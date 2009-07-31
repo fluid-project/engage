@@ -1,0 +1,59 @@
+.fl-theme-iPhone .fl-artifact {
+    
+}
+.fl-theme-iPhone .fl-artifact > * > * >.fl-container-auto {
+    padding:0 10px;
+}
+.fl-theme-iPhone .fl-artifact h2 {
+    clear:both;
+    color:#fff;
+    font-size:0.9em;
+    background-image: -webkit-gradient(linear, left top, left bottom, 
+        from(#B0BCCD), 
+        to(#6D84A2)
+    );
+    -webkit-border-radius:8px;
+    padding:3px 6px;
+    border:2px solid #333;
+}
+.fl-theme-iPhone .fl-artifact-thumbnail {
+    width:50%;
+    margin: 0 10px 10px 0;
+}
+
+.fl-theme-iPhone .fl-artifact-quickInfo {
+    list-style:none;
+    padding:0;
+    margin:10px 0 0;
+    font-size:0.82em;
+}
+.fl-theme-iPhone .fl-artifact-tags {
+    background-color:rgba(207,213,221,.5);
+    border-top:none;
+    -webkit-border-radius-bottom:8px;
+}
+
+.fl-theme-iPhone .fl-artifact-tags a {
+    color:#fff;
+    padding:4px 5px;
+    margin:0 2px;
+    background-image: -webkit-gradient(linear, left top, left bottom, 
+        from(#8391AF), 
+        to(#4C566C)
+    );
+    -webkit-border-radius:2px; 
+}
+
+.fl-theme-iPhone .fl-artifact-imagepair {
+    width:50%;
+    margin: 10px 10px 0 10px;
+}
+
+.fl-theme-iPhone .fl-transition-expandingRegion {
+    -webkit-transition: height 0.75s ease-out;
+    overflow:hidden;
+	height:0px;
+}
+.fl-theme-iPhone .fl-transition-grow-collapsed {
+    height:100px;
+}

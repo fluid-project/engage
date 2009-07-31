@@ -1,0 +1,86 @@
+<!-- jQuery can load resources as needed -->
+<script type="text/javascript" src="../../lib/fastXmlPull/js/fastXmlPull.js"></script>
+<script type="text/javascript" src="../../framework/renderer/js/fluidParser.js"></script>
+<script type="text/javascript" src="../../framework/renderer/js/fluidRenderer.js"></script>
+<script type="text/javascript" src="../js/artifact.js"></script>
+<script type="text/javascript" src="../js/loadData.js"></script>
+
+<!-- TODO: should use the flc- namespace!!! -->
+
+<div class="fl-artifact">
+    <!--The div named artifact-container gives the renderer and component its scope -->
+    <div class="artifact-container">
+        <!-- the class name flc-artifact-renderscope is for renderer scoping-->
+        <div class="flc-artifact-renderscope">
+            <div class="flc-screenNavigator-navbar fl-navbar fl-table">
+                <div class="fl-table-row">              
+                	<a href="explore_collections_costumes.html" class="fl-table-cell fl-button fl-button-left fl-backButton flc-screenNavigator-backButton"><span class="fl-button-inner">Costume</span></a>
+                  <!--Artifact name that appears in the top nav bar -->
+                	<h1 class="fl-table-cell artifact-name">Artifact name</h1>
+                                 
+                  <ul class="fl-table-cell fl-force-right fl-tabs fl-arrows-nextPrevious">
+                      <li><a href="#" title="Previous">&#9650;</a></li>
+                      <li><a href="#" title="Next">&#9660;</a></li>
+                  </ul>
+                </div>
+            </div>            
+            <div class="fl-container-auto">
+                <!-- User interaction buttons -->
+                <p>
+                    <a class="fl-button fl-button-white fl-bevel-white " href="#addToFavourites">Add favourite</a>
+                    <a class="fl-button fl-button-white fl-bevel-white " href="#addToFavourites">Related objects</a>
+                    <a class="fl-button fl-button-white fl-bevel-white " href="#sendToFriend">Send to friend</a>
+                </p>
+                <!-- Image of the artifact -->
+                <img src="../images/Snuffbox.jpg" alt="" class="fl-force-left fl-artifact-thumbnail artifact-picture" />
+                <!-- Short description of the artifact besides the image -->
+                <ul class="fl-artifact-quickInfo">
+                  <li class="artifact-name fl-text-bold">Artifact name</li>
+                	<li class="artifact-dated">Date info to be rendered</li>
+                	<li class="artifact-medium">Medium to be rendered</li>
+                	<li class="artifact-size">Dimensions to be rendered</li>
+                	<li class="artifact-donor">Donor to be rendered</li>
+                </ul>
+                
+                <p class="artifact-description fl-force-left">
+                  Here goes a longer artifact description!
+                </p>
+
+                <!--Start panel for tags-->
+                <h2 class="fl-bevel-black flc-artifact-panel-tags-title">Tags</h2>
+                <div class="flc-artifact-panel-tags-content fl-artifact-tags fl-transition-grow fl-transition-grow-collapsed">
+                    <a href="#">Tag</a><a href="#">This</a><a href="#">Is</a><a href="#">A Tag</a>           
+                    <input type="text" value="Search" />
+                </div>
+                <!--Stop panel for tags-->
+                
+                <!--Start panel for comments-->
+                <h2 class="fl-bevel-black flc-artifact-panel-comment-title">Comments</h2>
+                <div class="flc-artifact-panel-comment-content fl-artifact-tags fl-transition-grow fl-transition-grow-collapsed">
+                    <form>
+                      <input type="text"> </input>
+                      <input type="button" value="Add comment" />
+                    </form>
+                </div>
+                <!--Stop panel for comments-->
+                
+                <!--Start panel for comments-->
+                <h2 class="fl-bevel-black flc-artifact-panel-img-title">Image pairs</h2>
+                <div class="flc-artifact-panel-img-content fl-artifact-tags fl-transition-grow fl-transition-grow-collapsed">
+                    <img src="../images/Snuffbox.jpg" alt="" class="fl-artifact-imagepair artifact-picture" />
+                    <img src="../images/Snuffbox.jpg" alt="" class="fl-artifact-imagepair artifact-picture" />
+                </div>
+                <!--Stop panel for comments-->
+                
+                <h2 class="fl-bevel-black">You might also enjoy&#8230;</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+        // put all your jQuery goodness in here.
+        demo.loadJson ();
+    });
+</script>

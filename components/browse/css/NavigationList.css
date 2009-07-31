@@ -1,0 +1,11 @@
+.fl-navigationList-description {
+	text-align: left;
+    font-size: 0.9em;
+    color: #aaa;
+    font-weight: normal;
+}
+
+.fl-navigationList-header {
+    padding: 12px; 
+    margin: 100px 0;
+}

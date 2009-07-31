@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Navigatin List Demo</title>
+        
+        <link type="text/css" rel="stylesheet" href="../../framework/fss/css/fss-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../framework/fss/css/fss-text.css" />
+        <link type="text/css" rel="stylesheet" href="../../framework/fss/css/fss-theme-iphone.css" />
+        <link type="text/css" rel="stylesheet" href="../css/NavigationList.css" />
+
+        <script type="text/javascript" src="../../lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../lib/json/js/json2.js"></script>
+        <script type="text/javascript" src="../../framework/core/js/Fluid.js"></script>
+        <script type="text/javascript" src="../../framework/core/js/FluidDOMUtilities.js"></script>
+        <script type="text/javascript" src="../../framework/core/js/DataBinding.js"></script>
+        <script type="text/javascript" src="../../framework/renderer/js/fluidParser.js"></script>
+        <script type="text/javascript" src="../../framework/renderer/js/fluidRenderer.js"></script>
+        <script type="text/javascript" src="../../lib/fastXmlPull/js/fastXmlPull.js"></script>   
+        <script type="text/javascript" src="../js/NavigationList.js"></script>  
+	</head>
+    
+	<body class="fl-theme-iPhone">
+	    <div class="fl-navbar"></div>
+        <div class="simpleList">
+            <div class="flc-nagivationList-listGroup">
+                <h2 class="flc-navigationList-header fl-navigationList-header">group</h2>
+                <ul class="fl-listmenu fl-listmenu-basic fl-thumbnail">
+                    <li class="flc-navigationList-items">
+                        <a class="flc-navigationList-link">
+                            <img class="flc-navigationList-image fl-icon"/>
+                            <span class="flc-navigationList-titleText">title</span>
+                            <span class="flc-navigationList-descriptionText fl-link-summary">description</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="noNumberInHeader">
+            <div class="flc-nagivationList-listGroup">
+                <h2 class="flc-navigationList-header fl-navigationList-header">group</h2>
+                <ul class="fl-listmenu fl-listmenu-basic fl-thumbnail">
+                    <li class="flc-navigationList-items">
+                        <a class="flc-navigationList-link">
+                            <img class="flc-navigationList-image fl-icon"/>
+                            <span class="flc-navigationList-titleText">title</span>
+                            <span class="flc-navigationList-descriptionText fl-link-summary">description</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="noHeader">
+            <div class="flc-nagivationList-listGroup">
+                <ul class="fl-listmenu fl-listmenu-basic fl-thumbnail">
+                    <li class="flc-navigationList-items">
+                        <a class="flc-navigationList-link">
+                            <img class="flc-navigationList-image fl-icon"/>
+                            <span class="flc-navigationList-titleText">title</span>
+                            <span class="flc-navigationList-descriptionText fl-link-summary">description</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <script type="text/javascript">
+            var links = [
+                            {
+                                target: "../images/Snuffbox.jpg",
+                                image: "../images/Snuffbox.jpg",
+                                title: "Title",
+                                description: "Description"
+                            },
+                            {
+                                target: "../images/Snuffbox.jpg",
+                                image: "../images/Snuffbox.jpg",
+                                title: "Title",
+                                description: "Description"
+                            }
+                        ];
+            
+            var modelCompiler = function (links, header, showNumber) {
+                return {
+                    model: {
+                        header: header,
+                        showNumberInHeader: showNumber,
+                        links: links
+                    }
+                };  
+            };
+            
+            fluid.navigationList(".simpleList", modelCompiler(links, "Header", true));
+            fluid.navigationList(".noNumberInHeader", modelCompiler(links, "Header"));
+            fluid.navigationList(".noHeader", modelCompiler(links));
+        </script>
+	</body>
+</html>
