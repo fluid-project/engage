@@ -232,6 +232,13 @@ var fluid_1_2 = fluid_1_2 || {};
 
     /************************************************************************************/
     /* Public overwriteable functions */
+    fluid.screenNavigator.ajaxViewFetcher = function (that, url) {
+        var direction = that.navDirection;        
+        $.get(that.options.pathPrefix + url, function (ajaxData) {
+            that.viewsHash[url] = that.createView(url, direction, ajaxData);            
+            that.showView(url);
+        });
+    };
 
     fluid.screenNavigator.slideOutAnimation = function (el, direction, that) {
         var newPosition = (direction > 0) ? that.options.styles.previous : that.options.styles.next;        
@@ -243,19 +250,13 @@ var fluid_1_2 = fluid_1_2 || {};
     };
 
     fluid.screenNavigator.fadeOut = function (el, direction, that) {
-		// if this navbar is part of the OUTGOING screen, trigger the fade out		
-		var navbar = $(that.viewsHash[that.previousPath]).children(that.options.selectors.header);
-		navbar.addClass('fl-transition-fade fl-transition-fadeOut');
+		// remove all previously applied fadeout fx
+		$(".fl-animation-fadeout").removeClass("fl-animation-fadeout");
+		
+		// if this navbar is within the outgoing screen, use a fade out		
+		var navbar = $(that.viewsHash[that.previousPath]).children(that.options.selectors.header);		
+		navbar.addClass('fl-animation-fadeout');
     };
-
-    fluid.screenNavigator.ajaxViewFetcher = function (that, url) {
-        var direction = that.navDirection;        
-        $.get(that.options.pathPrefix + url, function (ajaxData) {
-            that.viewsHash[url] = that.createView(url, direction, ajaxData);            
-            that.showView(url);            
-        });
-    };
-    
 
     /************************************************************************************/
     /* Defaults storage */
@@ -273,12 +274,12 @@ var fluid_1_2 = fluid_1_2 || {};
             loadingIndicator: ".fl-link-loading"
         },
         styles : {
-            current: "fl-view fl-transition-slide",
-            previous: "fl-view fl-offScreen-left fl-transition-slide",
-            next: "fl-view fl-offScreen-right fl-transition-slide",
+            current: "fl-screenNavigator-view fl-transition-slide",
+            previous: "fl-screenNavigator-view fl-screenNavigator-hide-left fl-transition-slide",
+            next: "fl-screenNavigator-view fl-screenNavigator-hide-right fl-transition-slide",
             loadingIndicator: "fl-link-loading",
-			prepPrevious: "fl-view fl-offScreen-left",
-			prepNext: "fl-view fl-offScreen-right"
+			prepPrevious: "fl-screenNavigator-view fl-screenNavigator-hide-left",
+			prepNext: "f-screenNavigatorl-view fl-screenNavigator-hide-right"
         },
         screenSelectors : {
             next :  "flc-screenNavigator-nextView",
