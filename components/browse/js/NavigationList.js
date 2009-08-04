@@ -42,6 +42,18 @@ fluid_1_2 = fluid_1_2 || {};
             
             tree.push(treeNode("header", "value", that.model.showNumberInHeader ? addCount(that.model.header, that.model.links.length) : that.model.header));
             
+            tree.push({
+                ID: "header",
+                value: that.model.showNumberInHeader ? addCount(that.model.header, that.model.links.length) : that.model.header,
+                decorators: {
+                    type: "jQuery",
+                    func: "click",
+                    args: function () {
+                        that.locate("listGroup").toggleClass(that.options.styles.hideGroup);
+                    }
+                }
+            });
+            
             tree = tree.concat(fluid.transform(that.model.links, function (object) {
                 return treeNode("listItems:", "children", [
                     treeNode("link", "target", object.target || ""),
@@ -89,7 +101,9 @@ fluid_1_2 = fluid_1_2 || {};
             descriptionText: ".flc-navigationList-descriptionText"
         },
         
-        styles: {},
+        styles: {
+            hideGroup: "fl-navigationList-group-hide"
+        },
         
         strings: {},
         
