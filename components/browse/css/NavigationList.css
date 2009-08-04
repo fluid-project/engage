@@ -8,3 +8,6 @@
 .fl-navigationList-header {
 }
 
+.fl-navigationList-hide {
+	height:0px;
+}
