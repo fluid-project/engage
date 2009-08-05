@@ -1,12 +1,17 @@
-.fl-view {
+.fl-screenNavigator-view {
     position:absolute;
     width:100%;
     z-index:100;    
     -webkit-transform: translateX(0%);
 }
-.fl-offScreen-right {
+.fl-screenNavigator-hide-right {
     -webkit-transform: translateX(100%);
 }
-.fl-offScreen-left {
+.fl-screenNavigator-hide-left {
     -webkit-transform: translateX(-100%);
+}
+.fl-screenNavigator-fadeout {
+	-webkit-animation-name: fadeOut;
+    -webkit-animation-duration: 0.75s;
+    -webkit-animation-iteration-count: 1;
 }

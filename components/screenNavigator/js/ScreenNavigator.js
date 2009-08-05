@@ -251,11 +251,11 @@ var fluid_1_2 = fluid_1_2 || {};
 
     fluid.screenNavigator.fadeOut = function (el, direction, that) {
 		// remove all previously applied fadeout fx
-		$(".fl-animation-fadeout").removeClass("fl-animation-fadeout");
+		$(".fl-screenNavigator-fadeout").removeClass("fl-screenNavigator-fadeout");
 		
 		// if this navbar is within the outgoing screen, use a fade out		
 		var navbar = $(that.viewsHash[that.previousPath]).children(that.options.selectors.header);		
-		navbar.addClass('fl-animation-fadeout');
+		navbar.addClass('fl-screenNavigator-fadeout');
     };
 
     /************************************************************************************/
