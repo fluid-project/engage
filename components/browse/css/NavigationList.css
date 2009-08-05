@@ -1,22 +1,7 @@
-.fl-navigationList-group {
-	-webkit-border-radius:8px;
-	margin:0 10px 15px;
-	max-height:640px;
-	overflow:hidden;
-}
-
-.fl-navigationList-group-hide {
+.fl-navigationList-hidden {
 	max-height:43px;
 }
 
-.fl-transition-group-animation{
+.fl-navigationList-animation {
     -webkit-transition: max-height 0.75s ease-in;
 }
-
-.fl-theme-iPhone .fl-navigationList-group .fl-listmenu-heading,
-.fl-theme-iPhone .fl-navigationList-group .fl-listmenu.fl-listmenu-thumbnails {
-	margin:0;
-}
-
-.fl-navigationList-group h2 {}
-.fl-navigationList-group .fl-navigationList-group-hide h2 {}
