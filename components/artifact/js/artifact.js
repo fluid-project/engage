@@ -97,25 +97,13 @@ fluid = fluid || fluid_1_2;
 	};
 	//end of Renderer function that changes the template
 
-  //start of function to attach action listener
-  var attachHandlers = function (that) {
-//    var yyy = that.locate("artifactPanelTagsContent");
-    // attach a handler to tags panel
-    that.locate("artifactPanelTagsTitle").click(function () {
-//      alert (yyy);
-      $(".flc-artifact-panel-tags-content").toggleClass("fl-transition-grow-collapsed");
-//      yyy.toggleClass("fl-transition-grow-collapsed");
-    });
-    
-    that.locate("artifactPanelCommentTitle").click(function () {
-      $(".flc-artifact-panel-comment-content").toggleClass("fl-transition-grow-collapsed");
-    });
-    
-    that.locate("artifactPanelImgTitle").click(function () {
-      $(".flc-artifact-panel-img-content").toggleClass("fl-transition-grow-collapsed");
+  //start of function to attach on-click handler
+  var attachPanelClickHandler = function (artifactPanel) {
+    artifactPanel.click(function () {
+      artifactPanel.toggleClass("fl-artifact-panel-hidden");
     });
   }
-  //stop of function to attach action listener
+  //stop of function to attach on-click handler
 	
   //start of creator function
   fluid.artifact = function (container, options) {
@@ -124,7 +112,14 @@ fluid = fluid || fluid_1_2;
     renderArtifactPage(that);
     
     // calling function to attach action listeners
-    attachHandlers(that);
+    var artifactPanel = that.locate("artifactPanelTags");
+    attachPanelClickHandler(artifactPanel);
+    
+    artifactPanel = that.locate("artifactPanelComment");
+    attachPanelClickHandler(artifactPanel);
+    
+    artifactPanel = that.locate("artifactPanelImage");
+    attachPanelClickHandler(artifactPanel);
     
     return that; 
   };
@@ -145,10 +140,9 @@ fluid = fluid || fluid_1_2;
         artifactDonor: ".artifact-donor",
         artifactPicture: ".artifact-picture",
         artifactDesc: ".artifact-description",
-        artifactPanelTagsTitle: ".flc-artifact-panel-tags-title",
-        artifactPanelTagsContent: ".flc-artifact-panel-tags-content",
-        artifactPanelCommentTitle: ".flc-artifact-panel-comment-title",
-        artifactPanelImgTitle: ".flc-artifact-panel-img-title"
+        artifactPanelTags: ".flc-artifact-panel-tags",
+        artifactPanelComment: ".flc-artifact-panel-comment",
+        artifactPanelImage: ".flc-artifact-panel-image"
     },
 		data: {
 			artifactName: "my name"
