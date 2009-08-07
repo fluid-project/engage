@@ -3,7 +3,7 @@
 <div class="flc-screenNavigator-navbar fl-navbar fl-table">
     <div class="fl-table-row">              
         <a href="explore_collections_costumes.html" class=" flc-screenNavigator-backButton fl-table-cell fl-button fl-button-left fl-backButton"><span class="fl-button-inner">Costume</span></a>
-        <h1 class="fl-table-cell artifact-name">Click to flip</h1>
+        <h1 class="fl-table-cell artifact-name">Flip browser</h1>
       <ul class="fl-table-cell fl-tabs">
           <li><a href="#" title="Previous">&#9650;</a></li>
           <li><a href="#" title="Next">&#9660;</a></li>
@@ -21,7 +21,6 @@
             <a href="#"></a>
         </div>
 
-
         <div class="fl-artifact-side fl-artifact-back">
 			
             <!--Start panel for tags-->
@@ -38,11 +37,10 @@
 
         </div>
 
-
 	</div>
 </div>
 <script type="text/javascript">
-    $(".fl-navbar").click(function(){
+    $(".fl-artifact-side").click(function(){
         $(".fl-artifact-flip-transition").toggleClass("fl-flipped");
     });
 </script>

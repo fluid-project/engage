@@ -49,12 +49,11 @@
 
 /* 3D Image Flipping with preservation of aspect ratio */
 .fl-artifact-flip-container {
-	-webkit-perspective: 600; /*-webkit-perspective-origin:*/
-    position:absolute;
-	top:47px;
+	-webkit-perspective: 600;
     width:100%;
 	height:433px;
-	background-color:rgba(0,0,0,0.75);
+	background-color:rgba(0,0,0,0.5);
+	margin-top:-12px;
 }
 [orientation^=landscape] .fl-artifact-flip-container {
 	height:260px;
