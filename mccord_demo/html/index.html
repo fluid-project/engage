@@ -33,14 +33,7 @@
         <script type="text/javascript">
             var myContentManager;
             jQuery().ready(function () {
-                // for desktop - click, for iPhone - touchstart
-                if (navigator.userAgent.match(/iPhone/i)) {
-                    myContentManager = fluid_1_2.screenNavigator("body");
-                } else {
-                    myContentManager = fluid_1_2.screenNavigator("body", {
-                        eventType : "click"
-                    });
-                }
+                myContentManager = fluid_1_2.screenNavigator("body");
             }); 
         </script>
     </body>

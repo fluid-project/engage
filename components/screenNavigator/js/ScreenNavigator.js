@@ -46,9 +46,7 @@ var fluid_1_2 = fluid_1_2 || {};
 
         // Main event to listen to
         /*
-         * TODO: fix this concept of binding a single event - it interferes with touch + drag scrolling behaviour as is
-         * TODO: when finger is 1/2 on and off target, it launches new window 
-         * TOOD: accessibility needs to happen too
+         * TOOD: accessibility review
          */
         that.container.bind(that.options.eventType, function (event) {            
 			var target = findTarget(event.target);            
@@ -262,7 +260,7 @@ var fluid_1_2 = fluid_1_2 || {};
     /* Defaults storage */
     fluid.defaults("fluid.screenNavigator", {
         pathPrefix: "",        
-        eventType: "touchstart",
+        eventType: "click",
         startUrl: "explore.html",
         toggleVisibility: true,
         selectors: {
