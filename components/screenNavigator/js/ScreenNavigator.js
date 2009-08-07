@@ -4,13 +4,9 @@
 var fluid_1_2 = fluid_1_2 || {};
 
 (function ($, fluid) {
-
-    // FROM state and TO state
-    fluid.transition = function (element, from, to) {
-    };
-
-    fluid.animation = function (element, options) {
-    };
+    /*
+     * TOOD: accessibility review
+     */
 
     // Private functions
     var findTarget = function (el) {
@@ -39,17 +35,14 @@ var fluid_1_2 = fluid_1_2 || {};
         that.viewsHash = {};
         that.currentPath = "";
 
-		var coreContainer = that.locate("viewContainer");
+        var coreContainer = that.locate("viewContainer");
         // Webkit CSS event to listent to
         coreContainer[0].addEventListener("webkitTransitionEnd", that.animationEventComplete, true);
         coreContainer[0].addEventListener("orientationchange", that.orientationChange, true);
 
         // Main event to listen to
-        /*
-         * TOOD: accessibility review
-         */
         that.container.bind(that.options.eventType, function (event) {            
-			var target = findTarget(event.target);            
+            var target = findTarget(event.target);            
             // Handle different kinds of anchor links...
             if (target) {
                 that.events.onInterceptEvent.fire(event); // when a link is found, fire intercept event                
@@ -79,30 +72,30 @@ var fluid_1_2 = fluid_1_2 || {};
     fluid.screenNavigator = function (container, options) {
         var that = fluid.initView("fluid.screenNavigator", container, options);
 
-		/**
-		 * Set a flag to identify the orientation of the device
-		 * @param {Object} event
-		 */
-		that.orientationChange = function (event) {
-			var orientation = "";
+        /**
+         * Set a flag to identify the orientation of the device
+         * @param {Object} event
+         */
+        that.orientationChange = function (event) {
+            var orientation = "";
             switch (window.orientation)
             {
             case 0:
-				orientation = "portraitNormal";
+                orientation = "portraitNormal";
                 break;
             case -90:
-				orientation = "landscapeClockwise";
+                orientation = "landscapeClockwise";
                 break;
             case 90:
-				orientation = "landscapeCounterClockwise";
+                orientation = "landscapeCounterClockwise";
                 break;
             case 180:
-				orientation = "portraitReverse";
+                orientation = "portraitReverse";
                 break;
-            }			
-			that.locate("viewContainer").attr("orientation", orientation);
-			that.events.afterOrientationChange.fire(window.orientation);
-		};
+            }            
+            that.locate("viewContainer").attr("orientation", orientation);
+            that.events.afterOrientationChange.fire(window.orientation);
+        };
 
         /**
          * Load View
@@ -153,7 +146,7 @@ var fluid_1_2 = fluid_1_2 || {};
         that.createView = function (url, direction, ajaxContent) {
             var theView;
             theView = $('<div>' + ajaxContent + '</div>');
-			theView.addClass(that.options.styles.prepNext);
+            theView.addClass(that.options.styles.prepNext);
             that.locate("viewContainer").append(theView)
             
             return theView;            
@@ -171,8 +164,8 @@ var fluid_1_2 = fluid_1_2 || {};
             
             // update global content paths
             that.currentPath = nextView;
-			that.previousPath = currentView;
-			
+            that.previousPath = currentView;
+            
             // event for when content is accessible in the DOM, BEFORE animations are fired
             that.events.afterContentReady.fire(that.viewsHash[url]);            
 
@@ -248,12 +241,12 @@ var fluid_1_2 = fluid_1_2 || {};
     };
 
     fluid.screenNavigator.fadeOut = function (el, direction, that) {
-		// remove all previously applied fadeout fx
-		$(".fl-screenNavigator-fadeout").removeClass("fl-screenNavigator-fadeout");
-		
-		// if this navbar is within the outgoing screen, use a fade out		
-		var navbar = $(that.viewsHash[that.previousPath]).children(that.options.selectors.header);		
-		navbar.addClass('fl-screenNavigator-fadeout');
+        // remove all previously applied fadeout fx
+        $(".fl-screenNavigator-fadeout").removeClass("fl-screenNavigator-fadeout");
+        
+        // if this navbar is within the outgoing screen, use a fade out        
+        var navbar = $(that.viewsHash[that.previousPath]).children(that.options.selectors.header);        
+        navbar.addClass('fl-screenNavigator-fadeout');
     };
 
     /************************************************************************************/
@@ -276,8 +269,8 @@ var fluid_1_2 = fluid_1_2 || {};
             previous: "fl-screenNavigator-view fl-screenNavigator-hide-left fl-transition-slide",
             next: "fl-screenNavigator-view fl-screenNavigator-hide-right fl-transition-slide",
             loadingIndicator: "fl-link-loading",
-			prepPrevious: "fl-screenNavigator-view fl-screenNavigator-hide-left",
-			prepNext: "f-screenNavigatorl-view fl-screenNavigator-hide-right"
+            prepPrevious: "fl-screenNavigator-view fl-screenNavigator-hide-left",
+            prepNext: "f-screenNavigatorl-view fl-screenNavigator-hide-right"
         },
         screenSelectors : {
             next :  "flc-screenNavigator-nextView",
@@ -288,7 +281,7 @@ var fluid_1_2 = fluid_1_2 || {};
             onFetchContent: null,
             afterContentReady : null,
             afterTransition : null,
-			afterOrientationChange : null
+            afterOrientationChange : null
         },
         animations : {
             "currentView": fluid.screenNavigator.slideOutAnimation,
