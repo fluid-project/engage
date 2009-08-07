@@ -104,6 +104,14 @@ fluid = fluid || fluid_1_2;
     });
   }
   //stop of function to attach on-click handler
+  
+  //start of function to flip page on click
+  var attachFlipHandler = function (that) {
+    that.locate("artifactSideFlip").click(function () {
+      $(".fl-artifact-flip-transition").toggleClass("fl-flipped");
+    });
+  }
+  //stop of function to flip page on click
 	
   //start of creator function
   fluid.artifact = function (container, options) {
@@ -111,7 +119,7 @@ fluid = fluid || fluid_1_2;
     // call renderer function
     renderArtifactPage(that);
     
-    // calling function to attach action listeners
+    // start calling function to attach panel action listeners
     var artifactPanel = that.locate("artifactPanelTags");
     attachPanelClickHandler(artifactPanel);
     
@@ -120,6 +128,10 @@ fluid = fluid || fluid_1_2;
     
     artifactPanel = that.locate("artifactPanelImage");
     attachPanelClickHandler(artifactPanel);
+    // stop calling function to attach panel action listeners
+    
+    //call function to attach flip handler
+    attachFlipHandler(that);
     
     return that; 
   };
@@ -142,7 +154,8 @@ fluid = fluid || fluid_1_2;
         artifactDesc: ".artifact-description",
         artifactPanelTags: ".flc-artifact-panel-tags",
         artifactPanelComment: ".flc-artifact-panel-comment",
-        artifactPanelImage: ".flc-artifact-panel-image"
+        artifactPanelImage: ".flc-artifact-panel-image",
+        artifactSideFlip: ".fl-artifact-side"
     },
 		data: {
 			artifactName: "my name"
