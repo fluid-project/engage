@@ -99,7 +99,8 @@ fluid = fluid || fluid_1_2;
 
   //start of function to attach on-click handler
   var attachPanelClickHandler = function (artifactPanel) {
-    artifactPanel.click(function () {
+    artifactPanel.click(function (event) {
+	  event.stopPropagation();
       artifactPanel.toggleClass("fl-artifact-panel-hidden");
     });
   }
