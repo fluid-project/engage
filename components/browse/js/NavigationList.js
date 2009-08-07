@@ -23,15 +23,6 @@ fluid_1_2 = fluid_1_2 || {};
         return obj; 
     };
     
-    var treeNodePlusDecorator = function (id, key, value, decorator) {
-        var obj = {
-                ID: id,
-                decorators: decorator
-            };
-            
-        obj[key] = value;
-    };
-    
     var addCount = function (string, count) {
         return string + " (" + count + ")";
     };
@@ -54,23 +45,14 @@ fluid_1_2 = fluid_1_2 || {};
             tree.push({
                 ID: "header",
                 value: that.model.showNumberInHeader ? addCount(that.model.header, that.model.links.length) : that.model.header,
-                decorators: [
+                decorators: 
                     {
                         type: "jQuery",
                         func: "click",
                         args: function () {
                             that.locate("listGroup").toggleClass(that.options.styles.hideGroup);
                         }
-                    },
-                    {
-                        type: "event",
-                        event: "ontouchstart",
-                        handler: function () {
-                                that.locate("listGroup").toggleClass(that.options.styles.hideGroup);
-                                that.locate("header").unbind("click");
-                            }
                     }
-                ]
             });
             
             tree = tree.concat(fluid.transform(that.model.links, function (object) {
