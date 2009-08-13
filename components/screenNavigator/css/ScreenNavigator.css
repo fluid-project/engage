@@ -1,5 +1,9 @@
+.fl-screenNavigator-scrollContainer {
+	position:relative;z-index:1;height:380px;
+}
+
 .fl-screenNavigator-view {
-    position:absolute;
+/*    position:absolute;*/
     width:100%;
     z-index:100;    
     -webkit-transform: translateX(0%);
