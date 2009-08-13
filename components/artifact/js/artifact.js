@@ -25,20 +25,8 @@ fluid = fluid || fluid_1_2;
 			  id: "artName"
 		  },
       {
-        selector: that.options.selectors.artifactDated,
-        id: "artDated"
-      },
-      {
-        selector: that.options.selectors.artifactSize,
-        id: "artSize"
-      },
-      {
-        selector: that.options.selectors.artifactMedium,
-        id: "artMedium"
-      },
-      {
-        selector: that.options.selectors.artifactDonor,
-        id: "artDonor"
+        selector: that.options.selectors.artifactInfoList,
+        id: "artInfoList:"
       },
       {
         selector: that.options.selectors.artifactPicture,
@@ -51,32 +39,15 @@ fluid = fluid || fluid_1_2;
     ];
 		//end of selector map
 		
-		//start of component tree
-		var artifactTree = {
-			children: [
-				{
+    //start of function to create component tree
+    var createTree = function (that) {
+      var tree = [
+        {
 					ID: "artName",
 					valuebinding: that.options.lookup.artName
 				},
         {
-					ID: "artDated",
-					valuebinding: that.options.lookup.artDated
-				},
-        {
-					ID: "artSize",
-					valuebinding: that.options.lookup.artSize
-				},
-        {
-					ID: "artMedium",
-					valuebinding: that.options.lookup.artMedium
-				},
-        {
-					ID: "artDonor",
-          valuebinding: that.options.lookup.artDonor     
-				},
-        {
 					ID: "artPicture",
-					value: null,
 					decorators: {
             attrs: {src: that.options.lookup.artPicture}
           }
@@ -85,33 +56,54 @@ fluid = fluid || fluid_1_2;
 					ID: "artDesc",
           valuebinding: that.options.lookup.artDesc     
 				}
-			]
-		};
-		//end of component tree
-		  
-    //alert ("that.options.data." + that.options.lookup.artDonor);
+      ];
+      
+      for (var key in that.options.lookup) {
+        if(key !== "artPicture" && key !== "artDesc") {          
+          if (key === "artName") {
+            tree.push ({
+              ID: "artInfoList:",
+              valuebinding: that.options.lookup[key],
+              decorators: {
+                type: "addClass",
+                classes: that.options.styles.artNameHeadingInList
+              }
+            });
+          }
+          else {
+            tree.push ({
+              ID: "artInfoList:",
+              valuebinding: that.options.lookup[key]
+            });  
+          }
+        }
+      }
+      
+      return tree;
+    };
+    //stop of function to create component tree
     
 		// calling the self renderer function (with model: we define the data to use for rendering and with valuebinding
     // in the selector map we define the path to the actual data to be rendered)
-		fluid.selfRender(that.locate("renderScope"), artifactTree, {cutpoints: selMap, model: that.options.data, debug: true});
+		fluid.selfRender(that.locate("renderScope"), createTree (that), {cutpoints: selMap, model: that.options.data, debug: true});
 	};
 	//end of Renderer function that changes the template
 
   //start of function to attach on-click handler
-  var attachPanelClickHandler = function (artifactPanel) {
+  var attachPanelClickHandler = function (that, artifactPanel) {
     artifactPanel.click(function (event) {
-	  event.stopPropagation();
-      artifactPanel.toggleClass("fl-artifact-panel-hidden");
+	    event.stopPropagation();
+      artifactPanel.toggleClass(that.options.styles.hideGroup);
     });
-  }
+  };
   //stop of function to attach on-click handler
-  
+    
   //start of function to flip page on click
   var attachFlipHandler = function (that) {
     that.locate("artifactSideFlip").click(function () {
       $(".fl-artifact-flip-transition").toggleClass("fl-flipped");
     });
-  }
+  };
   //stop of function to flip page on click
 	
   //start of creator function
@@ -122,13 +114,13 @@ fluid = fluid || fluid_1_2;
     
     // start calling function to attach panel action listeners
     var artifactPanel = that.locate("artifactPanelTags");
-    attachPanelClickHandler(artifactPanel);
+    attachPanelClickHandler(that, artifactPanel);
     
     artifactPanel = that.locate("artifactPanelComment");
-    attachPanelClickHandler(artifactPanel);
+    attachPanelClickHandler(that, artifactPanel);
     
     artifactPanel = that.locate("artifactPanelImage");
-    attachPanelClickHandler(artifactPanel);
+    attachPanelClickHandler(that, artifactPanel);
     // stop calling function to attach panel action listeners
     
     //call function to attach flip handler
@@ -146,17 +138,22 @@ fluid = fluid || fluid_1_2;
         content: ".flc-artifact-content",
         details: ".flc-artifact-details",
         renderScope: ".flc-artifact-renderscope",
+        artifactInfoList: ".artifact-info-list",
         artifactName: ".artifact-name",
-        artifactDated: ".artifact-dated",
-        artifactSize: ".artifact-size",
-        artifactMedium: ".artifact-medium",
-        artifactDonor: ".artifact-donor",
+//        artifactDated: ".artifact-dated",
+//        artifactSize: ".artifact-size",
+//        artifactMedium: ".artifact-medium",
+//        artifactDonor: ".artifact-donor",
         artifactPicture: ".artifact-picture",
         artifactDesc: ".artifact-description",
         artifactPanelTags: ".flc-artifact-panel-tags",
         artifactPanelComment: ".flc-artifact-panel-comment",
         artifactPanelImage: ".flc-artifact-panel-image",
         artifactSideFlip: ".fl-artifact-side"
+    },
+    styles: {
+        hideGroup: "fl-artifact-panel-hidden",
+        artNameHeadingInList: "fl-text-bold"
     },
 		data: {
 			artifactName: "my name"

@@ -48,7 +48,7 @@ var demo = demo || {};
 		// Do an ajax call to load the data.
 		$.ajax({
 //			url: "http://localhost:5984/artifacts/Cartoon",
-			url: "../data/Cartoon.json", 
+			url: "../data/Headdress.json", 
       success: initArtifact,
 			dataType: "json"
 		});
