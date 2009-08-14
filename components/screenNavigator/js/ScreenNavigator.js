@@ -254,7 +254,7 @@ var fluid_1_2 = fluid_1_2 || {};
     fluid.defaults("fluid.screenNavigator", {
         pathPrefix: "",        
         eventType: "click",
-        startUrl: "explore.html",
+        startUrl: "home.html",
         toggleVisibility: true,
         selectors: {
             header: ".flc-screenNavigator-navbar",
