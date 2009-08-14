@@ -22,75 +22,20 @@
         <script type="text/javascript" src="../../framework/core/js/FluidDOMUtilities.js"></script>
         <script type="text/javascript" src="../../framework/core/js/DataBinding.js"></script>
 
-      	<script type="text/javascript" src="../../components/screenNavigator/js/ScreenNavigator.js"></script>
-      	<script type="text/javascript" src="../js/iscroll.js"></script>
+      	<script type="text/javascript" src="../../components/screenNavigator/js/ScreenNavigator.js"></script>      	
     </head>
     
     <body>
-    	<style type="text/css">
-    		.bar {height:50px; background-color:#0C0; /*position:absolute;*/ z-index:10000; width:100%;}
-			#top {}
-			#bottom {bottom:0;}
-    	</style>
-    	<div id="top" class="bar"> <h1>TOP</h1>
-		</div>
 		
         <!-- View are dynamically added -->
-        <div class="flc-screenNavigator-view-container fl-screenNavigator-scrollContainer">
+        <div class="flc-screenNavigator-view-container">
         	
-<div class="flc-screenNavigator-navbar fl-navbar fl-table">
-    <div class="fl-table-row">
-    	<a href="explore.html" class="fl-table-cell fl-button fl-button-left fl-backButton flc-screenNavigator-backButton"><span class="fl-button-inner">Home</span></a>
-    	<h1 class="fl-table-cell">Explore</h1>
-    	<a href="search.html" class="fl-table-cell fl-button fl-button-right"><span class="fl-button-inner">Search</span></a>		
-    </div>
-</div>
-<!-- container needed to transition content separately from navbar -->
-<div class="fl-container-auto">
-    <div class="fl-container-flex fl-note fl-bevel-white fl-font-size-90">
-      <h1>Start</h1>
-      This is a sample of a basic menu:
-    </div>
-    <ul id="menu" class="fl-list">
-        <!-- image elements needed for rounded corners (backgrounds cant have border radius) -->
-    	<li><a href="explore_collections.html"><img class="fl-icon" src="../images/1.jpg" alt="" />Collections <span class="fl-link-secondary">27</span></a></li>
-    	<li><a href="explore_artists.html"><img class="fl-icon" src="../images/2.jpg" alt="" />Artists <span class="fl-link-secondary">188</span></a></li>
-    	<li><a href="../../components/artifact/html/artifact.html"><img class="fl-icon" src="../images/3.jpg" alt="" />The Artifact <span class="fl-link-secondary">Jump</span></a></li>
-    	<li><a href="../../components/artifact/html/artifact_picflip.html"><img class="fl-icon" src="../images/3.jpg" alt="" />The picture flipping Artifact <span class="fl-link-secondary">Jump</span></a></li>
-    	<li><a href="#fragment"><img class="fl-icon" src="../images/4.jpg" alt="" />Time Periods <span class="fl-link-secondary">Inactive</span></a></li>
-    	<li><a href="#fragment"><img class="fl-icon" src="../images/5.jpg" alt="" />Geocultural Areas <span class="fl-link-secondary">Inactive</span></a></li>
-    	<li><a href="#fragment"><img class="fl-icon" src="../images/6.jpg" alt="" />Geocultural Map <span class="fl-link-secondary">Inactive</span></a></li>
-    	<li><a href="#fragment"><img class="fl-icon" src="../images/1.jpg" alt="" />Thematic Tours <span class="fl-link-secondary">Inactive</span></a></li>
-    	<li><a href="#fragment"><img class="fl-icon" src="../images/2.jpg" alt="" />Fonds <span class="fl-link-secondary">Inactive</span></a></li>
-    </ul>
-	<div class="fl-panel fl-collapsable">
-        <h2>group</h2>
-        <ul class="fl-list fl-list-thumbnails">
-            <li> <a> <img class="fl-icon"/> Text <span class="fl-link-summary">description</span> </a></li>
-        </ul>
-    </div>
-		
-    <div class="fl-container-flex fl-note fl-bevel-white">
-      <p class="">This is a footer</p>
-    </div>
-</div>            
-
-
-
         </div>
-
-    	<div id="bottom" class="bar"><h1>BOTTOM</h1>
-		</div>
-
 
         <script type="text/javascript">
             var myContentManager;
             jQuery().ready(function () {
-	            /*myContentManager = fluid_1_2.screenNavigator("body");*/
-    			/* Should this be part of the Screen Navigator? */
-				setTimeout(function(){ 
-					new iScroll(document.querySelector('.flc-screenNavigator-view-container')); 
-				}, 100)
+	            myContentManager = fluid_1_2.screenNavigator("body");
             }); 
         </script>
     </body>
