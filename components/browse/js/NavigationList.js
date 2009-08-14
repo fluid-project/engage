@@ -30,6 +30,7 @@ fluid_1_2 = fluid_1_2 || {};
     var render = function (that) {
          var selectorMap = [
             {selector: that.options.selectors.header, id: "header"},
+            {selector: that.options.selectors.headerDescription, id: "headerDescription"},
             {selector: that.options.selectors.listItems, id: "listItems:"},
             {selector: that.options.selectors.link, id: "link"},
             {selector: that.options.selectors.image, id: "image"},
@@ -40,11 +41,12 @@ fluid_1_2 = fluid_1_2 || {};
         generateTree = function () {
             var tree = [];
             
-            tree.push(treeNode("header", "value", that.model.showNumberInHeader ? addCount(that.model.header, that.model.links.length) : that.model.header));
+//            tree.push(treeNode("header", "value", that.model.showNumberInHeader ? addCount(that.model.header, that.model.links.length) : that.model.header));
+            tree.push(treeNode("headerDescription", "value", that.model.headerDescription || ""));
             
             tree.push({
                 ID: "header",
-                value: that.model.showNumberInHeader ? addCount(that.model.header, that.model.links.length) : that.model.header,
+                value: that.model.showNumberInHeader ? addCount(that.model.header, that.options.calculateHeaderNumbers(that)) : that.model.header,
                 decorators: 
                     {
                         type: "jQuery",
@@ -56,7 +58,12 @@ fluid_1_2 = fluid_1_2 || {};
             });
             
             tree = tree.concat(fluid.transform(that.model.links, function (object) {
-                return treeNode("listItems:", "children", [
+                object.title = object.title || "";
+                var message = "See all in " + object.title;
+                return object.set ? treeNode("listItems:", "children", [
+                    treeNode("link", "target", object.target || ""),
+                    treeNode("titleText", "value", object.setSize ? addCount(message, object.setSize) : message)
+                ]) : treeNode("listItems:", "children", [
                     treeNode("link", "target", object.target || ""),
                     treeNode("image", "decorators", {
                         attrs: {
@@ -91,10 +98,15 @@ fluid_1_2 = fluid_1_2 || {};
         setup(that);
     };
     
+    fluid.navigationList.calculateListSize = function (that) {
+        return that.model.links.length || 0;
+    };
+    
     fluid.defaults("fluid.navigationList", {
         selectors: {
             listGroup: ".flc-nagivationList-listGroup",
             header: ".flc-navigationList-header",
+            headerDescription: ".flc-navigationList-headerDescription",
             listItems: ".flc-navigationList-items",
             link: ".flc-navigationList-link",
             image: ".flc-navigationList-image",
@@ -112,16 +124,21 @@ fluid_1_2 = fluid_1_2 || {};
         
         model: {
             header: "",
+            headerDescription: "",
             showNumberInHeader: false,
             links: [
                 {
                     target: "",
                     image: "",
                     title: "",
-                    description: ""
+                    description: "",
+                    set: false,
+                    setSize: ""
                 }
             ]
-        }
+        },
+        
+        calculateHeaderNumbers: fluid.navigationList.calculateListSize
     });
     
 })(jQuery, fluid_1_2);
