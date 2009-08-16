@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+		<title>Cabinet Demo</title>
+
+        <link type="text/css" rel="stylesheet" href="../../../framework/fss/css/fss-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../framework/fss/css/fss-text.css" />
+        <link type="text/css" rel="stylesheet" href="../../../framework/fss/css/fss-transitions.css" />
+        <link type="text/css" rel="stylesheet" href="../../../framework/fss/css/fss-mobile-iphone-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../framework/fss/css/fss-mobile-iphone-theme.css" />
+        <link type="text/css" rel="stylesheet" href="../css/Cabinet.css" />
+
+        <script type="text/javascript" src="../../../lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../lib/json/js/json2.js"></script>
+        <script type="text/javascript" src="../../../framework/core/js/Fluid.js"></script>
+        <script type="text/javascript" src="../../../framework/core/js/FluidDOMUtilities.js"></script>
+        <script type="text/javascript" src="../../../framework/core/js/DataBinding.js"></script>
+        <script type="text/javascript" src="../../../framework/renderer/js/fluidParser.js"></script>
+        <script type="text/javascript" src="../../../framework/renderer/js/fluidRenderer.js"></script>
+        <script type="text/javascript" src="../../../lib/fastXmlPull/js/fastXmlPull.js"></script>   
+        <script type="text/javascript" src="../js/Cabinet.js"></script>
+	</head>
+    
+	<body class="fl-theme-iPhone">
+	    <div class="fl-navbar"></div>
+        <div class="cabinet">
+            <div class="flc-cabinet-drawers">
+                <div class="flc-cabinet-drawer fl-cabinet-animation fl-cabinet-drawerClosed fl-collapsable">
+                    <div class="flc-cabinet-handle">
+                        <h2 class="flc-cabinet-header">Header</h2>
+                        <span class="flc-cabinet-headerDescription">Description</span>
+                    </div>
+                    <div class="flc-cabinet-contents">Contents</div>
+                </div>
+            </div>
+        </div>
+        
+        <script type="text/javascript">
+            var options = {
+                drawers: [
+                    {
+                        header: "Header 1",
+                        headerDescription: "first header",
+                        contents: {value: "contents"}
+                    },
+                    {
+                        header: "Header 2",
+                        contents: {value: "header 2 contents"},
+                        size: 1                  
+                    },
+                    {
+                        header: "Header 3"        
+                    }
+                ]
+            };
+            
+            fluid.cabinet(".cabinet", options);
+        </script>
+	</body>
+</html>
