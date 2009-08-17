@@ -19,25 +19,64 @@
         <script type="text/javascript" src="../../../framework/core/js/DataBinding.js"></script>
         <script type="text/javascript" src="../../../framework/renderer/js/fluidParser.js"></script>
         <script type="text/javascript" src="../../../framework/renderer/js/fluidRenderer.js"></script>
-        <script type="text/javascript" src="../../../lib/fastXmlPull/js/fastXmlPull.js"></script>   
+        <script type="text/javascript" src="../../../lib/fastXmlPull/js/fastXmlPull.js"></script>  
+        <script type="text/javascript" src="../js/NavigationList.js"></script> 
         <script type="text/javascript" src="../js/Cabinet.js"></script>
 	</head>
     
 	<body class="fl-theme-iPhone">
 	    <div class="fl-navbar"></div>
-        <div class="cabinet">
+        <div class="cabinet" role="tablist" aria-multiselectable="true">
             <div class="flc-cabinet-drawers">
-                <div class="flc-cabinet-drawer fl-panel fl-panel-autoHeading fl-cabinet-animation fl-cabinet-drawerClosed fl-panel-collapsable">
-                    <div class="flc-cabinet-handle">
+                <div class="flc-cabinet-drawer fl-panel fl-panel-autoHeading fl-cabinet-animation fl-cabinet-drawerClosed fl-panel-collapsable" role="tab" aria-expanded="false">
+                    <div class="flc-cabinet-handle fl-cabinet-handle">
                         <h2 class="flc-cabinet-header">Header</h2>
-                        <span class="flc-cabinet-headerDescription">Description</span>
+                        <span class="flc-cabinet-headerDescription fl-font-size-80">Description</span>
                     </div>
-                    <div class="flc-cabinet-contents">Contents</div>
+                    <div class="flc-cabinet-contents fl-cabinet-contents">
+                        <ul class="flc-nagivationList-listGroup fl-list fl-list-thumbnails fl-thumbnails-expanded">
+                            <li class="flc-navigationList-items">
+                                <a class="flc-navigationList-link">
+                                    <img class="flc-navigationList-image fl-icon"/>
+                                    <span class="flc-navigationList-titleText">title</span>
+                                    <span class="flc-navigationList-descriptionText fl-link-summary">description</span>
+                                </a>
+                            </li>
+                            <li class="flc-navigationList-moreLink">
+                                <span class="flc-navigationList-message"></span>
+                                <span class="flc-navigationList-messageDescription"></span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
         
         <script type="text/javascript">
+            
+            var navigationListOptions = {
+                links: [{
+                    target: "../../../integration_demo/images/Artifacts-.jpg",
+                    image: "../../../integration_demo/images/Artifacts-.jpg",
+                    title: "Title",
+                    description: "Description"
+                }, {
+                    target: "../../../integration_demo/images/Snuffbox.jpg",
+                    image: "../../../integration_demo/images/Snuffbox.jpg",
+                    title: "Title",
+                    description: "Description"
+                }, {
+                    target: "../../../integration_demo/images/Snuffbox.jpg",
+                    image: "../../../integration_demo/images/Snuffbox.jpg",
+                    title: "Title",
+                    description: "Description"
+                }, {
+                    target: "http://build.fluidproject.org",
+                    title: "Category",
+                    size: 100
+                }]
+            };
+            
             var options = {
                 drawers: [
                     {
@@ -51,7 +90,12 @@
                         size: 1                  
                     },
                     {
-                        header: "Header 3"        
+                        header: "Header 3",
+                        contents: {decorators: {
+                            type: "fluid",
+                            func: "fluid.navigationList",
+                            options: navigationListOptions
+                        }}
                     }
                 ]
             };

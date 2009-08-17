@@ -1,3 +1,7 @@
+.fl-cabinet-handle.fl-cabinet-headerWithDescription {
+    padding: 0px 10px;
+}
+
 .fl-collapsable {
 	margin: 12px;
 }
@@ -11,3 +15,4 @@
 .fl-collapsingPanel.fl-cabinet-drawerClosed > *:first-child {
 	-webkit-border-radius:8px;
 }
+

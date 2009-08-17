@@ -49,15 +49,22 @@ fluid_1_2 = fluid_1_2 || {};
                 return treeNode("drawer:", "children", [
                     treeNode("header", "value", object.size ? addCount(headerText, object.size) : headerText),
                     treeNode("headerDescription", "value", object.headerDescription || ""),
-                    treeNode("handle", "decorators", {
+                    treeNode("handle", "decorators", [{
                         type: "jQuery",
                         func: "click",
                         args: function () {
-                            $(fluid.findAncestor(this, function (element) {
+                            var handle = $(fluid.findAncestor(this, function (element) {
                                 return $(element).is(that.options.selectors.drawer);
-                            })).toggleClass(that.options.styles.drawerClosed);
+                            }));
+                            
+                            handle.toggleClass(that.options.styles.drawerClosed);
+                            handle.attr({"expanded": handle.attr("expanded") === "true" ? "false" : "true"});
                         }
-                    }),
+                    },
+                    {
+                        type: "addClass",
+                        classes: object.headerDescription && object.headerDescription !== "" ? "fl-cabinet-headerWithDescription" : ""
+                    }]),
                     
                     addId("contents", object.contents || {value: ""})
                 ]);
