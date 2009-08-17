@@ -25,111 +25,47 @@
     
 	<body class="fl-theme-iPhone">
 	    <div class="fl-navbar"></div>
+        
         <div class="simpleList">
-            <div class="flc-nagivationList-listGroup fl-navigationList-animation fl-navigationList-hidden fl-collapsable">
-                <h2 class="flc-navigationList-header">group</h2>
-                <ul class="fl-listmenu fl-listmenu-thumbnails">
-                    <li class="flc-navigationList-items">
-                        <a class="flc-navigationList-link">
-                            <img class="flc-navigationList-image fl-icon"/>
-                            <span class="flc-navigationList-titleText">title</span>
-                            <span class="flc-navigationList-descriptionText fl-link-summary">description</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="noNumberInHeader">
-            <div class="flc-nagivationList-listGroup fl-navigationList-animation fl-navigationList-hidden fl-collapsable">
-                <h2 class="flc-navigationList-header">group</h2>
-                <ul class="fl-listmenu fl-listmenu-thumbnails">
-                    <li class="flc-navigationList-items">
-                        <a class="flc-navigationList-link">
-                            <img class="flc-navigationList-image fl-icon"/>
-                            <span class="flc-navigationList-titleText">title</span>
-                            <span class="flc-navigationList-descriptionText fl-link-summary">description</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="descriptionInHeader">
-            <div class="flc-nagivationList-listGroup fl-navigationList-animation fl-navigationList-hidden fl-collapsable">
-                <div>
-                    <h2 class="flc-navigationList-header">group</h2>
-                    <span class="flc-navigationList-headerDescription"></span>
-                </div>
-                <ul class="fl-listmenu fl-listmenu-thumbnails">
-                    <li class="flc-navigationList-items">
-                        <a class="flc-navigationList-link">
-                            <img class="flc-navigationList-image fl-icon"/>
-                            <span class="flc-navigationList-titleText">title</span>
-                            <span class="flc-navigationList-descriptionText fl-link-summary">description</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="noHeader">
-            <div class="flc-nagivationList-listGroup">
-                <ul class="fl-listmenu fl-listmenu-basic fl-thumbnail">
-                    <li class="flc-navigationList-items">
-                        <a class="flc-navigationList-link">
-                            <img class="flc-navigationList-image fl-icon"/>
-                            <span class="flc-navigationList-titleText">title</span>
-                            <span class="flc-navigationList-descriptionText fl-link-summary">description</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <ul class="flc-nagivationList-listGroup fl-list fl-list-thumbnails fl-thumbnails-expanded">
+                <li class="flc-navigationList-items">
+                    <a class="flc-navigationList-link">
+                        <img class="flc-navigationList-image fl-icon"/>
+                        <span class="flc-navigationList-titleText">title</span>
+                        <span class="flc-navigationList-descriptionText fl-link-summary">description</span>
+                    </a>
+                </li>
+            </ul>
         </div>
         
         <script type="text/javascript">
             var links = [
                             {
-                                target: "../../../mccord_demo/images/Artifacts-.jpg",
-                                image: "../../../mccord_demo/images/Artifacts-.jpg",
+                                target: "../../../integration_demo/images/Artifacts-.jpg",
+                                image: "../../../integration_demo/images/Artifacts-.jpg",
                                 title: "Title",
                                 description: "Description"
                             },
                             {
-                                target: "../../../mccord_demo/images/Snuffbox.jpg",
-                                image: "../../../mccord_demo/images/Snuffbox.jpg",
+                                target: "../../../integration_demo/images/Snuffbox.jpg",
+                                image: "../../../integration_demo/images/Snuffbox.jpg",
                                 title: "Title",
                                 description: "Description"
                             },
                             {
-                                target: "../../../mccord_demo/images/Snuffbox.jpg",
-                                image: "../../../mccord_demo/images/Snuffbox.jpg",
+                                target: "../../../integration_demo/images/Snuffbox.jpg",
+                                image: "../../../integration_demo/images/Snuffbox.jpg",
                                 title: "Title",
                                 description: "Description"
                             },
                             {
-                                target: "../../../mccord_demo/html/index.html",
+                                target: "http://build.fluidproject.org",
                                 title: "Category",
-                                set: true,
-                                setSize: 100
+                                size: 100
                             }
                         ];
             
-            var modelCompiler = function (links, header, showNumber, description) {
-                return {
-                    model: {
-                        header: header,
-                        headerDescription: description,
-                        showNumberInHeader: showNumber,
-                        links: links
-                    }
-                };  
-            };
-            
-            fluid.navigationList(".simpleList", modelCompiler(links, "Header", true));
-            fluid.navigationList(".noNumberInHeader", modelCompiler(links, "Header"));
-            fluid.navigationList(".descriptionInHeader", modelCompiler(links, "Header", false, "Description"));
-            fluid.navigationList(".noHeader", modelCompiler(links));
+            fluid.navigationList(".simpleList", {links: links});
         </script>
 
 	</body>
