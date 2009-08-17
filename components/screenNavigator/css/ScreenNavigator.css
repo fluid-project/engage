@@ -1,13 +1,36 @@
-.fl-screenNavigator-scrollContainer {
-	position:relative;z-index:1;height:380px;
-}
 
 .fl-screenNavigator-view {
     position:absolute;
     width:100%;
     z-index:100;    
-    -webkit-transform: translateX(0%);
+    -webkit-transform: translateX(0%);		
 }
+
+.fl-screenNavigator-scroll-container {
+	position:relative;	/* needed */
+	z-index:1;			/* needed and important */
+	overflow:hidden;	/* suggested */
+}
+
+/* 
+ * Height of scrollable container is needed
+ * in landscape/portrait 
+ * with/without bottom tab bar
+ */
+.fl-screenNavigator-scroll-container {
+	height:200px;		/* needed */
+}
+.fl-tabs-functionBar ~ .fl-screenNavigator-scroll-container {
+	height:200px;		/* needed */
+}
+
+[orientation*=landscape] .fl-screenNavigator-scroll-container {
+	height:200px;		/* needed */
+}
+[orientation*=landscape] .fl-tabs-functionBar ~ .fl-screenNavigator-scroll-container {
+	height:200px;		/* needed */
+}
+
 .fl-screenNavigator-hide-right {
     -webkit-transform: translateX(100%);
 }
@@ -18,4 +41,22 @@
 	-webkit-animation-name: fadeOut;
     -webkit-animation-duration: 0.75s;
     -webkit-animation-iteration-count: 1;
+}
+
+
+.fl-screenNavigator-alert {	
+	position:fixed;
+	height:100px;
+	bottom:0;
+	width:80%;
+	left:10%;
+	opacity:1; 
+	background: rgba(0,0,0,.5);
+	color:#fff;
+	-webkit-transform: translateY(0%);
+	-webkit-transition: -webkit-transform,opacity 1s,1s ease-out;
+}
+.fl-screenNavigator-hideAlert {
+	-webkit-transform: translateY(100%);
+	opacity:0; 
 }
