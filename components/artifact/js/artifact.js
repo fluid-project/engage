@@ -115,12 +115,6 @@ fluid = fluid || fluid_1_2;
     // start calling function to attach panel action listeners
     var artifactPanel = that.locate("artifactPanelTags");
     attachPanelClickHandler(that, artifactPanel);
-    
-    artifactPanel = that.locate("artifactPanelComment");
-    attachPanelClickHandler(that, artifactPanel);
-    
-    artifactPanel = that.locate("artifactPanelImage");
-    attachPanelClickHandler(that, artifactPanel);
     // stop calling function to attach panel action listeners
     
     //call function to attach flip handler
@@ -140,15 +134,9 @@ fluid = fluid || fluid_1_2;
         renderScope: ".flc-artifact-renderscope",
         artifactInfoList: ".artifact-info-list",
         artifactName: ".artifact-name",
-//        artifactDated: ".artifact-dated",
-//        artifactSize: ".artifact-size",
-//        artifactMedium: ".artifact-medium",
-//        artifactDonor: ".artifact-donor",
         artifactPicture: ".artifact-picture",
         artifactDesc: ".artifact-description",
         artifactPanelTags: ".flc-artifact-panel-tags",
-        artifactPanelComment: ".flc-artifact-panel-comment",
-        artifactPanelImage: ".flc-artifact-panel-image",
         artifactSideFlip: ".fl-artifact-side"
     },
     styles: {
