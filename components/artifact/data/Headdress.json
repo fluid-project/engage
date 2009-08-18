@@ -1,0 +1,403 @@
+{
+    "artefacts": {
+        "artefact": {
+            "accessnumber": {
+                "textvalue": "M956.5"
+            }, 
+            "artist": {
+                "textvalue": "Anonyme - Anonymous"
+            }, 
+            "comments": {
+                "count": "0"
+            }, 
+            "copyright": {
+                "textvalue": "\u00a9 McCord Museum"
+            }, 
+            "culture": {
+                "textvalue": "Aboriginal: Maliseet"
+            }, 
+            "dated": {
+                "textvalue": "1865-1900, 19th century"
+            }, 
+            "descriptions": {
+                "description_cura": {
+                    "textvalue": "<I>The Imaginary \"Indian\"</I><br><br>In the 19th century, tourists, whether Euro-Canadians or Europeans, were fond of souvenirs representing their travels in North America. Aboriginal objects were especially appreciated as mementos of this adventure. The \"Indian\" that animated the dreams and imaginations of so many people in the 19th century often wore a feathered headdress.<br><br>This type of headgear was probably not worn by the Mi'kmaq before the arrival of Europeans; however, the Mi'kmaq realized that new clients flocked to them when they wore such regalia. They no doubt adopted the style to increase the \"visibility\" of the artisanal objects they had for sale.<br><br>Nevertheless, the affection of the Mi'kmaq for such headdresses should not be underestimated; they provided a means to affirm their Aboriginal identity loudly and clearly in the face of threats to their culture."
+                }, 
+                "description_museum": {
+                    "textvalue": "Turn-of-the-century photographs of Malecite and Mi'kmaq men often show them wearing feather headdresses, which were very popular at the time. Some Aboriginals no doubt realized that wearing so-called traditional items like this headdress helped them to sell their handicrafts. The Malecites and Mi'kmaqs may also have worn traditional costumes, and these types of headresses, so that their Aboriginal identity would not be swallowed up by white society."
+                }, 
+                "what": {
+                    "textvalue": "This headdress resembles the <b>Glengarry</b> caps worn by some British regiments that served in Canada. The headdress is decorated with ostrich feathers, as well as brass and glass beads."
+                }, 
+                "when": {
+                    "textvalue": "This object was probably made after 1860. It is unlikely that the Mi'kmaq wore this type of headgear before the arrival of Europeans."
+                }, 
+                "where": {
+                    "textvalue": "This headdress may come from New Brunswick or Nova Scotia."
+                }, 
+                "who": {
+                    "textvalue": "In this photograph, taken in 1914, we see six dancers wearing headdresses similar to this one. The dancer whose face is unclear because the  photograph is damaged, is thought to be Chief Isaac Sack (1855-1930), who was elected the grand chief of the Mi'kmaq in 1917."
+                }
+            }, 
+            "dimensions": {
+                "textvalue": "28.5 x 58 cm"
+            }, 
+            "geoculturalarea": {
+                "textvalue": "Eastern Woodlands"
+            }, 
+            "header": {
+                "link": [
+                    {
+                        "href": "http://www.mccord-museum.qc.ca/en/collection/artifacts/M956.5/meta/dc/", 
+                        "rel": "meta"
+                    }, 
+                    {
+                        "href": "http://www.mccord-museum.qc.ca/en/collection/artifacts/M956.5/", 
+                        "rel": "bookmark"
+                    }
+                ]
+            }, 
+            "id": "0", 
+            "images": {
+                "image": [
+                    {
+                        "alt": "", 
+                        "copyright": "\u00a9 McCord Museum", 
+                        "id": "149469", 
+                        "imagemaps": {}, 
+                        "imagesfiles": {
+                            "imagefile": [
+                                {
+                                    "filesize": "5", 
+                                    "format": "mini", 
+                                    "height": "75", 
+                                    "id": "667176", 
+                                    "label": "Square", 
+                                    "sizeunit": "kB", 
+                                    "textvalue": "http://eich.wsg.mcgill.ca/ThumbView/5090.jpg", 
+                                    "width": "75"
+                                }, 
+                                {
+                                    "filesize": "6", 
+                                    "format": "small", 
+                                    "height": "114", 
+                                    "id": "782021", 
+                                    "label": "Thumbnail", 
+                                    "sizeunit": "kB", 
+                                    "textvalue": "http://eich.wsg.mcgill.ca/ListView/5090.jpg", 
+                                    "width": "91"
+                                }, 
+                                {
+                                    "filesize": "6", 
+                                    "format": "carrousel", 
+                                    "height": "85", 
+                                    "id": "782021", 
+                                    "label": "Thumbnail", 
+                                    "sizeunit": "kB", 
+                                    "textvalue": "http://eich.wsg.mcgill.ca/ListView/5090.jpg", 
+                                    "width": "67"
+                                }, 
+                                {
+                                    "filesize": "48", 
+                                    "format": "medium", 
+                                    "height": "385", 
+                                    "id": "914266", 
+                                    "label": "Medium", 
+                                    "sizeunit": "kB", 
+                                    "textvalue": "http://eich.wsg.mcgill.ca/ObjView/5090.jpg", 
+                                    "width": "308"
+                                }, 
+                                {
+                                    "filesize": "48", 
+                                    "format": "album", 
+                                    "height": "200", 
+                                    "id": "914266", 
+                                    "label": "Medium", 
+                                    "sizeunit": "kB", 
+                                    "textvalue": "http://eich.wsg.mcgill.ca/ObjView/5090.jpg", 
+                                    "width": "159"
+                                }, 
+                                {
+                                    "filesize": "64", 
+                                    "format": "large", 
+                                    "height": "768", 
+                                    "id": "1046509", 
+                                    "label": "Large", 
+                                    "sizeunit": "kB", 
+                                    "textvalue": "http://eich.wsg.mcgill.ca/largeimages/5090.jpg", 
+                                    "width": "615"
+                                }, 
+                                {
+                                    "filesize": "", 
+                                    "format": "zoomify", 
+                                    "height": "", 
+                                    "id": "1345396", 
+                                    "label": "", 
+                                    "sizeunit": "", 
+                                    "textvalue": "http://wozniak.wsg.mcgill.ca/zoomify/BATCH_ETHNO_0/5090", 
+                                    "width": ""
+                                }
+                            ]
+                        }, 
+                        "longdesc": {}, 
+                        "primarydisplay": "yes", 
+                        "rank": "0", 
+                        "rights": {
+                            "right": {
+                                "a": {
+                                    "href": "http://creativecommons.org/licenses/by-nc-nd/2.5/ca/", 
+                                    "img": {
+                                        "alt": "Creative Commons License", 
+                                        "src": "http://i.creativecommons.org/l/by-nc-nd/2.5/ca/88x31.png"
+                                    }, 
+                                    "rel": "license", 
+                                    "target": "_blank", 
+                                    "title": "This image is licensed under a Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License"
+                                }, 
+                                "type": "cc"
+                            }
+                        }, 
+                        "url": "", 
+                        "view": ""
+                    }, 
+                    {
+                        "alt": "", 
+                        "copyright": "\u00a9 McCord Museum", 
+                        "id": "303053", 
+                        "imagemaps": {}, 
+                        "imagesfiles": {
+                            "imagefile": [
+                                {
+                                    "filesize": "7", 
+                                    "format": "mini", 
+                                    "height": "74", 
+                                    "id": "1524838", 
+                                    "label": "Square", 
+                                    "sizeunit": "kB", 
+                                    "textvalue": "http://eich.wsg.mcgill.ca/ThumbView/5091.jpg", 
+                                    "width": "74"
+                                }, 
+                                {
+                                    "filesize": "10", 
+                                    "format": "small", 
+                                    "height": "89", 
+                                    "id": "1537583", 
+                                    "label": "Thumbnail", 
+                                    "sizeunit": "kB", 
+                                    "textvalue": "http://eich.wsg.mcgill.ca/ListView/5091.jpg", 
+                                    "width": "114"
+                                }, 
+                                {
+                                    "filesize": "10", 
+                                    "format": "carrousel", 
+                                    "height": "66", 
+                                    "id": "1537583", 
+                                    "label": "Thumbnail", 
+                                    "sizeunit": "kB", 
+                                    "textvalue": "http://eich.wsg.mcgill.ca/ListView/5091.jpg", 
+                                    "width": "85"
+                                }, 
+                                {
+                                    "filesize": "98", 
+                                    "format": "medium", 
+                                    "height": "303", 
+                                    "id": "1550329", 
+                                    "label": "Medium", 
+                                    "sizeunit": "kB", 
+                                    "textvalue": "http://eich.wsg.mcgill.ca/ObjView/5091.jpg", 
+                                    "width": "385"
+                                }, 
+                                {
+                                    "filesize": "98", 
+                                    "format": "album", 
+                                    "height": "157", 
+                                    "id": "1550329", 
+                                    "label": "Medium", 
+                                    "sizeunit": "kB", 
+                                    "textvalue": "http://eich.wsg.mcgill.ca/ObjView/5091.jpg", 
+                                    "width": "200"
+                                }, 
+                                {
+                                    "filesize": "369", 
+                                    "format": "large", 
+                                    "height": "604", 
+                                    "id": "1563075", 
+                                    "label": "Large", 
+                                    "sizeunit": "kB", 
+                                    "textvalue": "http://eich.wsg.mcgill.ca/largeimages/5091.jpg", 
+                                    "width": "768"
+                                }, 
+                                {
+                                    "filesize": "", 
+                                    "format": "zoomify", 
+                                    "height": "", 
+                                    "id": "1587905", 
+                                    "label": "", 
+                                    "sizeunit": "", 
+                                    "textvalue": "http://wozniak.wsg.mcgill.ca/zoomify/BATCH_ETHNO_0/5091", 
+                                    "width": ""
+                                }
+                            ]
+                        }, 
+                        "longdesc": {}, 
+                        "primarydisplay": "no", 
+                        "rank": "1", 
+                        "rights": {
+                            "right": {
+                                "a": {
+                                    "href": "http://creativecommons.org/licenses/by-nc-nd/2.5/ca/", 
+                                    "img": {
+                                        "alt": "Creative Commons License", 
+                                        "src": "http://i.creativecommons.org/l/by-nc-nd/2.5/ca/88x31.png"
+                                    }, 
+                                    "rel": "license", 
+                                    "target": "_blank", 
+                                    "title": "This image is licensed under a Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License"
+                                }, 
+                                "type": "cc"
+                            }
+                        }, 
+                        "url": "", 
+                        "view": ""
+                    }
+                ]
+            }, 
+            "keywords": {
+                "keyword": {
+                    "count": "38", 
+                    "id": "6992", 
+                    "label": {
+                        "textvalue": "Headdress"
+                    }, 
+                    "search_link": {
+                        "global": "yes", 
+                        "href": {
+                            "textvalue": "/scripts/search_results.php?Lang=1&keyword=6992"
+                        }
+                    }
+                }
+            }, 
+            "links": {
+                "type": {
+                    "category": {
+                        "id": "webtour_default", 
+                        "label": "Related Web Tours", 
+                        "link": {
+                            "href": {
+                                "textvalue": "/en/keys/webtours/tourID/VQ_P1_3_EN"
+                            }, 
+                            "id": "0", 
+                            "label": {
+                                "textvalue": "Tradition, Change and Survival: Mi'kmaq Tourist Art"
+                            }, 
+                            "target": {
+                                "textvalue": "_self"
+                            }, 
+                            "title": {
+                                "textvalue": "Tradition, Change and Survival: Mi'kmaq Tourist Art"
+                            }
+                        }
+                    }, 
+                    "id": "internal"
+                }
+            }, 
+            "medium": {
+                "textvalue": "Ostrich feathers, glass beads, brass beads, brass tokens, silk ribbon, cotton thread, birchbark, cardboard, metallic thread, metallic ribbon, metal braid"
+            }, 
+            "mention": {
+                "textvalue": "Gift of Mr. David Ross McCord"
+            }, 
+            "object": {
+                "textvalue": "Headdress"
+            }, 
+            "objectid": {
+                "textvalue": "23778"
+            }, 
+            "soundfiles": {}, 
+            "tags": {
+                "tag": [
+                    {
+                        "count": "2", 
+                        "id": "20131", 
+                        "keywordid": "20131", 
+                        "label": {
+                            "textvalue": "chef"
+                        }, 
+                        "search_link": [
+                            {
+                                "global": "yes", 
+                                "href": {
+                                    "textvalue": "/scripts/search_results.php?Lang=1&keyword=20131&userid"
+                                }
+                            }, 
+                            {
+                                "global": "no", 
+                                "href": {
+                                    "textvalue": "/scripts/search_results.php?Lang=1&keyword=20131"
+                                }
+                            }
+                        ], 
+                        "usercount": "0", 
+                        "userid": ""
+                    }, 
+                    {
+                        "count": "1", 
+                        "id": "20132", 
+                        "keywordid": "20132", 
+                        "label": {
+                            "textvalue": "fleurs"
+                        }, 
+                        "search_link": [
+                            {
+                                "global": "yes", 
+                                "href": {
+                                    "textvalue": "/scripts/search_results.php?Lang=1&keyword=20132&userid"
+                                }
+                            }, 
+                            {
+                                "global": "no", 
+                                "href": {
+                                    "textvalue": "/scripts/search_results.php?Lang=1&keyword=20132"
+                                }
+                            }
+                        ], 
+                        "usercount": "0", 
+                        "userid": ""
+                    }, 
+                    {
+                        "count": "1", 
+                        "id": "20130", 
+                        "keywordid": "20130", 
+                        "label": {
+                            "textvalue": "plume"
+                        }, 
+                        "search_link": [
+                            {
+                                "global": "yes", 
+                                "href": {
+                                    "textvalue": "/scripts/search_results.php?Lang=1&keyword=20130&userid"
+                                }
+                            }, 
+                            {
+                                "global": "no", 
+                                "href": {
+                                    "textvalue": "/scripts/search_results.php?Lang=1&keyword=20130"
+                                }
+                            }
+                        ], 
+                        "usercount": "0", 
+                        "userid": ""
+                    }
+                ]
+            }, 
+            "title": {}
+        }, 
+        "brokeraddress": {
+            "textvalue": "/scripts/XMLBroker.new.php?Lang=1&contentType=IMAGES&contentID=M956.5"
+        }, 
+        "lang": {
+            "textvalue": "1"
+        }, 
+        "userid": "0"
+    }
+}

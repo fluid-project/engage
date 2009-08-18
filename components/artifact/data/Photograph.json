@@ -1,0 +1,336 @@
+{
+    "artefacts": {
+        "artefact": {
+            "accessnumber": {
+                "textvalue": "MP-0000.25.1023"
+            }, 
+            "artist": {
+                "textvalue": "Anonyme - Anonymous"
+            }, 
+            "comments": {
+                "count": "0"
+            }, 
+            "copyright": {
+                "textvalue": "\u00a9 McCord Museum"
+            }, 
+            "culture": {}, 
+            "dated": {
+                "textvalue": "About 1905, 20th century"
+            }, 
+            "descriptions": {
+                "description_cura": {
+                    "textvalue": "Young working women who were still single probably lived at home and contributed to the family budget, but they did enjoy a certain degree of financial independence and personal autonomy. Their experiences at work carried over into the world of leisure: the idea that young men and women who mingled daily at work could get together for leisure activities, such as sports, without having to be supervised by adults gradually gained acceptance. The softening of the old restrictions applied to both traditional entertainments and the commercial entertainments introduced around the turn of the century, such as amusement parks, dance halls and movie theatres."
+                }, 
+                "description_museum": {}, 
+                "what": {
+                    "textvalue": "The easy mingling of these young men and women and the way in which they are touching would not have been possible during the Victorian era."
+                }, 
+                "when": {
+                    "textvalue": "Although most workers normally had only Sunday off, some service sectors (banking, administration and other service industries) gave their workers Saturday afternoon off as well."
+                }, 
+                "where": {
+                    "textvalue": "As public transportation was extended to the city outskirts, people had greater access to leisure activities such as snowshoeing."
+                }, 
+                "who": {
+                    "textvalue": "These young men and women, who appear so happy, relaxed and uninhibited while posing for the photographer seem very modern, don't they?"
+                }
+            }, 
+            "dimensions": {
+                "textvalue": "8 x 10 cm"
+            }, 
+            "geoculturalarea": {}, 
+            "header": {
+                "link": [
+                    {
+                        "href": "http://www.mccord-museum.qc.ca/en/collection/artifacts/MP-0000.25.1023/meta/dc/", 
+                        "rel": "meta"
+                    }, 
+                    {
+                        "href": "http://www.mccord-museum.qc.ca/en/collection/artifacts/MP-0000.25.1023/", 
+                        "rel": "bookmark"
+                    }
+                ]
+            }, 
+            "id": "0", 
+            "images": {
+                "image": {
+                    "alt": "", 
+                    "copyright": "McCord Museum", 
+                    "id": "150681", 
+                    "imagemaps": {}, 
+                    "imagesfiles": {
+                        "imagefile": [
+                            {
+                                "filesize": "6", 
+                                "format": "mini", 
+                                "height": "75", 
+                                "id": "668385", 
+                                "label": "Square", 
+                                "sizeunit": "kB", 
+                                "textvalue": "http://eich.wsg.mcgill.ca/ThumbView/025-1023.jpg", 
+                                "width": "75"
+                            }, 
+                            {
+                                "filesize": "11", 
+                                "format": "small", 
+                                "height": "106", 
+                                "id": "783231", 
+                                "label": "Thumbnail", 
+                                "sizeunit": "kB", 
+                                "textvalue": "http://eich.wsg.mcgill.ca/ListView/025-1023.jpg", 
+                                "width": "113"
+                            }, 
+                            {
+                                "filesize": "11", 
+                                "format": "carrousel", 
+                                "height": "79", 
+                                "id": "783231", 
+                                "label": "Thumbnail", 
+                                "sizeunit": "kB", 
+                                "textvalue": "http://eich.wsg.mcgill.ca/ListView/025-1023.jpg", 
+                                "width": "85"
+                            }, 
+                            {
+                                "filesize": "64", 
+                                "format": "medium", 
+                                "height": "360", 
+                                "id": "915476", 
+                                "label": "Medium", 
+                                "sizeunit": "kB", 
+                                "textvalue": "http://eich.wsg.mcgill.ca/ObjView/025-1023.jpg", 
+                                "width": "385"
+                            }, 
+                            {
+                                "filesize": "64", 
+                                "format": "album", 
+                                "height": "187", 
+                                "id": "915476", 
+                                "label": "Medium", 
+                                "sizeunit": "kB", 
+                                "textvalue": "http://eich.wsg.mcgill.ca/ObjView/025-1023.jpg", 
+                                "width": "200"
+                            }, 
+                            {
+                                "filesize": "64", 
+                                "format": "large", 
+                                "height": "719", 
+                                "id": "1047719", 
+                                "label": "Large", 
+                                "sizeunit": "kB", 
+                                "textvalue": "http://eich.wsg.mcgill.ca/largeimages/025-1023.jpg", 
+                                "width": "767"
+                            }, 
+                            {
+                                "filesize": "", 
+                                "format": "zoomify", 
+                                "height": "", 
+                                "id": "1346568", 
+                                "label": "", 
+                                "sizeunit": "", 
+                                "textvalue": "http://wozniak.wsg.mcgill.ca/zoomify/BATCH_NO_31/025-1023", 
+                                "width": ""
+                            }
+                        ]
+                    }, 
+                    "longdesc": {}, 
+                    "primarydisplay": "yes", 
+                    "rank": "0", 
+                    "rights": {
+                        "right": {
+                            "a": {
+                                "href": "http://creativecommons.org/licenses/by-nc-nd/2.5/ca/", 
+                                "img": {
+                                    "alt": "Creative Commons License", 
+                                    "src": "http://i.creativecommons.org/l/by-nc-nd/2.5/ca/88x31.png"
+                                }, 
+                                "rel": "license", 
+                                "target": "_blank", 
+                                "title": "This image is licensed under a Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License"
+                            }, 
+                            "type": "cc"
+                        }
+                    }, 
+                    "url": "", 
+                    "view": ""
+                }
+            }, 
+            "keywords": {
+                "keyword": [
+                    {
+                        "count": "1849", 
+                        "id": "9565", 
+                        "label": {
+                            "textvalue": "figure"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=9565"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "644", 
+                        "id": "9706", 
+                        "label": {
+                            "textvalue": "group"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=9706"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "1110", 
+                        "id": "7460", 
+                        "label": {
+                            "textvalue": "Occupation"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=7460"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "77678", 
+                        "id": "7610", 
+                        "label": {
+                            "textvalue": "Photograph"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=7610"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "7", 
+                        "id": "10628", 
+                        "label": {
+                            "textvalue": "skiing"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=10628"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "6", 
+                        "id": "10648", 
+                        "label": {
+                            "textvalue": "snowshoeing"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=10648"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "475", 
+                        "id": "8137", 
+                        "label": {
+                            "textvalue": "sport"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=8137"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "107", 
+                        "id": "10670", 
+                        "label": {
+                            "textvalue": "sport"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=10670"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "71", 
+                        "id": "10972", 
+                        "label": {
+                            "textvalue": "winter"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=10972"
+                            }
+                        }
+                    }
+                ]
+            }, 
+            "links": {
+                "type": {
+                    "category": {
+                        "id": "webtour_default", 
+                        "label": "Related Web Tours", 
+                        "link": {
+                            "href": {
+                                "textvalue": "/en/keys/webtours/tourID/VQ_P3_5_EN"
+                            }, 
+                            "id": "0", 
+                            "label": {
+                                "textvalue": "Pastimes of Yesteryear, 1896-1919"
+                            }, 
+                            "target": {
+                                "textvalue": "_self"
+                            }, 
+                            "title": {
+                                "textvalue": "Pastimes of Yesteryear, 1896-1919"
+                            }
+                        }
+                    }, 
+                    "id": "internal"
+                }
+            }, 
+            "medium": {
+                "textvalue": "Silver salts and transparent ink on glass - Gelatin dry plate process"
+            }, 
+            "mention": {
+                "textvalue": "Gift of Mr. Stanley G. Triggs"
+            }, 
+            "object": {
+                "textvalue": "Photograph, glass lantern slide"
+            }, 
+            "objectid": {
+                "textvalue": "167060"
+            }, 
+            "references": {
+                "reference": {
+                    "id": "3", 
+                    "label": {
+                        "textvalue": "Kathy Peiss, <I>Cheap Amusements. Working Women and Leisure in Turn-of-Century New York</I> (Philadelphia: Temple University Press, 1986), pp. 4-8."
+                    }
+                }
+            }, 
+            "soundfiles": {}, 
+            "tags": {}, 
+            "title": {
+                "textvalue": "Canadian winter sports, snowshoeing and skiing, about 1905"
+            }
+        }, 
+        "brokeraddress": {
+            "textvalue": "/scripts/XMLBroker.new.php?Lang=1&contentType=IMAGES&contentID=MP-0000.25.1023"
+        }, 
+        "lang": {
+            "textvalue": "1"
+        }, 
+        "userid": "0"
+    }
+}

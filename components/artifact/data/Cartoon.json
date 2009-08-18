@@ -1,0 +1,537 @@
+{
+    "artefacts": {
+        "artefact": {
+            "accessnumber": {
+                "textvalue": "M996.10.62"
+            }, 
+            "artist": {
+                "textvalue": "Serge Chapleau"
+            }, 
+            "comments": {
+                "comment": {
+                    "author": {
+                        "avatar": "http://www.mccord-museum.qc.ca/images/avatars/anonyme.jpg", 
+                        "userid": "1521", 
+                        "username": "hugues"
+                    }, 
+                    "id": "2238", 
+                    "last_modified": {
+                        "textvalue": "2009-05-08 15:03:26"
+                    }, 
+                    "offensive": "0", 
+                    "public": "1", 
+                    "published": {
+                        "textvalue": "2009-05-08 15:03:26"
+                    }, 
+                    "reported": "0", 
+                    "text": {
+                        "textvalue": "I never thought i would miss Jean Chr&eacute;tien."
+                    }
+                }, 
+                "count": "1"
+            }, 
+            "copyright": {
+                "textvalue": "\u00a9 McCord Museum"
+            }, 
+            "culture": {}, 
+            "dated": {
+                "textvalue": "1994, 20th century"
+            }, 
+            "descriptions": {
+                "description_cura": {
+                    "textvalue": "\"One of my early classics of Chr\u00e9tien. The drawing really captures the man, who speaks two second languages absolutely perfectly!\"<br><br>Serge Chapleau"
+                }, 
+                "description_museum": {
+                    "textvalue": "Serge Chapleau is the creator of a large group of humorous drawings that constitute the most recent major acquisition to enrich the McCord Museum's collection of over 15,000 caricatures. Chapleau - Aislin's francophone counterpart in Montreal - executed his first works in 1971 for the weekly magazine Perspectives. After having contributed to a number of daily papers and magazines, he became political cartoonist for Le Devoir in 1991, and for La Presse in 1996. Here, he shows Prime Minister Jean Chr\u00e9tien wishing us all a Happy Canada Day."
+                }, 
+                "what": {
+                    "textvalue": "A populist politician, Jean Chr\u00e9tien is famous for frequently butchering the French language by translating literally expressions from Canada's other official language, English. Many cartoonists have lampooned Chr\u00e9tien for this..."
+                }, 
+                "when": {
+                    "textvalue": "On July 1, 1994, Jean Chr\u00e9tien celebrated Canada Day for the first time as the country's prime minister. His Liberal Party was brought to power in the general election of October 1993."
+                }, 
+                "where": {
+                    "textvalue": "Canada Day is celebrated annually throughout Canada. In Quebec, however, where there is a deeply entrenched sovereignist movement, the celebration often rekindles the nationalist debate."
+                }, 
+                "who": {
+                    "textvalue": "Jean Chr\u00e9tien was elected leader of the Liberal Party of Canada in 1990 and served as prime minister of Canada from 1993 to 2004."
+                }
+            }, 
+            "dimensions": {
+                "textvalue": "43 x 35.7 cm"
+            }, 
+            "geoculturalarea": {}, 
+            "header": {
+                "link": [
+                    {
+                        "href": "http://www.mccord-museum.qc.ca/en/collection/artifacts/M996.10.62/meta/dc/", 
+                        "rel": "meta"
+                    }, 
+                    {
+                        "href": "http://www.mccord-museum.qc.ca/en/collection/artifacts/M996.10.62/", 
+                        "rel": "bookmark"
+                    }
+                ]
+            }, 
+            "images": {
+                "image": {
+                    "alt": "", 
+                    "copyright": "\u00a9 McCord Museum", 
+                    "id": "145725", 
+                    "imagemaps": {}, 
+                    "imagesfiles": {
+                        "imagefile": [
+                            {
+                                "filesize": "5", 
+                                "format": "mini", 
+                                "height": "74", 
+                                "id": "664223", 
+                                "label": "Square", 
+                                "sizeunit": "kB", 
+                                "textvalue": "http://www.mccord-museum.qc.ca/ThumbView/M996.10.62.jpg", 
+                                "width": "74"
+                            }, 
+                            {
+                                "filesize": "7", 
+                                "format": "small", 
+                                "height": "114", 
+                                "id": "778288", 
+                                "label": "Thumbnail", 
+                                "sizeunit": "kB", 
+                                "textvalue": "http://www.mccord-museum.qc.ca/ListView/M996.10.62.jpg", 
+                                "width": "112"
+                            }, 
+                            {
+                                "filesize": "7", 
+                                "format": "carrousel", 
+                                "height": "85", 
+                                "id": "778288", 
+                                "label": "Thumbnail", 
+                                "sizeunit": "kB", 
+                                "textvalue": "http://www.mccord-museum.qc.ca/ListView/M996.10.62.jpg", 
+                                "width": "83"
+                            }, 
+                            {
+                                "filesize": "60", 
+                                "format": "medium", 
+                                "height": "385", 
+                                "id": "910533", 
+                                "label": "Medium", 
+                                "sizeunit": "kB", 
+                                "textvalue": "http://www.mccord-museum.qc.ca/ObjView/M996.10.62.jpg", 
+                                "width": "379"
+                            }, 
+                            {
+                                "filesize": "60", 
+                                "format": "album", 
+                                "height": "200", 
+                                "id": "910533", 
+                                "label": "Medium", 
+                                "sizeunit": "kB", 
+                                "textvalue": "http://www.mccord-museum.qc.ca/ObjView/M996.10.62.jpg", 
+                                "width": "196"
+                            }, 
+                            {
+                                "filesize": "64", 
+                                "format": "large", 
+                                "height": "768", 
+                                "id": "1042776", 
+                                "label": "Large", 
+                                "sizeunit": "kB", 
+                                "textvalue": "http://www.mccord-museum.qc.ca/largeimages/M996.10.62.jpg", 
+                                "width": "757"
+                            }, 
+                            {
+                                "filesize": "", 
+                                "format": "zoomify", 
+                                "height": "", 
+                                "id": "1440929", 
+                                "label": "", 
+                                "sizeunit": "", 
+                                "textvalue": "http://wozniak.wsg.mcgill.ca/zoomify/BATCH_PPD_14/M996.10.62", 
+                                "width": ""
+                            }
+                        ]
+                    }, 
+                    "longdesc": {}, 
+                    "primarydisplay": "yes", 
+                    "rank": "0", 
+                    "rights": {
+                        "right": {
+                            "a": {
+                                "href": "http://creativecommons.org/licenses/by-nc-nd/2.5/ca/", 
+                                "img": {
+                                    "alt": "Creative Commons License", 
+                                    "src": "http://i.creativecommons.org/l/by-nc-nd/2.5/ca/88x31.png"
+                                }, 
+                                "rel": "license", 
+                                "target": "_blank", 
+                                "title": "This image is licensed under a Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License"
+                            }, 
+                            "type": "cc"
+                        }
+                    }, 
+                    "url": "", 
+                    "view": ""
+                }
+            }, 
+            "keywords": {
+                "keyword": [
+                    {
+                        "count": "4", 
+                        "id": "21369", 
+                        "label": {
+                            "textvalue": "Canada Day"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=21369"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "19138", 
+                        "id": "6231", 
+                        "label": {
+                            "textvalue": "Cartoon"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=6231"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "18637", 
+                        "id": "6635", 
+                        "label": {
+                            "textvalue": "Drawing"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=6635"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "18379", 
+                        "id": "6636", 
+                        "label": {
+                            "textvalue": "drawing"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=6636"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "334", 
+                        "id": "21704", 
+                        "label": {
+                            "textvalue": "Federal"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=21704"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "1849", 
+                        "id": "9565", 
+                        "label": {
+                            "textvalue": "figure"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=9565"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "4", 
+                        "id": "21886", 
+                        "label": {
+                            "textvalue": "Holiday"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=21886"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "80", 
+                        "id": "21972", 
+                        "label": {
+                            "textvalue": "Jean Chr\u00e9tien"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=21972"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "1", 
+                        "id": "22020", 
+                        "label": {
+                            "textvalue": "July 1st"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=22020"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "243", 
+                        "id": "22083", 
+                        "label": {
+                            "textvalue": "Liberal Party of Canada"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=22083"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "1608", 
+                        "id": "10009", 
+                        "label": {
+                            "textvalue": "male"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=10009"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "800", 
+                        "id": "22447", 
+                        "label": {
+                            "textvalue": "Political parties"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=22447"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "859", 
+                        "id": "22450", 
+                        "label": {
+                            "textvalue": "Politicians"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=22450"
+                            }
+                        }
+                    }, 
+                    {
+                        "count": "1624", 
+                        "id": "22451", 
+                        "label": {
+                            "textvalue": "Politics"
+                        }, 
+                        "search_link": {
+                            "global": "yes", 
+                            "href": {
+                                "textvalue": "/scripts/search_results.php?Lang=1&keyword=22451"
+                            }
+                        }
+                    }
+                ]
+            }, 
+            "links": {
+                "type": {
+                    "category": [
+                        {
+                            "id": "clip_default", 
+                            "label": "Videos", 
+                            "link": [
+                                {
+                                    "href": {
+                                        "textvalue": "http://wozniak.wsg.mcgill.ca/video/docu/chapleau_complete_hi.mov"
+                                    }, 
+                                    "id": "200", 
+                                    "label": {
+                                        "textvalue": "Chapleau pr\u00e9sente Aislin"
+                                    }, 
+                                    "target": {
+                                        "textvalue": "_blank"
+                                    }, 
+                                    "title": {}
+                                }, 
+                                {
+                                    "href": {
+                                        "textvalue": "http://wozniak.wsg.mcgill.ca/video/docu/aislin_complete_hi.mov"
+                                    }, 
+                                    "id": "200", 
+                                    "label": {
+                                        "textvalue": "Aislin presents Chapleau"
+                                    }, 
+                                    "target": {
+                                        "textvalue": "_blank"
+                                    }, 
+                                    "title": {}
+                                }
+                            ]
+                        }, 
+                        {
+                            "id": "webtour_default", 
+                            "label": "Related Web Tours", 
+                            "link": [
+                                {
+                                    "href": {
+                                        "textvalue": "/en/keys/webtours/tourID/CW_CaricatureEdito_EN"
+                                    }, 
+                                    "id": "0", 
+                                    "label": {
+                                        "textvalue": "Once a Politician, Always a Butt: Introduction to Editorial Cartooning"
+                                    }, 
+                                    "target": {
+                                        "textvalue": "_self"
+                                    }, 
+                                    "title": {
+                                        "textvalue": "Once a Politician, Always a Butt: Introduction to Editorial Cartooning"
+                                    }
+                                }, 
+                                {
+                                    "href": {
+                                        "textvalue": "/en/keys/webtours/tourID/VQ_P4_6_EN"
+                                    }, 
+                                    "id": "0", 
+                                    "label": {
+                                        "textvalue": "Funny and Moody: The Best of Chapleau's Cartoons"
+                                    }, 
+                                    "target": {
+                                        "textvalue": "_self"
+                                    }, 
+                                    "title": {
+                                        "textvalue": "Funny and Moody: The Best of Chapleau's Cartoons"
+                                    }
+                                }
+                            ]
+                        }
+                    ], 
+                    "id": "internal"
+                }
+            }, 
+            "medium": {
+                "textvalue": "Graphite on paper"
+            }, 
+            "mention": {
+                "textvalue": "Gift of M. Serge Chapleau"
+            }, 
+            "object": {
+                "textvalue": "Drawing, cartoon"
+            }, 
+            "objectid": {
+                "textvalue": "94341"
+            }, 
+            "soundfiles": {}, 
+            "tags": {
+                "tag": [
+                    {
+                        "count": "4", 
+                        "id": "20096", 
+                        "keywordid": "20096", 
+                        "label": {
+                            "textvalue": "Jean Chr\u00e9tien"
+                        }, 
+                        "search_link": [
+                            {
+                                "global": "yes", 
+                                "href": {
+                                    "textvalue": "/scripts/search_results.php?Lang=1&keyword=20096&userid"
+                                }
+                            }, 
+                            {
+                                "global": "no", 
+                                "href": {
+                                    "textvalue": "/scripts/search_results.php?Lang=1&keyword=20096"
+                                }
+                            }
+                        ], 
+                        "usercount": "0", 
+                        "userid": ""
+                    }, 
+                    {
+                        "count": "1", 
+                        "id": "24934", 
+                        "keywordid": "24934", 
+                        "label": {
+                            "textvalue": "patriote"
+                        }, 
+                        "search_link": [
+                            {
+                                "global": "yes", 
+                                "href": {
+                                    "textvalue": "/scripts/search_results.php?Lang=1&keyword=24934&userid"
+                                }
+                            }, 
+                            {
+                                "global": "no", 
+                                "href": {
+                                    "textvalue": "/scripts/search_results.php?Lang=1&keyword=24934"
+                                }
+                            }
+                        ], 
+                        "usercount": "0", 
+                        "userid": ""
+                    }, 
+                    {
+                        "count": "7", 
+                        "id": "20092", 
+                        "keywordid": "20092", 
+                        "label": {
+                            "textvalue": "Politiciens"
+                        }, 
+                        "search_link": [
+                            {
+                                "global": "yes", 
+                                "href": {
+                                    "textvalue": "/scripts/search_results.php?Lang=1&keyword=20092&userid"
+                                }
+                            }, 
+                            {
+                                "global": "no", 
+                                "href": {
+                                    "textvalue": "/scripts/search_results.php?Lang=1&keyword=20092"
+                                }
+                            }
+                        ], 
+                        "usercount": "0", 
+                        "userid": ""
+                    }
+                ]
+            }, 
+            "title": {
+                "textvalue": "Happy Canada Day! Joyeux Canada Jour !"
+            }
+        }, 
+        "lang": {
+            "textvalue": "1"
+        }, 
+        "userid": "0"
+    }
+}
