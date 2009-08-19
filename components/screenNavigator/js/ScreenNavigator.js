@@ -40,12 +40,20 @@ var fluid_1_2 = fluid_1_2 || {};
         coreContainer[0].addEventListener("webkitTransitionEnd", that.animationEventComplete, true);
         coreContainer[0].addEventListener("orientationchange", that.orientationChange, true);
 
-        // Main event to listen to
-        that.container.bind(that.options.eventType, function (event) {            
+        ///////////////////////////////////////////////////
+        // Events
+        ///////////////////////////////////////////////////
+        
+        // Click
+        // noClickDelay to remove 300ms delay on iPhone for click events
+        //new NoClickDelay(that.locate("viewContainer")[0]); // destroys page scrolling gesture
+
+        // click event binding
+        that.container.bind("click", function (event) {            
             var target = findTarget(event.target);            
             // Handle different kinds of anchor links...
             if (target) {
-                that.events.onInterceptEvent.fire(event); // when a link is found, fire intercept event                
+                that.events.onSelected.fire(event); // when a link is found, fire intercept event
                 event.preventDefault();                
                 if (typeof(target) !== "string" && !target.is(that.options.selectors.backButton)) {                    
                     target.addClass(that.options.styles.loadingIndicator);
@@ -176,6 +184,7 @@ var fluid_1_2 = fluid_1_2 || {};
                 if (that.options.toggleVisibility) {
                     that.viewsHash[url].show();
                 }
+				that.events.afterTransition.fire(event, that); // on first run, the "transition" would just snap 
             } else {
                 // NOT FIRST RUN
                 
@@ -252,8 +261,7 @@ var fluid_1_2 = fluid_1_2 || {};
     /************************************************************************************/
     /* Defaults storage */
     fluid.defaults("fluid.screenNavigator", {
-        pathPrefix: "",        
-        eventType: "click",
+        pathPrefix: "",
         startUrl: "home.html",
         toggleVisibility: true,
         selectors: {
@@ -270,14 +278,15 @@ var fluid_1_2 = fluid_1_2 || {};
             next: "fl-screenNavigator-view fl-screenNavigator-hide-right fl-transition-slide",
             loadingIndicator: "fl-link-loading",
             prepPrevious: "fl-screenNavigator-view fl-screenNavigator-hide-left",
-            prepNext: "f-screenNavigatorl-view fl-screenNavigator-hide-right"
+            prepNext: "fl-screenNavigatorl-view fl-screenNavigator-hide-right"
         },
         screenSelectors : {
             next :  "flc-screenNavigator-nextView",
             current : "flc-screenNavigator-currentView"
         },
         events : {
-            onInterceptEvent : null,
+            onSelected : null,
+            onTouched : null,
             onFetchContent: null,
             afterContentReady : null,
             afterTransition : null,
