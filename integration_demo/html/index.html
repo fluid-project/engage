@@ -24,6 +24,8 @@
         <script type="text/javascript" src="../../framework/core/js/DataBinding.js"></script>
 
       	<script type="text/javascript" src="../../components/screenNavigator/js/ScreenNavigator.js"></script>      	
+        <script type="text/javascript" src="../../components/screenNavigator/js/iScroll.js"></script>
+        <script type="text/javascript" src="../../components/screenNavigator/js/NoClickDelay.js"></script>
     </head>
     
     <body>
@@ -35,11 +37,34 @@
 
         <script type="text/javascript">
             var myContentManager;
-            jQuery().ready(function () {
+			var initScroll;
+			
+			//document.ontouchmove = function(e) { e.preventDefault(); return false; }
+			
+            jQuery().ready(function () {                
 	            myContentManager = fluid_1_2.screenNavigator("body",{
-                    startUrl: "start.html"
+                    startUrl: "start.html",
+					listeners : {
+						afterTransition : function () {
+							/* This should probably be taken care of inside the screen navigator component */							
+							//initScroll = new iScroll( $(".fl-panel")[0] );							
+							
+						}
+					}					
                 });
             }); 
+
+
+            /*
+            var initScroll;            
+            function loaded() {                
+                setTimeout( function() {
+                    document.ontouchmove = function(e) { e.preventDefault(); return false; }
+                    initScroll = new iScroll( $("fl-screenNavigator-scroll-container *:first-child")[0] );
+                }, 100);                
+            }            
+            window.addEventListener('load', loaded, true);
+            */
         </script>
     </body>
 </html>
