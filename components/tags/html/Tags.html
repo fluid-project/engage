@@ -6,13 +6,21 @@
 
 		<title>Tags</title>
 
-        <script type="text/javascript" src="../../../lib/jquery/core/js/jquery.js"></script>
-        <script type="text/javascript" src="../../../framework/core/js/Fluid.js"></script>
+        <script type="text/javascript" src="../../../../infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../../infusion/src/webapp/framework/core/js/Fluid.js"></script>
         <script type="text/javascript" src="../js/Tags.js"></script>
 	</head>
     
 	<body>
 	    <div class="tags-pane"></div>
+        
+	    <div class="tags-template">
+            <h2 class="flc-tags-title">Tags Title <a class="flc-tags-edit">edit</a></h2>
+            <ul>
+                <li class="flc-tags-tag">tag <a class="flc-tags-remove">remove</a></li>, 
+            </ul>
+            <input class="flc-tags-editField" type="text" />
+	    </div>
 
         <script type="text/javascript">
             fluid.artifactTags(".tags-pane");
