@@ -4,9 +4,7 @@
 	<head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-        <link rel="stylesheet" type="text/css" href="../css/Tags.css" />
-
-		<title>Tags</title>
+		<title>Artifact Tags</title>
 
         <script type="text/javascript" src="../../../../infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
         <script type="text/javascript" src="../../../../infusion/src/webapp/framework/core/js/Fluid.js"></script>
@@ -16,19 +14,11 @@
         <script type="text/javascript" src="../js/Tags.js"></script>
 	</head>
     
-	<body>        
-	    <div class="flc-tags-template fl-tags">
-            <h2 class="flc-tags-title">Tags Title</h2> <a class="flc-tags-edit" href="#">edit</a>
-            <ul>
-                <li class="flc-tags-tag">
-                    <span class="flc-tags-tagName">tag</span> 
-                    <a class="flc-tags-remove" href="#">remove</a>,</li>
-            </ul>
-            <input class="flc-tags-editField" type="text" />
-	    </div>
-
+	<body>
+	    <div class="tags-pane"></div>
+        
         <script type="text/javascript">
-            fluid.tags(".flc-tags-template", {tags: ["animal", "cat", "CATT"]});
+            fluid.artifactTags(".tags-pane");
         </script>
 	</body>
 </html>
