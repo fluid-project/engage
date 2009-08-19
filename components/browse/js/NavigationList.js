@@ -23,8 +23,8 @@ fluid_1_2 = fluid_1_2 || {};
         return obj; 
     };
     
-    var addCount = function (string, count) {
-        return string + " (" + count + ")";
+    var seeAllMessage = function (that, string, count) {
+        return that.options.strings.linkToMoreMessage + " " + string + " (" + count + ")";
     };
     
     var render = function (that) {
@@ -41,7 +41,7 @@ fluid_1_2 = fluid_1_2 || {};
                 var title = object.title || "";
                 var tree = treeNode("listItems:", "children", [
                     treeNode("link", "target", object.target || ""),
-                    treeNode("titleText", "value", object.size ? addCount(title, object.size) : title),
+                    treeNode("titleText", "value", object.category ? seeAllMessage(that, title, object.size) : title),
                     treeNode("descriptionText", "value", object.description || "")
                 ]);
                 
@@ -91,7 +91,9 @@ fluid_1_2 = fluid_1_2 || {};
         
         styles: {},
         
-        strings: {},
+        strings: {
+            linkToMoreMessage: "See all in"
+        },
         
         events: {},
         
@@ -101,6 +103,7 @@ fluid_1_2 = fluid_1_2 || {};
                     image: "",
                     title: "",
                     description: "",
+                    category: null,
                     size: ""
                 }
             ]
