@@ -17,18 +17,14 @@
 	</head>
     
 	<body>        
-	    <div class="flc-tags-template fl-tags">
-            <h2 class="flc-tags-title">Tags Title</h2> <a class="flc-tags-edit" href="#">edit</a>
-            <ul>
-                <li class="flc-tags-tag">
-                    <span class="flc-tags-tagName">tag</span> 
-                    <a class="flc-tags-remove" href="#">remove</a>,</li>
-            </ul>
-            <input class="flc-tags-editField" type="text" />
-	    </div>
-
+	    <div class="tags"></div>
+        
         <script type="text/javascript">
-            fluid.tags(".flc-tags-template", {tags: ["animal", "cat", "CATT"]});
+            fluid.tags(".tags", {
+                tags: ["book", "paperback", "green"],
+                templateURL: "TagsTemplate.html"
+            });
+
         </script>
 	</body>
 </html>

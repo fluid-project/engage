@@ -7,7 +7,8 @@ fluid = fluid || {};
     
     // TODO: this can be refactored somewhat to remove the duplication of node creation
     var generateTree = function (that, title, tags, allowEdit) {
-        var tagNodes = fluid.transform(tags, function(tag) {
+        title = fluid.stringTemplate(title, {num: tags.length});
+        var tagNodes = fluid.transform(tags, function (tag) {
             var node = {
                 ID: "tag:",
                 children: [{
@@ -21,9 +22,10 @@ fluid = fluid || {};
                     ID: "remove",
                     value: "remove",
                     decorators: [
-                    {type: "jQuery",
-                     func: "hide"}]
-                })
+                        {type: "jQuery",
+                         func: "hide"}
+                    ]
+                });
             }
             
             return node;
@@ -38,7 +40,8 @@ fluid = fluid || {};
                 value: "",
                 decorators: [
                     {type: "jQuery",
-                     func: "hide"}]
+                     func: "hide"}
+                ]
             });
             tree.children.push({
                 ID: "edit",
@@ -56,40 +59,41 @@ fluid = fluid || {};
         return tree;
     };
         
-    var rendererOptions = function (selectors, allowEdit) {
-        var selectorMap = [{selector: selectors.title, id: "title"},
-                           {selector: selectors.tag, id: "tag:"},
-                           {selector: selectors.tagName, id: "tagName"},
-                           {selector: selectors.edit, id: "edit"},
-                           {selector: selectors.editField, id: "editField"},
-                           {selector: selectors.remove, id: "remove"}];
-                
-        return {
-            debug: true,
-            cutpoints: selectorMap
-        }
+    var generateSelectorMap = function (selectors) {
+        return  [{selector: selectors.title, id: "title"},
+                    {selector: selectors.tag, id: "tag:"},
+                    {selector: selectors.tagName, id: "tagName"},
+                    {selector: selectors.edit, id: "edit"},
+                    {selector: selectors.editField, id: "editField"},
+                    {selector: selectors.remove, id: "remove"}];
     };
     
     var renderTags = function (that) {
         var tree = generateTree(that, that.options.strings.title, that.options.tags, that.options.allowEdit);
-        var opts = rendererOptions(that.options.selectors, that.options.allowEdit);
+        var selectorMap = generateSelectorMap(that.options.selectors);
         var templates;
 
-        if (that.options.templateUrl) {
+        if (that.options.templateURL) {
             // Data structure needed by fetchResources
             var resources = {
                 tags: {
-                    href: that.options.templateUrl
+                    href: that.options.templateURL,
+                    cutpoints: selectorMap
                 }
             };
             
             // Get the template, create the tree and render the table of contents
-            fluid.fetchResources(resources, function() {
+            fluid.fetchResources(resources, function () {
                 templates = fluid.parseTemplates(resources, ["tags"], {});
-                fluid.reRender(templates, that.container, tree, {});
+                fluid.reRender(templates, that.container, tree);
             //                afterRender.fire(node);
             });
         } else {
+            var opts = {
+                debug: true,
+                cutpoints: selectorMap
+            };
+
             fluid.selfRender(that.container, tree, opts);
         }
     };
@@ -117,7 +121,7 @@ fluid = fluid || {};
         },
         allowEdit: true, 
         tags: [],
-        templateUrl: null  // if not passed expect the template in the current page
+        templateURL: null  // if not passed expect the template in the current page
     });
     
     // TODO: find a better name for this. It is the composition of 'myTags' and 'allTags'
@@ -138,7 +142,7 @@ fluid = fluid || {};
         fluid.tags(myTagsDiv, {
             strings: {title: that.options.strings.myTags}, 
             tags: tags.myTags,
-            templateUrl: "Tags.html .flc-tags-template"
+            templateURL: "TagsTemplate.html"
         });
         
         var allTagsDiv = $("<div></div>");
@@ -149,13 +153,14 @@ fluid = fluid || {};
             },
             allowEdit: false,
             tags: tags.allTags,
-            templateUrl: "Tags.html .flc-tags-template"
+            templateURL: "TagsTemplate.html"
         });
 
         return that; 
     };
 
     fluid.defaults("artifactTags", {
+        // TODO: switch to using message bundle instead of strings?
         strings: {
             tagsTitle: "Tags (%num)",
             myTags: "My Tags (%num)",
