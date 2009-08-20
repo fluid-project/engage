@@ -13,10 +13,6 @@
 	height:200px;	
 }
 
-.fl-screenNavigator-scroll-container > .fl-panel {
-	padding-bottom:50px; /* ensures full clearance and no clipped content? */
-}
-
 /* 
  * Height of scrollable container is needed
  * in landscape/portrait 

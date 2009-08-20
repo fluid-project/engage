@@ -160,9 +160,9 @@ var fluid_1_2 = fluid_1_2 || {};
          * @param {Object} url
          * @param {Object} ajaxContent
          */
-        that.createView = function (url, direction, ajaxContent) {
+        that.createView = function (url, direction, content) {
             var theView;
-            theView = $('<div>' + ajaxContent + '</div>');
+            theView = $('<div></div>').html(content);
             theView.addClass(that.options.styles.prepNext);
             that.locate("viewContainer").append(theView)
             
@@ -242,10 +242,21 @@ var fluid_1_2 = fluid_1_2 || {};
     /************************************************************************************/
     /* Public overwriteable functions */
     fluid.screenNavigator.ajaxViewFetcher = function (that, url) {
-        var direction = that.navDirection;        
-        $.get(that.options.pathPrefix + url, function (ajaxData) {
-            that.viewsHash[url] = that.createView(url, direction, ajaxData);            
-            that.showView(url);
+        var direction = that.navDirection;
+        /*
+         * TODO: Handle embedded script blocks
+         * TODO: Handle errors gracefully
+         */
+        $.ajax({
+            dataType: "xml",
+            url: that.options.pathPrefix + url,
+            error: function (XMLHttpRequest, textStatus, errorThrown) {                                
+            },            
+            success: function (xml, status, ajaxObject) {
+                var content = $(xml).find("body")[0].innerHTML;                 
+                that.viewsHash[url] = that.createView(url, direction, content);            
+                that.showView(url);
+            }
         });
     };
 
