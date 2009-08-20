@@ -188,10 +188,10 @@ var fluid_1_2 = fluid_1_2 || {};
             if (that.firstRun) {
                 that.firstRun = false;                
                 that.prepViewPos(that.viewsHash[url], that.navDirection);
-                
+                                
                 if (that.options.toggleVisibility) {
                     that.viewsHash[url].show();
-                }
+                }                
 				that.events.afterTransition.fire(event, that); // on first run, the "transition" would just snap 
             } else {
                 // NOT FIRST RUN
@@ -242,16 +242,24 @@ var fluid_1_2 = fluid_1_2 || {};
     /* Public overwriteable functions */
     fluid.screenNavigator.ajaxViewFetcher = function (that, url) {
         var direction = that.navDirection;
-        /*
-         * TODO: Handle embedded script blocks
-         * TODO: Handle errors gracefully
-         */
+
         $.ajax({
             dataType: "xml",
             url: that.options.pathPrefix + url,
-            error: function (XMLHttpRequest, textStatus, errorThrown) {                                
+            error: function (XMLHttpRequest, status, error) {
+
+                that.events.afterFetchContent.fire(false, status, XMLHttpRequest);
+
+                /* TODO: better error message */
+                alert("There was an error fetching the page. Please try again.");
+                
+                that.locate("loadingIndicator").removeClass(that.options.styles.loadingIndicator);
             },            
-            success: function (xml, status, ajaxObject) {
+
+            success: function (xml, status) {
+                
+                that.events.afterFetchContent.fire(true, status, xml);
+
                 var content = $(xml).find("body")[0].innerHTML;                 
                 that.viewsHash[url] = that.createView(url, direction, content);            
                 that.showView(url);
@@ -307,6 +315,7 @@ var fluid_1_2 = fluid_1_2 || {};
             onSelected : null,
             onTouched : null,
             onFetchContent: null,
+            afterFetchContent: null,
             afterContentReady : null,
             afterTransition : null,
             afterOrientationChange : null
