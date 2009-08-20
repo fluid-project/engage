@@ -44,13 +44,22 @@ var fluid_1_2 = fluid_1_2 || {};
         // Events
         ///////////////////////////////////////////////////
         
+        that.container.bind("touchstart", function (event) {
+            var target = findTarget(event.target);
+            //if (target) target.addClass(that.options.styles.loadingIndicator);
+        }); 
+        
+        
+        
+        
+        
         // Click
         // noClickDelay to remove 300ms delay on iPhone for click events
         //new NoClickDelay(that.locate("viewContainer")[0]); // destroys page scrolling gesture
 
         // click event binding
         that.container.bind("click", function (event) {            
-            var target = findTarget(event.target);            
+            var target = findTarget(event.target);
             // Handle different kinds of anchor links...
             if (target) {
                 that.events.onSelected.fire(event); // when a link is found, fire intercept event
@@ -194,7 +203,7 @@ var fluid_1_2 = fluid_1_2 || {};
 
                 // Unhide if required
                 if (that.options.toggleVisibility) {
-                    that.viewsHash[currentView].show();
+                    //that.viewsHash[currentView].show();
                     that.viewsHash[nextView].show();
                 }
                 
