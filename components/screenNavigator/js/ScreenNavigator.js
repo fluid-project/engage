@@ -1,5 +1,4 @@
-/* global fluid_1_2 */
-/* global jQuery */
+/*global fluid_1_2, jQuery, window*/
 
 var fluid_1_2 = fluid_1_2 || {};
 
@@ -164,7 +163,7 @@ var fluid_1_2 = fluid_1_2 || {};
             var theView;
             theView = $('<div></div>').html(content);
             theView.addClass(that.options.styles.prepNext);
-            that.locate("viewContainer").append(theView)
+            that.locate("viewContainer").append(theView);
             
             return theView;            
         };
