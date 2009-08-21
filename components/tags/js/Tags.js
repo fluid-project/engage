@@ -1,3 +1,15 @@
+/*
+Copyright 2009 University of Toronto
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://source.fluidproject.org/svn/LICENSE.txt
+ 
+*/
+
 /*global jQuery*/
 /*global fluid*/
 
@@ -6,6 +18,7 @@ fluid = fluid || {};
 (function ($, fluid) {
     
     // TODO: this can be refactored somewhat to remove the duplication of node creation
+    //        also, change the signature, just take that.
     var generateTree = function (that, title, tags, allowEdit) {
         title = fluid.stringTemplate(title, {num: tags.length});
         var tagNodes = fluid.transform(tags, function (tag) {
@@ -38,10 +51,10 @@ fluid = fluid || {};
             tree.children.push({
                 ID: "editField",
                 value: "",
-                decorators: [
-                    {type: "jQuery",
-                     func: "hide"}
-                ]
+                decorators: [{
+                    type: "jQuery",
+                    func: "hide"
+                }]
             });
             tree.children.push({
                 ID: "edit",
@@ -82,11 +95,10 @@ fluid = fluid || {};
                 }
             };
             
-            // Get the template, create the tree and render the table of contents
             fluid.fetchResources(resources, function () {
                 templates = fluid.parseTemplates(resources, ["tags"], {});
                 fluid.reRender(templates, that.container, tree);
-            //                afterRender.fire(node);
+            	that.events.afterInit.fire();
             });
         } else {
             var opts = {
@@ -95,6 +107,7 @@ fluid = fluid || {};
             };
 
             fluid.selfRender(that.container, tree, opts);
+            that.events.afterInit.fire();
         }
     };
     
@@ -119,9 +132,12 @@ fluid = fluid || {};
         strings: {
             title: "Tags"
         },
+        events: {
+            afterInit: null
+        },
         allowEdit: true, 
         tags: [],
-        templateURL: null  // if not passed expect the template in the current page
+        templateURL: null  // if not passed in expect the template in the current page
     });
     
     // TODO: find a better name for this. It is the composition of 'myTags' and 'allTags'
