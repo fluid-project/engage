@@ -23,8 +23,27 @@ fluid_1_2 = fluid_1_2 || {};
         return obj; 
     };
     
-    var seeAllMessage = function (that, string, count) {
-        return that.options.strings.linkToMoreMessage + " " + string + " (" + count + ")";
+    var compileMessage = function (id, messageKey, messageArgs) {
+        return {
+            ID: id,
+            messagekey: messageKey,
+            args: messageArgs
+        };
+    };
+    
+    var conditionalNode = function (condition, onTrue, onFalse) {
+        var value;
+        if(condition) {
+            value = onTrue;
+        } else {
+            value = onFalse;
+        }
+        
+        return value;
+    };
+    
+    var addCount = function (string, count) {
+        return string + " (" + count + ")";
     };
     
     var render = function (that) {
@@ -41,7 +60,7 @@ fluid_1_2 = fluid_1_2 || {};
                 var title = object.title || "";
                 var tree = treeNode("listItems:", "children", [
                     treeNode("link", "target", object.target || ""),
-                    treeNode("titleText", "value", object.category ? seeAllMessage(that, title, object.size) : title),
+                    conditionalNode(object.category, compileMessage("titleText", "linkToMoreMessage", [addCount(object.category, object.size || "")]), treeNode("titleText", "value", title)),
                     treeNode("descriptionText", "value", object.description || "")
                 ]);
                 
@@ -58,10 +77,14 @@ fluid_1_2 = fluid_1_2 || {};
         };
         
         var options = {
-            cutpoints: selectorMap
+            cutpoints: selectorMap,
+            messageSource: {
+                type: "data", 
+                messages: that.options.messageBundle
+            }
         };
         
-        fluid.selfRender(that.locate("listGroup"), generateTree(), {cutpoints: selectorMap});
+        fluid.selfRender(that.locate("listGroup"), generateTree(), options);
          
     };
     
@@ -96,6 +119,8 @@ fluid_1_2 = fluid_1_2 || {};
         },
         
         events: {},
+        
+        messageBundle: {linkToMoreMessage: "See all in {0}"},
         
         links: [
                 {
