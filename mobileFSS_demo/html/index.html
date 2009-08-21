@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+        
+    	<title>Mobile FSS Demo</title>
+    	
+    	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+    	<meta name="apple-mobile-web-app-capable" content="yes" />
+    	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        
+      	<!-- Links to the basic FSS style sheets -->
+      	<link type="text/css" rel="stylesheet" href="../../../infusion/src/webapp/framework/fss/css/fss-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../infusion/src/webapp/framework/fss/css/fss-transitions.css" />
+        <link type="text/css" rel="stylesheet" href="../../../infusion/src/webapp/framework/fss/css/fss-text.css" />
+      	<link type="text/css" rel="stylesheet" href="../../../infusion/src/webapp/framework/fss/css/fss-mobile-iphone-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../infusion/src/webapp/framework/fss/css/fss-mobile-iphone-theme.css" />
+      	<link type="text/css" rel="stylesheet" href="../../components/screenNavigator/css/ScreenNavigator.css" />	
+
+        <script type="text/javascript" src="../../../infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>
+        <script type="text/javascript" src="../../../infusion/src/webapp/framework/core/js/Fluid.js"></script>
+        <script type="text/javascript" src="../../../infusion/src/webapp/framework/core/js/FluidDOMUtilities.js"></script>
+        <script type="text/javascript" src="../../../infusion/src/webapp/framework/core/js/DataBinding.js"></script>
+
+        <script type="text/javascript" src="../../../infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
+        <script type="text/javascript" src="../../../infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
+
+      	<script type="text/javascript" src="../../components/screenNavigator/js/ScreenNavigator.js"></script>
+    </head>
+    
+    <body>
+		
+        <!-- View are dynamically added -->
+        <div class="flc-screenNavigator-view-container">
+        	
+        </div>
+
+
+<script type="text/javascript">
+    
+    var selectorMap = [
+        {selector: ".render", id: "render:"},
+        {selector: "h2", id: "header"},
+        {selector: "li", id: "listItem:"},
+        {selector: "a", id: "anchor"}
+    ];
+    
+    var tree = [
+        {
+            ID: "render:",
+            children: [
+                {
+                    ID: "header",
+                    value: "List"
+                },
+                {
+                    ID: "listItem:",
+                    children: [
+                        {
+                            ID: "anchor",
+                            target: "basic/1.html",
+                            linktext: "Basic"
+                        }
+                    ]
+                },
+                {
+                    ID: "listItem:",
+                    children: [
+                        {
+                            ID: "anchor",
+                            target: "icon/1.html",
+                            linktext: "Icon"
+                        }
+                    ]
+                },
+                {
+                    ID: "listItem:",
+                    children: [
+                        {
+                            ID: "anchor",
+                            target: "thumb/1.html",
+                            linktext: "Thumbnail"
+                        }
+                    ]
+                },
+                {
+                    ID: "listItem:",
+                    children: [
+                        {
+                            ID: "anchor",
+                            target: "#",
+                            linktext: "Interactive Builder"
+                        }
+                    ]
+                }
+            ]
+        }
+    ];
+    
+    
+    
+    var options = {
+        cutpoints : selectorMap,
+        debug: true
+    }
+    
+      
+    
+</script>
+
+        <script type="text/javascript">
+
+            var myContentManager;
+			
+            jQuery().ready(function () {                
+	            myContentManager = fluid_1_2.screenNavigator("body",{
+                    startUrl: "start.html",
+					listeners : {
+						afterTransition : function () {                            
+							fluid.selfRender($(".fl-screenNavigator-scroll-container"), tree, options); 
+						}
+					}					
+                });
+            }); 
+
+        </script>
+    </body>
+</html>
