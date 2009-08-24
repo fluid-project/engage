@@ -243,24 +243,24 @@ var fluid_1_2 = fluid_1_2 || {};
     fluid.screenNavigator.ajaxViewFetcher = function (that, url) {
         var direction = that.navDirection;
 
-        $.ajax({
-            dataType: "xml",
+        $.ajax({            
             url: that.options.pathPrefix + url,
             error: function (XMLHttpRequest, status, error) {
 
                 that.events.afterFetchContent.fire(false, status, XMLHttpRequest);
 
-                /* TODO: better error message */
                 alert("There was an error fetching the page. Please try again.");
-                
+
                 that.locate("loadingIndicator").removeClass(that.options.styles.loadingIndicator);
             },            
 
-            success: function (xml, status) {
+            success: function (data, status) {
                 
-                that.events.afterFetchContent.fire(true, status, xml);
+                that.events.afterFetchContent.fire(true, status, data);
+                
+                 // incoming nodes within the <body> are innjected, including scripts
+                var content = jQuery("<div/>").append(data).find(">*");
 
-                var content = $(xml).find("body")[0].innerHTML;                 
                 that.viewsHash[url] = that.createView(url, direction, content);            
                 that.showView(url);
             }
