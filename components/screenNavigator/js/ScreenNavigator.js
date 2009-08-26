@@ -246,21 +246,15 @@ var fluid_1_2 = fluid_1_2 || {};
         $.ajax({            
             url: that.options.pathPrefix + url,
             error: function (XMLHttpRequest, status, error) {
-
                 that.events.afterFetchContent.fire(false, status, XMLHttpRequest);
-
-                alert("There was an error fetching the page. Please try again.");
-
                 that.locate("loadingIndicator").removeClass(that.options.styles.loadingIndicator);
             },            
 
             success: function (data, status) {
-                
+                 // incoming nodes within the <body> are innjected, including scripts
+                var content = $("<div/>").append(data).find(">*");
                 that.events.afterFetchContent.fire(true, status, data);
                 
-                 // incoming nodes within the <body> are innjected, including scripts
-                var content = jQuery("<div/>").append(data).find(">*");
-
                 that.viewsHash[url] = that.createView(url, direction, content);            
                 that.showView(url);
             }
