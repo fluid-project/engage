@@ -37,94 +37,20 @@
         	
         </div>
 
-
-<script type="text/javascript">
-    
-    var selectorMap = [
-        {selector: ".render", id: "render:"},
-        {selector: "h2", id: "header"},
-        {selector: "li", id: "listItem:"},
-        {selector: "a", id: "anchor"}
-    ];
-    
-    var tree = [
-        {
-            ID: "render:",
-            children: [
-                {
-                    ID: "header",
-                    value: "List"
-                },
-                {
-                    ID: "listItem:",
-                    children: [
-                        {
-                            ID: "anchor",
-                            target: "basic/1.html",
-                            linktext: "Basic"
-                        }
-                    ]
-                },
-                {
-                    ID: "listItem:",
-                    children: [
-                        {
-                            ID: "anchor",
-                            target: "icon/1.html",
-                            linktext: "Icon"
-                        }
-                    ]
-                },
-                {
-                    ID: "listItem:",
-                    children: [
-                        {
-                            ID: "anchor",
-                            target: "thumb/1.html",
-                            linktext: "Thumbnail"
-                        }
-                    ]
-                },
-                {
-                    ID: "listItem:",
-                    children: [
-                        {
-                            ID: "anchor",
-                            target: "#",
-                            linktext: "Interactive Builder"
-                        }
-                    ]
-                }
-            ]
-        }
-    ];
-    
-    
-    
-    var options = {
-        cutpoints : selectorMap,
-        debug: true
-    }
-    
-      
-    
-</script>
-
         <script type="text/javascript">
-
-            var myContentManager;
-			
-            jQuery().ready(function () {                
-	            myContentManager = fluid_1_2.screenNavigator("body",{
-                    startUrl: "start.html",
-					listeners : {
-						afterTransition : function () {                            
-							fluid.selfRender($(".fl-screenNavigator-scroll-container"), tree, options); 
-						}
-					}					
-                });
-            }); 
-
+            var myGlobalNavigator;
+            (function () {
+                jQuery().ready(function () {
+                    myGlobalNavigator = fluid_1_2.screenNavigator("body",{
+                        startUrl: "start.html",
+                        listeners : {
+                            afterContentReady : function () {
+                                renderMe();
+                            }
+                        }
+                    });
+                }); 
+            })();
         </script>
     </body>
 </html>

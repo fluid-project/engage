@@ -45,25 +45,20 @@
         
         <div class="flc-screenNavigator-navbar fl-navbar fl-table">
             <div class="fl-table-row">
+                <a href="start.html" class="fl-button-left fl-backButton flc-screenNavigator-backButton">
+                    <span class="fl-button-inner">Back</span>
+                </a>
             	<h1 class="fl-table-cell">Start</h1>
+                <a href="start.html" class="fl-button-right">
+                    <span class="fl-button-inner">Back</span>
+                </a>
             </div>
         </div>
         
-        <div class="fl-screenNavigator-scroll-container startPage">
+        <div class="fl-screenNavigator-scroll-container componentPage">
         	<div class="fl-panel">
-        	    <h1 class="fl-note fl-bevel-white">Infusion Integration</h1>
-        	
-        	    <p class="fl-panel fl-note fl-bevel-white fl-font-size-80">
-        	        Your currently looking at the following technologies in action;
-        	    </p>
-                <ol class=" fl-font-size-80">
-                    <li>The Infusion Renderer</li>
-                    <li>Mobile FSS CSS</li>
-                    <li>Several Infusion Components</li>
-                </ol> 
-        	    <p class="fl-panel fl-note fl-bevel-white fl-font-size-80">
-        	        These technologies are working together to create a harmonious experience.
-        	    </p>
+        	    <h1 class="fl-note fl-bevel-white">Renderer Screen Navigator</h1>
+    	        Another demo file        	    
         	</div>
             
             <div class="render fl-panel">
@@ -85,9 +80,9 @@
                
                     var selectorMap = [
                         {selector: ".render", id: "render:"},
-                        {selector: ".render h2", id: "header"},
-                        {selector: ".render li", id: "listItem:"},
-                        {selector: ".render a", id: "anchor"}
+                        {selector: "h2", id: "header"},
+                        {selector: "li", id: "listItem:"},
+                        {selector: "a", id: "anchor"}
                     ];
                     
                     var tree = [
@@ -96,15 +91,15 @@
                             children: [
                                 {
                                     ID: "header",
-                                    value: "Menu Options"
+                                    value: "List"
                                 },
                                 {
                                     ID: "listItem:",
                                     children: [
                                         {
                                             ID: "anchor",
-                                            target: "componentX.html",
-                                            linktext: "Component X"
+                                            target: "start.html",
+                                            linktext: "Menu 1"
                                         }
                                     ]
                                 },
@@ -113,28 +108,8 @@
                                     children: [
                                         {
                                             ID: "anchor",
-                                            target: "icon/1.html",
-                                            linktext: "Icon"
-                                        }
-                                    ]
-                                },
-                                {
-                                    ID: "listItem:",
-                                    children: [
-                                        {
-                                            ID: "anchor",
-                                            target: "thumb/1.html",
-                                            linktext: "Thumbnail"
-                                        }
-                                    ]
-                                },
-                                {
-                                    ID: "listItem:",
-                                    children: [
-                                        {
-                                            ID: "anchor",
-                                            target: "#",
-                                            linktext: "Interactive Builder"
+                                            target: "start.html",
+                                            linktext: "Menu 2"
                                         }
                                     ]
                                 }
@@ -146,7 +121,7 @@
                         cutpoints : selectorMap,
                         debugMode: true                        
                     };
-                    fluid.selfRender($(".startPage"), tree, options);                   
+                    fluid.selfRender($(".componentPage"), tree, options);                   
                 };
         </script>
     </body>
