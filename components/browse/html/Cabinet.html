@@ -27,23 +27,37 @@
 	<body class="fl-theme-iPhone">
 	    <div class="fl-navbar"></div>
         <div class="cabinet" role="tablist" aria-multiselectable="true">
-            <div class="flc-cabinet-drawers">
-                <div class="flc-cabinet-drawer fl-panel fl-panel-autoHeading fl-cabinet-animation fl-cabinet-drawerClosed fl-panel-collapsable" role="tab" aria-expanded="false">
-                    <div class="flc-cabinet-handle fl-cabinet-handle">
-                        <h2 class="flc-cabinet-header">Header</h2>
-                        <span class="flc-cabinet-headerDescription fl-font-size-80">Description</span>
-                    </div>
-                    <div class="flc-cabinet-contents fl-cabinet-contents">
-                        <ul class="flc-nagivationList-listGroup fl-list fl-list-brief fl-list-thumbnails fl-thumbnails-expanded">
-                            <li class="flc-navigationList-items">
-                                <a class="flc-navigationList-link">
-                                    <img class="flc-navigationList-image fl-icon"/>
-                                    <span class="flc-navigationList-titleText">title</span>
-                                    <span class="flc-navigationList-descriptionText fl-link-summary">description</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+            <div class="flc-cabinet-drawer fl-panel fl-panel-autoHeading fl-cabinet-animation fl-cabinet-drawerClosed fl-panel-collapsable" role="tab" aria-expanded="false">
+                <div class="flc-cabinet-handle fl-cabinet-handle">
+                    <h2 class="flc-cabinet-header">Header</h2>
+                </div>
+                <div class="fl-cabinet-contents">
+                    <p>Some contents in a paragraph</p>
+                </div>
+            </div>
+            <div class="flc-cabinet-drawer fl-panel fl-panel-autoHeading fl-cabinet-animation fl-cabinet-drawerClosed fl-panel-collapsable" role="tab" aria-expanded="false">
+                <div class="flc-cabinet-handle fl-cabinet-handle">
+                    <h2 class="flc-cabinet-header">Header</h2>
+                </div>
+                <div class="fl-cabinet-contents">
+                    <p>Some other contents</p>
+                </div>
+            </div>
+            <div class="flc-cabinet-drawer fl-panel fl-panel-autoHeading fl-cabinet-animation fl-cabinet-drawerClosed fl-panel-collapsable" role="tab" aria-expanded="false">
+                <div class="flc-cabinet-handle fl-cabinet-handle fl-cabinet-headerWithDescription">
+                    <h2 class="flc-cabinet-header">Header</h2>
+                    <span class="fl-font-size-80">Description</span>
+                </div>
+                <div class="flc-navigationList fl-cabinet-contents">
+                    <ul class="flc-nagivationList-listGroup fl-list fl-list-thumbnails fl-thumbnails-expanded">
+                        <li class="flc-navigationList-items">
+                            <a class="flc-navigationList-link">
+                                <img class="flc-navigationList-image fl-icon"/>
+                                <span class="flc-navigationList-titleText">title</span>
+                                <span class="flc-navigationList-descriptionText fl-link-summary">description</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -73,30 +87,8 @@
                 }]
             };
             
-            var options = {
-                drawers: [
-                    {
-                        header: "Header 1",
-                        headerDescription: "first header",
-                        contents: {value: "contents"}
-                    },
-                    {
-                        header: "Header 2",
-                        contents: {value: "header 2 contents"},
-                        size: 1                  
-                    },
-                    {
-                        header: "Header 3",
-                        contents: {decorators: {
-                            type: "fluid",
-                            func: "fluid.navigationList",
-                            options: navigationListOptions
-                        }}
-                    }
-                ]
-            };
-            
-            fluid.cabinet(".cabinet", options);
+            fluid.navigationList($(".flc-navigationList"), navigationListOptions);
+            fluid.cabinet(".cabinet");
         </script>
 	</body>
 </html>

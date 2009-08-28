@@ -16,100 +16,39 @@ fluid_1_2 = fluid_1_2 || {};
 
 (function ($, fluid) {
     
-    var treeNode = function (id, key, value) {
-        var obj = {ID: id};
-        obj[key] = value;
-        
-        return obj; 
-    };
-    
-    var addId = function (id, object) {
-        object.ID = id;
-        
-        return object;
-    };
-    
-    var addCount = function (string, count) {
-        return string + " (" + count + ")";
-    };
-    
-    var renderPanels = function (that) {
-        var selectorMap = [
-            {selector: that.options.selectors.drawer, id: "drawer:"},
-            {selector: that.options.selectors.handle, id: "handle"},
-            {selector: that.options.selectors.header, id: "header"},
-            {selector: that.options.selectors.headerDescription, id: "headerDescription"},
-            {selector: that.options.selectors.contents, id: "contents"}
-        ];
-        
-        var generateTree = function (that) {
+    var addClickEvent = function (that) {
+        that.locate("handle").click(function () {
+            var handle = $(fluid.findAncestor(this, function (element) {
+                return $(element).is(that.options.selectors.drawer);
+            }));
             
-            return fluid.transform(that.options.drawers, function (object) {
-                var headerText = object.header || "";
-                return treeNode("drawer:", "children", [
-                    treeNode("header", "value", object.size ? addCount(headerText, object.size) : headerText),
-                    treeNode("headerDescription", "value", object.headerDescription || ""),
-                    treeNode("handle", "decorators", [{
-                        type: "jQuery",
-                        func: "click",
-                        args: function () {
-                            var handle = $(fluid.findAncestor(this, function (element) {
-                                return $(element).is(that.options.selectors.drawer);
-                            }));
-                            
-                            handle.toggleClass(that.options.styles.drawerClosed);
-                            handle.attr({"expanded": handle.attr("expanded") === "true" ? "false" : "true"});
-                        }
-                    },
-                    {
-                        type: "addClass",
-                        classes: object.headerDescription && object.headerDescription !== "" ? "fl-cabinet-headerWithDescription" : ""
-                    }]),
-                    
-                    addId("contents", object.contents || {value: ""})
-                ]);
-            });
-        };
-        
-        fluid.selfRender(that.locate("drawers"), generateTree(that), {cutpoints: selectorMap});
-    };
-    
-    var setup = function (that) {
-        renderPanels(that);
+            handle.toggleClass(that.options.styles.drawerClosed);
+            handle.attr({"expanded": handle.attr("expanded") === "true" ? "false" : "true"});
+            that.events.afterToggle.fire(handle, handle[0]);
+        });
     };
     
     fluid.cabinet = function (container, options) {
         var that = fluid.initView("fluid.cabinet", container, options);
         
-        setup(that);
+        addClickEvent(that);
     };
     
     fluid.defaults("fluid.cabinet", {
         selectors: {
-            drawers: ".flc-cabinet-drawers",
             drawer: ".flc-cabinet-drawer",
             handle: ".flc-cabinet-handle",
             header: ".flc-cabinet-header",
-            headerDescription: ".flc-cabinet-headerDescription",
-            contents: ".flc-cabinet-contents"
+            headerDescription: ".flc-cabinet-headerDescription"
         },
         
         styles: {
             drawerClosed: "fl-cabinet-drawerClosed"
         },
         
-        strings: {},
-        
-        events: {},
-        
-        drawers: [
-            {
-                header: "",
-                headerDescription: "",
-                size: "",
-                contents: {}
-            }
-        ]
+        events: {
+            afterToggle: null
+        }
     });
     
 })(jQuery, fluid_1_2);
