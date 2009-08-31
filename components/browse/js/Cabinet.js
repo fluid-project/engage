@@ -16,28 +16,60 @@ fluid_1_2 = fluid_1_2 || {};
 
 (function ($, fluid) {
     
+    var addAria = function (that) {
+        that.container.attr({
+            role: "tablist",
+            "aria-multiselectable": "true"
+        });
+        
+        that.locate("drawer").attr({
+            role: "tab",
+            "aria-expanded": "false"
+        });
+    };
+    
     var addClickEvent = function (that) {
         that.locate("handle").click(function () {
             var handle = $(fluid.findAncestor(this, function (element) {
                 return $(element).is(that.options.selectors.drawer);
             }));
             
-            handle.toggleClass(that.options.styles.drawerClosed);
-            handle.attr({"expanded": handle.attr("expanded") === "true" ? "false" : "true"});
-            that.events.afterToggle.fire(handle, handle[0]);
+            that.toggleHandle(handle);
         });
+    };
+    
+    var addKeyNav = function (that) {
+        that.container.attr("tabindex", 0);
+        that.container.fluid("selectable", {selectableSelector: that.options.selectors.drawer});
+        that.container.fluid("activatable", function (evt){
+            that.toggleHandle(evt.target);
+        });
+    };
+    
+    var setup = function (that) {
+        addAria(that);
+        addClickEvent(that);
+        addKeyNav(that);
     };
     
     fluid.cabinet = function (container, options) {
         var that = fluid.initView("fluid.cabinet", container, options);
         
-        addClickEvent(that);
+        that.toggleHandle = function (handle) {
+            handle.toggleClass(that.options.styles.drawerClosed);
+            var expAttr = "aria-expanded";
+            handle.attr(expAttr, !handle.attr(expAttr));
+            
+            that.events.afterToggle.fire(handle, handle[0]);
+        };
+        
+        setup(that);
     };
     
     fluid.defaults("fluid.cabinet", {
         selectors: {
             drawer: ".flc-cabinet-drawer",
-            handle: ".flc-cabinet-handle",
+            handle: ".flc-cabinet-handle", 
             header: ".flc-cabinet-header",
             headerDescription: ".flc-cabinet-headerDescription"
         },
@@ -48,7 +80,9 @@ fluid_1_2 = fluid_1_2 || {};
         
         events: {
             afterToggle: null
-        }
+        },
+        
+        startOpen: false
     });
     
 })(jQuery, fluid_1_2);
