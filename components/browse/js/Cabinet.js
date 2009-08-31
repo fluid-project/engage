@@ -56,9 +56,10 @@ fluid_1_2 = fluid_1_2 || {};
         var that = fluid.initView("fluid.cabinet", container, options);
         
         that.toggleHandle = function (handle) {
-            handle.toggleClass(that.options.styles.drawerClosed);
             var expAttr = "aria-expanded";
-            handle.attr(expAttr, !handle.attr(expAttr));
+            
+            handle.toggleClass(that.options.styles.drawerClosed);
+            handle.attr(expAttr, handle.attr(expAttr) === "true" ? "false" : "true");
             
             that.events.afterToggle.fire(handle, handle[0]);
         };
