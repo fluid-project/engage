@@ -16,6 +16,17 @@ fluid_1_2 = fluid_1_2 || {};
 
 (function ($, fluid) {
     
+    var findChild = function (element, test) {
+        element = fluid.unwrap(element);
+        var childNodes = element.childNodes;
+        
+        for (var i = 0; i < childNodes.length; i++) {
+            if(test(childNodes[i])) {
+                return childNodes[i];
+            }
+        }
+    };
+    
     var addAria = function (that) {
         that.container.attr({
             role: "tablist",
@@ -34,11 +45,24 @@ fluid_1_2 = fluid_1_2 || {};
         that.locate("handle").addClass(that.options.styles.handle);
     };
     
+    var toggleVisibility = function (that, selector, show) {
+        selector.each(function (index, element) {
+            var contents = findChild(element, function (element) {
+                return $(element).is(that.options.selectors.contents);
+            });
+            
+            if(contents) {
+                $(contents).toggle();
+            }
+        });
+    };
+    
     var moveDrawers = function (that, openState, selector, stopEvent) {
         selector.addClass(openState ? that.options.styles.drawerOpened : that.options.styles.drawerClosed);
         selector.removeClass(openState ? that.options.styles.drawerClosed : that.options.styles.drawerOpened);
         selector.attr("aria-expanded", openState ? "true" : "false");
-        
+        toggleVisibility(that, selector, openState);
+
         if(!stopEvent) {
             that.events[openState ? "afterOpen" : "afterClose"].fire(selector);
         }
@@ -57,8 +81,8 @@ fluid_1_2 = fluid_1_2 || {};
     var addKeyNav = function (that) {
         that.container.attr("tabindex", 0);
         that.container.fluid("selectable", {selectableSelector: that.options.selectors.drawer});
-        that.container.fluid("activatable", function (evt){
-            that.toggleDrawers(evt.target);
+        that.locate("drawer").fluid("activatable", function (evt){
+            that.toggleDrawers($(evt.target));
         });
     };
     
