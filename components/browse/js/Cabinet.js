@@ -28,6 +28,11 @@ fluid_1_2 = fluid_1_2 || {};
         });
     };
     
+    var moveDrawers = function (that, add, selector) {
+        selector[add ? "removeClass" : "addClass"](that.options.styles.drawerClosed);
+        selector.attr("aria-expanded", add ? "true" : "false");
+    };
+    
     var addClickEvent = function (that) {
         that.locate("handle").click(function () {
             var handle = $(fluid.findAncestor(this, function (element) {
@@ -46,8 +51,10 @@ fluid_1_2 = fluid_1_2 || {};
         });
     };
     
+    
     var setup = function (that) {
         addAria(that);
+        moveDrawers(that, that.options.startOpen, that.locate("drawer"));
         addClickEvent(that);
         addKeyNav(that);
     };
@@ -62,6 +69,14 @@ fluid_1_2 = fluid_1_2 || {};
             handle.attr(expAttr, handle.attr(expAttr) === "true" ? "false" : "true");
             
             that.events.afterToggle.fire(handle, handle[0]);
+        };
+        
+        that.openDrawers = function (selector) {
+            moveDrawers(that, true, selector);
+        };
+        
+        that.closeDrawers = function (selector) {
+            moveDrawers(that, false, selector);
         };
         
         setup(that);
