@@ -16,6 +16,12 @@ fluid_1_2 = fluid_1_2 || {};
 
 (function ($, fluid) {
     
+    /**
+     * Finds the descendant of an element, as specified by the test function passed in the argument
+     * 
+     * @param {Object} element, the root node to test from
+     * @param {Object} test, a function that takes an element and returns true when the correct child is found
+     */
     var findChild = function (element, test) {
         element = fluid.unwrap(element);
         var childNodes = element.childNodes;
@@ -27,6 +33,11 @@ fluid_1_2 = fluid_1_2 || {};
         }
     };
     
+    /**
+     * Adds the various aria properties
+     * 
+     * @param {Object} that, the component
+     */
     var addAria = function (that) {
         that.container.attr({
             role: "tablist",
@@ -39,13 +50,25 @@ fluid_1_2 = fluid_1_2 || {};
         });
     };
     
+    /**
+     * Adds the various css classes used by the component
+     * 
+     * @param {Object} that, the component
+     */
     var addCSS = function (that) {
         that.locate("drawer").addClass(that.options.styles.drawer);
         that.locate("contents").addClass(that.options.styles.contents);
         that.locate("handle").addClass(that.options.styles.handle);
     };
     
-    var toggleVisibility = function (that, selector, show) {
+    /**
+     * Toggle's the visibility of the contents of the drawer. It finds the contents which
+     * are the children of the drawer that was open/closed and sets toggles the visibility
+     * 
+     * @param {Object} that, the component
+     * @param {Object} selector, a selector representing the drawers that were opened/closed
+     */
+    var toggleVisibility = function (that, selector) {
         selector.each(function (index, element) {
             var contents = findChild(element, function (element) {
                 return $(element).is(that.options.selectors.contents);
@@ -57,17 +80,30 @@ fluid_1_2 = fluid_1_2 || {};
         });
     };
     
+    /**
+     * 
+     * 
+     * @param {Object} that, the component
+     * @param {Object} openState, a boolean representing the open state of the drawer. True === open.
+     * @param {Object} selector, a selector representing the drawers to open/close
+     * @param {Object} stopEvent, a boolean used to prevent the event from firing. 
+     */
     var moveDrawers = function (that, openState, selector, stopEvent) {
         selector.addClass(openState ? that.options.styles.drawerOpened : that.options.styles.drawerClosed);
         selector.removeClass(openState ? that.options.styles.drawerClosed : that.options.styles.drawerOpened);
         selector.attr("aria-expanded", openState ? "true" : "false");
-        toggleVisibility(that, selector, openState);
+        toggleVisibility(that, selector);
 
         if(!stopEvent) {
             that.events[openState ? "afterOpen" : "afterClose"].fire(selector);
         }
     };
     
+    /**
+     * Adds a click event to each handle for opening/closing the drawer
+     * 
+     * @param {Object} that, the component
+     */
     var addClickEvent = function (that) {
         that.locate("handle").click(function () {
             var handle = $(fluid.findAncestor(this, function (element) {
@@ -78,6 +114,11 @@ fluid_1_2 = fluid_1_2 || {};
         });
     };
     
+    /**
+     * Adds keyboard a11y to the handles
+     * 
+     * @param {Object} that, the component
+     */
     var addKeyNav = function (that) {
         that.container.attr("tabindex", 0);
         that.container.fluid("selectable", {selectableSelector: that.options.selectors.drawer});
@@ -86,6 +127,11 @@ fluid_1_2 = fluid_1_2 || {};
         });
     };
     
+    /**
+     * Calls the various setup functions
+     * 
+     * @param {Object} that, the component
+     */
     var setup = function (that) {
         addAria(that);
         addCSS(that);
@@ -94,11 +140,22 @@ fluid_1_2 = fluid_1_2 || {};
         addKeyNav(that);
     };
     
+    /**
+     * The creator function for the component
+     * 
+     * @param {Object} container, the components container
+     * @param {Object} options, the integrator specified options.
+     */
     fluid.cabinet = function (container, options) {
         var that = fluid.initView("fluid.cabinet", container, options);
         
-        that.toggleDrawers = function (handle) {
-            handle.each(function (index, element) {
+        /**
+         * Toggles the open state of the drawer. 
+         * 
+         * @param {Object} drawer, the drawers to open/close
+         */
+        that.toggleDrawers = function (drawer) {
+            drawer.each(function (index, element) {
                 var elm = $(element);
                 
                 if(elm.hasClass(that.options.styles.drawerClosed)) {
@@ -109,10 +166,20 @@ fluid_1_2 = fluid_1_2 || {};
             });
         };
         
+        /**
+         * Opens all specified drawers
+         * 
+         * @param {Object} selector, the set of drawers to open
+         */
         that.openDrawers = function (selector) {
             moveDrawers(that, true, selector);
         };
         
+        /**
+         * Closes all specified drawers
+         * 
+         * @param {Object} selector, the set of drawers to close
+         */
         that.closeDrawers = function (selector) {
             moveDrawers(that, false, selector);
         };
