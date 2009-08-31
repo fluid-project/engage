@@ -27,7 +27,7 @@ fluid_1_2 = fluid_1_2 || {};
         var childNodes = element.childNodes;
         
         for (var i = 0; i < childNodes.length; i++) {
-            if(test(childNodes[i])) {
+            if (test(childNodes[i])) {
                 return childNodes[i];
             }
         }
@@ -75,7 +75,7 @@ fluid_1_2 = fluid_1_2 || {};
                 return $(element).is(that.options.selectors.contents);
             });
             
-            if(contents) {
+            if (contents) {
                 $(contents).toggle();
             }
         });
@@ -96,7 +96,7 @@ fluid_1_2 = fluid_1_2 || {};
         selector.attr("aria-expanded", openState ? "true" : "false");
         toggleVisibility(that, selector);
 
-        if(!stopEvent) {
+        if (!stopEvent) {
             that.events[openState ? "afterOpen" : "afterClose"].fire(selector);
         }
     };
@@ -124,7 +124,7 @@ fluid_1_2 = fluid_1_2 || {};
     var addKeyNav = function (that) {
         that.container.attr("tabindex", 0);
         that.container.fluid("selectable", {selectableSelector: that.options.selectors.drawer});
-        that.locate("drawer").fluid("activatable", function (evt){
+        that.locate("drawer").fluid("activatable", function (evt) {
             that.toggleDrawers($(evt.target));
         });
     };
@@ -161,9 +161,9 @@ fluid_1_2 = fluid_1_2 || {};
             drawer.each(function (index, element) {
                 var elm = $(element);
                 
-                if(elm.hasClass(that.options.styles.drawerClosed)) {
+                if (elm.hasClass(that.options.styles.drawerClosed)) {
                     that.openDrawers(elm);
-                } else if(elm.hasClass(that.options.styles.drawerOpened)) {
+                } else if (elm.hasClass(that.options.styles.drawerOpened)) {
                     that.closeDrawers(elm);
                 }
             });
