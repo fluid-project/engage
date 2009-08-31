@@ -69,6 +69,7 @@ fluid_1_2 = fluid_1_2 || {};
      * @param {Object} selector, a selector representing the drawers that were opened/closed
      */
     var toggleVisibility = function (that, selector) {
+        selector = fluid.wrap(selector);
         selector.each(function (index, element) {
             var contents = findChild(element, function (element) {
                 return $(element).is(that.options.selectors.contents);
@@ -81,7 +82,7 @@ fluid_1_2 = fluid_1_2 || {};
     };
     
     /**
-     * 
+     * Opens/Closes the specified drawers, and fires the appropriate events.
      * 
      * @param {Object} that, the component
      * @param {Object} openState, a boolean representing the open state of the drawer. True === open.
@@ -89,6 +90,7 @@ fluid_1_2 = fluid_1_2 || {};
      * @param {Object} stopEvent, a boolean used to prevent the event from firing. 
      */
     var moveDrawers = function (that, openState, selector, stopEvent) {
+        selector = fluid.wrap(selector);
         selector.addClass(openState ? that.options.styles.drawerOpened : that.options.styles.drawerClosed);
         selector.removeClass(openState ? that.options.styles.drawerClosed : that.options.styles.drawerOpened);
         selector.attr("aria-expanded", openState ? "true" : "false");
@@ -155,6 +157,7 @@ fluid_1_2 = fluid_1_2 || {};
          * @param {Object} drawer, the drawers to open/close
          */
         that.toggleDrawers = function (drawer) {
+            drawer = fluid.wrap(drawer);
             drawer.each(function (index, element) {
                 var elm = $(element);
                 
