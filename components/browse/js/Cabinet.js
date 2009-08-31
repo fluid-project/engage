@@ -28,6 +28,12 @@ fluid_1_2 = fluid_1_2 || {};
         });
     };
     
+    var addCSS = function (that) {
+        that.locate("drawer").addClass(that.options.styles.drawer);
+        that.locate("contents").addClass(that.options.styles.contents);
+        that.locate("handle").addClass(that.options.styles.handle);
+    };
+    
     var moveDrawers = function (that, openState, selector, stopEvent) {
         selector.addClass(openState ? that.options.styles.drawerOpened : that.options.styles.drawerClosed);
         selector.removeClass(openState ? that.options.styles.drawerClosed : that.options.styles.drawerOpened);
@@ -58,6 +64,7 @@ fluid_1_2 = fluid_1_2 || {};
     
     var setup = function (that) {
         addAria(that);
+        addCSS(that);
         moveDrawers(that, that.options.startOpen, that.locate("drawer"), that.options.fireEventsOnInit);
         addClickEvent(that);
         addKeyNav(that);
@@ -100,7 +107,11 @@ fluid_1_2 = fluid_1_2 || {};
         
         styles: {
             drawerClosed: "fl-cabinet-drawerClosed",
-            drawerOpened: "fl-cabinet-drawerOpened"
+            drawerOpened: "fl-cabinet-drawerOpened",
+            
+            drawer: "fl-panel fl-panel-autoHeading fl-cabinet-animation fl-panel-collapsable",
+            contents: "fl-cabinet-contents",
+            handle: "fl-cabinet-handle"
         },
         
         events: {
