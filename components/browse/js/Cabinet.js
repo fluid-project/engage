@@ -28,9 +28,14 @@ fluid_1_2 = fluid_1_2 || {};
         });
     };
     
-    var moveDrawers = function (that, add, selector) {
-        selector[add ? "removeClass" : "addClass"](that.options.styles.drawerClosed);
-        selector.attr("aria-expanded", add ? "true" : "false");
+    var moveDrawers = function (that, openState, selector, stopEvent) {
+        selector.addClass(openState ? that.options.styles.drawerOpened : that.options.styles.drawerClosed);
+        selector.removeClass(openState ? that.options.styles.drawerClosed : that.options.styles.drawerOpened);
+        selector.attr("aria-expanded", openState ? "true" : "false");
+        
+        if(!stopEvent) {
+            that.events[openState ? "afterOpen" : "afterClose"].fire(selector);
+        }
     };
     
     var addClickEvent = function (that) {
@@ -39,7 +44,7 @@ fluid_1_2 = fluid_1_2 || {};
                 return $(element).is(that.options.selectors.drawer);
             }));
             
-            that.toggleHandle(handle);
+            that.toggleDrawers(handle);
         });
     };
     
@@ -47,14 +52,13 @@ fluid_1_2 = fluid_1_2 || {};
         that.container.attr("tabindex", 0);
         that.container.fluid("selectable", {selectableSelector: that.options.selectors.drawer});
         that.container.fluid("activatable", function (evt){
-            that.toggleHandle(evt.target);
+            that.toggleDrawers(evt.target);
         });
     };
     
-    
     var setup = function (that) {
         addAria(that);
-        moveDrawers(that, that.options.startOpen, that.locate("drawer"));
+        moveDrawers(that, that.options.startOpen, that.locate("drawer"), that.options.fireEventsOnInit);
         addClickEvent(that);
         addKeyNav(that);
     };
@@ -62,13 +66,16 @@ fluid_1_2 = fluid_1_2 || {};
     fluid.cabinet = function (container, options) {
         var that = fluid.initView("fluid.cabinet", container, options);
         
-        that.toggleHandle = function (handle) {
-            var expAttr = "aria-expanded";
-            
-            handle.toggleClass(that.options.styles.drawerClosed);
-            handle.attr(expAttr, handle.attr(expAttr) === "true" ? "false" : "true");
-            
-            that.events.afterToggle.fire(handle, handle[0]);
+        that.toggleDrawers = function (handle) {
+            handle.each(function (index, element) {
+                var elm = $(element);
+                
+                if(elm.hasClass(that.options.styles.drawerClosed)) {
+                    that.openDrawers(elm);
+                } else if(elm.hasClass(that.options.styles.drawerOpened)) {
+                    that.closeDrawers(elm);
+                }
+            });
         };
         
         that.openDrawers = function (selector) {
@@ -87,18 +94,23 @@ fluid_1_2 = fluid_1_2 || {};
             drawer: ".flc-cabinet-drawer",
             handle: ".flc-cabinet-handle", 
             header: ".flc-cabinet-header",
-            headerDescription: ".flc-cabinet-headerDescription"
+            headerDescription: ".flc-cabinet-headerDescription",
+            contents: ".flc-cabinet-contents"
         },
         
         styles: {
-            drawerClosed: "fl-cabinet-drawerClosed"
+            drawerClosed: "fl-cabinet-drawerClosed",
+            drawerOpened: "fl-cabinet-drawerOpened"
         },
         
         events: {
-            afterToggle: null
+            afterOpen: null,
+            afterClose: null
         },
         
-        startOpen: false
+        startOpen: false,
+        
+        preventEventFireOnInit: true
     });
     
 })(jQuery, fluid_1_2);
