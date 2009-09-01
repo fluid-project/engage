@@ -188,6 +188,8 @@ fluid_1_2 = fluid_1_2 || {};
         };
         
         setup(that);
+        
+        return that;
     };
     
     fluid.defaults("fluid.cabinet", {
