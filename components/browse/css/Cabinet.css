@@ -12,7 +12,11 @@
 .fl-cabinet-animation {
     -webkit-transition: max-height 0.75s ease-in;
 }
+
 .fl-collapsingPanel.fl-cabinet-drawerClosed > *:first-child {
 	-webkit-border-radius:8px;
 }
 
+.fl-cabinet-focus {
+    outline: #0000FF inset thin;
+}

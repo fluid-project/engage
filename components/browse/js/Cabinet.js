@@ -92,13 +92,19 @@ fluid_1_2 = fluid_1_2 || {};
     var moveDrawers = function (that, openState, selector, stopEvent) {
         selector = fluid.wrap(selector);
         selector.addClass(openState ? that.options.styles.drawerOpened : that.options.styles.drawerClosed);
-        selector.removeClass(openState ? that.options.styles.drawerClosed : that.options.styles.drawerOpened);
+        selector.removeClass(!openState ? that.options.styles.drawerOpened : that.options.styles.drawerClosed);
         selector.attr("aria-expanded", openState ? "true" : "false");
         toggleVisibility(that, selector);
 
         if (!stopEvent) {
             that.events[openState ? "afterOpen" : "afterClose"].fire(selector);
         }
+    };
+    
+    var findHandleBase = function (that, element) {
+        return $(fluid.findAncestor(element, function (el) {
+            return $(el).is(that.options.selectors.drawer);
+        }));
     };
     
     /**
@@ -108,11 +114,7 @@ fluid_1_2 = fluid_1_2 || {};
      */
     var addClickEvent = function (that) {
         that.locate("handle").click(function () {
-            var handle = $(fluid.findAncestor(this, function (element) {
-                return $(element).is(that.options.selectors.drawer);
-            }));
-            
-            that.toggleDrawers(handle);
+            that.toggleDrawers(findHandleBase(that, this));
         });
     };
     
@@ -123,9 +125,13 @@ fluid_1_2 = fluid_1_2 || {};
      */
     var addKeyNav = function (that) {
         that.container.attr("tabindex", 0);
-        that.container.fluid("selectable", {selectableSelector: that.options.selectors.drawer});
-        that.locate("drawer").fluid("activatable", function (evt) {
-            that.toggleDrawers($(evt.target));
+        that.container.fluid("selectable", {
+            selectableSelector: that.options.selectors.handle,
+            onSelect: function (element) {findHandleBase(that, element).addClass(that.options.styles.keyboardFocus);},
+            onUnselect:function (element) {findHandleBase(that, element).removeClass(that.options.styles.keyboardFocus);}
+            });
+        that.locate("handle").fluid("activatable", function (evt) {
+            that.toggleDrawers(findHandleBase(that, evt.target));
         });
     };
     
@@ -137,7 +143,7 @@ fluid_1_2 = fluid_1_2 || {};
     var setup = function (that) {
         addAria(that);
         addCSS(that);
-        moveDrawers(that, that.options.startOpen, that.locate("drawer"), that.options.fireEventsOnInit);
+        moveDrawers(that, that.options.startOpen, that.locate("drawer"), that.options.preventEventFireOnInit);
         addClickEvent(that);
         addKeyNav(that);
     };
@@ -207,7 +213,9 @@ fluid_1_2 = fluid_1_2 || {};
             
             drawer: "fl-panel fl-panel-autoHeading fl-cabinet-animation fl-panel-collapsable",
             contents: "fl-cabinet-contents",
-            handle: "fl-cabinet-handle"
+            handle: "fl-cabinet-handle",
+            
+            keyboardFocus: "fl-cabinet-focus"
         },
         
         events: {
