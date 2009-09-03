@@ -16,7 +16,3 @@
 .fl-collapsingPanel.fl-cabinet-drawerClosed > *:first-child {
 	-webkit-border-radius:8px;
 }
-
-.fl-cabinet-focus {
-    outline: #0000FF inset thin;
-}

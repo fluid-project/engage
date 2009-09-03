@@ -126,10 +126,8 @@ fluid_1_2 = fluid_1_2 || {};
     var addKeyNav = function (that) {
         that.container.attr("tabindex", 0);
         that.container.fluid("selectable", {
-            selectableSelector: that.options.selectors.handle,
-            onSelect: function (element) {findHandleBase(that, element).addClass(that.options.styles.keyboardFocus);},
-            onUnselect:function (element) {findHandleBase(that, element).removeClass(that.options.styles.keyboardFocus);}
-            });
+            selectableSelector: that.options.selectors.handle
+        });
         that.locate("handle").fluid("activatable", function (evt) {
             that.toggleDrawers(findHandleBase(that, evt.target));
         });
@@ -213,9 +211,7 @@ fluid_1_2 = fluid_1_2 || {};
             
             drawer: "fl-panel fl-panel-autoHeading fl-cabinet-animation fl-panel-collapsable",
             contents: "fl-cabinet-contents",
-            handle: "fl-cabinet-handle",
-            
-            keyboardFocus: "fl-cabinet-focus"
+            handle: "fl-cabinet-handle"
         },
         
         events: {
