@@ -16,30 +16,29 @@ fluid_1_2 = fluid_1_2 || {};
 
 (function ($, fluid) {
     
-    var treeNode = function (id, key, value) {
+    var treeNode = function (id, key, value, classes) {
         var obj = {ID: id};
         obj[key] = value;
+        if (classes) {
+            obj.decorators = {
+                type: "addClass",
+                classes: classes
+            };
+        }
         
         return obj; 
     };
     
-    var compileMessage = function (id, messageKey, messageArgs) {
-        return {
-            ID: id,
-            messagekey: messageKey,
-            args: messageArgs
-        };
+    var compileMessage = function (id, messageKey, messageArgs, classes) {
+        var obj = treeNode(id, "messagekey", messageKey, classes);
+        obj.args = messageArgs;
+        return obj;
     };
     
     var conditionalNode = function (condition, onTrue, onFalse) {
-        var value;
-        if(condition) {
-            value = onTrue;
-        } else {
-            value = onFalse;
-        }
+        var func = condition ? onTrue : onFalse;
         
-        return value;
+        return func();
     };
     
     var addCount = function (string, count) {
@@ -56,20 +55,31 @@ fluid_1_2 = fluid_1_2 || {};
         ];
         
         generateTree = function () {
+            var styles = that.options.styles;
             return fluid.transform(that.options.links, function (object) {
                 var title = object.title || "";
                 var tree = treeNode("listItems:", "children", [
-                    treeNode("link", "target", object.target || ""),
-                    conditionalNode(object.category, compileMessage("titleText", "linkToMoreMessage", [addCount(object.category, object.size || "")]), treeNode("titleText", "value", title)),
-                    treeNode("descriptionText", "value", object.description || "")
-                ]);
+                    treeNode("link", "target", object.target || "", styles.link),
+                    conditionalNode(object.category, function () {
+                        return compileMessage("titleText", "linkToMoreMessage", [addCount(object.category, object.size || "")], styles.category);
+                    }, function () {
+                        return treeNode("titleText", "value", title, styles.titleText);
+                    }),
+                    treeNode("descriptionText", "value", object.description || "", styles.descriptionText)
+                ], styles.listItems);
                 
                 if(object.image) {
-                    tree.children.push(treeNode("image", "decorators", {
-                        attrs: {
-                            src: object.image || ""
+                    tree.children.push(treeNode("image", "decorators", [
+                        {
+                            attrs: {
+                                src: object.image || ""
+                            }
+                        },
+                        {
+                            type: "addClass",
+                            classes: styles.image
                         }
-                    }));
+                    ]));
                 }
                 
                 return tree;
@@ -88,8 +98,13 @@ fluid_1_2 = fluid_1_2 || {};
          
     };
     
+    var styleGroup = function (that) {
+        that.locate("listGroup").addClass(that.options.styles.listGroup);
+    };
+    
     var setup = function (that) {
         render(that);
+        styleGroup(that);
     };
     
     fluid.navigationList = function (container, options) {
@@ -112,11 +127,17 @@ fluid_1_2 = fluid_1_2 || {};
             descriptionText: ".flc-navigationList-descriptionText"
         },
         
-        styles: {},
-        
-        strings: {
-            linkToMoreMessage: "See all in"
+        styles: {
+            listGroup: "fl-list fl-list-thumbnails fl-thumbnails-expanded",
+            listItems: null,
+            link: null,
+            image: "fl-icon",
+            titleText: null,
+            descriptionText: "fl-link-summary",
+            category: null
         },
+        
+        strings: {},
         
         events: {},
         
