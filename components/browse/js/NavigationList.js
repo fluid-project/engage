@@ -89,9 +89,12 @@ fluid_1_2 = fluid_1_2 || {};
                         return compileMessage("titleText", "linkToMoreMessage", [object.category || "", object.size || ""], styles.category);
                     }, function () {
                         return treeNode("titleText", "value", title, styles.titleText);
-                    }),
-                    treeNode("descriptionText", "value", object.description || "", styles.descriptionText)
+                    })
                 ], styles.listItems);
+                
+                if(object.description) {
+                    tree.children.push(treeNode("descriptionText", "value", object.description || "", styles.descriptionText));
+                }
                 
                 if (object.image) {
                     tree.children.push(treeNode("image", "decorators", [
@@ -152,6 +155,8 @@ fluid_1_2 = fluid_1_2 || {};
         var that = fluid.initView("fluid.navigationList", container, options);
         
         setup(that);
+        
+        return that;
     };
     
     /**
@@ -188,9 +193,9 @@ fluid_1_2 = fluid_1_2 || {};
                     target: "",
                     image: "",
                     title: "",
-                    description: "",
+                    description: null,
                     category: null,
-                    size: ""
+                    size: null
                 }
             ]
         }
