@@ -10,7 +10,7 @@
  https://source.fluidproject.org/svn/LICENSE.txt
  
  */
-/*global jQuery, fluid*/
+/*global jQuery, fluid, fluid_1_2*/
 
 fluid_1_2 = fluid_1_2 || {};
 
@@ -71,15 +71,15 @@ fluid_1_2 = fluid_1_2 || {};
      * @param {Object} that, the component
      */
     var render = function (that) {
-         var selectorMap = [
+        var selectorMap = [
             {selector: that.options.selectors.listItems, id: "listItems:"},
             {selector: that.options.selectors.link, id: "link"},
             {selector: that.options.selectors.image, id: "image"},
             {selector: that.options.selectors.titleText, id: "titleText"},
             {selector: that.options.selectors.descriptionText, id: "descriptionText"}
         ];
-        
-        generateTree = function () {
+
+        var generateTree = function () {
             var styles = that.options.styles;
             return fluid.transform(that.options.links, function (object) {
                 var title = object.title || "";
@@ -93,7 +93,7 @@ fluid_1_2 = fluid_1_2 || {};
                     treeNode("descriptionText", "value", object.description || "", styles.descriptionText)
                 ], styles.listItems);
                 
-                if(object.image) {
+                if (object.image) {
                     tree.children.push(treeNode("image", "decorators", [
                         {
                             attrs: {
@@ -193,6 +193,7 @@ fluid_1_2 = fluid_1_2 || {};
                     size: ""
                 }
             ]
-    });
+        }
+    );
     
 })(jQuery, fluid_1_2);
