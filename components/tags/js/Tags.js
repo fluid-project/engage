@@ -151,14 +151,14 @@ fluid = fluid || {};
         };
 
         var totalTagsStr = fluid.stringTemplate(that.options.strings.tagsTitle, {num: tags.myTags.length + tags.allTags.length});
-        that.container.append($("<h1>" + totalTagsStr + "</h1>"));
+        that.container.append($("<h2>" + totalTagsStr + "</h2>"));
         
         var myTagsDiv = $("<div></div>");
         that.container.append(myTagsDiv);
         fluid.tags(myTagsDiv, {
             strings: {title: that.options.strings.myTags}, 
             tags: tags.myTags,
-            templateURL: "TagsTemplate.html"
+            templateURL: that.options.tagsTemplateURL
         });
         
         var allTagsDiv = $("<div></div>");
@@ -169,7 +169,7 @@ fluid = fluid || {};
             },
             allowEdit: false,
             tags: tags.allTags,
-            templateURL: "TagsTemplate.html"
+            templateURL: that.options.tagsTemplateURL
         });
 
         return that; 
@@ -181,7 +181,8 @@ fluid = fluid || {};
             tagsTitle: "Tags (%num)",
             myTags: "My Tags (%num)",
             allTags: "All Tags (%num)"
-        }
+        },
+        tagsTemplateURL: "TagsTemplate.html"
     });
 
 })(jQuery, fluid);
