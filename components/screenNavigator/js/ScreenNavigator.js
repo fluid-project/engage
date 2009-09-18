@@ -36,8 +36,8 @@ var fluid_1_2 = fluid_1_2 || {};
 
         var coreContainer = that.locate("viewContainer");
         // Webkit CSS event to listent to
-        coreContainer[0].addEventListener("webkitTransitionEnd", that.animationEventComplete, true);
-        coreContainer[0].addEventListener("orientationchange", that.orientationChange, true);
+        coreContainer.bind("webkitTransitionEnd", that.animationEventComplete);
+        coreContainer.bind("orientationchange", that.orientationChange);
 
         ///////////////////////////////////////////////////
         // Events
