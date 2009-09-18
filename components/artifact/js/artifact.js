@@ -67,10 +67,14 @@ fluid = fluid || fluid_1_2;
         };
 		
 		var myTags = [];
-		
+		that.artifactDescription = fluid.artifactDescription(that, "artifactDescription", [that.locate("descriptionScope"), 
+				{model: that.options.toRender.model.Description, 
+				collapseContainerURL: "engage-client/description/images/collapse.png",
+				expandContainerURL: "engage-client/description/images/expand.png"}])
 		that.artifactNavigationList = fluid.initSubcomponent(that, "artifactNavigationList", [that.locate("navigationListScope"), navigationListOptions]);
 		that.artifactTags = fluid.initSubcomponent(that, "artifactTags", [that.locate("tagsScope"), 
-				{myTags: myTags || [], allTags: that.options.toRender.model.Tags || []}]);
+				{myTags: myTags || [], allTags: that.options.toRender.model.Tags || [], 
+				tagsTemplateURL: "engage-client/tags/html/TagsTemplate.html"}]);
 		that.artifactCabinet = fluid.initSubcomponent(that, "artifactCabinet", that.locate("cabinetScope"));
 		// call renderer function
 		renderArtifactPage(that);    
@@ -85,9 +89,9 @@ fluid = fluid || fluid_1_2;
 	//start of Fluid defaults
 	fluid.defaults("fluid.artifact", {
 	    selectors: {
+			descriptionScope: ".artifact-description",
 			tagsScope: ".tags-pane",
 	        renderScope: ".flc-artifact-renderscope",
-	        artifactPanelTags: ".flc-artifact-panel-tags",
 	        cabinetScope: ".cabinet",
 	        navigationListScope: ".flc-navigationList"
 	    },
@@ -96,6 +100,9 @@ fluid = fluid || fluid_1_2;
 	        artNameHeadingInList: "fl-text-bold"
 	    },
 	    toRender: {},
+	    artifactDescription: {
+            type: "fluid.artifactDescription"
+        },
 	    artifactCabinet: {
             type: "fluid.cabinet"
         },

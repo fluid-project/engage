@@ -143,21 +143,18 @@ fluid = fluid || {};
     // TODO: find a better name for this. It is the composition of 'myTags' and 'allTags'
     fluid.artifactTags = function (container, options) {
         var that = fluid.initView("artifactTags", container, options);
-        
-        // TODO: retrieve these tags from the server for a particular artifact
-        var tags = {
-            myTags: ["lorem", "ipsum", "dolor"],
-            allTags: ["sit", "amet", "consectetur", "adipiscing", "elit", "Mauris", "iaculis", "scelerisque", "Cras", "nunc", "libero"]
-        };
 
-        var totalTagsStr = fluid.stringTemplate(that.options.strings.tagsTitle, {num: tags.myTags.length + tags.allTags.length});
-        that.container.append($("<h2>" + totalTagsStr + "</h2>"));
+        var totalTagsStr = fluid.stringTemplate(that.options.strings.tagsTitle, 
+        		{num: that.options.myTags.length + that.options.allTags.length});
+        
+        //that.container.append($("<h2>" + totalTagsStr + "</h2>"));
+        $("#drawer-tags").html(totalTagsStr);
         
         var myTagsDiv = $("<div></div>");
         that.container.append(myTagsDiv);
         fluid.tags(myTagsDiv, {
             strings: {title: that.options.strings.myTags}, 
-            tags: tags.myTags,
+            tags: that.options.myTags,
             templateURL: that.options.tagsTemplateURL
         });
         
@@ -168,7 +165,7 @@ fluid = fluid || {};
                 title: that.options.strings.allTags
             },
             allowEdit: false,
-            tags: tags.allTags,
+            tags: that.options.allTags,
             templateURL: that.options.tagsTemplateURL
         });
 
