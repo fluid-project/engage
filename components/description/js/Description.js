@@ -29,54 +29,37 @@ fluid = fluid || {};
     };	
 	
 	var generateTree = function (that) {
-		if (needToggle(that))
-			return {
-				children: [
-				{
-					ID: "content:",
-					value: that.options.model.substring(0, that.options.visibleCharacters) + "..."
-				},
-				{
-					ID: "content:",
-					value: that.options.model,
-					decorators: [{
-	                    type: "jQuery",
-	                    func: "hide"
-	                }]
-				}]
-			};
-		else {
-			return {
-				children: [{
-					ID: "content",
-					value: that.options.model
-				}]
-			};
-		}
+		return {
+			children: [{
+				ID: "content",
+				value: that.options.model
+			}]
+		};
 	};	
 	
 	var createRenderOptions = function (that) {
 		var selectorMap = [
 			{
 				selector: that.options.selectors.content, 
-				id: "content" + (needToggle(that) ? ":" : "")
+				id: "content"
 			}
 		];
 		return {cutpoints: selectorMap, debug: true};
 	};
 
 	var addClickEvent = function (that) {
-		$(".fl-description-toggler").click(that.toggleDescription);
+		that.locate("toggler").click(that.toggleDescription);
 	};
 	
 	var needToggle = function (that) {
-		return that.options.model.length > that.options.visibleCharacters;
+		return that.locate("content").height() > 25;
 	};
 	
 	var setUpDescription = function (that) {
 		that.options.model = that.options.model.replace(/(<([^>]+)>)/gi, "");
 		fluid.selfRender(that.container, generateTree(that), createRenderOptions(that));
 		if (needToggle(that)) {
+			that.locate("content").addClass(that.options.styles.descriptionCollapsed);
 			addToggler(that);
 			setUpToggler(that);
 		}
@@ -92,26 +75,30 @@ fluid = fluid || {};
 	fluid.artifactDescription = function (container, options) {
 		
 		var that = fluid.initView("artifactDescription", container, options);
-		that.template = {};
+		
 		that.toggleDescription = function () {
-			if (that.locate("collapseContainer").is(":hidden")) {
-				that.locate("expandContainer").hide();
-				that.locate("collapseContainer").show();
-				$(".fl-artifact-description-content:first").hide();
-				$(".fl-artifact-description-content:last").show();
+			if (that.locate("collapseContainer").is(":hidden")) {				
+				that.locate("content").removeClass(that.options.styles.descriptionCollapsed);
+				that.locate("content").addClass(that.options.styles.descriptionExpanded);
 			}
 			else {
-				that.locate("expandContainer").show();
-				that.locate("collapseContainer").hide();
-				$(".fl-artifact-description-content:last").hide();
-				$(".fl-artifact-description-content:first").show();
+				that.locate("content").addClass(that.options.styles.descriptionCollapsed);
+				that.locate("content").removeClass(that.options.styles.descriptionExpanded);
 			}
+			that.locate("expandContainer").toggle();
+			that.locate("collapseContainer").toggle();
 		};		
+		
 		setUpDescription(that);
+		
 		return that;
 	};
 	
 	fluid.defaults("artifactDescription", {
+		styles: {
+			descriptionCollapsed: "fl-description-hide",
+			descriptionExpanded: "fl-description-show",
+		},
 		selectors: {
 			description: ".fl-artifact-description",
 			content: ".fl-artifact-description-content",
@@ -119,7 +106,6 @@ fluid = fluid || {};
 			collapseContainer: ".fl-description-toggler-collapse",
 			expandContainer: ".fl-description-toggler-expand"
 		},
-		visibleCharacters: 250,
 		collapseContainerURL: "../images/collapse.png",
 		expandContainerURL: "../images/expand.png",
 		model: "<i>Marvel Super Special</i>, vol. 1, no. 25, <i>Rock & Rule</i>, 1983. This comic book contains an adaptation of the film <Rock 'n' Rule</i>, along with articles on the making of the film, the music of the film, and production stills. <p> The cover of the book features an illustration of several characters from the film, along with the text \"\" Marvel Super Special / The Official Adaptation / of the Feature-Length Animated Rock 'n' Roll Fantasy from Nelvana! / Plus: Articles, Interviews and Artwork from the Movie.\"\"The book includes a special section on the making of the film."
