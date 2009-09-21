@@ -52,7 +52,7 @@ fluid = fluid || {};
 	};
 	
 	var needToggle = function (that) {
-		return that.locate("content").height() > 25;
+		return that.locate("content").height() > that.options.collapsedHeight;
 	};
 	
 	var setUpDescription = function (that) {
@@ -77,13 +77,14 @@ fluid = fluid || {};
 		var that = fluid.initView("artifactDescription", container, options);
 		
 		that.toggleDescription = function () {
-			if (that.locate("collapseContainer").is(":hidden")) {				
-				that.locate("content").removeClass(that.options.styles.descriptionCollapsed);
-				that.locate("content").addClass(that.options.styles.descriptionExpanded);
+			var selector = that.locate("content");
+			if (that.locate("collapseContainer").is(":hidden")) {
+				selector.removeClass(that.options.styles.descriptionCollapsed);
+				selector.addClass(that.options.styles.descriptionExpanded);
 			}
 			else {
-				that.locate("content").addClass(that.options.styles.descriptionCollapsed);
-				that.locate("content").removeClass(that.options.styles.descriptionExpanded);
+				selector.addClass(that.options.styles.descriptionCollapsed);
+				selector.removeClass(that.options.styles.descriptionExpanded);
 			}
 			that.locate("expandContainer").toggle();
 			that.locate("collapseContainer").toggle();
@@ -106,6 +107,7 @@ fluid = fluid || {};
 			collapseContainer: ".fl-description-toggler-collapse",
 			expandContainer: ".fl-description-toggler-expand"
 		},
+		collapsedHeight: 25,
 		collapseContainerURL: "../images/collapse.png",
 		expandContainerURL: "../images/expand.png",
 		model: "<i>Marvel Super Special</i>, vol. 1, no. 25, <i>Rock & Rule</i>, 1983. This comic book contains an adaptation of the film <Rock 'n' Rule</i>, along with articles on the making of the film, the music of the film, and production stills. <p> The cover of the book features an illustration of several characters from the film, along with the text \"\" Marvel Super Special / The Official Adaptation / of the Feature-Length Animated Rock 'n' Roll Fantasy from Nelvana! / Plus: Articles, Interviews and Artwork from the Movie.\"\"The book includes a special section on the making of the film."
