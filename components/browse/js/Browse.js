@@ -176,7 +176,9 @@ fluid_1_2 = fluid_1_2 || {};
         setTitle(that);
         setDescription(that);
         renderBrowse(that);
-        initCabinet(that);
+        if (that.options.useCabinet) {
+            initCabinet(that);
+        }
     };
     
     /**
