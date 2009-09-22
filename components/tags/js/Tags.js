@@ -30,11 +30,8 @@ fluid = fluid || {};
     };
         
     var generateTree = function (that) {
-        var tags = that.options.tags;
-        
-        // TODO: next two in one line
+        var tags = that.options.tags;        
         var tree = {children: fluid.transform(tags, createTagTreeNode)};
-        
         var title = fluid.stringTemplate(that.options.strings.title, {num: tags.length});
         tree.children.push({ID: "title", value: title});
         return tree;
