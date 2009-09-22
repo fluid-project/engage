@@ -99,6 +99,15 @@ fluid_1_2 = fluid_1_2 || {};
         });
     };
     
+    var addDescriptionStyle = function (that) {
+        fluid.transform(that.locate("cabinetHandle"), function (object, index) {
+            console.log($(that.options.selectors.listHeaderDescription, object));
+            if ($(that.options.selectors.listHeaderDescription, object).length > 0) {
+                $(object).addClass(that.options.styles.listHeaderDescription);
+            }
+        });
+    };
+    
     /**
      * Sets the title that will be displayed at the top of the page. It takes the value from the options.
      * 
@@ -147,6 +156,7 @@ fluid_1_2 = fluid_1_2 || {};
         
         fluid.selfRender(that.locate("browseContents"), renderTree(), {cutpoints: selectorMap});
         initComponents(that.locate("lists"), extractArray(that.options.lists, "listOptions"));
+        addDescriptionStyle(that);
     };
     
     /**
@@ -195,6 +205,7 @@ fluid_1_2 = fluid_1_2 || {};
             browseDescription: ".flc-browse-description",
             browseDescriptionToggle: ".flc-browse-descriptionToggle",
             browseContents: ".flc-browse-contents",
+            cabinetHandle: ".flc-cabinet-handle",
             listHeader: ".flc-cabinet-header",
             listHeaderDescription: ".flc-cabinet-headerDescription",
             lists: ".flc-cabinet-drawer"
@@ -202,7 +213,8 @@ fluid_1_2 = fluid_1_2 || {};
         
         styles: {
             browseDescription: "",
-            browseDescriptionToggle: ""
+            browseDescriptionToggle: "",
+            listHeaderDescription: "fl-cabinet-headerWithDescription"
         },
         
         strings: {
