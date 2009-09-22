@@ -17,10 +17,23 @@ fluid = fluid || {};
 
 (function ($, fluid) {
     
+    var createHiddenTreeNode = function (id, val) {
+        return {
+                    ID: id,
+                    value: val,
+                    decorators: [
+                        {type: "jQuery",
+                         func: "hide"}
+                    ]
+                };
+    };
+    
     // TODO: this can be refactored somewhat to remove the duplication of node creation
-    //        also, change the signature, just take that.
-    var generateTree = function (that, title, tags, allowEdit) {
-        title = fluid.stringTemplate(title, {num: tags.length});
+    var generateTree = function (that) {
+        var tags = that.options.tags;
+        var title = fluid.stringTemplate(that.options.strings.title, {num: tags.length});
+        var allowEdit = that.options.allowEdit;
+        
         var tagNodes = fluid.transform(tags, function (tag) {
             var node = {
                 ID: "tag:",
@@ -31,14 +44,7 @@ fluid = fluid || {};
             };
             
             if (allowEdit) {
-                node.children.push({
-                    ID: "remove",
-                    value: "remove",
-                    decorators: [
-                        {type: "jQuery",
-                         func: "hide"}
-                    ]
-                });
+                node.children.push(createHiddenTreeNode("remove", "remove"));
             }
             
             return node;
@@ -48,14 +54,7 @@ fluid = fluid || {};
         
         tree.children.push({ID: "title", value: title});
         if (allowEdit) {
-            tree.children.push({
-                ID: "editField",
-                value: "",
-                decorators: [{
-                    type: "jQuery",
-                    func: "hide"
-                }]
-            });
+            tree.children.push(createHiddenTreeNode("editField", ""));
             tree.children.push({
                 ID: "edit",
                 value: "Edit",
@@ -82,7 +81,7 @@ fluid = fluid || {};
     };
     
     var renderTags = function (that) {
-        var tree = generateTree(that, that.options.strings.title, that.options.tags, that.options.allowEdit);
+        var tree = generateTree(that);
         var selectorMap = generateSelectorMap(that.options.selectors);
         var templates;
 
