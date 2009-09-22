@@ -179,6 +179,8 @@ fluid = fluid || {};
             myTags: "My Tags (%num)",
             allTags: "All Tags (%num)"
         },
+		myTags: [],
+		allTags: [],
         tagsTemplateURL: "TagsTemplate.html"
     });
 
