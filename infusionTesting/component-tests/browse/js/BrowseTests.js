@@ -103,19 +103,49 @@ https://source.fluidproject.org/svn/LICENSE.txt
         //TODO: Test that toggle is not rendered if description isn't present or not large enough to need one
         
         tests.test("Initialize with a cabinet", function () {
-            var browse = setup(CONTAINER);
-            var selectors = browse.options.selectors;
-            var styles = browse.options.styles;
+            var browse = setup(CONTAINER, {useCabinet: true});
             
             initTests(browse);
         });
         
         tests.test("Initialize without a cabinet", function () {
             var browse = setup(CONTAINER, {useCabinet: false});
-            var selectors = browse.options.selectors;
-            var styles = browse.options.styles;
             
             initTests(browse);
+        });
+        
+        tests.test("Description on cabinet header", function () {
+            var options = {
+                lists: [
+                    {
+                        category: "category",
+                        description: "description",
+                        listOptions: {}
+                    }
+                ]
+            };
+            var browse = setup(CONTAINER, options);
+            var selectors = browse.options.selectors;
+            
+            jqUnit.assertEquals("The description is rendered", 1, $(selectors.listHeaderDescription).length);
+            jqUnit.assertTrue("Header Description styling applied", $(selectors.cabinetHandle).hasClass(browse.options.styles.listHeaderDescription));
+            
+        });
+        
+        tests.test("No Description on cabinet header", function () {
+            var options = {
+                lists: [
+                    {
+                        category: "category",
+                        listOptions: {}
+                    }
+                ]
+            };
+            var browse = setup(CONTAINER, options);
+            var selectors = browse.options.selectors;
+            
+            jqUnit.assertEquals("The description is not rendered", 0, $(selectors.listHeaderDescription).length);
+            jqUnit.assertFalse("Header Description styling is not applied", $(selectors.cabinetHandle).hasClass(browse.options.styles.listHeaderDescription));
         });
     };
     
