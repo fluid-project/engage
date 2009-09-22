@@ -45,7 +45,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
     };
     
     var initTest = function () {
-        expect(7);
+        expect(4);
         jqUnit.assertDeepEq("The model has been set correctly", tagsArray, myTags.model);
         for (var sName in myTags.options.selectors) {
             var selector = myTags.container.selector + " " + myTags.options.selectors[sName];

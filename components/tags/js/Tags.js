@@ -17,67 +17,33 @@ fluid = fluid || {};
 
 (function ($, fluid) {
     
-    var createHiddenTreeNode = function (id, val) {
-        return {
-                    ID: id,
-                    value: val,
-                    decorators: [
-                        {type: "jQuery",
-                         func: "hide"}
-                    ]
-                };
+    var createTagTreeNode = function (tag) {
+        var node = {
+            ID: "tag:",
+            children: [{
+                ID: "tagName",
+                value: tag
+            }]
+        };
+                    
+        return node;
     };
-    
-    // TODO: this can be refactored somewhat to remove the duplication of node creation
+        
     var generateTree = function (that) {
         var tags = that.options.tags;
+        
+        // TODO: next two in one line
+        var tree = {children: fluid.transform(tags, createTagTreeNode)};
+        
         var title = fluid.stringTemplate(that.options.strings.title, {num: tags.length});
-        var allowEdit = that.options.allowEdit;
-        
-        var tagNodes = fluid.transform(tags, function (tag) {
-            var node = {
-                ID: "tag:",
-                children: [{
-                    ID: "tagName",
-                    value: tag
-                }]
-            };
-            
-            if (allowEdit) {
-                node.children.push(createHiddenTreeNode("remove", "remove"));
-            }
-            
-            return node;
-        });
-        
-        var tree = {children: tagNodes};
-        
         tree.children.push({ID: "title", value: title});
-        if (allowEdit) {
-            tree.children.push(createHiddenTreeNode("editField", ""));
-            tree.children.push({
-                ID: "edit",
-                value: "Edit",
-                decorators: [{
-                    type: "jQuery",
-                    func: "click",
-                    args: [function () {
-                        that.locate("editField").show();
-                        that.locate("remove").show();
-                    }]
-                }]
-            });
-        }
         return tree;
     };
         
     var generateSelectorMap = function (selectors) {
         return  [{selector: selectors.title, id: "title"},
                     {selector: selectors.tag, id: "tag:"},
-                    {selector: selectors.tagName, id: "tagName"},
-                    {selector: selectors.edit, id: "edit"},
-                    {selector: selectors.editField, id: "editField"},
-                    {selector: selectors.remove, id: "remove"}];
+                    {selector: selectors.tagName, id: "tagName"}];
     };
     
     var renderTags = function (that) {
@@ -123,10 +89,7 @@ fluid = fluid || {};
         selectors: {
             title: ".flc-tags-title",
             tag: ".flc-tags-tag",
-            tagName: ".flc-tags-tagName",
-            edit: ".flc-tags-edit",
-            editField: ".flc-tags-editField",
-            remove: ".flc-tags-remove"
+            tagName: ".flc-tags-tagName"
         },
         strings: {
             title: "Tags"
@@ -134,53 +97,8 @@ fluid = fluid || {};
         events: {
             afterInit: null
         },
-        allowEdit: true, 
         tags: [],
         templateURL: null  // if not passed in expect the template in the current page
     });
     
-    // TODO: find a better name for this. It is the composition of 'myTags' and 'allTags'
-    fluid.artifactTags = function (container, options) {
-        var that = fluid.initView("artifactTags", container, options);
-
-        var totalTagsStr = fluid.stringTemplate(that.options.strings.tagsTitle, 
-        		{num: that.options.myTags.length + that.options.allTags.length});
-        
-        //that.container.append($("<h2>" + totalTagsStr + "</h2>"));
-        $("#drawer-tags").html(totalTagsStr);
-        
-        var myTagsDiv = $("<div></div>");
-        that.container.append(myTagsDiv);
-        fluid.tags(myTagsDiv, {
-            strings: {title: that.options.strings.myTags}, 
-            tags: that.options.myTags,
-            templateURL: that.options.tagsTemplateURL
-        });
-        
-        var allTagsDiv = $("<div></div>");
-        that.container.append(allTagsDiv);
-        fluid.tags(allTagsDiv, {
-            strings: {
-                title: that.options.strings.allTags
-            },
-            allowEdit: false,
-            tags: that.options.allTags,
-            templateURL: that.options.tagsTemplateURL
-        });
-
-        return that; 
-    };
-
-    fluid.defaults("artifactTags", {
-        // TODO: switch to using message bundle instead of strings?
-        strings: {
-            tagsTitle: "Tags (%num)",
-            myTags: "My Tags (%num)",
-            allTags: "All Tags (%num)"
-        },
-		myTags: [],
-		allTags: [],
-        tagsTemplateURL: "TagsTemplate.html"
-    });
-
 })(jQuery, fluid);
