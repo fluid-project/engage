@@ -16,6 +16,15 @@ fluid_1_2 = fluid_1_2 || {};
 
 (function ($, fluid) {
     
+    /**
+     * Creates a render component for the component tree. The key can be any key that a componet tree would take and the value is what would be assigned to it.
+     * For example if you wanted to have node that just prints out "Hello World" you could set the key to "value" and the value to "Hello World"
+     * 
+     * @param {Object} id, the ID used by the component tree
+     * @param {Object} key, a key representing an entry in a renderer component
+     * @param {Object} value, the value assigned to the key
+     * @param {Object} classes, (optional) can add classes without having to specify the decorator key. 
+     */
     var treeNode = function (id, key, value) {
         var obj = {ID: id};
         obj[key] = value;
@@ -23,6 +32,14 @@ fluid_1_2 = fluid_1_2 || {};
         return obj;
     };
     
+    /**
+     * Createsthe branch level node for the component tree, including the rendering of the subcomponent.
+     * 
+     * @param {Object} that, the component
+     * @param {Object} id, the ID used by the component tree
+     * @param {Object} children, leaves on the branch
+     * @param {Object} options, options passed to the subcomponent
+     */
     var branch = function (that, id, children, options) {
         return {
             ID: id,
@@ -35,6 +52,14 @@ fluid_1_2 = fluid_1_2 || {};
         };
     };
     
+    /**
+     * Children that will be attached to the branch. If no description is provided no markup related to it will be rendered
+     * 
+     * @param {Object} titleID, the ID used by the component tree for the title
+     * @param {Object} title, the title to be rendered
+     * @param {Object} descriptionID, the ID used by the component tree for the description
+     * @param {Object} description, the description to be rendered
+     */
     var branchChildren = function (titleID, title, descriptionID, description) {
         title = title || "";
         
@@ -49,40 +74,95 @@ fluid_1_2 = fluid_1_2 || {};
         return obj;
     };
     
-    var addId = function (id, object) {
-        object.ID = id;
-        
-        return object;
+    /**
+     * Traverses through an array of objects returning an array of all the values for a specified key.
+     * 
+     * @param {Object} array, an array of Objects to search through
+     * @param {Object} key, the key for whose value to return from each object. Will return an empty string "",
+     * if the key does not exist in the any of the objects.
+     */
+    var extractArray = function (array, key) {
+        return fluid.transform(array, function (object, index) {
+            return object[key] || null;
+        });
     };
     
+    /**
+     * Used to initialize multiple navigationList components
+     * 
+     * @param {Object} container, the set of container elements used by the navigationLists
+     * @param {Object} options, an array of options to be used by the navigationLists
+     */
+    var initComponents = function (container, options) {
+        fluid.transform(container, function (object, index) {
+            fluid.navigationList(object, options[index]);
+        });
+    };
+    
+    /**
+     * Sets the title that will be displayed at the top of the page. It takes the value from the options.
+     * 
+     * @param {Object} that, the component
+     */
     var setTitle = function (that) {
         that.locate("title").text(that.options.strings.title);
     };
     
+    /**
+     * Sets the description that will be displayed at the top of the page. It takes the value from the options.
+     * 
+     * @param {Object} that, the component
+     */
     var setDescription = function (that) {
         that.locate("browseDescription").text(that.options.strings.description);
     };
     
+    /**
+     * Renderers out the pieces of the component
+     * 
+     * @param {Object} that,the component
+     */
     var renderBrowse = function (that) {
         var selectorMap = [
             {selector: that.options.selectors.lists, id: "lists:"},
             {selector: that.options.selectors.listHeader, id: "listHeader"},
-            {selector: that.options.selectors.listHeaderDescription, id:"listHeaderDescription"}
+            {selector: that.options.selectors.listHeaderDescription, id: "listHeaderDescription"}
         ];
         
+        //currently doesn't work due to a bug in the renderer (FLUID-2980), will re-explore this option if it gets fixed in time
+//        var renderTree = function () {
+//            return fluid.transform(that.options.lists, function (object, index) {
+//                return branch(that, "lists:", branchChildren("listHeader", object.category, "listHeaderDescription", object.description) ,object.listOptions);
+//            });
+//        };
+
         var renderTree = function () {
             return fluid.transform(that.options.lists, function (object, index) {
-                return branch(that, "lists:", branchChildren("listHeader", object.category, "listHeaderDescription", object.description) ,object.listOptions);
+                return {
+                    ID: "lists:",
+                    children: branchChildren("listHeader", object.category, "listHeaderDescription", object.description)
+                };
             });
         };
         
         fluid.selfRender(that.locate("browseContents"), renderTree(), {cutpoints: selectorMap});
+        initComponents(that.locate("lists"), extractArray(that.options.lists, "listOptions"));
     };
     
+    /**
+     * Initializes the Cabinet component which is used as a subcomponent
+     * 
+     * @param {Object} that, the componet
+     */
     var initCabinet = function (that) {
         that.cabinet = fluid.initSubcomponent(that, "cabinet", [that.locate("browseContents"), fluid.COMPONENT_OPTIONS]);
     };
     
+    /**
+     * Executes the various functions required to properly setup the component
+     * 
+     * @param {Object} that, the component
+     */
     var setup = function (that) {
         setTitle(that);
         setDescription(that);
@@ -90,6 +170,12 @@ fluid_1_2 = fluid_1_2 || {};
         initCabinet(that);
     };
     
+    /**
+     * The component's creator function 
+     * 
+     * @param {Object} container, the container which will hold the component
+     * @param {Object} options, options passed into the component
+     */
     fluid.browse = function (container, options) {
         var that = fluid.initView("fluid.browse", container, options);
         
@@ -99,10 +185,6 @@ fluid_1_2 = fluid_1_2 || {};
     };
     
     fluid.defaults("fluid.browse", {
-        navigationList: {
-            type: "fluid.navigationList"
-        },
-        
         cabinet: {
             type: "fluid.cabinet",
             options: {}
