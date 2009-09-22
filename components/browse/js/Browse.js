@@ -20,7 +20,33 @@ fluid_1_2 = fluid_1_2 || {};
         var obj = {ID: id};
         obj[key] = value;
         
-        return obj; 
+        return obj;
+    };
+    
+    var branch = function (that, id, children, options) {
+        return {
+            ID: id,
+            children: children,
+            decorators: {
+                type: "fluid",
+                func: that.options.navigationList.type,
+                options: options
+            }
+        };
+    };
+    
+    var branchChildren = function (titleID, title, descriptionID, description) {
+        title = title || "";
+        
+        var obj = [
+            treeNode(titleID, "value", title)
+        ];
+        
+        if (description && description !== "") {
+            obj.push(treeNode(descriptionID, "value", description));
+        }
+        
+        return obj;
     };
     
     var addId = function (id, object) {
@@ -45,10 +71,12 @@ fluid_1_2 = fluid_1_2 || {};
         ];
         
         var renderTree = function () {
-            return ;
+            return fluid.transform(that.options.lists, function (object, index) {
+                return branch(that, "lists:", branchChildren("listHeader", object.category, "listHeaderDescription", object.description) ,object.listOptions);
+            });
         };
         
-        fluid.selfRender(that.locate("browseContents"), tree, {cutpoints: selectoMap});
+        fluid.selfRender(that.locate("browseContents"), renderTree(), {cutpoints: selectorMap});
     };
     
     var initCabinet = function (that) {
@@ -58,7 +86,7 @@ fluid_1_2 = fluid_1_2 || {};
     var setup = function (that) {
         setTitle(that);
         setDescription(that);
-//        renderBrowse(that);
+        renderBrowse(that);
         initCabinet(that);
     };
     
@@ -72,8 +100,7 @@ fluid_1_2 = fluid_1_2 || {};
     
     fluid.defaults("fluid.browse", {
         navigationList: {
-            type: "fluid.navigationList",
-            options: {}
+            type: "fluid.navigationList"
         },
         
         cabinet: {
@@ -108,7 +135,8 @@ fluid_1_2 = fluid_1_2 || {};
         lists: [
             {
                 category: "",
-                links: ""
+                description: "",
+                listOptions: {}
             }
         ]
     });
