@@ -107,7 +107,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var selectors = browse.options.selectors;
             var styles = browse.options.styles;
             
-            initTests();
+            initTests(browse);
         });
         
         tests.test("Initialize without a cabinet", function () {
@@ -115,7 +115,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var selectors = browse.options.selectors;
             var styles = browse.options.styles;
             
-            initTests();
+            initTests(browse);
         });
     };
     
