@@ -101,7 +101,6 @@ fluid_1_2 = fluid_1_2 || {};
     
     var addDescriptionStyle = function (that) {
         fluid.transform(that.locate("cabinetHandle"), function (object, index) {
-            console.log($(that.options.selectors.listHeaderDescription, object));
             if ($(that.options.selectors.listHeaderDescription, object).length > 0) {
                 $(object).addClass(that.options.styles.listHeaderDescription);
             }
