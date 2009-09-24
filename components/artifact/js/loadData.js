@@ -24,12 +24,17 @@ var demo = demo || {};
 	};
 	
 	demo.loadJson = function (location) {
-		$.ajax({
-			url: location.protocol + "//" + location.host + "/couch", 
-			success: initArtifact,
-			dataType: "json",
-			data: location.search
-		});
+		if (location.protocol === "file:") {
+			fluid.artifact(".artifact-container");
+		}
+		else {
+			$.ajax({
+				url: location.protocol + "//" + location.host + "/couch", 
+				success: initArtifact,
+				dataType: "json",
+				data: location.search,
+			});
+		}
 	};
 	
 }(jQuery, fluid_1_2));

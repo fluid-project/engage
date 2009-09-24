@@ -17,26 +17,39 @@ fluid = fluid || fluid_1_2;
 
 (function ($, fluid) {
 	
-	//start of Renderer function that changes the template
-	var renderArtifactPage = function (that) {    
+	var setupArtifact = function (that) {
+		if (!that.options.toRender) {
+			var handler = fluid.artifact.handler({
+	    		modelURL: that.options.modelURL,
+	    		specURL: that.options.specURL,
+	    		getImageURL: function(imageString) {
+		    		return {
+		    			attrs: {
+		    				src: imageString.substring(imageString.indexOf("src='") + 5, 
+		    						imageString.indexOf(".jpg'") + 4) 
+		    			}
+		    		};
+				},
+				styles: {
+					artNameHeadingInList: "fl-text-bold"
+				}
+	    	});
+	    				
+			$.ajax({
+				url: handler.options.modelURL, 
+				success: handler.getDoc,
+				dataType: "json",
+				async: false
+			});
+			
+	    	that.options.toRender = handler.options.toRender;			
+		}
+	};
+	
+	var renderArtifactPage = function (that) {		
 		fluid.selfRender(that.locate("renderScope"), 
 				that.options.toRender.tree, 
 				{cutpoints: that.options.toRender.cutpoints, model: that.options.toRender.model, debug: true});
-	};
-
-	//start of function to attach on-click handler
-	var attachPanelClickHandler = function (that, artifactPanel) {
-		artifactPanel.click(function (event) {
-			event.stopPropagation();
-			artifactPanel.toggleClass(that.options.styles.hideGroup);
-		});
-	};
-    
-	//start of function to flip page on click
-	var attachFlipHandler = function (that) {
-		that.locate("artifactSideFlip").click(function () {
-			$(".fl-artifact-flip-transition").toggleClass("fl-flipped");
-		});
 	};
 
 	//start of creator function
@@ -66,29 +79,25 @@ fluid = fluid || fluid_1_2;
             }]
         };
 		
-		that.artifactDescription = fluid.initSubcomponent(that, "artifactDescription", [that.locate("descriptionScope"), 
-				{model: that.options.toRender.model.Description, 
-				collapseContainerURL: "engage-client/description/images/collapse.png",
-				expandContainerURL: "engage-client/description/images/expand.png"}])
+		setupArtifact(that);
+		
+		that.description = fluid.initSubcomponent(that, "description", [that.locate("descriptionScope"), 
+				{model: that.options.toRender.model.Description}])
 		that.artifactNavigationList = fluid.initSubcomponent(that, "artifactNavigationList", [that.locate("navigationListScope"), navigationListOptions]);
 		that.artifactTags = fluid.initSubcomponent(that, "artifactTags", [that.locate("tagsScope"), 
 				{tags: that.options.toRender.model.Tags, 
-				templateURL: "engage-client/tags/html/TagsTemplate.html"}]);
+				templateURL: "../../../../engage/components/tags/html/TagsTemplate.html"}]);
 		that.artifactCabinet = fluid.initSubcomponent(that, "artifactCabinet", that.locate("cabinetScope"));
-		// call renderer function
-		renderArtifactPage(that);    
-//		// start calling function to attach panel action listeners
-//		var artifactPanel = that.locate("artifactPanelTags");
-//		attachPanelClickHandler(that, artifactPanel);    
-//		// call function to attach flip handler
-//		attachFlipHandler(that);		
+
+		renderArtifactPage(that);
+		
 		return that; 
 	};
 	
 	//start of Fluid defaults
 	fluid.defaults("fluid.artifact", {
 	    selectors: {
-			descriptionScope: ".fl-artifact-description",
+			descriptionScope: ".flc-description",
 			tagsScope: ".tags-pane",
 	        renderScope: ".flc-artifact-renderscope",
 	        cabinetScope: ".cabinet",
@@ -98,9 +107,11 @@ fluid = fluid || fluid_1_2;
 	        hideGroup: "fl-artifact-panel-hidden",
 	        artNameHeadingInList: "fl-text-bold"
 	    },
-	    toRender: {},
-	    artifactDescription: {
-            type: "fluid.artifactDescription"
+	    toRender: null,
+	    specURL: "../spec/mmi.json",
+	    modelURL: "../data/demoData.json",
+	    description: {
+            type: "fluid.description"
         },
 	    artifactCabinet: {
             type: "fluid.cabinet"
@@ -112,5 +123,82 @@ fluid = fluid || fluid_1_2;
             type: "fluid.tags"
         }
 	});
+	
+	fluid.artifact.handler = function(options) {
+    	
+    	var that = fluid.initLittleComponent("fluid.artifact.handler", options);
+    	
+    	that.getDoc = function(data, status) {
+    		
+			that.options.model = fluid.artifact.handler.artifactCleanUp(data);
+    		
+    		var getSpec = function (specData, status) {
+    			try {
+    				specData.charAt;
+    				specData = JSON.parse(specData);
+    			} catch (e) {
+    				
+    			} finally {
+    				that.options.spec = specData.spec;
+    			}
+    		};
+    		
+    		$.ajax({
+    			url: that.options.specURL, 
+    			success: getSpec,
+    			dataType: "json",
+    			async: false
+    		}); 
+    		
+    		that.options.toRender = {
+    			tree: fluid.csRenderer.buildComponentTree(that.options),
+    			cutpoints: fluid.csRenderer.createCutpoints(that.options.spec),
+    			model: that.options.model
+    		};
+    	};
+    	return that;
+    };
+    
+    fluid.artifact.handler.artifactCleanUp = function (data) {
+		if (data instanceof Array) {
+			for (var i = 0; i < data.length; i++) {
+				if (data[i] instanceof Array || data[i] instanceof Object) {
+					data[i] = fluid.artifact.handler.artifactCleanUp(data[i]);
+				}
+				if (!data[i]) {
+					if (data.length < 2) {
+						return undefined;
+					}
+					else {
+						data.splice(i, 1);
+						i--;
+					}
+				}
+			}
+			if (data.length < 2) {
+				data = data[0];
+			}
+		}
+		else if (data instanceof Object) {
+			for (var key in data) {
+				if (data[key] instanceof Array || data[key] instanceof Object) {
+					data[key] = fluid.artifact.handler.artifactCleanUp(data[key]);
+				}
+				if (!data[key]) {
+					delete data[key];
+				}
+			}
+			//	if (size(data) < 1) return undefined;
+		}
+		return data;
+	};
 
+	fluid.defaults("fluid.artifact.handler", {   
+		model: {},
+		spec: {},
+		specURL: "",
+		modelURL: "",
+		styles: null
+    });
+	
 }(jQuery, fluid_1_2));
