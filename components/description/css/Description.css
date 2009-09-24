@@ -1,0 +1,27 @@
+.fl-description-hide {
+	max-height: 36px;
+}
+
+.fl-description-show {
+	max-height: 1000px;
+}
+
+.fl-description-content {
+	overflow: hidden;
+    margin-right: 19px;
+}
+
+.fl-description-togglerCollapse {
+    background-image: url("../images/collapse.png");  
+}
+
+.fl-description-togglerExpand {
+    background-image: url("../images/expand.png");
+}
+
+.fl-icon {
+    height: 19px;
+    width: 19px;
+    float: right;
+    margin-top: -36px;
+}

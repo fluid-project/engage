@@ -17,16 +17,22 @@ fluid = fluid || {};
 
 (function ($, fluid) {
 	
+    var cleanseSelector = function (selector) {
+        return selector.replace(/\./gi, "");
+    };
+    
 	var addToggler = function (that) {
-        var markup = "<span class='fl-description-toggler'>" +
-	        "<span class='fl-description-toggler-collapse'><a href='#'><img src=" + that.options.collapseContainerURL + " alt='Collapse Description' title='Collapse Description' style='border:none' /></a></span>" +
-	        "<span class='fl-description-toggler-expand'><a href='#'><img src=" + that.options.expandContainerURL + " alt='Expand Description' title='Expand Description' style='border:none' /></a></span>" +
-	    "</span>";
+        var styles = that.options.styles;
+        var markup = "<div class='" + cleanseSelector(that.options.selectors.toggler) + " " + styles.descriptionToggle + " " + styles.descriptionToggleCollapse + "' alt='Expand Description' title='Expand Description'>Expand</div>";
         var markupNode = $(markup);
 		markupNode.hide();
         that.container.append(markupNode);
         return markupNode;
     };	
+    
+    var addDescriptionClass = function (that) {
+        that.locate("content").addClass(that.options.styles.content);
+    };
 	
 	var generateTree = function (that) {
 		return {
@@ -56,8 +62,10 @@ fluid = fluid || {};
 	};
 	
 	var setUpDescription = function (that) {
+        addDescriptionClass(that);
 		that.options.model = that.options.model.replace(/(<([^>]+)>)/gi, "");
 		fluid.selfRender(that.container, generateTree(that), createRenderOptions(that));
+        
 		if (needToggle(that)) {
 			that.locate("content").addClass(that.options.styles.descriptionCollapsed);
 			addToggler(that);
@@ -66,28 +74,30 @@ fluid = fluid || {};
 	};
 	
 	var setUpToggler = function (that) {
-		that.locate("expandContainer").show();
-		that.locate("collapseContainer").hide();
 		that.locate("toggler").show();
 		addClickEvent(that);
 	};
 	
-	fluid.artifactDescription = function (container, options) {
+	fluid.description = function (container, options) {
 		
-		var that = fluid.initView("artifactDescription", container, options);
+		var that = fluid.initView("fluid.description", container, options);
 		
 		that.toggleDescription = function () {
 			var selector = that.locate("content");
-			if (that.locate("collapseContainer").is(":hidden")) {
-				selector.removeClass(that.options.styles.descriptionCollapsed);
-				selector.addClass(that.options.styles.descriptionExpanded);
+            var toggle = that.locate("toggler");
+            var styles = that.options.styles;
+            
+			if (toggle.hasClass(styles.descriptionToggleCollapse)) {
+				selector.removeClass(styles.descriptionCollapsed);
+				selector.addClass(styles.descriptionExpanded);
 			}
 			else {
-				selector.addClass(that.options.styles.descriptionCollapsed);
-				selector.removeClass(that.options.styles.descriptionExpanded);
+				selector.addClass(styles.descriptionCollapsed);
+				selector.removeClass(styles.descriptionExpanded);
 			}
-			that.locate("expandContainer").toggle();
-			that.locate("collapseContainer").toggle();
+            
+            toggle.toggleClass(styles.descriptionToggleCollapse);
+            toggle.toggleClass(styles.descriptionToggleExpand);
 		};		
 		
 		setUpDescription(that);
@@ -95,21 +105,20 @@ fluid = fluid || {};
 		return that;
 	};
 	
-	fluid.defaults("artifactDescription", {
+	fluid.defaults("fluid.description", {
 		styles: {
 			descriptionCollapsed: "fl-description-hide",
 			descriptionExpanded: "fl-description-show",
+            descriptionToggle: "fl-icon",
+            descriptionToggleCollapse: "fl-description-togglerCollapse",
+            descriptionToggleExpand: "fl-description-togglerExpand",
+            content: "fl-description-content"
 		},
 		selectors: {
-			description: ".fl-artifact-description",
-			content: ".fl-artifact-description-content",
-			toggler: ".fl-description-toggler",
-			collapseContainer: ".fl-description-toggler-collapse",
-			expandContainer: ".fl-description-toggler-expand"
+			content: ".flc-description-content",
+			toggler: ".flc-description-toggler"
 		},
-		collapsedHeight: 25,
-		collapseContainerURL: "../images/collapse.png",
-		expandContainerURL: "../images/expand.png",
+		collapsedHeight: 36,
 		model: "<i>Marvel Super Special</i>, vol. 1, no. 25, <i>Rock & Rule</i>, 1983. This comic book contains an adaptation of the film <Rock 'n' Rule</i>, along with articles on the making of the film, the music of the film, and production stills. <p> The cover of the book features an illustration of several characters from the film, along with the text \"\" Marvel Super Special / The Official Adaptation / of the Feature-Length Animated Rock 'n' Roll Fantasy from Nelvana! / Plus: Articles, Interviews and Artwork from the Movie.\"\"The book includes a special section on the making of the film."
 	});
 })(jQuery, fluid);
