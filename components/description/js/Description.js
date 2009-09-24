@@ -119,6 +119,6 @@ fluid = fluid || {};
 			toggler: ".flc-description-toggler"
 		},
 		collapsedHeight: 36,
-		model: "<i>Marvel Super Special</i>, vol. 1, no. 25, <i>Rock & Rule</i>, 1983. This comic book contains an adaptation of the film <Rock 'n' Rule</i>, along with articles on the making of the film, the music of the film, and production stills. <p> The cover of the book features an illustration of several characters from the film, along with the text \"\" Marvel Super Special / The Official Adaptation / of the Feature-Length Animated Rock 'n' Roll Fantasy from Nelvana! / Plus: Articles, Interviews and Artwork from the Movie.\"\"The book includes a special section on the making of the film."
+		model: "Description Information"
 	});
 })(jQuery, fluid);

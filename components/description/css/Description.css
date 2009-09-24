@@ -9,6 +9,7 @@
 .fl-description-content {
 	overflow: hidden;
     margin-right: 19px;
+    margin-left: 5px;
 }
 
 .fl-description-togglerCollapse {
