@@ -99,6 +99,11 @@ fluid_1_2 = fluid_1_2 || {};
         });
     };
     
+    /**
+     * Adds the style necessary for the cabinet headers that have descriptions
+     * 
+     * @param {Object} that, the component
+     */
     var addDescriptionStyle = function (that) {
         fluid.transform(that.locate("cabinetHandle"), function (object, index) {
             if ($(that.options.selectors.listHeaderDescription, object).length > 0) {
@@ -114,15 +119,6 @@ fluid_1_2 = fluid_1_2 || {};
      */
     var setTitle = function (that) {
         that.locate("title").text(that.options.strings.title);
-    };
-    
-    /**
-     * Sets the description that will be displayed at the top of the page. It takes the value from the options.
-     * 
-     * @param {Object} that, the component
-     */
-    var setDescription = function (that) {
-        that.locate("browseDescription").text(that.options.strings.description);
     };
     
     /**
@@ -168,13 +164,22 @@ fluid_1_2 = fluid_1_2 || {};
     };
     
     /**
+     * Initializes the Description component which is used as a subcomponent
+     * 
+     * @param {Object} that, the component
+     */
+    var initDescription = function (that) {
+        that.description = fluid.initSubcomponent(that, "description", [that.locate("browseDescriptionContainer"), fluid.COMPONENT_OPTIONS]);
+    };
+    
+    /**
      * Executes the various functions required to properly setup the component
      * 
      * @param {Object} that, the component
      */
     var setup = function (that) {
         setTitle(that);
-        setDescription(that);
+        initDescription(that);
         renderBrowse(that);
         if (that.options.useCabinet) {
             initCabinet(that);
@@ -201,10 +206,20 @@ fluid_1_2 = fluid_1_2 || {};
             options: {}
         },
         
+        description: {
+            type: "fluid.description",
+            options: {
+                model: "",
+                selectors: {
+                    content: ".flc-browse-description"
+                }
+            }
+        },
+        
         selectors: {
             title: ".flc-browse-title",
             browseDescription: ".flc-browse-description",
-            browseDescriptionToggle: ".flc-browse-descriptionToggle",
+            browseDescriptionContainer: ".flc-browse-descriptionContainer",
             browseContents: ".flc-browse-contents",
             cabinetHandle: ".flc-cabinet-handle",
             listHeader: ".flc-cabinet-header",
@@ -219,7 +234,6 @@ fluid_1_2 = fluid_1_2 || {};
         },
         
         strings: {
-            description: "The Browse Description", 
             title: "Browse Title"
         },
         

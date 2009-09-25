@@ -3,6 +3,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
         <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Browse Demo</title>
         
         <link type="text/css" rel="stylesheet" href="../../../../infusion/src/webapp/framework/fss/css/fss-layout.css" />
@@ -10,6 +11,7 @@
         <link type="text/css" rel="stylesheet" href="../../../../infusion/src/webapp/framework/fss/css/fss-transitions.css" />
         <link type="text/css" rel="stylesheet" href="../../../../infusion/src/webapp/framework/fss/css/fss-mobile-iphone-layout.css" />
         <link type="text/css" rel="stylesheet" href="../../../../infusion/src/webapp/framework/fss/css/fss-mobile-iphone-theme.css" />
+        <link type="text/css" rel="stylesheet" href="../../description/css/Description.css" />
         <link type="text/css" rel="stylesheet" href="../css/Cabinet.css" />
         <link type="text/css" rel="stylesheet" href="../css/NavigationList.css" />
 
@@ -24,6 +26,7 @@
         <script type="text/javascript" src="../../../../infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
         <script type="text/javascript" src="../../../../infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
         <script type="text/javascript" src="../../../../infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script> 
+        <script type="text/javascript" src="../../description/js/Description.js"></script>
         <script type="text/javascript" src="../js/Cabinet.js"></script> 
         <script type="text/javascript" src="../js/NavigationList.js"></script>
         <script type="text/javascript" src="../js/Browse.js"></script> 
@@ -33,12 +36,11 @@
 	    <div class="fl-navbar fl-table">
 	        <h1 class="flc-browse-title fl-table-cell">Title</h1>
         </div>
-	    
-        <p class="flc-browse-description">
-            Description
-        </p>
-        <span class="flc-browse-descriptionToggle">Expand</span>
-        
+	    <div class="flc-browse-descriptionContainer">
+	        <p class="flc-browse-description">
+                Description
+            </p>
+	    </div>
         <div class="flc-browse-contents">
             <div class="flc-cabinet-drawer">
                 <div class="flc-cabinet-handle">
@@ -61,6 +63,12 @@
         
         <script type="text/javascript">
             var options = {
+                description: {
+                    options: {
+                        model: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                    }
+                },
+                
                 lists: [
                     {
                         category: "Category 1",
