@@ -82,11 +82,13 @@ fluid = fluid || fluid_1_2;
 		setupArtifact(that);
 		
 		that.description = fluid.initSubcomponent(that, "description", [that.locate("descriptionScope"), 
-				{model: that.options.toRender.model.Description}])
+				{model: that.options.toRender.model.Description}]);
 		that.artifactNavigationList = fluid.initSubcomponent(that, "artifactNavigationList", [that.locate("navigationListScope"), navigationListOptions]);
 		that.artifactTags = fluid.initSubcomponent(that, "artifactTags", [that.locate("tagsScope"), 
-				{tags: that.options.toRender.model.Tags, 
-				templateURL: "../../../../engage/components/tags/html/TagsTemplate.html"}]);
+				{
+                    tags: that.options.toRender.model.Tags 
+                }
+            ]);
 		that.artifactCabinet = fluid.initSubcomponent(that, "artifactCabinet", that.locate("cabinetScope"));
 
 		renderArtifactPage(that);
