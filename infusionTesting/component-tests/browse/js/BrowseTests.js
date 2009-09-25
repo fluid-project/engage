@@ -22,61 +22,6 @@ https://source.fluidproject.org/svn/LICENSE.txt
     var setup = function (container, options) {
         return fluid.browse(container, options);
     };
-    
-//    var hasClasses = function (selector, classes) {
-//        if (typeof classes === "string") {classes = [classes];}
-//        
-//        for(var i = 0; i < classes.length; i++) {
-//            if (!selector.hasClass(classes[i])) {return false;}
-//        }
-//        
-//        return true;
-//    };
-//    
-//    var hasAttribute = function (selector, attribute, value) {
-//        selector = fluid.wrap(selector);
-//        selector.each(function (index, element) {
-//            var attrValue = $(element).attr(attribute);
-//            if (attrValue !== (value || !null)) {return false;}
-//        });
-//        
-//        return true;
-//    };
-//    
-//    var hasStyle = function (selector, style, value) {
-//        selector = fluid.wrap(selector);
-//        selector.each(function (index, element) {
-//            var styleValue = $(element).css(style);
-//            if (styleValue !== value) {return false;}
-//        });
-//        
-//        return true;
-//    };
-//    
-//    var assertStyling = function (selector, styles, expected, message) {
-//        selector = fluid.wrap(selector);
-//        styles = styles.split(" ");
-//        selector.each(function (index, element) {
-//            jqUnit[expected ? "assertTrue" : "assertFalse"](message, hasClasses(fluid.wrap(element), styles));
-//        });
-//    };
-//    
-//    var closeStylingTests = function (drawerSelector, contentSelector, openStyle, closeStyle) {
-//        
-//        assertStyling(drawerSelector, closeStyle, true, "All specified drawers have close styling");
-//        assertStyling(drawerSelector, openStyle, false, "No specified drawer has open styling");
-//        
-//        jqUnit.assertTrue("Drawer has aria-expended set to false", hasAttribute(drawerSelector, "aria-expanded","false"));
-//        jqUnit.assertTrue("Contents are hidden", hasStyle(contentSelector, "display", "none"));
-//    };
-//    
-//    var openStylingTests = function (drawerSelector, contentSelector, openStyle, closeStyle) {
-//        assertStyling(drawerSelector, openStyle, true, "All specified drawers have open styling");
-//        assertStyling(drawerSelector, closeStyle, false, "No specified drawer has close styling");
-//        
-//        jqUnit.assertTrue("Drawer has aria-expanded set to true", hasAttribute(drawerSelector, "aria-expanded", "true"));
-//        jqUnit.assertTrue("Contents are visible", hasStyle(contentSelector, "display", "block"));
-//    };
 
     var initTests = function (component) {
         var selectors = component.options.selectors;
@@ -91,16 +36,12 @@ https://source.fluidproject.org/svn/LICENSE.txt
             jqUnit.assertFalse("Cabinet not Initializede", component.cabinet);
         }
         
-        jqUnit.assertEquals("Correct Description Text", strings.description, description.text());
         jqUnit.assertEquals("Correct Title text", strings.title, $(selectors.title).text());
         jqUnit.assertEquals("Correct Number of NavigationLists Rendered", component.options.lists.length, $(".flc-nagivationList-listGroup").length);
     };
         
     var browseTests = function () {
-        var tests = jqUnit.testCase("Cabinet Tests");
-        
-        //TODO: Test the toggle button is working
-        //TODO: Test that toggle is not rendered if description isn't present or not large enough to need one
+        var tests = jqUnit.testCase("Browse Tests");
         
         tests.test("Initialize with a cabinet", function () {
             var browse = setup(CONTAINER, {useCabinet: true});
@@ -146,6 +87,22 @@ https://source.fluidproject.org/svn/LICENSE.txt
             
             jqUnit.assertEquals("The description is not rendered", 0, $(selectors.listHeaderDescription).length);
             jqUnit.assertFalse("Header Description styling is not applied", $(selectors.cabinetHandle).hasClass(browse.options.styles.listHeaderDescription));
+        });
+        
+        tests.test("Browse description", function () {
+            var descriptionText = "Description";
+            var options = {
+                description: {
+                    options: {
+                        model: descriptionText
+                    }
+                }
+            };
+            
+            var browse = setup(CONTAINER, options);
+            
+            jqUnit.assertTrue("The description subcomponent has been initialized", browse.description);
+            jqUnit.assertTrue("The correct description was added", descriptionText, browse.locate("browseDescription"));
         });
     };
     
