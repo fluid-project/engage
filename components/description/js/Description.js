@@ -30,8 +30,9 @@ fluid = fluid || {};
         return markupNode;
     };	
     
-    var addDescriptionClass = function (that) {
+    var addStyleClasses = function (that) {
         that.locate("content").addClass(that.options.styles.content);
+        that.container.addClass(that.options.styles.container);
     };
 	
 	var generateTree = function (that) {
@@ -62,7 +63,7 @@ fluid = fluid || {};
 	};
 	
 	var setUpDescription = function (that) {
-        addDescriptionClass(that);
+        addStyleClasses(that);
 		that.options.model = that.options.model.replace(/(<([^>]+)>)/gi, "");
 		fluid.selfRender(that.container, generateTree(that), createRenderOptions(that));
         
@@ -112,13 +113,14 @@ fluid = fluid || {};
             descriptionToggle: "fl-icon",
             descriptionToggleCollapse: "fl-description-togglerCollapse",
             descriptionToggleExpand: "fl-description-togglerExpand",
-            content: "fl-description-content"
+            content: "fl-description-content",
+            container: "fl-description"
 		},
 		selectors: {
 			content: ".flc-description-content",
 			toggler: ".flc-description-toggler"
 		},
-		collapsedHeight: 36,
+		collapsedHeight: 40,
 		model: "Description Information"
 	});
 })(jQuery, fluid);

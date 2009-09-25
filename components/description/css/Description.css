@@ -1,5 +1,8 @@
+.fl-description {
+    position:relative;
+}
 .fl-description-hide {
-	max-height: 36px;
+	max-height: 40px;
 }
 
 .fl-description-show {
@@ -20,9 +23,10 @@
     background-image: url("../images/expand.png");
 }
 
-.fl-icon {
+.fl-description .fl-icon {
     height: 19px;
     width: 19px;
-    float: right;
-    margin-top: -36px;
+    position:absolute;
+    bottom:0;
+    right:0;
 }
