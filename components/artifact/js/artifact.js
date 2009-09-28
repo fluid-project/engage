@@ -82,7 +82,7 @@ fluid = fluid || fluid_1_2;
 		setupArtifact(that);
 		
 		that.description = fluid.initSubcomponent(that, "description", [that.locate("descriptionScope"), 
-				{model: that.options.toRender.model.Description}]);
+				{model: that.options.toRender.descriptionModel}]);
 		that.artifactNavigationList = fluid.initSubcomponent(that, "artifactNavigationList", [that.locate("navigationListScope"), navigationListOptions]);
 		that.artifactTags = fluid.initSubcomponent(that, "artifactTags", [that.locate("tagsScope"), 
 				{
@@ -110,8 +110,8 @@ fluid = fluid || fluid_1_2;
 	        artNameHeadingInList: "fl-text-bold"
 	    },
 	    toRender: null,
-	    specURL: "../spec/mmi.json",
-	    modelURL: "../data/demoData.json",
+	    specURL: "",
+	    modelURL: "",
 	    description: {
             type: "fluid.description"
         },

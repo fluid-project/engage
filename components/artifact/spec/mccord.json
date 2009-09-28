@@ -1,0 +1,48 @@
+{ 
+	"spec": [
+		{
+	    	"artefacts.artefact.title": {
+		   		"selector": ".artifact-name",
+				"valuebinding": true
+			}
+	   	},
+		{
+		    "artefacts.artefact.images.image.imagesfiles.imagefile": {
+		        "selector": ".artifact-picture",
+				"decorators": [{
+					"type": "function",
+					"name": "decoratorFunction",
+					"decoratorFunction": "getImageURL"
+				}]
+			}
+	    },
+		{
+			"artefacts.artefact.title": {
+		   		"selector": ".artifact-descr-name",
+				"valuebinding": true,
+				"decorators": [{
+	                "type": "addClass",
+	                "classes": "artNameHeadingInList"
+	            }]
+		   	}
+		},
+		{
+			"artefacts.artefact.artist": {
+				"selector": ".artifact-provenance",
+				"valuebinding": true
+			}
+		},
+		{
+			"artefacts.artefact.dated": {
+				"selector": ".artifact-date",
+				"valuebinding": true
+			}
+		},
+		{
+			"artefacts.artefact.accessnumber": {
+				"selector": ".artifact-accession-number",
+				"valuebinding": true
+			}
+		}
+	]
+}

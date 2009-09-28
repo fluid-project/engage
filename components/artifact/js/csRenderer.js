@@ -76,7 +76,7 @@ var fluid = fluid || fluid_1_2;
                         if (spec.decorators && spec.decorators.length > 0) {
                             children[index].children[j].decorators = [];
                             buildDecorators(children[index].children[j].decorators,
-                            		spec.decorators, that, modelPart[key]);
+                            		spec.decorators, that, fluid.model.getBeanValue(modelPart, key));
                         }
                     }                    
                     j++;
@@ -125,12 +125,12 @@ var fluid = fluid || fluid_1_2;
 	                    	children[index].valuebinding = elPath;
 	                    }
 	                    if (specPart[key].markup) {
-	                    	children[index].markup = modelPart[key];
+	                    	children[index].markup = fluid.model.getBeanValue(modelPart, key);
 	                    }
 	                    if (specPart[key].decorators && specPart[key].decorators.length > 0) {
 	                    	children[index].decorators = [];
 	                    	buildDecorators(children[index].decorators, specPart[key].decorators,
-	                    			that, modelPart[key]);
+	                    			that, fluid.model.getBeanValue(modelPart, key));
 	                    }
 	                }
 	                index = children.length;
