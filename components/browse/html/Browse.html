@@ -11,9 +11,9 @@
         <link type="text/css" rel="stylesheet" href="../../../../infusion/src/webapp/framework/fss/css/fss-transitions.css" />
         <link type="text/css" rel="stylesheet" href="../../../../infusion/src/webapp/framework/fss/css/fss-mobile-iphone-layout.css" />
         <link type="text/css" rel="stylesheet" href="../../../../infusion/src/webapp/framework/fss/css/fss-mobile-iphone-theme.css" />
-        <link type="text/css" rel="stylesheet" href="../../description/css/Description.css" />
-        <link type="text/css" rel="stylesheet" href="../css/Cabinet.css" />
-        <link type="text/css" rel="stylesheet" href="../css/NavigationList.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../engage/components/description/css/Description.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../engage/components/browse/css/Cabinet.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../engage/components/browse/css/NavigationList.css" />
 
         <script type="text/javascript" src="../../../../infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
         <script type="text/javascript" src="../../../../infusion/src/webapp/lib/jquery/ui/js/ui.core.js"></script>
@@ -26,10 +26,11 @@
         <script type="text/javascript" src="../../../../infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
         <script type="text/javascript" src="../../../../infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
         <script type="text/javascript" src="../../../../infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script> 
-        <script type="text/javascript" src="../../description/js/Description.js"></script>
-        <script type="text/javascript" src="../js/Cabinet.js"></script> 
-        <script type="text/javascript" src="../js/NavigationList.js"></script>
-        <script type="text/javascript" src="../js/Browse.js"></script> 
+        <script type="text/javascript" src="../../../../engage/components/description/js/Description.js"></script>
+        <script type="text/javascript" src="../../../../engage/components/browse/js/Cabinet.js"></script> 
+        <script type="text/javascript" src="../../../../engage/components/browse/js/NavigationList.js"></script>
+        <script type="text/javascript" src="../../../../engage/components/browse/js/Browse.js"></script> 
+        <script type="text/javascript" src="../../../../engage/components/browse/js/loadData.js"></script>
         
 	</head>
 	<body class="browse fl-theme-iPhone">
@@ -62,111 +63,7 @@
         </div>
         
         <script type="text/javascript">
-            var options = {
-                description: {
-                    options: {
-                        model: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                    }
-                },
-                
-                lists: [
-                    {
-                        category: "Category 1",
-                        description: "",
-                        listOptions: {
-                            links: [
-                                {
-                                    target: "../../../integration_demo/images/Artifacts-.jpg",
-                                    image: "../../../integration_demo/images/Artifacts-.jpg",
-                                    title: "Title 1",
-                                    description: "Description 1"
-                                },
-                                {
-                                    target: "../../../integration_demo/images/Snuffbox.jpg",
-                                    image: "../../../integration_demo/images/Snuffbox.jpg",
-                                    title: "Title 2",
-                                    description: "Description 2"
-                                },
-                                {
-                                    target: "../../../integration_demo/images/Snuffbox.jpg",
-                                    image: "../../../integration_demo/images/Snuffbox.jpg",
-                                    title: "Title 3",
-                                    description: "Description 3"
-                                },
-                                {
-                                    target: "http://build.fluidproject.org",
-                                    category: "Category",
-                                    size: 100
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        category: "Category 2",
-                        description: "Description 2",
-                        listOptions: {
-                            links: [
-                                {
-                                    target: "../../../integration_demo/images/Artifacts-.jpg",
-                                    image: "../../../integration_demo/images/Artifacts-.jpg",
-                                    title: "Title 1",
-                                    description: "Description 1"
-                                },
-                                {
-                                    target: "../../../integration_demo/images/Snuffbox.jpg",
-                                    image: "../../../integration_demo/images/Snuffbox.jpg",
-                                    title: "Title 2",
-                                    description: "Description 2"
-                                },
-                                {
-                                    target: "../../../integration_demo/images/Snuffbox.jpg",
-                                    image: "../../../integration_demo/images/Snuffbox.jpg",
-                                    title: "Title 3",
-                                    description: "Description 3"
-                                },
-                                {
-                                    target: "http://build.fluidproject.org",
-                                    category: "Category",
-                                    size: 100
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        category: "Category 3",
-                        description: "Description 3",
-                        listOptions: {
-                            links: [
-                                {
-                                    target: "../../../integration_demo/images/Artifacts-.jpg",
-                                    image: "../../../integration_demo/images/Artifacts-.jpg",
-                                    title: "Title 1",
-                                    description: "Description 1"
-                                },
-                                {
-                                    target: "../../../integration_demo/images/Snuffbox.jpg",
-                                    image: "../../../integration_demo/images/Snuffbox.jpg",
-                                    title: "Title 2",
-                                    description: "Description 2"
-                                },
-                                {
-                                    target: "../../../integration_demo/images/Snuffbox.jpg",
-                                    image: "../../../integration_demo/images/Snuffbox.jpg",
-                                    title: "Title 3",
-                                    description: "Description 3"
-                                },
-                                {
-                                    target: "http://build.fluidproject.org",
-                                    category: "Category",
-                                    size: 100
-                                }
-                            ]
-                        }
-                    }
-                ]
-            };
-            
-            fluid.browse(".browse", options);
+            demo.loadJson(window.location, ".browse");
         </script>
 	</body>
 </html>

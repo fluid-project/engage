@@ -1,6 +1,5 @@
 /*
  Copyright 2008-2009 University of Toronto
- Copyright 2008-2009 University of Cambridge
  
  Licensed under the Educational Community License (ECL), Version 2.0 or the New
  BSD license. You may not use this file except in compliance with one these
@@ -149,7 +148,7 @@ fluid_1_2 = fluid_1_2 || {};
             });
         };
         
-        fluid.selfRender(that.locate("browseContents"), renderTree(), {cutpoints: selectorMap});
+        fluid.selfRender(that.locate("browseContents"), that.options.componentTree || renderTree(), {cutpoints: that.options.selectorMap || selectorMap});
         initComponents(that.locate("lists"), extractArray(that.options.lists, "listOptions"));
         addDescriptionStyle(that);
     };
@@ -240,6 +239,9 @@ fluid_1_2 = fluid_1_2 || {};
         events: {},
         
         useCabinet: true,
+        
+        componentTree: null,
+        selectorMap: null,
         
         lists: [
             {
