@@ -1,0 +1,7 @@
+{
+	"category": "artefacts.artefact.links.type.category.label",
+    "linkTarget": "artefacts.artefact.title",
+	"linkImage": "artefacts.artefact.images.image.imagefiles.imagefile.0.nodetext",
+	"linkTitle": "artefacts.artefact.title",
+	"linkDescription": "artefacts.artefact.dated"
+}
