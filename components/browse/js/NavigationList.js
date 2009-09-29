@@ -173,7 +173,7 @@ fluid_1_2 = fluid_1_2 || {};
         },
         
         styles: {
-            listGroup: "fl-list fl-list-thumbnails fl-thumbnails-expanded",
+            listGroup: "fl-listmenu fl-list-thumbnails fl-thumbnails-expanded",
             listItems: null,
             link: null,
             image: "fl-icon",
