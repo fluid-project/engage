@@ -22,13 +22,9 @@ fluid = fluid || fluid_1_2;
 			var handler = fluid.artifact.handler({
 	    		modelURL: that.options.modelURL,
 	    		specURL: that.options.specURL,
-	    		getImageURL: function(imageString) {
-		    		return {
-		    			attrs: {
-		    				src: imageString.substring(imageString.indexOf("src='") + 5, 
-		    						imageString.indexOf(".jpg'") + 4) 
-		    			}
-		    		};
+	    		getImageURL: function (imageString) {
+		    			return imageString.substring(imageString.indexOf("src='") + 5, 
+    						imageString.indexOf(".jpg'") + 4);
 				},
 				styles: {
 					artNameHeadingInList: "fl-text-bold"
@@ -42,7 +38,11 @@ fluid = fluid || fluid_1_2;
 				async: false
 			});
 			
-	    	that.options.toRender = handler.options.toRender;			
+	    	that.options.toRender = {
+	    		model: handler.options.model,
+	    		cutpoints: handler.buildCutpoints(),
+	    		tree: handler.buildComponentTree()
+	    	};
 		}
 	};
 	
@@ -82,13 +82,10 @@ fluid = fluid || fluid_1_2;
 		setupArtifact(that);
 		
 		that.description = fluid.initSubcomponent(that, "description", [that.locate("descriptionScope"), 
-				{model: that.options.toRender.descriptionModel}]);
+				{model: that.options.toRender.model.artifactDescription}]);
 		that.artifactNavigationList = fluid.initSubcomponent(that, "artifactNavigationList", [that.locate("navigationListScope"), navigationListOptions]);
 		that.artifactTags = fluid.initSubcomponent(that, "artifactTags", [that.locate("tagsScope"), 
-				{
-                    tags: that.options.toRender.model.Tags 
-                }
-            ]);
+				{tags: that.options.toRender.model.artifactTags}]);
 		that.artifactCabinet = fluid.initSubcomponent(that, "artifactCabinet", that.locate("cabinetScope"));
 
 		renderArtifactPage(that);
@@ -132,8 +129,6 @@ fluid = fluid || fluid_1_2;
     	
     	that.getDoc = function(data, status) {
     		
-			that.options.model = fluid.artifact.handler.artifactCleanUp(data);
-    		
     		var getSpec = function (specData, status) {
     			try {
     				specData.charAt;
@@ -141,7 +136,7 @@ fluid = fluid || fluid_1_2;
     			} catch (e) {
     				
     			} finally {
-    				that.options.spec = specData.spec;
+    				that.options.spec = specData;
     			}
     		};
     		
@@ -152,48 +147,120 @@ fluid = fluid || fluid_1_2;
     			async: false
     		}); 
     		
-    		that.options.toRender = {
-    			tree: fluid.csRenderer.buildComponentTree(that.options),
-    			cutpoints: fluid.csRenderer.createCutpoints(that.options.spec),
-    			model: that.options.model
+    		var mapModel = function (artifactModel, spec) {
+    			var model = {};
+    			for (key in spec) {
+    				if(spec.hasOwnProperty(key)) {
+    					model[key] = fluid.model.getBeanValue(artifactModel, spec[key]);
+    				}
+    			}
+    			return model;
     		};
+    		
+    		that.options.model = mapModel(that.artifactCleanUp(data), that.options.spec);
     	};
+    	
+    	that.buildCutpoints = function (){
+        	return [{
+        	 		id: "artifactTitle",
+        	 		selector: ".artifact-name"
+        	 	},
+        	 	{
+        	 		id: "artifactImage",
+        	 		selector: ".artifact-picture"
+        	 	},
+        	 	{
+        	 		id: "artifactTitle2",
+        	 		selector: ".artifact-descr-name"
+        	 	},
+        	 	{
+        	 		id: "artifactAuthor",
+        	 		selector: ".artifact-provenance"
+        	 	},
+        	 	{
+        	 		id: "artifactDate",
+        	 		selector: ".artifact-date"
+        	 	},
+        	 	{
+        	 		id: "artifactAccessionNumber",
+        	 		selector: ".artifact-accession-number"
+        	 	}
+        	];
+        };
+        that.buildComponentTree = function () {
+        	return {children: [
+    			{
+    				ID: "artifactTitle",
+    				valuebinding: "artifactTitle"
+    			},
+    			{
+    				ID: "artifactImage",
+    				decorators: [{
+    					attrs: {
+        					src: that.options.getImageURL(that.options.model["artifactImage"])
+        				}
+    				}]
+    			},
+    			{
+    				ID: "artifactTitle2",
+    				valuebinding: "artifactTitle",
+    				decorators: [{
+        				type: "addClass",
+        				classes: that.options.styles.artNameHeadingInList
+    				}]
+    			},
+    			{
+    				ID: "artifactAuthor",
+    				valuebinding: "artifactAuthor"
+    			},
+    			{
+    				ID: "artifactDate",
+    				valuebinding: "artifactDate"
+    			},
+    			{
+    				ID: "artifactAccessionNumber",
+    				valuebinding: "artifactAccessionNumber"
+    			}
+        	]};
+        };    	
+        
+        that.artifactCleanUp = function (data) {
+    		if (data instanceof Array) {
+    			for (var i = 0; i < data.length; i++) {
+    				if (data[i] instanceof Array || data[i] instanceof Object) {
+    					data[i] = that.artifactCleanUp(data[i]);
+    				}
+    				if (!data[i]) {
+    					if (data.length < 2) {
+    						return undefined;
+    					}
+    					else {
+    						data.splice(i, 1);
+    						i--;
+    					}
+    				}
+    			}
+    			if (data.length < 2) {
+    				data = data[0];
+    			}
+    		}
+    		else if (data instanceof Object) {
+    			for (var key in data) {
+    				if (data[key] instanceof Array || data[key] instanceof Object) {
+    					data[key] = that.artifactCleanUp(data[key]);
+    				}
+    				if (!data[key]) {
+    					delete data[key];
+    				}
+    			}
+    			//	if (size(data) < 1) return undefined;
+    		}
+    		return data;
+    	};
+        
     	return that;
-    };
+    };        
     
-    fluid.artifact.handler.artifactCleanUp = function (data) {
-		if (data instanceof Array) {
-			for (var i = 0; i < data.length; i++) {
-				if (data[i] instanceof Array || data[i] instanceof Object) {
-					data[i] = fluid.artifact.handler.artifactCleanUp(data[i]);
-				}
-				if (!data[i]) {
-					if (data.length < 2) {
-						return undefined;
-					}
-					else {
-						data.splice(i, 1);
-						i--;
-					}
-				}
-			}
-			if (data.length < 2) {
-				data = data[0];
-			}
-		}
-		else if (data instanceof Object) {
-			for (var key in data) {
-				if (data[key] instanceof Array || data[key] instanceof Object) {
-					data[key] = fluid.artifact.handler.artifactCleanUp(data[key]);
-				}
-				if (!data[key]) {
-					delete data[key];
-				}
-			}
-			//	if (size(data) < 1) return undefined;
-		}
-		return data;
-	};
 
 	fluid.defaults("fluid.artifact.handler", {   
 		model: {},
