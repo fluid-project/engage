@@ -1,0 +1,14 @@
+{
+    "category": "artefacts.artefact.links.type.category.label",
+    "linkTarget": "artefacts.artefact.accessnumber",
+	"linkImage": "artefacts.artefact.images.image.imagesfiles.imagefile",
+	"linkTitle": "artefacts.artefact.title",
+	"linkDescription": "artefacts.artefact.dated",
+	"artifactTitle": "artefacts.artefact.title",
+	"artifactImage": "artefacts.artefact.images.image.imagesfiles.imagefile",
+	"artifactAuthor": "artefacts.artefact.artist",
+	"artifactDate": "artefacts.artefact.dated",
+	"artifactAccessionNumber": "artefacts.artefact.accessnumber",
+	"artifactTags": "artefacts.artefact.tags",
+	"artifactDescription": "artefacts.artefact.descriptions.description_museum"
+}

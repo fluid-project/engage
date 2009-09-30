@@ -1,0 +1,16 @@
+{
+    "category": "Collection category",
+    "linkTarget": "Accession number",
+	"linkImage": "Media file",
+	"linkTitle": "Object Title",
+	"linkDescription": "Creation date",
+	"artifactTitle": "Object Title",
+	"artifactImage": {
+        "path": "Media file",
+        "func": "getImageFromMarkup"
+    },
+	"artifactDate": "Creation date",
+	"artifactAccessionNumber": "Accession number",
+	"artifactTags": "Tags",
+	"artifactDescription": "Description"
+}
