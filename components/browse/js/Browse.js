@@ -92,9 +92,11 @@ fluid_1_2 = fluid_1_2 || {};
      * @param {Object} container, the set of container elements used by the navigationLists
      * @param {Object} options, an array of options to be used by the navigationLists
      */
-    var initComponents = function (container, options) {
+    var initComponents = function (that, container, options) {
         fluid.transform(container, function (object, index) {
-            fluid.navigationList(object, options[index]);
+            var componentOptions = fluid.copy(that.options.navigationList.options);
+            fluid.merge("merge", componentOptions, options[index]);
+            fluid.initSubcomponent(that, "navigationList", [object, componentOptions]);
         });
     };
     
@@ -149,7 +151,7 @@ fluid_1_2 = fluid_1_2 || {};
         };
         
         fluid.selfRender(that.locate("browseContents"), that.options.componentTree || renderTree(), {cutpoints: that.options.selectorMap || selectorMap});
-        initComponents(that.locate("lists"), extractArray(that.options.lists, "listOptions"));
+        initComponents(that, that.locate("lists"), extractArray(that.options.lists, "listOptions"));
         addDescriptionStyle(that);
     };
     
@@ -211,6 +213,15 @@ fluid_1_2 = fluid_1_2 || {};
                 model: "",
                 selectors: {
                     content: ".flc-browse-description"
+                }
+            }
+        },
+        
+        navigationList: {
+            type: "fluid.navigationList",
+            options: {
+                styles: {
+                    titleText: "fl-browse-shortenText"
                 }
             }
         },

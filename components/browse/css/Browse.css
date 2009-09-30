@@ -1,0 +1,7 @@
+.fl-browse-shortenText {
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    height: 1.2em;
+    display: block;
+}
