@@ -25,7 +25,7 @@ var demo = demo || {};
 	
 	demo.loadJson = function (location) {
 		if (location.protocol === "file:") {
-			fluid.artifact(".artifact-container", {specURL: "../spec/mmiDataSpec.json",
+			fluid.artifact(".artifact-container", {specURL: "../../../framework/spec/mmiDataSpec.json",
 			    modelURL: "../data/demoData.json"});
 		}
 		else {
@@ -33,7 +33,7 @@ var demo = demo || {};
 				url: location.protocol + "//" + location.host + "/couch", 
 				success: initArtifact,
 				dataType: "json",
-				data: location.search,
+				data: location.search
 			});
 		}
 	};
