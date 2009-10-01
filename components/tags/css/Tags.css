@@ -1,3 +1,12 @@
+.fl-tags ul {
+    margin:0;
+    padding:0;
+}
 .fl-tags li {
     display: inline
+}
+.fl-theme-iphone .fl-tags [class*=fl-button] {
+    padding:3px 5px;
+    border:2px solid #666;
+    -webkit-border-radius:5px;
 }

@@ -30,3 +30,35 @@
     bottom:0;
     right:0;
 }
+
+.fl-theme-iphone .fl-description .fl-icon {
+    -webkit-border-radius:10px;
+    border:1px solid #fff;
+    background-image: -webkit-gradient(radial, 50% 80%, 0, 50% 100%, 22, 
+        from(#0097cb),
+        color-stop(0.5, #0077a0),
+        color-stop(0.5, #4b9ed3),
+        to(#bce7ff)
+    );
+    -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px;    
+}
+.fl-theme-iphone .fl-description-togglerCollapse::after {
+    text-indent:0;
+    position:absolute;
+    color:#fff;
+    top:-3px;
+    left:3px;
+    text-shadow: rgba(33,11,170,.5) 0px 0px 4px;
+    font-size:22px;
+    content: "+";
+}
+.fl-theme-iphone .fl-description-togglerExpand::after {    
+    text-indent:0;
+    position:absolute;
+    color:#fff;
+    top:-4px;
+    left:6px;
+    text-shadow: rgba(33,11,170,.5) 0px 0px 4px;
+    font-size:22px;
+    content: "-";
+}
