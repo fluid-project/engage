@@ -25,7 +25,14 @@ var fluid = fluid || fluid_1_2;
     
     fluid.defaults("fluid.engage.artifactHandlers", {   
 		getImageFromMarkup: function (value) {
-            return $(value).filter("img").eq(0).attr("src");
+    		
+	    	var img = $(value).each(function (index) {
+	            if ($(value).eq(index).is("img")) {
+	                return $(value).eq(index);
+	            }
+	        });
+	    	
+            return String(img.eq(0).attr("src"));
         },
         
         getImageFromObjectArray: function (value) {

@@ -17,147 +17,21 @@ fluid = fluid || fluid_1_2;
 
 (function ($, fluid) {
 	
-    var buildCutpoints = function (){
-    	return [{
-    	 		id: "artifactTitle",
-    	 		selector: ".artifact-name"
-    	 	},
-    	 	{
-    	 		id: "artifactImage",
-    	 		selector: ".artifact-picture"
-    	 	},
-    	 	{
-    	 		id: "artifactTitle2",
-    	 		selector: ".artifact-descr-name"
-    	 	},
-    	 	{
-    	 		id: "artifactAuthor",
-    	 		selector: ".artifact-provenance"
-    	 	},
-    	 	{
-    	 		id: "artifactDate",
-    	 		selector: ".artifact-date"
-    	 	},
-    	 	{
-    	 		id: "artifactAccessionNumber",
-    	 		selector: ".artifact-accession-number"
-    	 	}
-    	];
-    };
-    
-    var buildComponentTree = function (model) {
-    	return {children: [
-			{
-				ID: "artifactTitle",
-				valuebinding: "artifactTitle"
-			},
-			{
-				ID: "artifactImage",
-				decorators: [{
-					attrs: {
-    					src: model.artifactImage
-    				}
-				}]
-			},
-			{
-				ID: "artifactTitle2",
-				valuebinding: "artifactTitle",
-				decorators: [{
-    				type: "addClass",
-    				classes: "fl-text-bold"
-				}]
-			},
-			{
-				ID: "artifactAuthor",
-				valuebinding: "artifactAuthor"
-			},
-			{
-				ID: "artifactDate",
-				valuebinding: "artifactDate"
-			},
-			{
-				ID: "artifactAccessionNumber",
-				valuebinding: "artifactAccessionNumber"
-			}
-    	]};
-    };
-    
-    var artifactCleanUp = function (data) {
-		if (data instanceof Array) {
-			for (var i = 0; i < data.length; i++) {
-				if (data[i] instanceof Array || data[i] instanceof Object) {
-					data[i] = artifactCleanUp(data[i]);
-				}
-				if (!data[i]) {
-					if (data.length < 2) {
-						return undefined;
-					}
-					else {
-						data.splice(i, 1);
-						i--;
-					}
-				}
-			}
-			if (data.length < 2) {
-				data = data[0];
-			}
-		}
-		else if (data instanceof Object) {
-			for (var key in data) {
-				if (data[key] instanceof Array || data[key] instanceof Object) {
-					data[key] = artifactCleanUp(data[key]);
-				}
-				if (!data[key]) {
-					delete data[key];
-				}
-			}
-			//	if (size(data) < 1) return undefined;
-		}
-		return data;
-	}; 
-    
+	var mapModel = function (that) {		
+		var handlers = fluid.engage.artifactHandlers();
+		var spec = fluid.artifact.getSpec(that.options.specURL);
+		var model = fluid.artifact.getData(that.options.modelURL);
+		model = fluid.artifact.artifactCleanUp(fluid.engage.mapModel(model, spec, handlers.options));
+        that.options.toRender = {
+    		model: model,
+            cutpoints: fluid.artifact.buildCutpoints(),
+    		tree: fluid.artifact.buildComponentTree(model)
+	    };
+	};
+	
 	var setupArtifact = function (that) {
 		if (!that.options.toRender) {
-            var handlers = fluid.engage.artifactHandlers();
-            var spec = {};
-            
-            var getSpec = function (specData, status) {
-    			try {
-    				specData.charAt;
-    				specData = JSON.parse(specData);
-    			} catch (e) {
-    				
-    			} finally {
-    				spec = specData;
-    			}
-    		};
-    		
-    		$.ajax({
-    			url: that.options.specURL, 
-    			success: getSpec,
-    			dataType: "json",
-    			async: false,
-                error: function (a, b, e) {
-                this;
-                }
-    		});
-            
-            var successCallback = function (data, status) {
-//                var model = fluid.engage.mapModel(artifactCleanUp(data), spec, handlers.options);
-                var model = artifactCleanUp(fluid.engage.mapModel(data, spec, handlers.options));
-                that.options.toRender = {
-    	    		model: model,
-                    cutpoints: buildCutpoints(),
-    	    		tree: buildComponentTree(model)
-	    	    };
-            };
-            
-            $.ajax({
-				url: that.options.modelURL, 
-				success: successCallback,
-				dataType: "json",
-				async: false
-			});
+			mapModel(that);
         }
 	};
 	
@@ -208,6 +82,140 @@ fluid = fluid || fluid_1_2;
 		return that; 
 	};
 	
+	fluid.artifact.artifactCleanUp = function (data) {
+		if (data instanceof Array) {
+			for (var i = 0; i < data.length; i++) {
+				if (data[i] instanceof Array || data[i] instanceof Object) {
+					data[i] = fluid.artifact.artifactCleanUp(data[i]);
+				}
+				if (!data[i]) {
+					if (data.length < 2) {
+						return undefined;
+					}
+					else {
+						data.splice(i, 1);
+						i--;
+					}
+				}
+			}
+			if (data.length < 2) {
+				data = data[0];
+			}
+		}
+		else if (data instanceof Object) {
+			for (var key in data) {
+				if (data[key] instanceof Array || data[key] instanceof Object) {
+					data[key] = fluid.artifact.artifactCleanUp(data[key]);
+				}
+				if (!data[key]) {
+					delete data[key];
+				}
+			}
+			//	if (size(data) < 1) return undefined;
+		}
+		return data;
+	};
+	
+	fluid.artifact.getSpec = function (specURL) {
+		var spec = {};		
+		var getSpec = function (specData, status) {
+			try {
+				specData.charAt;
+				specData = JSON.parse(specData);
+			} catch (e) {
+				
+			} finally {
+				spec = specData;
+			}
+		};		
+		$.ajax({
+			url: specURL, 
+			success: getSpec,
+			dataType: "json",
+			async: false,
+		});
+		return spec;
+	};
+	
+	fluid.artifact.getData = function (modelURL) {
+		var model = {}
+		var successCallback = function (data, status) {
+            model = data;            
+        };        
+        $.ajax({
+			url: modelURL, 
+			success: successCallback,
+			dataType: "json",
+			async: false
+		});
+        return model;
+	};
+	
+	fluid.artifact.buildCutpoints = function (){
+    	return [{
+    	 		id: "artifactTitle",
+    	 		selector: ".artifact-name"
+    	 	},
+    	 	{
+    	 		id: "artifactImage",
+    	 		selector: ".artifact-picture"
+    	 	},
+    	 	{
+    	 		id: "artifactTitle2",
+    	 		selector: ".artifact-descr-name"
+    	 	},
+    	 	{
+    	 		id: "artifactAuthor",
+    	 		selector: ".artifact-provenance"
+    	 	},
+    	 	{
+    	 		id: "artifactDate",
+    	 		selector: ".artifact-date"
+    	 	},
+    	 	{
+    	 		id: "artifactAccessionNumber",
+    	 		selector: ".artifact-accession-number"
+    	 	}
+    	];
+    };
+    
+    fluid.artifact.buildComponentTree = function (model) {
+    	return {children: [
+			{
+				ID: "artifactTitle",
+				valuebinding: "artifactTitle"
+			},
+			{
+				ID: "artifactImage",
+				decorators: [{
+					attrs: {
+    					src: model.artifactImage
+    				}
+				}]
+			},
+			{
+				ID: "artifactTitle2",
+				valuebinding: "artifactTitle",
+				decorators: [{
+    				type: "addClass",
+    				classes: "fl-text-bold"
+				}]
+			},
+			{
+				ID: "artifactAuthor",
+				valuebinding: "artifactAuthor"
+			},
+			{
+				ID: "artifactDate",
+				valuebinding: "artifactDate"
+			},
+			{
+				ID: "artifactAccessionNumber",
+				valuebinding: "artifactAccessionNumber"
+			}
+    	]};
+    };
+	
 	//start of Fluid defaults
 	fluid.defaults("fluid.artifact", {
 	    selectors: {
@@ -237,58 +245,5 @@ fluid = fluid || fluid_1_2;
             type: "fluid.tags"
         }
 	});
-	
-	fluid.artifact.handler = function(options) {
-    	
-    	var that = fluid.initLittleComponent("fluid.artifact.handler", options);
-    	
-    	that.getDoc = function(data, status) {
-    		
-    		var getSpec = function (specData, status) {
-    			try {
-    				specData.charAt;
-    				specData = JSON.parse(specData);
-    			} catch (e) {
-    				
-    			} finally {
-    				that.options.spec = specData;
-    			}
-    		};
-    		
-    		$.ajax({
-    			url: that.options.specURL, 
-    			success: getSpec,
-    			dataType: "json",
-    			async: false
-    		}); 
-    		
-    		var mapModel = function (artifactModel, spec) {
-    			var model = {};
-    			for (key in spec) {
-    				if(spec.hasOwnProperty(key)) {
-    					model[key] = fluid.model.getBeanValue(artifactModel, spec[key]);
-    				}
-    			}
-    			return model;
-    		};
-    		
-    		that.options.model = mapModel(that.artifactCleanUp(data), that.options.spec);
-    	};
-    	
-    		
-        
-        
-        
-    	return that;
-    };        
-    
-
-	fluid.defaults("fluid.artifact.handler", {   
-		model: {},
-		spec: {},
-		specURL: "",
-		modelURL: "",
-		styles: null
-    });
 	
 }(jQuery, fluid_1_2));
