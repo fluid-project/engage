@@ -19,57 +19,103 @@ var fluid = fluid || fluid_1_2;
     
     fluid.engage = fluid.engage || {};
     
+    fluid.engage.collections = {
+    	mmi: {
+    		dataSpec: {
+    		    "category": "Collection category",
+    		    "linkTarget": "Accession number",
+    			"linkImage": "Media file",
+    			"linkTitle": "Object Title",
+    			"linkDescription": "Creation date",
+    			"artifactTitle": "Object Title",
+    			"artifactImage": {
+    		        "path": "Media file",
+    		        "func": "getImageFromMarkup"
+    		    },
+    			"artifactDate": "Creation date",
+    			"artifactAccessionNumber": "Accession number",
+    			"artifactTags": "Tags",
+    			"artifactDescription": "Description"
+    		},
+    		mappers: {
+    			getImageFromMarkup: function (value) {        		
+	    	    	var img = $(value).each(function (index) {
+	    	            if ($(value).eq(index).is("img")) {
+	    	                return $(value).eq(index);
+	    	            }
+	    	        });	    	    	
+	                return String(img.eq(0).attr("src"));
+            	}
+    		}
+    	},
+    	mccord: {
+    		dataSpec: {
+    		    "category": "artefacts.artefact.links.type.category.label",
+    		    "linkTarget": "artefacts.artefact.accessnumber",
+    			"linkImage": "artefacts.artefact.images.image.imagesfiles.imagefile",
+    			"linkTitle": "artefacts.artefact.title",
+    			"linkDescription": "artefacts.artefact.dated",
+    			"artifactTitle": "artefacts.artefact.title",
+    			"artifactImage": {
+    		        "path": "artefacts.artefact.images.image.imagesfiles.imagefile",
+    		        "func": "getImageFromObjectArray"
+    		    }, 
+    			"artifactAuthor": {
+    				"path": "artefacts.artefact.artist",
+    				"func": "getArtifactArtist"
+    			},
+    			"artifactDate": "artefacts.artefact.dated",
+    			"artifactAccessionNumber": "artefacts.artefact.accessnumber",
+    			"artifactTags": "artefacts.artefact.tags",
+    			"artifactDescription": "artefacts.artefact.descriptions.description_museum"
+    		},
+    		mappers: {
+    			getImageFromObjectArray: function (value) {
+	    			if (typeof value === "string") {
+	    				return value;
+	    			}
+	    			else {
+	    				return value[value.length - 2].nodetext;
+	    			}
+	    		},        
+	            getArtifactArtist: function (value) {
+	            	if (typeof value === "string") {
+	            		return value;
+	            	}
+	            	else {
+	            		return value[0].nodetext; 
+	            	}
+	            }
+    		}
+    	}
+    };
+    
     var isString = function (value) {
         return typeof value === "string";
     };
     
-    fluid.defaults("fluid.engage.artifactHandlers", {   
-		getImageFromMarkup: function (value) {
-    		
-	    	var img = $(value).each(function (index) {
-	            if ($(value).eq(index).is("img")) {
-	                return $(value).eq(index);
-	            }
-	        });
-	    	
-            return String(img.eq(0).attr("src"));
-        },
+    fluid.engage.mapModel = function (model, dbName, spec) {
         
-        getImageFromObjectArray: function (value) {
-            
-        },
-        
-        getTargetURL: function () {
-            
-        }
-        
-        
-    });
-    
-    fluid.engage.artifactHandlers = function (options) {
-        var that = fluid.initLittleComponent("fluid.engage.artifactHandlers", options);
-        return that;
-    };
-    
-    fluid.engage.mapModel = function (model, modelSpec, handlers) {
-        
+    	spec = spec || fluid.engage.collections;
+    	
         var normalizedModel = {};
         
         var validatePathFunc = function (path, func) {
             return path && func;
         };
         
-        var invokeSpecValueFunction = function (func, value, handlers) {
+        var invokeSpecValueFunction = function (func, value, mappers) {
             if (isString(func)) {
-                return handlers ? fluid.model.getBeanValue(handlers, func)(value) : fluid.invokeGlobalFunction(func, [value]);
+                return mappers ? fluid.model.getBeanValue(mappers, func)(value) : fluid.invokeGlobalFunction(func, [value]);
             } else {
                 return func(value);
             }
         };
-        
-        for (key in modelSpec) {
-            if (modelSpec.hasOwnProperty(key)) {
-                var specValue = modelSpec[key];
+                
+        var dbSpec = spec[dbName].dataSpec; 
+        for (key in dbSpec) {
+            if (dbSpec.hasOwnProperty(key)) {
+                var specValue = dbSpec[key];
                 if (isString(specValue)) {
                     normalizedModel[key] = fluid.model.getBeanValue(model, specValue);
                 }
@@ -79,7 +125,7 @@ var fluid = fluid || fluid_1_2;
                     if (!validatePathFunc(specValuePath, specValueFunc) || !isString(specValuePath)) {
                         fluid.log("Model Spec Function or Path not found in: " + specValue);
                     } else {
-                        normalizedModel[key] = invokeSpecValueFunction(specValueFunc, fluid.model.getBeanValue(model, specValuePath), handlers);
+                        normalizedModel[key] = invokeSpecValueFunction(specValueFunc, fluid.model.getBeanValue(model, specValuePath), spec[dbName].mappers);
                     }
                 }
             }

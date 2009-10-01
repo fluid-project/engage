@@ -1,9 +1,0 @@
-{
-	"artifactTitle": "artefacts.artefact.title",
-	"artifactImage": "artefacts.artefact.images.image.imagesfiles.imagefile",
-	"artifactAuthor": "artefacts.artefact.artist",
-	"artifactDate": "artefacts.artefact.dated",
-	"artifactAccessionNumber": "artefacts.artefact.accessnumber",
-	"artifactTags": "artefacts.artefact.tags",
-	"artifactDescription": "artefacts.artefact.descriptions.description_museum"
-}

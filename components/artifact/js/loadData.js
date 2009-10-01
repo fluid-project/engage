@@ -25,8 +25,7 @@ var demo = demo || {};
 	
 	demo.loadJson = function (location) {
 		if (location.protocol === "file:") {
-			fluid.artifact(".artifact-container", {specURL: "../../../framework/spec/mmiDataSpec.json",
-			    modelURL: "../data/demoData.json"});
+			fluid.artifact(".artifact-container", {modelURL: "../data/demoData.json"});
 		}
 		else {
 			$.ajax({

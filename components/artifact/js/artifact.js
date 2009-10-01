@@ -17,11 +17,9 @@ fluid = fluid || fluid_1_2;
 
 (function ($, fluid) {
 	
-	var mapModel = function (that) {		
-		var handlers = fluid.engage.artifactHandlers();
-		var spec = fluid.artifact.getSpec(that.options.specURL);
+	var mapModel = function (that) {
 		var model = fluid.artifact.getData(that.options.modelURL);
-		model = fluid.artifact.artifactCleanUp(fluid.engage.mapModel(model, spec, handlers.options));
+		model = fluid.artifact.artifactCleanUp(fluid.engage.mapModel(model, "mmi"));
         that.options.toRender = {
     		model: model,
             cutpoints: fluid.artifact.buildCutpoints(),
@@ -74,7 +72,8 @@ fluid = fluid || fluid_1_2;
 				{model: that.options.toRender.model.artifactDescription}]);
 		that.artifactNavigationList = fluid.initSubcomponent(that, "artifactNavigationList", [that.locate("navigationListScope"), navigationListOptions]);
 		that.artifactTags = fluid.initSubcomponent(that, "artifactTags", [that.locate("tagsScope"), 
-				{tags: that.options.toRender.model.artifactTags}]);
+				{tags: that.options.toRender.model.artifactTags,
+				 templateURL: "../../../../engage/components/tags/html/TagsTemplate.html"}]);
 		that.artifactCabinet = fluid.initSubcomponent(that, "artifactCabinet", that.locate("cabinetScope"));
 
 		renderArtifactPage(that);
@@ -226,11 +225,9 @@ fluid = fluid || fluid_1_2;
 	        navigationListScope: ".flc-navigationList"
 	    },
 	    styles: {
-	        hideGroup: "fl-artifact-panel-hidden",
 	        artNameHeadingInList: "fl-text-bold"
 	    },
 	    toRender: null,
-	    specURL: "",
 	    modelURL: "",
 	    description: {
             type: "fluid.description"

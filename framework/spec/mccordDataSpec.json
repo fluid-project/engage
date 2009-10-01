@@ -5,8 +5,14 @@
 	"linkTitle": "artefacts.artefact.title",
 	"linkDescription": "artefacts.artefact.dated",
 	"artifactTitle": "artefacts.artefact.title",
-	"artifactImage": "artefacts.artefact.images.image.imagesfiles.imagefile",
-	"artifactAuthor": "artefacts.artefact.artist",
+	"artifactImage": {
+        "path": "artefacts.artefact.images.image.imagesfiles.imagefile",
+        "func": "getImageFromObjectArray"
+    }, 
+	"artifactAuthor": {
+		"path": "artefacts.artefact.artist",
+		"func": "getArtifactArtist"
+	},
 	"artifactDate": "artefacts.artefact.dated",
 	"artifactAccessionNumber": "artefacts.artefact.accessnumber",
 	"artifactTags": "artefacts.artefact.tags",
