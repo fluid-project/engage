@@ -24,7 +24,10 @@ var fluid = fluid || fluid_1_2;
     		dataSpec: {
     		    "category": "Collection category",
     		    "linkTarget": "Accession number",
-    			"linkImage": "Media file",
+    			"linkImage": {
+    		        "path": "Media file",
+    		        "func": "getImageFromMarkup"
+    		    },
     			"linkTitle": "Object Title",
     			"linkDescription": "Creation date",
     			"artifactTitle": "Object Title",
