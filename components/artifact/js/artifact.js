@@ -43,34 +43,10 @@ fluid = fluid || fluid_1_2;
 	fluid.artifact = function (container, options) {
 		var that = fluid.initView("fluid.artifact", container, options);
 		
-		var navigationListOptions = {
-            links: [{
-                target: "../../../integration_demo/images/Artifacts-.jpg",
-                image: "../../../integration_demo/images/Artifacts-.jpg",
-                title: "Title",
-                description: "Description"
-            }, {
-                target: "../../../integration_demo/images/Snuffbox.jpg",
-                image: "../../../integration_demo/images/Snuffbox.jpg",
-                title: "Title",
-                description: "Description"
-            }, {
-                target: "../../../integration_demo/images/Snuffbox.jpg",
-                image: "../../../integration_demo/images/Snuffbox.jpg",
-                title: "Title",
-                description: "Description"
-            }, {
-                target: "http://build.fluidproject.org",
-                title: "Category",
-                size: 100
-            }]
-        };
-		
 		setupArtifact(that);
 		
 		that.description = fluid.initSubcomponent(that, "description", [that.locate("descriptionScope"), 
 				{model: that.options.toRender.model.artifactDescription}]);
-		that.artifactNavigationList = fluid.initSubcomponent(that, "artifactNavigationList", [that.locate("navigationListScope"), navigationListOptions]);
 		that.artifactTags = fluid.initSubcomponent(that, "artifactTags", [that.locate("tagsScope"), 
 				{tags: that.options.toRender.model.artifactTags,
 				 templateURL: "../../../../engage/components/tags/html/TagsTemplate.html"}]);
@@ -115,31 +91,19 @@ fluid = fluid || fluid_1_2;
 		return data;
 	};
 	
-	fluid.artifact.getSpec = function (specURL) {
-		var spec = {};		
-		var getSpec = function (specData, status) {
-			try {
-				specData.charAt;
-				specData = JSON.parse(specData);
-			} catch (e) {
-				
-			} finally {
-				spec = specData;
-			}
-		};		
-		$.ajax({
-			url: specURL, 
-			success: getSpec,
-			dataType: "json",
-			async: false,
-		});
-		return spec;
-	};
-	
 	fluid.artifact.getData = function (modelURL) {
 		var model = {}
 		var successCallback = function (data, status) {
-            model = data;            
+			try {
+				data.charAt;
+				data = JSON.parse(data);
+			} catch (e) {				
+			} finally {
+				model = data;
+				if (model.total_rows && model.total_rows > 0) {
+					model = model.rows[0].doc;
+				}
+			}       
         };        
         $.ajax({
 			url: modelURL, 
@@ -221,8 +185,7 @@ fluid = fluid || fluid_1_2;
 			descriptionScope: ".flc-description",
 			tagsScope: ".tags-pane",
 	        renderScope: ".flc-artifact-renderscope",
-	        cabinetScope: ".cabinet",
-	        navigationListScope: ".flc-navigationList"
+	        cabinetScope: ".cabinet"
 	    },
 	    styles: {
 	        artNameHeadingInList: "fl-text-bold"
@@ -234,9 +197,6 @@ fluid = fluid || fluid_1_2;
         },
 	    artifactCabinet: {
             type: "fluid.cabinet"
-        },
-        artifactNavigationList: {
-            type: "fluid.navigationList"
         },
         artifactTags: {
             type: "fluid.tags"
