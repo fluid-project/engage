@@ -29,7 +29,8 @@ var demo = demo || {};
 		}
 		else {
 			$.ajax({
-				url: location.protocol + "//" + location.host + "/couch", 
+				url: location.href.substring(0, location.href.indexOf("artifact")) + "couch",
+				//url: location.protocol + "//" + location.host + "/couch", 
 				success: initArtifact,
 				dataType: "json",
 				data: location.search
