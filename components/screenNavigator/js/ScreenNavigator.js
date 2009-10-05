@@ -1,6 +1,6 @@
-/*global fluid_1_2, jQuery, window*/
+/*global fluid, jQuery, window*/
 
-var fluid_1_2 = fluid_1_2 || {};
+var fluid = fluid || {};
 
 (function ($, fluid) {
     /*
@@ -322,4 +322,4 @@ var fluid_1_2 = fluid_1_2 || {};
         viewFetcher: fluid.screenNavigator.ajaxViewFetcher
     });    
     
-})(jQuery, fluid_1_2);
+})(jQuery, fluid);

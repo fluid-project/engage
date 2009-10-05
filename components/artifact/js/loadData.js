@@ -12,8 +12,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 /*global jQuery*/
 /*global fluid*/
 
-fluid_1_2 = fluid_1_2 || {};
-fluid = fluid || fluid_1_2;
+fluid = fluid || {};
 
 var demo = demo || {};
 
@@ -38,4 +37,4 @@ var demo = demo || {};
 		}
 	};
 	
-}(jQuery, fluid_1_2));
+}(jQuery, fluid));
