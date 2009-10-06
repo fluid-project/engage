@@ -12,12 +12,9 @@ https://source.fluidproject.org/svn/LICENSE.txt
 /*global jQuery*/
 /*global fluid*/
 
-fluid_1_2 = fluid_1_2 || {};
-fluid = fluid || fluid_1_2;
-
 var demo = demo || {};
 
-(function ($, fluid) {
+(function ($) {
     var componentContainer;
     
 	var initBrowse = function (options) { 
@@ -31,11 +28,11 @@ var demo = demo || {};
         var isFile = location.protocol === "file:";
         
 		$.ajax({
-			url: isFile ? "../data/demoData.json" : location.protocol + "//" + location.host + "/browsecouch", 
+			url: isFile ? "../data/demoData.json" : "/artifactBrowseData/", 
 			success: initBrowse,
 			dataType: "json",
-			data: isFile ? null : location.search
+			data: isFile ? null : location.search.substring(0)
 		});
 	};
     
-}(jQuery, fluid_1_2));
+}(jQuery));

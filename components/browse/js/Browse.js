@@ -11,9 +11,7 @@
  */
 /*global jQuery, fluid*/
 
-fluid = fluid || {};
-
-(function ($, fluid) {
+(function ($) {
     
     /**
      * Creates a render component for the component tree. The key can be any key that a componet tree would take and the value is what would be assigned to it.
@@ -263,4 +261,4 @@ fluid = fluid || {};
         ]
     });
     
-})(jQuery, fluid);
+})(jQuery);

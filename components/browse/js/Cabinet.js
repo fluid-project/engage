@@ -10,11 +10,9 @@
  https://source.fluidproject.org/svn/LICENSE.txt
  
  */
-/*global jQuery, fluid_1_2*/
+/*global jQuery, fluid*/
 
-fluid_1_2 = fluid_1_2 || {};
-
-(function ($, fluid) {
+(function ($) {
     
     /**
      * Finds the descendant of an element, as specified by the test function passed in the argument
@@ -224,4 +222,4 @@ fluid_1_2 = fluid_1_2 || {};
         preventEventFireOnInit: true
     });
     
-})(jQuery, fluid_1_2);
+})(jQuery);
