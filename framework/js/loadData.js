@@ -17,30 +17,23 @@ https://source.fluidproject.org/svn/LICENSE.txt
 	fluid.engage = fluid.engage || {};
 	
 	var engageComponents = {
-		artifact: {
+		"fluid.artifact": {
 			localTestURL: "../data/demoData.json",
 			dataFeedURL: "/artifactData/"
 		},
-		browse: {
+		"fluid.browse": {
 			localTestURL: "../data/demoData.json",
 			dataFeedURL: "/artifactBrowseData/"
 		}
 	};
 	
-	var isFile;
-	var component;
-	var componentContainer;
-	
-	var initEngageComponent = function (options) {
-		component(componentContainer || "body", options);
-	};
-	
 	fluid.engage.initComponent = function (location, componentName, container) {
 		
-		isFile = location.protocol === "file:";
-		component = fluid.model.getBeanValue(fluid, componentName);
-		componentContainer = container;
+		var initEngageComponent = function (options) {
+			fluid.invokeGlobalFunction(componentName, [container || "body", options]);
+		};
 		
+		var isFile = location.protocol === "file:";		
 		var componentOptions = engageComponents[componentName];
 		
 		$.ajax({
