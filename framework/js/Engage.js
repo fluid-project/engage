@@ -40,18 +40,17 @@ var fluid = fluid || {};
     			"artifactDescription": "Description"
     		},
     		mappers: {
-    			getImageFromMarkup: function (value) {
-    				try {
-		    	    	var img = $(value).each(function (index) {
+    			getImageFromMarkup: function (value) {    			
+    				var getImage = function (value) {
+    					var img = $(value).each(function (index) {
 		    	            if ($(value).eq(index).is("img")) {
 		    	                return $(value).eq(index);
 		    	            }
 		    	        });	    	    	
 		                return String(img.eq(0).attr("src"));
-    				}
-    				catch (e) {
-    					return null;
-    				}
+    				};
+    				
+    				return tryFunc(getImage, value);
             	}
     		}
     	},
@@ -59,7 +58,10 @@ var fluid = fluid || {};
     		dataSpec: {
     		    "category": "artefacts.artefact.links.type.category.label",
     		    "linkTarget": "artefacts.artefact.accessnumber",
-    			"linkImage": "artefacts.artefact.images.image.imagesfiles.imagefile",
+    			"linkImage": {
+    		        "path": "artefacts.artefact.images.image.imagesfiles.imagefile",
+    		        "func": "getThumbImageFromObjectArray"
+    		    },
     			"linkTitle": "artefacts.artefact.title",
     			"linkDescription": "artefacts.artefact.dated",
     			"artifactTitle": "artefacts.artefact.title",
@@ -77,24 +79,50 @@ var fluid = fluid || {};
     			"artifactDescription": "artefacts.artefact.descriptions.description_museum"
     		},
     		mappers: {
+    			getThumbImageFromObjectArray: function (value) {
+    				var getImage = function (value) {
+		    			if (typeof value === "string") {
+		    				return value;
+		    			}
+		    			else {
+		    				return value[0].nodetext;
+		    			}
+    				};
+    				
+    				return tryFunc(getImage, value);
+    			},
     			getImageFromObjectArray: function (value) {
-	    			if (typeof value === "string") {
-	    				return value;
-	    			}
-	    			else {
-	    				return value[value.length - 2].nodetext;
-	    			}
+    				var getImage = function (value) {
+    					if (typeof value === "string") {
+    	    				return value;
+    	    			}
+    	    			else {
+    	    				return value[value.length - 2].nodetext;
+    	    			}
+    				};
+    				
+    				return tryFunc(getImage, value);	    			
 	    		},        
 	            getArtifactArtist: function (value) {
-	            	if (typeof value === "string") {
-	            		return value;
-	            	}
-	            	else {
-	            		return value[0].nodetext; 
-	            	}
+	    			var getArtist = function (value) {
+		            	if (typeof value === "string") {
+		            		return value;
+		            	}
+		            	else {
+		            		return value[0].nodetext; 
+		            	}
+	    			};
+	    			
+	    			return tryFunc(getArtist, value);
 	            }
     		}
     	}
+    };
+    
+    var tryFunc = function (func, value) {
+    	try {
+    		return func(value);
+    	} catch (e) {};
     };
     
     var isString = function (value) {
