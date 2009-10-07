@@ -50,7 +50,6 @@ fluid = fluid || {};
 	        artNameHeadingInList: "fl-text-bold"
 	    },
 	    toRender: null,
-	    modelURL: "",
 	    description: {
             type: "fluid.description"
         },

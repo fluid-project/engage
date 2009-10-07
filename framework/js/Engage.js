@@ -40,13 +40,18 @@ var fluid = fluid || {};
     			"artifactDescription": "Description"
     		},
     		mappers: {
-    			getImageFromMarkup: function (value) {        		
-	    	    	var img = $(value).each(function (index) {
-	    	            if ($(value).eq(index).is("img")) {
-	    	                return $(value).eq(index);
-	    	            }
-	    	        });	    	    	
-	                return String(img.eq(0).attr("src"));
+    			getImageFromMarkup: function (value) {
+    				try {
+		    	    	var img = $(value).each(function (index) {
+		    	            if ($(value).eq(index).is("img")) {
+		    	                return $(value).eq(index);
+		    	            }
+		    	        });	    	    	
+		                return String(img.eq(0).attr("src"));
+    				}
+    				catch (e) {
+    					return null;
+    				}
             	}
     		}
     	},
