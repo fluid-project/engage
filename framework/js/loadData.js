@@ -16,28 +16,21 @@ https://source.fluidproject.org/svn/LICENSE.txt
 	
 	fluid.engage = fluid.engage || {};
 	
-	var engageComponents = {
-		"fluid.artifact": {
-			localTestURL: "../data/demoData.json",
-			dataFeedURL: "/artifactData/"
-		},
-		"fluid.browse": {
-			localTestURL: "../data/demoData.json",
-			dataFeedURL: "/artifactBrowseData/"
-		}
+	var getDataFeedUrl = function (currentUrl) {
+	    return String(currentUrl).replace(".html", ".json");
 	};
 	
-	fluid.engage.initComponent = function (location, componentName, container) {
-		
+	var localTestDataURL = "../data/demoData.json";
+	
+	fluid.engage.initComponentWithDataFeed = function (currentUrl, componentName, container) {
 		var initEngageComponent = function (options) {
 			fluid.invokeGlobalFunction(componentName, [container || "body", options]);
 		};
 		
-		var isFile = location.protocol === "file:";		
-		var componentOptions = engageComponents[componentName];
+		var isFile = currentUrl.protocol === "file:";		
 		
 		$.ajax({
-			url: isFile ? componentOptions.localTestURL : componentOptions.dataFeedURL,
+			url: isFile ? localTestDataURL : getDataFeedUrl(currentUrl),
 			success: initEngageComponent,
 			dataType: "json",
 			async: false,
