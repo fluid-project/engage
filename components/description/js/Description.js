@@ -23,7 +23,7 @@ fluid = fluid || {};
     
 	var addToggler = function (that) {
         var styles = that.options.styles;
-        var markup = "<div class='" + cleanseSelector(that.options.selectors.toggler) + " " + styles.descriptionToggle + " " + styles.descriptionToggleCollapse + "' alt='Expand Description' title='Expand Description'>Expand</div>";
+        var markup = "<div class='" + cleanseSelector(that.options.selectors.toggler) + " " + styles.descriptionToggle + " " + styles.descriptionToggleExpand + "' alt='Expand Description' title='Expand Description'>Expand</div>";
         var markupNode = $(markup);
 		markupNode.hide();
         that.container.append(markupNode);
@@ -89,12 +89,12 @@ fluid = fluid || {};
             var styles = that.options.styles;
             
 			if (toggle.hasClass(styles.descriptionToggleCollapse)) {
-				selector.removeClass(styles.descriptionCollapsed);
-				selector.addClass(styles.descriptionExpanded);
-			}
-			else {
 				selector.addClass(styles.descriptionCollapsed);
 				selector.removeClass(styles.descriptionExpanded);
+			}
+			else {
+				selector.removeClass(styles.descriptionCollapsed);
+				selector.addClass(styles.descriptionExpanded);
 			}
             
             toggle.toggleClass(styles.descriptionToggleCollapse);
@@ -120,7 +120,7 @@ fluid = fluid || {};
 			content: ".flc-description-content",
 			toggler: ".flc-description-toggler"
 		},
-		collapsedHeight: 40,
+		collapsedHeight: 60,
 		model: "Description Information"
 	});
 })(jQuery, fluid);

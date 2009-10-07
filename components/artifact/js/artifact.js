@@ -29,8 +29,7 @@ fluid = fluid || {};
 		that.description = fluid.initSubcomponent(that, "description", [that.locate("descriptionScope"), 
 				{model: that.options.toRender.model.artifactDescription}]);
 		that.artifactTags = fluid.initSubcomponent(that, "artifactTags", [that.locate("tagsScope"), 
-				{tags: that.options.toRender.model.artifactTags,
-				 templateURL: "../../../../engage/components/tags/html/TagsTemplate.html"}]);
+				{tags: that.options.toRender.model.artifactTags}]);
 		that.artifactCabinet = fluid.initSubcomponent(that, "artifactCabinet", that.locate("cabinetScope"));
 
 		renderArtifactPage(that);
@@ -42,7 +41,7 @@ fluid = fluid || {};
 	fluid.defaults("fluid.artifact", {
 	    selectors: {
 			descriptionScope: ".flc-description",
-			tagsScope: ".tags-pane",
+			tagsScope: ".fl-tags",
 	        renderScope: ".flc-artifact-renderscope",
 	        cabinetScope: ".cabinet"
 	    },
