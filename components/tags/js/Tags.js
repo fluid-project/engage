@@ -77,7 +77,7 @@ fluid = fluid || {};
         var that = fluid.initView("tags", container, options);
         that.model = that.options.tags;
         
-        var totalTagsStr = fluid.stringTemplate(that.options.strings.title, {num: that.model.length || 0});        
+        var totalTagsStr = fluid.stringTemplate(that.options.strings.title, {num: that.model ? that.model.length : 0});        
         that.locate("title").text(totalTagsStr);
         
         renderTags(that);        
@@ -92,7 +92,7 @@ fluid = fluid || {};
             tagName: ".flc-tags-tagName"
         },
         strings: {
-            title: "Tags (%num)"
+            title: "Show Tags (%num)"
         },
         events: {
             afterInit: null
