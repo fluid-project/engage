@@ -31,6 +31,11 @@ fluid = fluid || {};
 		that.artifactTags = fluid.initSubcomponent(that, "artifactTags", [that.locate("tagsScope"), 
 				{tags: that.options.toRender.model.artifactTags}]);
 		that.artifactCabinet = fluid.initSubcomponent(that, "artifactCabinet", that.locate("cabinetScope"));
+		
+		that.realtedArtifacts = fluid.initSubcomponent(that, "artifactsLink", [that.locate("realtedArtifacts"),
+		        {messageBundle: {linkToMoreMessage: "Go to Related artifacts"}, links: [{category: "", target: that.options.toRender.relatedArtifacts}]}]);
+		that.visitorsArtifacts = fluid.initSubcomponent(that, "artifactsLink", [that.locate("visitorsArtifacts"),
+		        {messageBundle: {linkToMoreMessage: "Go to What other visitors enjoyed"}, links: [{category: ""}]}]);
 
 		renderArtifactPage(that);
 		
@@ -43,7 +48,9 @@ fluid = fluid || {};
 			descriptionScope: ".flc-description",
 			tagsScope: ".fl-tags",
 	        renderScope: ".flc-artifact-renderscope",
-	        cabinetScope: ".cabinet"
+	        cabinetScope: ".cabinet",
+	        realtedArtifacts: ".relatedArtifacts",
+	        visitorsArtifacts: ".visitorsArtifacts"        
 	    },
 	    styles: {
 	        artNameHeadingInList: "fl-text-bold"
@@ -57,6 +64,9 @@ fluid = fluid || {};
         },
         artifactTags: {
             type: "fluid.tags"
+        },
+        artifactsLink: {
+        	type: "fluid.navigationList"
         }
 	});
 	

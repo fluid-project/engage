@@ -13,6 +13,7 @@
         <link type="text/css" rel="stylesheet" href="../../../../infusion/src/webapp/framework/fss/css/fss-mobile-iphone-theme.css" />
         <link type="text/css" rel="stylesheet" href="../../../../engage/components/artifact/css/Artifact.css" />
 		<link type="text/css" rel="stylesheet" href="../../../../engage/components/browse/css/Cabinet.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../engage/components/browse/css/NavigationList.css" />
 		<link rel="stylesheet" type="text/css" href="../../../../engage/components/tags/css/Tags.css" />
 		<link rel="stylesheet" type="text/css" href="../../../../engage/components/description/css/Description.css" />
    
@@ -31,7 +32,8 @@
 		<script type="text/javascript" src="../../../../engage/framework/js/Engage.js"></script>
         <script type="text/javascript" src="../../../../engage/components/artifact/js/artifact.js"></script>
         <script type="text/javascript" src="../../../../engage/framework/js/loadData.js"></script>
-		<script type="text/javascript" src="../../../../engage/components/tags/js/Tags.js"></script> 
+		<script type="text/javascript" src="../../../../engage/components/tags/js/Tags.js"></script>
+        <script type="text/javascript" src="../../../../engage/components/browse/js/NavigationList.js"></script>  
         <script type="text/javascript" src="../../../../engage/components/browse/js/Cabinet.js"></script>
 		<script type="text/javascript" src="../../../../engage/components/description/js/Description.js"></script>
         
@@ -58,6 +60,22 @@
 					<div class="flc-description-content"></div>
 				</div>
 				<div class="cabinet">
+				    <div class="flc-cabinet-drawer">
+		                <div class="flc-cabinet-handle">
+		                    <h2 class="flc-cabinet-header">Show Audio and Video</h2>
+		                </div>
+		                <div class="flc-cabinet-contents">
+		                    <img class= "fl-demo-image" src="../../../../engage/components/artifact/images/media_panel.png" alt="Audio and Video" />
+		                </div>
+		            </div>
+                    <div class="flc-cabinet-drawer">
+		                <div class="flc-cabinet-handle">
+		                    <h2 class="flc-cabinet-header">Show Comments</h2>
+		                </div>
+		                <div class="flc-cabinet-contents">
+		                    <img class= "fl-demo-image" src="../../../../engage/components/artifact/images/comment_panel.png" alt="Audio and Video" />
+		                </div>
+		            </div>
 		            <div class="flc-cabinet-drawer flc-tags-template fl-tags">
 		                <div class="flc-cabinet-handle">
 		                    <h2 class="flc-cabinet-header flc-tags-title">Tags</h2>
@@ -66,29 +84,25 @@
                             <li class="flc-tags-tag"><span class="flc-tags-tagName fl-button-white fl-bevel-white">tag</span></li>
                         </ul>
 		            </div>
-		            <div class="flc-cabinet-drawer">
-		                <div class="flc-cabinet-handle">
-		                    <h2 class="flc-cabinet-header">Show Comments</h2>
-		                </div>
-		                <div class="flc-cabinet-contents">
-		                    <p>Some other contents</p>
-		                </div>
-		            </div>
-					<div class="flc-cabinet-drawer">
-		                <div class="flc-cabinet-handle">
-		                    <h2 class="flc-cabinet-header">Show Audio and Video</h2>
-		                </div>
-		                <div class="flc-cabinet-contents">
-		                    <p>Some other contents</p>
-		                </div>
-		            </div>					
-		            <div class="flc-cabinet-drawer">
-		                <div class="flc-cabinet-handle">
-		                    <h2 class="flc-cabinet-header">Go to Related artifacts</h2>
-		                </div>
-		                <div class="flc-cabinet-contents"></div>
-		            </div>
         		</div>
+                 <div class="relatedArtifacts fl-panel">
+                    <ul class="flc-nagivationList-listGroup">
+                        <li class="flc-navigationList-items">
+                            <a class="flc-navigationList-link">
+                                <span class="flc-navigationList-titleText">Go to Related artifacts</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="visitorsArtifacts fl-panel">
+                    <ul class="flc-nagivationList-listGroup">
+                        <li class="flc-navigationList-items">
+                            <a class="flc-navigationList-link">
+                                <span class="flc-navigationList-titleText">Go to What other visitors enjoyed</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
         <script type="text/javascript">

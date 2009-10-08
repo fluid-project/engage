@@ -58,7 +58,7 @@
      * @param {Object} onFalse, the function to run if the condition fails
      */
     var conditionalNode = function (condition, onTrue, onFalse) {
-        var func = condition ? onTrue : onFalse;
+        var func = condition === null || condition === undefined ? onFalse : onTrue;
         
         return func();
     };

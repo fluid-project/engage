@@ -37,9 +37,23 @@ var fluid = fluid || {};
     			"artifactDate": "Creation date",
     			"artifactAccessionNumber": "Accession number",
     			"artifactTags": "Tags",
-    			"artifactDescription": "Description"
+    			"artifactDescription": {
+    		    	"path": "Description",
+    		    	"func": "getDescription"
+    		    }
     		},
     		mappers: {
+    			getDescription: function (value) {
+    				var getDescr = function (value) {
+    					if (isString(value)) {
+    						return value;
+    					}
+    					else {
+    						return value[0];
+    					}
+    				};
+    				return tryFunc(getDescr, value);
+    			},
     			getImageFromMarkup: function (value) {    			
     				var getImage = function (value) {
     					var img = $(value).each(function (index) {
@@ -62,9 +76,15 @@ var fluid = fluid || {};
     		        "path": "artefacts.artefact.images.image.imagesfiles.imagefile",
     		        "func": "getThumbImageFromObjectArray"
     		    },
-    			"linkTitle": "artefacts.artefact.title",
+    			"linkTitle": {
+    		    	"path": "artefacts.artefact.title",
+    		    	"func": "getTitleFromObject"
+    		    },
     			"linkDescription": "artefacts.artefact.dated",
-    			"artifactTitle": "artefacts.artefact.title",
+    			"artifactTitle": {
+    		    	"path": "artefacts.artefact.title",
+    		    	"func": "getTitleFromObject"
+    		    },
     			"artifactImage": {
     		        "path": "artefacts.artefact.images.image.imagesfiles.imagefile",
     		        "func": "getImageFromObjectArray"
@@ -79,6 +99,20 @@ var fluid = fluid || {};
     			"artifactDescription": "artefacts.artefact.descriptions.description_museum"
     		},
     		mappers: {
+    			getTitleFromObject: function (value) {
+	    			var getTitle = function (value) {
+		    			if (typeof value === "string") {
+		    				return value;
+		    			}
+		    			else if (typeof value === "object"){
+		    				return value.nodetext;
+		    			}
+		    			else {
+		    				return "No Title";
+		    			}
+					};				
+					return tryFunc(getTitle, value);
+    			},
     			getThumbImageFromObjectArray: function (value) {
     				var getImage = function (value) {
 		    			if (typeof value === "string") {
