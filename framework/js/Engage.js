@@ -18,6 +18,9 @@ var fluid = fluid || {};
     
     fluid.engage = fluid.engage || {};
     
+    var noImageURL = "../../../../engage/components/artifact/images/no_image_64x64.png";
+    var noTitle = "No Title";
+    
     fluid.engage.collections = {
     	mmi: {
     		dataSpec: {
@@ -25,7 +28,7 @@ var fluid = fluid || {};
     		    "linkTarget": "Accession number",
     			"linkImage": {
     		        "path": "Media file",
-    		        "func": "getImageFromMarkup"
+    		        "func": "getImageFromMarkupWithDefaultImage"
     		    },
     			"linkTitle": "Object Title",
     			"linkDescription": "Creation date",
@@ -65,6 +68,18 @@ var fluid = fluid || {};
     				};
     				
     				return tryFunc(getImage, value);
+            	},
+                getImageFromMarkupWithDefaultImage: function (value) {    			
+    				var getImage = function (value) {
+    					var img = $(value).each(function (index) {
+		    	            if ($(value).eq(index).is("img")) {
+		    	                return $(value).eq(index);
+		    	            }
+		    	        });	    	    	
+		                return String(img.eq(0).attr("src") || noImageURL);
+    				};
+    				
+    				return tryFunc(getImage, value, noImageURL);
             	}
     		}
     	},
@@ -102,16 +117,13 @@ var fluid = fluid || {};
     			getTitleFromObject: function (value) {
 	    			var getTitle = function (value) {
 		    			if (typeof value === "string") {
-		    				return value;
-		    			}
-		    			else if (typeof value === "object"){
-		    				return value.nodetext;
+		    				return value || noTitle;
 		    			}
 		    			else {
-		    				return "No Title";
+		    				return value.nodetext || noTitle;
 		    			}
 					};				
-					return tryFunc(getTitle, value);
+					return tryFunc(getTitle, value, noTitle);
     			},
     			getThumbImageFromObjectArray: function (value) {
     				var getImage = function (value) {
@@ -119,11 +131,11 @@ var fluid = fluid || {};
 		    				return value;
 		    			}
 		    			else {
-		    				return value[0].nodetext;
+		    				return value[0].nodetext || noImageURL;
 		    			}
     				};
     				
-    				return tryFunc(getImage, value);
+    				return tryFunc(getImage, value, noImageURL);
     			},
     			getImageFromObjectArray: function (value) {
     				var getImage = function (value) {
@@ -153,10 +165,10 @@ var fluid = fluid || {};
     	}
     };
     
-    var tryFunc = function (func, value) {
+    var tryFunc = function (func, value, defaultValue) {
     	try {
     		return func(value);
-    	} catch (e) {};
+    	} catch (e) {return defaultValue;};
     };
     
     var isString = function (value) {
