@@ -110,13 +110,29 @@ var fluid = fluid || {};
     			},
     			"artifactDate": "artefacts.artefact.dated",
     			"artifactAccessionNumber": "artefacts.artefact.accessnumber",
-    			"artifactTags": "artefacts.artefact.tags",
+    			"artifactTags": {
+    				"path": "artefacts.artefact.tags.tag",
+    				"func": "getArtifactTags"
+    			},
     			"artifactDescription": "artefacts.artefact.descriptions.description_museum"
     		},
     		mappers: {
+    			getArtifactTags: function (value) {
+					var getTags = function (value) {
+						if (!isString(value)) {
+							return fluid.transform($.makeArray(value), function(value) {
+								return value.label;
+							});
+						}
+						else {
+							return [];
+						}
+					};
+					return tryFunc(getTags, value);
+				},
     			getTitleFromObject: function (value) {
 	    			var getTitle = function (value) {
-		    			if (typeof value === "string") {
+		    			if (isString(value)) {
 		    				return value || noTitle;
 		    			}
 		    			else {
@@ -127,38 +143,35 @@ var fluid = fluid || {};
     			},
     			getThumbImageFromObjectArray: function (value) {
     				var getImage = function (value) {
-		    			if (typeof value === "string") {
+		    			if (isString(value)) {
 		    				return value;
 		    			}
 		    			else {
 		    				return value[0].nodetext || noImageURL;
 		    			}
-    				};
-    				
+    				};    				
     				return tryFunc(getImage, value, noImageURL);
     			},
     			getImageFromObjectArray: function (value) {
     				var getImage = function (value) {
-    					if (typeof value === "string") {
+    					if (isString(value)) {
     	    				return value;
     	    			}
     	    			else {
     	    				return value[value.length - 2].nodetext;
     	    			}
-    				};
-    				
+    				};    				
     				return tryFunc(getImage, value);	    			
 	    		},        
 	            getArtifactArtist: function (value) {
 	    			var getArtist = function (value) {
-		            	if (typeof value === "string") {
+		            	if (isString(value)) {
 		            		return value;
 		            	}
 		            	else {
 		            		return value[0].nodetext; 
 		            	}
-	    			};
-	    			
+	    			};	    			
 	    			return tryFunc(getArtist, value);
 	            }
     		}
