@@ -33,8 +33,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
 			url: isFile ? localTestDataURL : getDataFeedUrl(currentUrl),
 			success: initEngageComponent,
 			dataType: "json",
-			async: false,
-			data: isFile ? null : location.search.replace("?", ""),
+			async: true,
+			data: isFile ? null : location.search.replace("?", "")
 		});
 	};
 	
