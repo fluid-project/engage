@@ -14,7 +14,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
 fluid = fluid || {};
 
-(function ($, fluid) {
+(function ($) {
 	
 	var renderArtifactPage = function (that) {		
 		fluid.selfRender(that.locate("renderScope"), 
@@ -66,8 +66,8 @@ fluid = fluid || {};
             type: "fluid.tags"
         },
         artifactsLink: {
-        	type: "fluid.navigationList"
+            type: "fluid.navigationList"
         }
 	});
 	
-}(jQuery, fluid));
+}(jQuery));

@@ -11,6 +11,8 @@
  */
 /*global jQuery, fluid*/
 
+fluid = fluid || {};
+
 (function ($) {
     
     /**

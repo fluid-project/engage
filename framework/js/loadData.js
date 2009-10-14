@@ -9,8 +9,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://source.fluidproject.org/svn/LICENSE.txt
 */
 
-/*global jQuery*/
-/*global fluid*/
+/*global jQuery, fluid, location*/
 
 (function ($, fluid) {
 	

@@ -12,174 +12,185 @@ https://source.fluidproject.org/svn/LICENSE.txt
 // Declare dependencies.
 /*global jQuery, fluid*/
 
-var fluid = fluid || {};
+fluid = fluid || {};
 
-(function ($, fluid) {
+(function ($) {
     
     fluid.engage = fluid.engage || {};
     
     var noTitle = "No Title";
     
+    var tryFunc = function (func, value, defaultValue) {
+        try {
+            return func(value);
+        } catch (e) {
+            return defaultValue;
+        }
+    };
+    
+    var isString = function (value) {
+        return typeof value === "string";
+    };
+    
     fluid.engage.collections = {
-    	mmi: {
-    		dataSpec: {
-    		    "category": "Collection category",
-    		    "linkTarget": "Accession number",
-    			"linkImage": {
-    		        "path": "Media file",
-    		        "func": "getImageFromMarkupWithDefaultImage"
-    		    },
-    			"linkTitle": "Object Title",
-    			"linkDescription": "Creation date",
-    			"artifactTitle": "Object Title",
-    			"artifactImage": {
-    		        "path": "Media file",
-    		        "func": "getImageFromMarkup"
-    		    },
-    			"artifactDate": "Creation date",
-    			"artifactAccessionNumber": "Accession number",
-    			"artifactTags": "Tags",
-    			"artifactDescription": {
-    		    	"path": "Description",
-    		    	"func": "getDescription"
-    		    }
-    		},
-    		mappers: {
-    			getDescription: function (value) {
-    				var getDescr = function (value) {
-    					if (isString(value)) {
-    						return value;
-    					}
-    					else {
-    						return value[0];
-    					}
-    				};
-    				return tryFunc(getDescr, value);
-    			},
-    			getImageFromMarkup: function (value) {    			
-    				var getImage = function (value) {
-    					var img = $(value).each(function (index) {
-		    	            if ($(value).eq(index).is("img")) {
-		    	                return $(value).eq(index);
-		    	            }
-		    	        });	    	    	
-    					var imgSRC = img.eq(0).attr("src");  	    	
-		                return imgSRC ? String(imgSRC) : undefined;
-    				};
-    				
-    				return tryFunc(getImage, value);
-            	},
-                getImageFromMarkupWithDefaultImage: function (value) {    			
-    				var getImage = function (value) {
-    					var img = $(value).each(function (index) {
-		    	            if ($(value).eq(index).is("img")) {
-		    	                return $(value).eq(index);
-		    	            }
-		    	        });	  
-                        var imgSRC = img.eq(0).attr("src");  	    	
-		                return imgSRC ? String(imgSRC) : undefined;
-    				};
-    				
-    				return tryFunc(getImage, value);
-            	}
-    		}
-    	},
-    	mccord: {
-    		dataSpec: {
-    		    "category": {
-    				"path": "artefacts.artefact.links.type.category",
-    				"func": "getArtifactCategory"
-    			},
-    		    "linkTarget": "artefacts.artefact.accessnumber",
-    			"linkImage": {
-    		        "path": "artefacts.artefact.images.image",
-    		        "func": "getThumbImageFromObjectArray"
-    		    },
-    			"linkTitle": {
-    		    	"path": "artefacts.artefact.title",
-    		    	"func": "getTitleFromObject"
-    		    },
-    			"linkDescription": "artefacts.artefact.dated",
-    			"artifactTitle": {
-    		    	"path": "artefacts.artefact.title",
-    		    	"func": "getTitleFromObject"
-    		    },
-    			"artifactImage": {
-    		        "path": "artefacts.artefact.images.image",
-    		        "func": "getImageFromObjectArray"
-    		    }, 
-    			"artifactAuthor": {
-    				"path": "artefacts.artefact.artist",
-    				"func": "getArtifactArtist"
-    			},
-    			"artifactDate": "artefacts.artefact.dated",
-    			"artifactAccessionNumber": "artefacts.artefact.accessnumber",
-    			"artifactTags": {
-    				"path": "artefacts.artefact.tags.tag",
-    				"func": "getArtifactTags"
-    			},
-    			"artifactDescription": {
-    				"path": "artefacts.artefact.descriptions.description_museum",
-    				"func": "getArtifactDescription"
-    			}
-    		},
-    		mappers: {
-    			getArtifactDescription: function (value) {
-    				var getDescription = function (value) {
-    					if (isString(value)) {
-    						return value;
-    					}
-    				};
-    				return tryFunc(getDescription, value);
-    			},
-    			getArtifactCategory: function (value) {
+        mmi: {
+            dataSpec: {
+                "category": "Collection category",
+                "linkTarget": "Accession number",
+                "linkImage": {
+                    "path": "Media file",
+                    "func": "getImageFromMarkupWithDefaultImage"
+                },
+                "linkTitle": "Object Title",
+                "linkDescription": "Creation date",
+                "artifactTitle": "Object Title",
+                "artifactImage": {
+                    "path": "Media file",
+                    "func": "getImageFromMarkup"
+                },
+                "artifactDate": "Creation date",
+                "artifactAccessionNumber": "Accession number",
+                "artifactTags": "Tags",
+                "artifactDescription": {
+                    "path": "Description",
+                    "func": "getDescription"
+                }
+            },
+            mappers: {
+                getDescription: function (value) {
+                    var getDescr = function (value) {
+                        if (isString(value)) {
+                            return value;
+                        }
+                        else {
+                            return value[0];
+                        }
+                    };
+                    return tryFunc(getDescr, value);
+                },
+	            getImageFromMarkup: function (value) {
+                    var getImage = function (value) {
+                        var img = $(value).each(function (index) {
+                            if ($(value).eq(index).is("img")) {
+                                return $(value).eq(index);
+                            }
+                        });
+                        var imgSRC = img.eq(0).attr("src");
+                        return imgSRC ? String(imgSRC) : undefined;
+                    };
+                    return tryFunc(getImage, value);
+                },
+                getImageFromMarkupWithDefaultImage: function (value) {
+                    var getImage = function (value) {
+                        var img = $(value).each(function (index) {
+                            if ($(value).eq(index).is("img")) {
+                                return $(value).eq(index);
+                            }
+                        });
+                        var imgSRC = img.eq(0).attr("src");
+                        return imgSRC ? String(imgSRC) : undefined;
+                    };
+                    
+                    return tryFunc(getImage, value);
+                }
+            }
+        },
+        mccord: {
+	        dataSpec: {
+                "category": {
+                    "path": "artefacts.artefact.links.type.category",
+                    "func": "getArtifactCategory"
+                },
+                "linkTarget": "artefacts.artefact.accessnumber",
+                "linkImage": {
+                    "path": "artefacts.artefact.images.image",
+                    "func": "getThumbImageFromObjectArray"
+                },
+                "linkTitle": {
+                    "path": "artefacts.artefact.title",
+                    "func": "getTitleFromObject"
+                },
+                "linkDescription": "artefacts.artefact.dated",
+                "artifactTitle": {
+                    "path": "artefacts.artefact.title",
+                    "func": "getTitleFromObject"
+                },
+                "artifactImage": {
+                    "path": "artefacts.artefact.images.image",
+                    "func": "getImageFromObjectArray"
+                }, 
+                "artifactAuthor": {
+                    "path": "artefacts.artefact.artist",
+                    "func": "getArtifactArtist"
+                },
+                "artifactDate": "artefacts.artefact.dated",
+                "artifactAccessionNumber": "artefacts.artefact.accessnumber",
+                "artifactTags": {
+                    "path": "artefacts.artefact.tags.tag",
+                    "func": "getArtifactTags"
+                },
+                "artifactDescription": {
+                    "path": "artefacts.artefact.descriptions.description_museum",
+                    "func": "getArtifactDescription"
+                }
+	        },
+            mappers: {
+                getArtifactDescription: function (value) {
+                    var getDescription = function (value) {
+                        if (isString(value)) {
+                            return value;
+                        }
+                    };
+                    return tryFunc(getDescription, value);
+                },
+                getArtifactCategory: function (value) {
                     var getCategory = function (value) {
-                    	return fluid.transform($.makeArray(value), function (val) {
+                        return fluid.transform($.makeArray(value), function (val) {
                             return val.label;
                         });
                     };
                     return tryFunc(getCategory, value);
                 },
-    			getArtifactTags: function (value) {
+	            getArtifactTags: function (value) {
 					var getTags = function (value) {
 						if (!isString(value)) {
-							return fluid.transform($.makeArray(value), function(val) {
+                            return fluid.transform($.makeArray(value), function (val) {
 								return val.label;
 							});
 						}
 					};
 					return tryFunc(getTags, value);
 				},
-    			getTitleFromObject: function (value) {
-	    			var getTitle = function (value) {
-		    			if (isString(value)) {
-		    				return value || noTitle;
-		    			}
-		    			else {
-		    				return $.makeArray(value)[0].nodetext || noTitle;
-		    			}
-					};				
-					return tryFunc(getTitle, value, noTitle);
-    			},
-    			getThumbImageFromObjectArray: function (value) {
-    				var getImage = function (value) {
-		    			if (isString(value)) {
-		    				return value || undefined;
-		    			}
-		    			else {
+                getTitleFromObject: function (value) {
+                    var getTitle = function (value) {
+                        if (isString(value)) {
+                            return value || noTitle;
+                        }
+                        else {
+                            return $.makeArray(value)[0].nodetext || noTitle;
+                        }
+                    };				
+                    return tryFunc(getTitle, value, noTitle);
+                },
+                getThumbImageFromObjectArray: function (value) {
+                    var getImage = function (value) {
+                        if (isString(value)) {
+                            return value || undefined;
+                        }
+                        else {
                             value = $.makeArray(value)[0].imagesfiles.imagefile;
-		    				return value[0].nodetext || undefined;
-		    			}
-    				};    				
-    				return tryFunc(getImage, value);
-    			},
-    			getImageFromObjectArray: function (value) {
-    				var getImage = function (value) {
-    					if (isString(value)) {
-    	    				return value;
-    	    			}
-    	    			else {
-    	    				value = $.makeArray(value)[0].imagesfiles.imagefile;
+                            return value[0].nodetext || undefined;
+                        }
+                    };
+                    return tryFunc(getImage, value);
+                },
+                getImageFromObjectArray: function (value) {
+                    var getImage = function (value) {
+                        if (isString(value)) {
+                            return value;
+                        }
+                        else {
+                            value = $.makeArray(value)[0].imagesfiles.imagefile;
                             var link;
                             $.each($.makeArray(value).reverse(), function (index, val) {
                                 if (val.sizeunit !== "") {
@@ -187,40 +198,30 @@ var fluid = fluid || {};
                                     return false;
                                 }
                             });
-	                        return link;
-    	    			}
-    				};    				
-    				return tryFunc(getImage, value);	    			
-	    		},        
-	            getArtifactArtist: function (value) {
-	    			var getArtist = function (value) {
-		            	if (isString(value)) {
-		            		return value;
-		            	}
-		            	else {
-		            		return $.makeArray(value)[0].nodetext; 
-		            	}
-	    			};	    			
-	    			return tryFunc(getArtist, value);
-	            }
-    		}
-    	}
-    };
-    
-    var tryFunc = function (func, value, defaultValue) {
-    	try {
-    		return func(value);
-    	} catch (e) {return defaultValue;}
-    };
-    
-    var isString = function (value) {
-        return typeof value === "string";
+                            return link;
+                        }
+                    };
+                    return tryFunc(getImage, value);
+                },
+                getArtifactArtist: function (value) {
+                    var getArtist = function (value) {
+                        if (isString(value)) {
+                            return value;
+                        }
+                        else {
+                            return $.makeArray(value)[0].nodetext;
+                        }
+                    };
+                    return tryFunc(getArtist, value);
+                }
+            }
+        }
     };
     
     fluid.engage.mapModel = function (model, dbName, spec) {
         
-    	spec = spec || fluid.engage.collections;
-    	
+        spec = spec || fluid.engage.collections;
+        
         var normalizedModel = {};
         
         var validatePathFunc = function (path, func) {
@@ -235,8 +236,8 @@ var fluid = fluid || {};
             }
         };
                 
-        var dbSpec = spec[dbName].dataSpec; 
-        for (key in dbSpec) {
+        var dbSpec = spec[dbName].dataSpec;
+        for (var key in dbSpec) {
             if (dbSpec.hasOwnProperty(key)) {
                 var specValue = dbSpec[key];
                 if (isString(specValue)) {
@@ -257,4 +258,4 @@ var fluid = fluid || {};
         return normalizedModel;
     };
     
-})(jQuery, fluid);
+})(jQuery);

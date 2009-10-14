@@ -60,7 +60,7 @@ fluid = fluid || {};
             fluid.fetchResources(resources, function () {
                 templates = fluid.parseTemplates(resources, ["tags"], {});
                 fluid.reRender(templates, that.container, tree);
-            	that.events.afterInit.fire();
+                that.events.afterInit.fire();
             });
         } else {
             var opts = {

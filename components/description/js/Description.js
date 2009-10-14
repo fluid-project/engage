@@ -15,7 +15,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
 fluid = fluid || {};
 
-(function ($, fluid) {
+(function ($) {
 	
     var cleanseSelector = function (selector) {
         return selector.replace(/\./gi, "");
@@ -61,7 +61,12 @@ fluid = fluid || {};
 	var needToggle = function (that) {
 		return that.locate("content").height() > that.options.collapsedHeight;
 	};
-	
+		
+	var setUpToggler = function (that) {
+		that.locate("toggler").show();
+		addClickEvent(that);
+	};
+    
 	var setUpDescription = function (that) {
         addStyleClasses(that);
 		that.options.model = that.options.model.replace(/(<([^>]+)>)/gi, "");
@@ -72,11 +77,6 @@ fluid = fluid || {};
 			addToggler(that);
 			setUpToggler(that);
 		}
-	};
-	
-	var setUpToggler = function (that) {
-		that.locate("toggler").show();
-		addClickEvent(that);
 	};
 	
 	fluid.description = function (container, options) {
@@ -123,4 +123,4 @@ fluid = fluid || {};
 		collapsedHeight: 60,
 		model: "Description Information"
 	});
-})(jQuery, fluid);
+})(jQuery);
