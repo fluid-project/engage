@@ -30,26 +30,6 @@
     };
     
     /**
-     * Createsthe branch level node for the component tree, including the rendering of the subcomponent.
-     * 
-     * @param {Object} that, the component
-     * @param {Object} id, the ID used by the component tree
-     * @param {Object} children, leaves on the branch
-     * @param {Object} options, options passed to the subcomponent
-     */
-    var branch = function (that, id, children, options) {
-        return {
-            ID: id,
-            children: children,
-            decorators: {
-                type: "fluid",
-                func: that.options.navigationList.type,
-                options: options
-            }
-        };
-    };
-    
-    /**
      * Children that will be attached to the branch. If no description is provided no markup related to it will be rendered
      * 
      * @param {Object} titleID, the ID used by the component tree for the title
@@ -131,13 +111,6 @@
             {selector: that.options.selectors.listHeader, id: "listHeader"},
             {selector: that.options.selectors.listHeaderDescription, id: "listHeaderDescription"}
         ];
-        
-        //currently doesn't work due to a bug in the renderer (FLUID-2980), will re-explore this option if it gets fixed in time
-//        var renderTree = function () {
-//            return fluid.transform(that.options.lists, function (object, index) {
-//                return branch(that, "lists:", branchChildren("listHeader", object.category, "listHeaderDescription", object.description) ,object.listOptions);
-//            });
-//        };
 
         var renderTree = function () {
             return fluid.transform(that.options.lists, function (object, index) {
