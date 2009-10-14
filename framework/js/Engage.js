@@ -63,7 +63,8 @@ var fluid = fluid || {};
 		    	                return $(value).eq(index);
 		    	            }
 		    	        });	    	    	
-		                return String(img.eq(0).attr("src"));
+    					var imgSRC = img.eq(0).attr("src");  	    	
+		                return imgSRC ? String(imgSRC) : undefined;
     				};
     				
     				return tryFunc(getImage, value);
