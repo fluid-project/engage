@@ -94,18 +94,15 @@
                     tree.children.push(treeNode("descriptionText", "value", object.description || "", styles.descriptionText));
                 }
                 
-                if (object.image) {
-                    tree.children.push(treeNode("image", "decorators", [
-                        {
-                            attrs: {
-                                src: object.image || ""
-                            }
-                        },
-                        {
+                if (object.image || that.options.useDefaultImage) {
+                    tree.children.push({
+                        ID: "image",
+                        target: object.image,
+                        decorators: [{
                             type: "addClass",
                             classes: styles.image
-                        }
-                    ]));
+                        }]
+                    });
                 }
                 
                 return tree;
@@ -183,6 +180,8 @@
         strings: {},
         
         events: {},
+        
+        useDefaultImage: true,
         
         messageBundle: {linkToMoreMessage: "See all in {0} ({1})"},
         

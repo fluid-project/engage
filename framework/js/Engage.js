@@ -18,7 +18,6 @@ var fluid = fluid || {};
     
     fluid.engage = fluid.engage || {};
     
-    var noImageURL = "../../../../engage/components/artifact/images/no_image_64x64.png";
     var noTitle = "No Title";
     
     fluid.engage.collections = {
@@ -75,11 +74,12 @@ var fluid = fluid || {};
 		    	            if ($(value).eq(index).is("img")) {
 		    	                return $(value).eq(index);
 		    	            }
-		    	        });	    	    	
-		                return String(img.eq(0).attr("src") || noImageURL);
+		    	        });	  
+                        var imgSRC = img.eq(0).attr("src");  	    	
+		                return imgSRC ? String(imgSRC) : undefined;
     				};
     				
-    				return tryFunc(getImage, value, noImageURL);
+    				return tryFunc(getImage, value);
             	}
     		}
     	},
@@ -88,7 +88,7 @@ var fluid = fluid || {};
     		    "category": "artefacts.artefact.links.type.category.label",
     		    "linkTarget": "artefacts.artefact.accessnumber",
     			"linkImage": {
-    		        "path": "artefacts.artefact.images.image.imagesfiles.imagefile",
+    		        "path": "artefacts.artefact.images.image",
     		        "func": "getThumbImageFromObjectArray"
     		    },
     			"linkTitle": {
@@ -144,13 +144,14 @@ var fluid = fluid || {};
     			getThumbImageFromObjectArray: function (value) {
     				var getImage = function (value) {
 		    			if (isString(value)) {
-		    				return value;
+		    				return value || undefined;
 		    			}
 		    			else {
-		    				return value[0].nodetext || noImageURL;
+                            value = $.makeArray(value)[0].imagesfiles.imagefile;
+		    				return value[0].nodetext || undefined;
 		    			}
     				};    				
-    				return tryFunc(getImage, value, noImageURL);
+    				return tryFunc(getImage, value);
     			},
     			getImageFromObjectArray: function (value) {
     				var getImage = function (value) {
@@ -181,7 +182,7 @@ var fluid = fluid || {};
     var tryFunc = function (func, value, defaultValue) {
     	try {
     		return func(value);
-    	} catch (e) {return defaultValue;};
+    	} catch (e) {return defaultValue;}
     };
     
     var isString = function (value) {
