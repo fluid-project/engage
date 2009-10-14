@@ -85,7 +85,10 @@ var fluid = fluid || {};
     	},
     	mccord: {
     		dataSpec: {
-    		    "category": "artefacts.artefact.links.type.category.label",
+    		    "category": {
+    				"path": "artefacts.artefact.links.type.category",
+    				"func": "getArtifactCategory"
+    			},
     		    "linkTarget": "artefacts.artefact.accessnumber",
     			"linkImage": {
     		        "path": "artefacts.artefact.images.image",
@@ -101,7 +104,7 @@ var fluid = fluid || {};
     		    	"func": "getTitleFromObject"
     		    },
     			"artifactImage": {
-    		        "path": "artefacts.artefact.images.image.imagesfiles.imagefile",
+    		        "path": "artefacts.artefact.images.image",
     		        "func": "getImageFromObjectArray"
     		    }, 
     			"artifactAuthor": {
@@ -114,18 +117,34 @@ var fluid = fluid || {};
     				"path": "artefacts.artefact.tags.tag",
     				"func": "getArtifactTags"
     			},
-    			"artifactDescription": "artefacts.artefact.descriptions.description_museum"
+    			"artifactDescription": {
+    				"path": "artefacts.artefact.descriptions.description_museum",
+    				"func": "getArtifactDescription"
+    			}
     		},
     		mappers: {
+    			getArtifactDescription: function (value) {
+    				var getDescription = function (value) {
+    					if (isString(value)) {
+    						return value;
+    					}
+    				};
+    				return tryFunc(getDescription, value);
+    			},
+    			getArtifactCategory: function (value) {
+                    var getCategory = function (value) {
+                    	return fluid.transform($.makeArray(value), function (val) {
+                            return val.label;
+                        });
+                    };
+                    return tryFunc(getCategory, value);
+                },
     			getArtifactTags: function (value) {
 					var getTags = function (value) {
 						if (!isString(value)) {
-							return fluid.transform($.makeArray(value), function(value) {
-								return value.label;
+							return fluid.transform($.makeArray(value), function(val) {
+								return val.label;
 							});
-						}
-						else {
-							return [];
 						}
 					};
 					return tryFunc(getTags, value);
@@ -136,7 +155,7 @@ var fluid = fluid || {};
 		    				return value || noTitle;
 		    			}
 		    			else {
-		    				return value.nodetext || noTitle;
+		    				return $.makeArray(value)[0].nodetext || noTitle;
 		    			}
 					};				
 					return tryFunc(getTitle, value, noTitle);
@@ -159,7 +178,15 @@ var fluid = fluid || {};
     	    				return value;
     	    			}
     	    			else {
-    	    				return value[value.length - 2].nodetext;
+    	    				value = $.makeArray(value)[0].imagesfiles.imagefile;
+                            var link;
+                            $.each($.makeArray(value).reverse(), function (index, val) {
+                                if (val.sizeunit !== "") {
+                                    link = val.nodetext;
+                                    return false;
+                                }
+                            });
+	                        return link;
     	    			}
     				};    				
     				return tryFunc(getImage, value);	    			
@@ -170,7 +197,7 @@ var fluid = fluid || {};
 		            		return value;
 		            	}
 		            	else {
-		            		return value[0].nodetext; 
+		            		return $.makeArray(value)[0].nodetext; 
 		            	}
 	    			};	    			
 	    			return tryFunc(getArtist, value);
