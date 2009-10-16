@@ -11,7 +11,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
 /*global jQuery*/
 /*global fluid*/
-/*global jqUnit*/
+/*global jqUnit, expect, window*/
 
 
 (function ($) {
@@ -37,10 +37,14 @@ https://source.fluidproject.org/svn/LICENSE.txt
     }
     
     var hasClasses = function (selector, classes) {
-        if (typeof classes === "string") {classes = [classes];}
+        if (typeof classes === "string") {
+            classes = [classes];
+        }
         
-        for(var i = 0; i < classes.length; i++) {
-            if (!selector.hasClass(classes[i])) {return false;}
+        for (var i = 0; i < classes.length; i++) {
+            if (!selector.hasClass(classes[i])) {
+                return false;
+            }
         }
         
         return true;
@@ -50,7 +54,9 @@ https://source.fluidproject.org/svn/LICENSE.txt
         selector = fluid.wrap(selector);
         selector.each(function (index, element) {
             var attrValue = $(element).attr(attribute);
-            if (attrValue !== (value || !null)) {return false;}
+            if (attrValue !== (value || !null)) {
+                return false;
+            }
         });
         
         return true;
@@ -60,7 +66,9 @@ https://source.fluidproject.org/svn/LICENSE.txt
         selector = fluid.wrap(selector);
         selector.each(function (index, element) {
             var styleValue = $(element).css(style);
-            if (styleValue !== value) {return false;}
+            if (styleValue !== value) {
+                return false;
+            }
         });
         
         return true;
@@ -79,7 +87,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         assertStyling(drawerSelector, closeStyle, true, "All specified drawers have close styling");
         assertStyling(drawerSelector, openStyle, false, "No specified drawer has open styling");
         
-        jqUnit.assertTrue("Drawer has aria-expended set to false", hasAttribute(drawerSelector, "aria-expanded","false"));
+        jqUnit.assertTrue("Drawer has aria-expended set to false", hasAttribute(drawerSelector, "aria-expanded", "false"));
         jqUnit.assertTrue("Contents are hidden", hasStyle(contentSelector, "display", "none"));
     };
     
@@ -107,14 +115,14 @@ https://source.fluidproject.org/svn/LICENSE.txt
         });
         
         tests.test("Aria insertion", function () {
-           var cabinet = setup(CONTAINER);
-           var  selectors = cabinet.options.selectors;
-           expect(4);
+            var cabinet = setup(CONTAINER);
+            var  selectors = cabinet.options.selectors;
+            expect(4);
            
-           jqUnit.assertTrue("Cabinet has role of tablist", hasAttribute(cabinet.container, "role", "tablist"));
-           jqUnit.assertTrue("Cabinet has attribute aria-multiselectable set to true", hasAttribute(cabinet.container, "aria-multiselectable", "true"));
-           jqUnit.assertTrue("Drawer has role of tab", hasAttribute(selectors.drawer, "role", "tab"));
-           jqUnit.assertTrue("Drawer has attribute of aria-expanded set", hasAttribute(selectors.drawer));
+            jqUnit.assertTrue("Cabinet has role of tablist", hasAttribute(cabinet.container, "role", "tablist"));
+            jqUnit.assertTrue("Cabinet has attribute aria-multiselectable set to true", hasAttribute(cabinet.container, "aria-multiselectable", "true"));
+            jqUnit.assertTrue("Drawer has role of tab", hasAttribute(selectors.drawer, "role", "tab"));
+            jqUnit.assertTrue("Drawer has attribute of aria-expanded set", hasAttribute(selectors.drawer));
         });
         
         tests.test("Start Closed", function () {
@@ -241,11 +249,15 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 startOpen: false,
                 preventEventFireOnInit: true,
                 listeners: {
-                    afterOpen: function () {openedEventFired = true;},
-                    afterClose: function () {closedEventFired = true;}
+                    afterOpen: function () {
+                        openedEventFired = true;
+                    },
+                    afterClose: function () {
+                        closedEventFired = true;
+                    }
                 }
             };
-            var cabinet = setup(CONTAINER, options);
+            setup(CONTAINER, options);
             
             jqUnit.assertFalse("Opened events not fired", openedEventFired);
             jqUnit.assertFalse("Closed events not fired", closedEventFired);
@@ -257,11 +269,15 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 startOpen: true,
                 preventEventFireOnInit: true,
                 listeners: {
-                    afterOpen: function () {openedEventFired = true;},
-                    afterClose: function () {closedEventFired = true;}
+                    afterOpen: function () {
+                        openedEventFired = true;
+                    },
+                    afterClose: function () {
+                        closedEventFired = true;
+                    }
                 }
             };
-            var cabinet = setup(CONTAINER, options);
+            setup(CONTAINER, options);
             
             jqUnit.assertFalse("Opened events not fired", openedEventFired);
             jqUnit.assertFalse("Closed events not fired", closedEventFired);
@@ -273,11 +289,15 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 startOpen: false,
                 preventEventFireOnInit: false,
                 listeners: {
-                    afterOpen: function () {openedEventFired = true;},
-                    afterClose: function () {closedEventFired = true;}
+                    afterOpen: function () {
+                        openedEventFired = true;
+                    },
+                    afterClose: function () {
+                        closedEventFired = true;
+                    }
                 }
             };
-            var cabinet = setup(CONTAINER, options);
+            setup(CONTAINER, options);
             
             jqUnit.assertFalse("Opened events not fired", openedEventFired);
             jqUnit.assertTrue("Closed events fired", closedEventFired);
@@ -289,11 +309,15 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 startOpen: true,
                 preventEventFireOnInit: false,
                 listeners: {
-                    afterOpen: function () {openedEventFired = true;},
-                    afterClose: function () {closedEventFired = true;}
+                    afterOpen: function () {
+                        openedEventFired = true;
+                    },
+                    afterClose: function () {
+                        closedEventFired = true;
+                    }
                 }
             };
-            var cabinet = setup(CONTAINER, options);
+            setup(CONTAINER, options);
             
             jqUnit.assertTrue("Opened events fired", openedEventFired);
             jqUnit.assertFalse("Closed events not fired", closedEventFired);
@@ -305,8 +329,12 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 startOpen: true,
                 preventEventFireOnInit: true,
                 listeners: {
-                    afterOpen: function () {openedEventFired = true;},
-                    afterClose: function () {closedEventFired = true;}
+                    afterOpen: function () {
+                        openedEventFired = true;
+                    },
+                    afterClose: function () {
+                        closedEventFired = true;
+                    }
                 }
             };
             var cabinet = setup(CONTAINER, options);
@@ -322,8 +350,12 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 startOpen: false,
                 preventEventFireOnInit: true,
                 listeners: {
-                    afterOpen: function () {openedEventFired = true;},
-                    afterClose: function () {closedEventFired = true;}
+                    afterOpen: function () {
+                        openedEventFired = true;
+                    },
+                    afterClose: function () {
+                        closedEventFired = true;
+                    }
                 }
             };
             var cabinet = setup(CONTAINER, options);
@@ -339,8 +371,12 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 startOpen: true,
                 preventEventFireOnInit: true,
                 listeners: {
-                    afterOpen: function () {openedEventFired = true;},
-                    afterClose: function () {closedEventFired = true;}
+                    afterOpen: function () {
+                        openedEventFired = true;
+                    },
+                    afterClose: function () {
+                        closedEventFired = true;
+                    }
                 }
             };
             var cabinet = setup(CONTAINER, options);
@@ -356,8 +392,12 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 startOpen: false,
                 preventEventFireOnInit: true,
                 listeners: {
-                    afterOpen: function () {openedEventFired = true;},
-                    afterClose: function () {closedEventFired = true;}
+                    afterOpen: function () {
+                        openedEventFired = true;
+                    },
+                    afterClose: function () {
+                        closedEventFired = true;
+                    }
                 }
             };
             var cabinet = setup(CONTAINER, options);
@@ -373,8 +413,12 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 startOpen: true,
                 preventEventFireOnInit: true,
                 listeners: {
-                    afterOpen: function () {openedEventFired = true;},
-                    afterClose: function () {closedEventFired = true;}
+                    afterOpen: function () {
+                        openedEventFired = true;
+                    },
+                    afterClose: function () {
+                        closedEventFired = true;
+                    }
                 }
             };
             var cabinet = setup(CONTAINER, options);
@@ -398,8 +442,12 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 startOpen: false,
                 preventEventFireOnInit: true,
                 listeners: {
-                    afterOpen: function () {openedEventFired = true;},
-                    afterClose: function () {closedEventFired = true;}
+                    afterOpen: function () {
+                        openedEventFired = true;
+                    },
+                    afterClose: function () {
+                        closedEventFired = true;
+                    }
                 }
             };
             var cabinet = setup(CONTAINER, options);
@@ -428,8 +476,12 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 startOpen: true,
                 preventEventFireOnInit: true,
                 listeners: {
-                    afterOpen: function () {openedEventFired = true;},
-                    afterClose: function () {closedEventFired = true;}
+                    afterOpen: function () {
+                        openedEventFired = true;
+                    },
+                    afterClose: function () {
+                        closedEventFired = true;
+                    }
                 }
             };
             var cabinet = setup(CONTAINER, options);
@@ -458,8 +510,12 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 startOpen: false,
                 preventEventFireOnInit: true,
                 listeners: {
-                    afterOpen: function () {openedEventFired = true;},
-                    afterClose: function () {closedEventFired = true;}
+                    afterOpen: function () {
+                        openedEventFired = true;
+                    },
+                    afterClose: function () {
+                        closedEventFired = true;
+                    }
                 }
             };
             var cabinet = setup(CONTAINER, options);
@@ -488,8 +544,12 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 startOpen: true,
                 preventEventFireOnInit: true,
                 listeners: {
-                    afterOpen: function () {openedEventFired = true;},
-                    afterClose: function () {closedEventFired = true;}
+                    afterOpen: function () {
+                        openedEventFired = true;
+                    },
+                    afterClose: function () {
+                        closedEventFired = true;
+                    }
                 }
             };
             var cabinet = setup(CONTAINER, options);
@@ -518,8 +578,12 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 startOpen: false,
                 preventEventFireOnInit: true,
                 listeners: {
-                    afterOpen: function () {openedEventFired = true;},
-                    afterClose: function () {closedEventFired = true;}
+                    afterOpen: function () {
+                        openedEventFired = true;
+                    },
+                    afterClose: function () {
+                        closedEventFired = true;
+                    }
                 }
             };
             var cabinet = setup(CONTAINER, options);

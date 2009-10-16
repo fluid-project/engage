@@ -23,10 +23,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
     var initTests = function (component) {
         var selectors = component.options.selectors;
-        var styles = component.options.styles;
         var strings = component.options.strings;
-        var description = $(selectors.browseDescription, CONTAINER);
-        var descriptionToggle = $(selectors.browseDescriptionToggle);
         
         if (component.options.useCabinet) {
             jqUnit.assertTrue("Cabinet Initialized", component.cabinet);

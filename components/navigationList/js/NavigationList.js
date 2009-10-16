@@ -91,7 +91,7 @@ fluid = fluid || {};
                     })
                 ], styles.listItems);
                 
-                if(object.description) {
+                if (object.description) {
                     tree.children.push(treeNode("descriptionText", "value", object.description || "", styles.descriptionText));
                 }
                 
