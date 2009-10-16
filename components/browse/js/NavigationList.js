@@ -182,7 +182,7 @@ fluid = fluid || {};
         
         events: {},
         
-        useDefaultImage: true,
+        useDefaultImage: false,
         
         messageBundle: {linkToMoreMessage: "See all in {0} ({1})"},
         

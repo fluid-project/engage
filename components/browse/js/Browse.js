@@ -195,7 +195,8 @@ fluid = fluid || {};
             options: {
                 styles: {
                     titleText: "fl-browse-shortenText"
-                }
+                },
+                useDefaultImage: true
             }
         },
         
