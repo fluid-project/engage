@@ -99,7 +99,6 @@ fluid = fluid || {};
      * @param {Object} that, the component
      */
     var removeLoadStyling = function (that) {
-        console.log("removeLoadStyling");
         that.container.removeClass(that.options.styles.load);
     };
     
