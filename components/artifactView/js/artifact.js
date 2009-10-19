@@ -49,9 +49,6 @@ fluid = fluid || {};
 	        cabinetScope: ".cabinet",
 	        realtedArtifacts: ".relatedArtifacts"        
 	    },
-	    styles: {
-	        artNameHeadingInList: "fl-text-bold"
-	    },
 	    toRender: null,
 	    description: {
             type: "fluid.description"
