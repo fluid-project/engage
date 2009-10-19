@@ -34,16 +34,21 @@
         <script type="text/javascript" src="../../../../engage-core/framework/js/loadData.js"></script>
         
 	</head>
-	<body class="browse fl-theme-iphone">
+	<body class="flc-browse fl-theme-iphone fl-browse-loading">
 	    <div class="fl-navbar fl-table">
 	        <h1 class="flc-browse-title fl-table-cell">Title</h1>
         </div>
-	    <div class="flc-browse-descriptionContainer">
+        <div class="fl-browse-loadMessage fl-note fl-bevel-white">
+            Loading...
+            <div class="fl-browse-spinner"></div>
+            <!-- loading message, and it graphic -->
+        </div>
+	    <div class="flc-browse-descriptionContainer fl-browse-descriptionContainer">
 	        <p class="flc-browse-description">
                 Description
             </p>
 	    </div>
-        <div class="flc-browse-contents">
+        <div class="flc-browse-contents fl-browse-contents">
             <div class="flc-cabinet-drawer">
                 <div class="flc-cabinet-handle">
                     <h2 class="flc-cabinet-header">Header</h2>
@@ -64,7 +69,7 @@
         </div>
         
         <script type="text/javascript">
-            fluid.engage.initComponentWithDataFeed(window.location, "fluid.browse", ".browse");
+            fluid.engage.initComponentWithDataFeed(window.location, "fluid.browse", ".flc-browse");
         </script>
 	</body>
 </html>
