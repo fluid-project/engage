@@ -94,6 +94,25 @@ fluid = fluid || {};
     };
     
     /**
+     * Removes the loading style from the component, so that the rendered page is displayed
+     * 
+     * @param {Object} that, the component
+     */
+    var removeLoadStyling = function (that) {
+        console.log("removeLoadStyling");
+        that.container.removeClass(that.options.styles.load);
+    };
+    
+    /**
+     * Binds the after render event to a lister that calls the removeLoadStyling function
+     * 
+     * @param {Object} that, the component
+     */
+    var bindEvents = function (that) {
+        that.events.afterRender.addListener(removeLoadStyling);
+    };
+    
+    /**
      * Sets the title that will be displayed at the top of the page. It takes the value from the options.
      * 
      * @param {Object} that, the component
@@ -152,9 +171,11 @@ fluid = fluid || {};
      * @param {Object} that, the component
      */
     var setup = function (that) {
+        bindEvents(that);
         setTitle(that);
         initDescription(that);
         renderBrowse(that);
+        that.events.afterRender.fire(that);
         if (that.options.useCabinet) {
             initCabinet(that);
         }
@@ -212,8 +233,9 @@ fluid = fluid || {};
         },
         
         styles: {
-            browseDescription: "",
-            browseDescriptionToggle: "",
+            load: "fl-browse-loading",
+            browseContents: "fl-browse-contents",
+            browseDescription: "fl-browse-description",
             listHeaderDescription: "fl-cabinet-headerWithDescription"
         },
         
@@ -221,7 +243,9 @@ fluid = fluid || {};
             title: "Browse Title"
         },
         
-        events: {},
+        events: {
+            afterRender: null
+        },
         
         useCabinet: true,
         
