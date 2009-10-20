@@ -15,14 +15,24 @@ https://source.fluidproject.org/svn/LICENSE.txt
 fluid = fluid || {};
 
 (function ($) {
-	
+
+    /**
+     * Renderers out the pieces of the component
+     * 
+     * @param {Object} that,the component
+     */	
 	var renderArtifactPage = function (that) {		
 		fluid.selfRender(that.locate("renderScope"), 
 				that.options.toRender.tree, 
 				{cutpoints: that.options.toRender.cutpoints, model: that.options.toRender.model, debug: true});
 	};
 
-	//start of creator function
+    /**
+     * The component's creator function 
+     * 
+     * @param {Object} container, the container which will hold the component
+     * @param {Object} options, options passed into the component
+     */
 	fluid.artifact = function (container, options) {
 		var that = fluid.initView("fluid.artifact", container, options);
 		
