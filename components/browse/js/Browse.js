@@ -175,6 +175,8 @@ fluid = fluid || {};
         initDescription(that);
         renderBrowse(that);
         that.events.afterRender.fire(that);
+        
+        //Initializing the cabinet must come after all of the rendering is complete and the markup is displayed
         if (that.options.useCabinet) {
             initCabinet(that);
         }
