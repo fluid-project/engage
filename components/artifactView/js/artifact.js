@@ -32,7 +32,7 @@ fluid = fluid || {};
 				{tags: that.options.toRender.model.artifactTags}]);
 		that.artifactCabinet = fluid.initSubcomponent(that, "artifactCabinet", that.locate("cabinetScope"));
 		
-		that.realtedArtifacts = fluid.initSubcomponent(that, "artifactsLink", [that.locate("realtedArtifacts"),
+		that.relatedArtifacts = fluid.initSubcomponent(that, "artifactsLink", [that.locate("realtedArtifacts"),
 		        {messageBundle: {linkToMoreMessage: "Go to Related artifacts"}, links: [{category: "", target: that.options.toRender.relatedArtifacts}]}]);
 
 		renderArtifactPage(that);
@@ -47,7 +47,7 @@ fluid = fluid || {};
 			tagsScope: ".fl-tags",
 	        renderScope: ".flc-artifact-renderscope",
 	        cabinetScope: ".cabinet",
-	        realtedArtifacts: ".relatedArtifacts"        
+	        relatedArtifacts: ".relatedArtifacts"        
 	    },
 	    toRender: null,
 	    description: {
