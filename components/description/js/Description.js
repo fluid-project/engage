@@ -136,6 +136,11 @@ fluid = fluid || {};
 		
 		var that = fluid.initView("fluid.description", container, options);
 		
+        /**
+         * Toggles the expansion/collapse of the description. 
+         * Also changes the appearance of the toggler to indicate if
+         * clicking will result in an expansion or a collapse.
+         */
 		that.toggleDescription = function () {
 			var selector = that.locate("content");
             var toggle = that.locate("toggler");
