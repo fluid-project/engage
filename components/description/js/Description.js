@@ -17,10 +17,21 @@ fluid = fluid || {};
 
 (function ($) {
 	
+    /**
+     * Removes "." from the selector name
+     * This is used by addToggler to add in a selector from the defaults into the injected  markup
+     * 
+     * @param {Object} selector, a selector from the component's defaults
+     */
     var cleanseSelector = function (selector) {
         return selector.replace(/\./gi, "");
     };
     
+    /**
+     * Injects a hidden toggler into the markup
+     * 
+     * @param {Object} that, the component
+     */
 	var addToggler = function (that) {
         var styles = that.options.styles;
         var markup = "<div class='" + cleanseSelector(that.options.selectors.toggler) + " " + styles.descriptionToggle + " " + styles.descriptionToggleExpand + "' alt='Expand Description' title='Expand Description'>Expand</div>";
@@ -30,11 +41,21 @@ fluid = fluid || {};
         return markupNode;
     };	
     
+    /**
+     * Programmatically adds the styles used by the component and specified in the styles section of the defaults
+     * 
+     * @param {Object} that, the component
+     */
     var addStyleClasses = function (that) {
         that.locate("content").addClass(that.options.styles.content);
         that.container.addClass(that.options.styles.container);
     };
 	
+    /**
+     * Generates the component tree used by the renderer
+     * 
+     * @param {Object} that, the component
+     */
 	var generateTree = function (that) {
 		return {
 			children: [{
@@ -44,6 +65,11 @@ fluid = fluid || {};
 		};
 	};	
 	
+    /**
+     * Creates the options object used by the renderer
+     * 
+     * @param {Object} that, the component
+     */
 	var createRenderOptions = function (that) {
 		var selectorMap = [
 			{
@@ -54,19 +80,40 @@ fluid = fluid || {};
 		return {cutpoints: selectorMap, debug: true};
 	};
 
+    /**
+     * Binds a click handler to the toggler to call that.toggleDescription on click
+     * 
+     * @param {Object} that, the component 
+     */
 	var addClickEvent = function (that) {
 		that.locate("toggler").click(that.toggleDescription);
 	};
 	
+    /**
+     * Determines if the toggler needs to be added to the page, 
+     * by testing the height of the content against the collpasedHeight specified in the defaults
+     * 
+     * @param {Object} that, the component
+     */
 	var needToggle = function (that) {
 		return that.locate("content").height() > that.options.collapsedHeight;
 	};
-		
+	
+    /**
+     * Displayes the toggler and adds a click event to it.
+     * 
+     * @param {Object} that, the component
+     */
 	var setUpToggler = function (that) {
 		that.locate("toggler").show();
 		addClickEvent(that);
 	};
     
+    /**
+     * Executes the necessary functions to setup the description
+     * 
+     * @param {Object} that, the component
+     */
 	var setUpDescription = function (that) {
         addStyleClasses(that);
 		that.options.model = that.options.model.replace(/(<([^>]+)>)/gi, "");
@@ -79,6 +126,12 @@ fluid = fluid || {};
 		}
 	};
 	
+    /**
+     * The component's creator function 
+     * 
+     * @param {Object} container, the container which will hold the component
+     * @param {Object} options, options passed into the component
+     */
 	fluid.description = function (container, options) {
 		
 		var that = fluid.initView("fluid.description", container, options);
@@ -120,7 +173,7 @@ fluid = fluid || {};
 			content: ".flc-description-content",
 			toggler: ".flc-description-toggler"
 		},
-		collapsedHeight: 60,
+		collapsedHeight: 60, //this also has to be specified in the css file in the .fl-description-hide class
 		model: "Description Information"
 	});
 })(jQuery);
