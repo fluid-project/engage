@@ -169,7 +169,7 @@ fluid = fluid || {};
         },
         
         styles: {
-            listGroup: "fl-listmenu fl-list-thumbnails fl-thumbnails-expanded",
+            listGroup: "fl-list-menu fl-list-thumbnails fl-thumbnails-expanded",
             listItems: null,
             link: null,
             image: "fl-icon",

@@ -208,7 +208,7 @@ fluid = fluid || {};
             drawerClosed: "fl-cabinet-drawerClosed",
             drawerOpened: "fl-cabinet-drawerOpened",
             
-            drawer: "fl-panel fl-panel-autoHeading fl-cabinet-animation fl-panel-collapsable",
+            drawer: "fl-container fl-container-autoHeading fl-cabinet-animation fl-container-collapsable",
             contents: "fl-cabinet-contents",
             handle: "fl-cabinet-handle"
         },
