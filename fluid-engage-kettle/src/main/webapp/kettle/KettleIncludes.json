@@ -18,5 +18,6 @@
    "../services/engageDemo/js/engageDemo.js",
    "$engage/framework/js/Engage.js",
    "../services/kettleDemo/js/kettleCherryDemo.js",
-   "../services/kettleDemo/js/kettleJSGIDemo.js"
+   "../services/kettleDemo/js/kettleJSGIDemo.js",
+   "../services/myCollection/js/myCollection.js"
   ]

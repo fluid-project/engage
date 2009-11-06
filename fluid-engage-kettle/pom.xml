@@ -112,23 +112,23 @@
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
-          <warSourceDirectory>src/webapp</warSourceDirectory>
+          <warSourceDirectory>src/main/webapp</warSourceDirectory>
         </configuration>
       </plugin>
     </plugins>
-    <sourceDirectory>src</sourceDirectory>
+    <sourceDirectory>src/main</sourceDirectory>
     <resources>
       <resource>
         <directory>.</directory>
         <includes>
           <include>*.TXT</include>
-          <include>src/**/*.java</include>
+          <include>src/main/**/*.java</include>
         </includes>
         <filtering>false</filtering>
       </resource>
       <resource>
-        <directory>src/</directory>
-        <targetPath>/</targetPath>
+        <directory>src/main/</directory>
+        <targetPath>/tmp/</targetPath>
         <includes>
           <include>**/*.xml</include>
           <include>**/*.html</include>
