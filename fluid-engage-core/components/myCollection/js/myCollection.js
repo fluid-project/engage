@@ -42,31 +42,31 @@ fluid = fluid || {};
             {selector: that.options.selectors.descriptionText, id: "descriptionText"}
         ];
 
-	/**
-	* Creates a render component for the component tree. The key can be any key that a componet tree would take and the value is what would be assigned to it.
-	* For example if you wanted to have node that just prints out "Hello World" you could set the key to "value" and the value to "Hello World"
-	* 
-	* @param {Object} id, the ID used by the component tree
-	* @param {Object} key, a key representing an entry in a renderer component
-	* @param {Object} value, the value assigned to the key
-	* @param {Object} classes, (optional) can add classes without having to specify the decorator key. 
-	*/
-	var treeNode = function (id, key, value, classes) {
-	    var obj = {ID: id};
-	    obj[key] = value;
-	    if (classes) {
-		obj.decorators = {
-		    type: "addClass",
-		    classes: classes
+		/**
+		* Creates a render component for the component tree. The key can be any key that a componet tree would take and the value is what would be assigned to it.
+		* For example if you wanted to have node that just prints out "Hello World" you could set the key to "value" and the value to "Hello World"
+		* 
+		* @param {Object} id, the ID used by the component tree
+		* @param {Object} key, a key representing an entry in a renderer component
+		* @param {Object} value, the value assigned to the key
+		* @param {Object} classes, (optional) can add classes without having to specify the decorator key. 
+		*/
+		var treeNode = function (id, key, value, classes) {
+		    var obj = {ID: id};
+		    obj[key] = value;
+		    if (classes) {
+				obj.decorators = {
+				    type: "addClass",
+				    classes: classes
+				};
+		    }
+		    
+		    return obj; 
 		};
-	    }
-	    
-	    return obj; 
-	};
-
-	var componentOptions = {
-	    useDefaultImage: true
-	};
+	
+		var componentOptions = {
+		    useDefaultImage: true
+		};
 
         fluid.transform(that.locate("lists"), function (object, index) {
             fluid.merge("merge", componentOptions, extractArray(that.options.lists, "listOptions")[index]);
@@ -121,10 +121,12 @@ fluid = fluid || {};
      * @param {Object} that, the component
      */
     var styleGroup = function (that) {
-        that.locate("listGroup").addClass(that.options.styles.listGroup);
+    	that.locate("listGroup").addClass(that.options.styles.listGroup);
     };
     
-
+    var styleToggler = function(that) {
+    	that.locate("toggler").addClass(that.options.styles.toggler);
+    }
 
     /**
      * Traverses through an array of objects returning an array of all the values for a specified key.
@@ -159,8 +161,20 @@ fluid = fluid || {};
 
     fluid.initMyCollection = function (container, options) {
         var that = fluid.initView("fluid.initMyCollection", container, options);
+        
+        that.toggleView = function() {
+        	that.locate("listGroup").removeClass(that.options.styles.listGroup);
+        	
+        	if (that.options.styles.listGroup === "fl-grid") {
+        		that.options.styles.listGroup = "fl-list";
+        	} else {
+        		that.options.styles.listGroup = "fl-grid";
+        	}
+        	
+        	styleGroup(that);
+        }
 
-	setup(that);
+        setup(that);
 
         return that;
     };
@@ -170,24 +184,30 @@ fluid = fluid || {};
         that.events.afterRender.fire(that);
 
         render(that);
+       
         styleGroup(that);
+        styleToggler(that);
 
-	initReorderer();      
+        initReorderer();
+        
+        addClickEvent(that);
     }
 
     var initReorderer = function() {
 
-	fluid.reorderImages("#image-grid",
-		{
-			selectors: {
-				movables: ".movable",
-				imageTitle: ".caption"
-			},
-			layoutHandler: "fluid.gridLayoutHandler",
-		}
-	);
+		fluid.reorderImages("#image-grid",
+			{
+				selectors: {
+					movables: ".movable"
+				}
+			}
+		);
     }
-
+    
+    var addClickEvent = function(that) {
+    	that.locate("toggler").click(that.toggleView);
+    }
+    
     fluid.defaults("fluid.initMyCollection", {
         description: {
             type: "fluid.description",
@@ -202,25 +222,27 @@ fluid = fluid || {};
         selectors: {
             title: ".flc-myCollection-title",
             myCollectionContents: ".flc-myCollection-contents",
-            listHeader: ".flc-cabinet-header",
-            listHeaderDescription: ".flc-cabinet-headerDescription",
-            lists: ".flc-cabinet-drawer",
+            lists: ".flc-myCollection-lists",
 
             listGroup: ".flc-myCollection-listGroup",
             listItems: ".flc-myCollection-items",
             link: ".flc-myCollection-link",
             image: ".flc-myCollection-image",
             titleText: ".flc-myCollection-titleText",
-            descriptionText: ".flc-myCollection-descriptionText"
+            descriptionText: ".flc-myCollection-descriptionText",
+            
+            toggler: ".flc-myCollection-toggler"
         },
 
- 	styles: {
- 		load: "fl-browse-loading",
-   		myCollectionContents: "fl-myCollection-contents",
- 		browseDescription: "fl-browse-description",
- 		listHeaderDescription: "fl-cabinet-headerWithDescription",
-		link: null
- 	},
+	 	styles: {
+	 		load: "fl-browse-loading",
+	   		myCollectionContents: "fl-myCollection-contents",
+	 		listHeaderDescription: "fl-cabinet-headerWithDescription",
+			link: null,
+			listGroup: "fl-grid",
+			
+			toggler: "fl-icon"
+	 	},
 
         strings: {
             title: "My Collection Title"
@@ -253,7 +275,8 @@ fluid = fluid || {};
                     size: null
                 }
             ],
-	useDefaultImage: true
+
+        useDefaultImage: true
     });
 
 })(jQuery);

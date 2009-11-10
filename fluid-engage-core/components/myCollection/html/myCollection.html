@@ -4,9 +4,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></meta>
 		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"></meta>
 		<meta name="apple-mobile-web-app-capable" content="yes"></meta>
-
+		
 		<title>My Collection</title>
-
+		
 		<script type="text/javascript" src="../infusion/lib/jquery/core/js/jquery.js"></script>
 		<script type="text/javascript" src="../infusion/lib/jquery/ui/js/ui.core.js"></script>
 		<script type="text/javascript" src="../infusion/lib/jquery/plugins/delegate/js/jquery.delegate.js"></script>
@@ -18,62 +18,62 @@
 		<script type="text/javascript" src="../infusion/framework/renderer/js/fluidParser.js"></script>
 		<script type="text/javascript" src="../infusion/framework/renderer/js/fluidRenderer.js"></script>
 		<script type="text/javascript" src="../infusion/lib/fastXmlPull/js/fastXmlPull.js"></script> 
-		<script type="text/javascript" src="../engage-core/components/navigationList/js/NavigationList.js"></script>
 		<script type="text/javascript" src="../engage-core/framework/js/loadData.js"></script>
 		<script type="text/javascript" src="../infusion/components/reorderer/js/GeometricManager.js"></script>
 		<script type="text/javascript" src="../infusion/components/reorderer/js/Reorderer.js"></script>
 		<script type="text/javascript" src="../infusion/components/reorderer/js/ImageReorderer.js"></script>
 		<script type="text/javascript" src="../infusion/lib/jquery/ui/js/ui.draggable.js"></script>
 		<script type="text/javascript" src="../engage-core/components/myCollection/js/myCollection.js"></script>
-
+		
 		<script type="text/javascript">
 			jQuery(document).ready(function () {
 				fluid.setLogging(true); 
-	
+		
 				fluid.engage.initComponentWithDataFeed(window.location, "fluid.initMyCollection", ".flc-browse");
 			});
 		</script>
-
-
+		
+		
 		<link type="text/css" rel="stylesheet" href="../infusion/components/reorderer/css/ImageReorderer.css" media="all"></link>
 		<link type="text/css" rel="stylesheet" href="../infusion/framework/fss/css/fss-layout.css" ></link>
 		<link type="text/css" rel="stylesheet" href="../infusion/framework/fss/css/fss-transitions.css" ></link>
 		<link type="text/css" rel="stylesheet" href="../infusion/framework/fss/css/fss-mobile-iphone-layout.css" ></link>
 		<link type="text/css" rel="stylesheet" href="../infusion/framework/fss/css/fss-mobile-iphone-theme.css" ></link>	
-		<link type="text/css" rel="stylesheet" href="../engage-core/components/cabinet/css/Cabinet.css" ></link>
 		<link type="text/css" rel="stylesheet" href="../engage-core/components/browse/css/Browse.css" ></link>
-		<link type="text/css" rel="stylesheet" href="../engage-core/components/description/css/Description.css" ></link>
 		<link type="text/css" rel="stylesheet" href="../engage-core/components/myCollection/css/myCollection.css" ></link>
 
 	  
 	</head>
 	<body class="flc-browse fl-theme-iphone fl-browse-loading">
 
-	      <div class="fl-navbar fl-table">
-		  <h1 class="flc-mycollection-title fl-table-cell"></h1>
-	      </div>
+		<div class="fl-navbar fl-table">
+			<h1 class="flc-mycollection-title fl-table-cell"></h1>
+		</div>
 
-	      <!-- loading message -->
-	      <div class="fl-browse-loadMessage fl-note fl-bevel-white">
-		  Loading...
-		  <div class="fl-browse-spinner"></div>
-	      </div>	
+		<!-- loading message -->
+		<div class="fl-browse-loadMessage fl-note fl-bevel-white">
+			Loading...
+		</div>	
 
-	      <form>
-		      <div class="flc-myCollection-contents fl-myCollection-contents">
-			      <div class="flc-cabinet-drawer">
-				      <div id="image-grid" class="flc-cabinet-contents">
-					      <ul class="flc-myCollection-listGroup fl-grid">
-						      <li  class="flc-myCollection-items caption" title="Image Title">
-							      <a class="flc-myCollection-link">
-								      <img src="../engage-core/components/myCollection/images/no_image_64x64.png" class="movable flc-myCollection-image"/>
-							      </a>
-						      </li>
-					      </ul>
-				      </div>
-			      </div>
-		      </div>
-	      </form>
+		<div class="flc-myCollection-toggler" alt="Toggle View" title="Toggle View">
+		  	Toggle View
+		</div>
+
+		<form>
+		    <div class="flc-myCollection-contents fl-myCollection-contents">
+				<div class="flc-myCollection-lists">
+					<div id="image-grid">
+						<ul class="flc-myCollection-listGroup">
+							<li  class="flc-myCollection-items">
+								<a class="flc-myCollection-link">
+									<img src="../engage-core/components/myCollection/images/no_image_64x64.png" class="movable flc-myCollection-image"/>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</form>
 	
 	</body>
 </html>
