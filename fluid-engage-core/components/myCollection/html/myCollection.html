@@ -34,13 +34,13 @@
 		</script>
 		
 		
+		<link type="text/css" rel="stylesheet" href="../engage-core/components/myCollection/css/myCollection.css" ></link>		
 		<link type="text/css" rel="stylesheet" href="../infusion/components/reorderer/css/ImageReorderer.css" media="all"></link>
 		<link type="text/css" rel="stylesheet" href="../infusion/framework/fss/css/fss-layout.css" ></link>
 		<link type="text/css" rel="stylesheet" href="../infusion/framework/fss/css/fss-transitions.css" ></link>
 		<link type="text/css" rel="stylesheet" href="../infusion/framework/fss/css/fss-mobile-iphone-layout.css" ></link>
 		<link type="text/css" rel="stylesheet" href="../infusion/framework/fss/css/fss-mobile-iphone-theme.css" ></link>	
 		<link type="text/css" rel="stylesheet" href="../engage-core/components/browse/css/Browse.css" ></link>
-		<link type="text/css" rel="stylesheet" href="../engage-core/components/myCollection/css/myCollection.css" ></link>
 
 	  
 	</head>
@@ -59,18 +59,20 @@
 		  	Toggle View
 		</div>
 
-		<form>
+		<form class="flc-myCollection-imageContainer">
 		    <div class="flc-myCollection-contents fl-myCollection-contents">
 				<div class="flc-myCollection-lists">
-					<div id="image-grid">
-						<ul class="flc-myCollection-listGroup">
-							<li  class="flc-myCollection-items">
-								<a class="flc-myCollection-link">
-									<img src="../engage-core/components/myCollection/images/no_image_64x64.png" class="movable flc-myCollection-image"/>
-								</a>
-							</li>
-						</ul>
-					</div>
+					<ul class="flc-myCollection-listGroup">
+						<li class="flc-myCollection-items flc-myCollection-movable">
+							<a class="flc-myCollection-link">
+								<img src="../engage-core/components/myCollection/images/no_image_64x64.png" class="flc-myCollection-image"/>
+								<div class="flc-myCollection-description">
+									<span class="flc-myCollection-titleText"></span>
+									<span class="flc-myCollection-period"></span>
+								</div>
+							</a>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</form>

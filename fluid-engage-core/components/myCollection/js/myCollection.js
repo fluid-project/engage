@@ -14,7 +14,29 @@
 fluid = fluid || {};
 
 (function ($) {
-   
+	/**
+	* Creates a render component for the component tree. The key can be any key that a componet tree would take and the value is what would be assigned to it.
+	* For example if you wanted to have node that just prints out "Hello World" you could set the key to "value" and the value to "Hello World"
+	* 
+	* @param {Object} id, the ID used by the component tree
+	* @param {Object} key, a key representing an entry in a renderer component
+	* @param {Object} value, the value assigned to the key
+	* @param {Object} classes, (optional) can add classes without having to specify the decorator key. 
+	*/
+	var treeNode = function (id, key, value, classes) {
+	    var obj = {ID: id};
+	    obj[key] = value;
+	    if (classes) {
+			obj.decorators = {
+			    type: "addClass",
+			    classes: classes
+			};
+	    }
+	    
+	    return obj; 
+	};
+	
+	   
     /**
      * Will return the result of a function wich is run based on a condition.
      * 
@@ -23,9 +45,41 @@ fluid = fluid || {};
      * @param {Object} onFalse, the function to run if the condition fails
      */
     var conditionalNode = function (condition, onTrue, onFalse) {
-        var func = condition === null || condition === undefined ? onFalse : onTrue;
+        var func = condition ? onTrue : onFalse;
         
         return func();
+    };
+	
+    var generateTree = function (that, componentOptions) {
+        var styles = that.options.styles;
+        return fluid.transform(componentOptions.links, function (object) {
+            var title = object.title || "";
+            var tree = treeNode("listItems:", "children", [
+                treeNode("link", "target", object.target || "", styles.link)
+            ], styles.listItems);
+            
+            if (styles.listGroup === "fl-list") {
+           		tree.children.push(treeNode("titleText", "value", title, styles.titleText));
+            }
+            
+            // Left over to replace with artifact period
+            if (object.description) {
+                tree.children.push(treeNode("descriptionText", "value", object.description || "", styles.descriptionText));
+            }
+            
+            if (object.image || that.options.useDefaultImage) {
+                tree.children.push({
+                    ID: "image",
+                    target: object.image,
+                    decorators: [{
+                        type: "addClass",
+                        classes: styles.image
+                    }]
+                });
+            }
+            
+            return tree;
+        });
     };
 
     /**
@@ -35,35 +89,13 @@ fluid = fluid || {};
      */
     var render = function (that) {
         var selectorMap = [
-            {selector: that.options.selectors.listItems, id: "listItems:"},
-            {selector: that.options.selectors.link, id: "link"},
-            {selector: that.options.selectors.image, id: "image"},
-            {selector: that.options.selectors.titleText, id: "titleText"},
-            {selector: that.options.selectors.descriptionText, id: "descriptionText"}
+           {selector: that.options.selectors.listItems, id: "listItems:"},
+           {selector: that.options.selectors.link, id: "link"},
+           {selector: that.options.selectors.image, id: "image"},
+           {selector: that.options.selectors.titleText, id: "titleText"},
+           {selector: that.options.selectors.descriptionText, id: "descriptionText"}
         ];
-
-		/**
-		* Creates a render component for the component tree. The key can be any key that a componet tree would take and the value is what would be assigned to it.
-		* For example if you wanted to have node that just prints out "Hello World" you could set the key to "value" and the value to "Hello World"
-		* 
-		* @param {Object} id, the ID used by the component tree
-		* @param {Object} key, a key representing an entry in a renderer component
-		* @param {Object} value, the value assigned to the key
-		* @param {Object} classes, (optional) can add classes without having to specify the decorator key. 
-		*/
-		var treeNode = function (id, key, value, classes) {
-		    var obj = {ID: id};
-		    obj[key] = value;
-		    if (classes) {
-				obj.decorators = {
-				    type: "addClass",
-				    classes: classes
-				};
-		    }
-		    
-		    return obj; 
-		};
-	
+    	
 		var componentOptions = {
 		    useDefaultImage: true
 		};
@@ -71,39 +103,7 @@ fluid = fluid || {};
         fluid.transform(that.locate("lists"), function (object, index) {
             fluid.merge("merge", componentOptions, extractArray(that.options.lists, "listOptions")[index]);
         });
-
-        var generateTree = function () {
-            var styles = that.options.styles;
-            return fluid.transform(componentOptions.links, function (object) {
-                var title = object.title || "";
-                var tree = treeNode("listItems:", "children", [
-                    treeNode("link", "target", object.target || "", styles.link),
-                    conditionalNode(object.category, function () {
-                        return compileMessage("titleText", "linkToMoreMessage", [object.category || "", object.size || ""], styles.category);
-                    }, function () {
-                        return treeNode("titleText", "value", title, styles.titleText);
-                    })
-                ], styles.listItems);
-                
-                if (object.description) {
-                    tree.children.push(treeNode("descriptionText", "value", object.description || "", styles.descriptionText));
-                }
-                
-                if (object.image || that.options.useDefaultImage) {
-                    tree.children.push({
-                        ID: "image",
-                        target: object.image,
-                        decorators: [{
-                            type: "addClass",
-                            classes: styles.image
-                        }]
-                    });
-                }
-                
-                return tree;
-            });
-        };
-        
+       
         var options = {
             cutpoints: selectorMap,
             messageSource: {
@@ -111,8 +111,7 @@ fluid = fluid || {};
             }
         };
         
-        fluid.selfRender(that.locate("listGroup"), generateTree(), options);
-         
+        return fluid.selfRender(that.locate("listGroup"), generateTree(that, componentOptions), options);         
     };
     
     /**
@@ -142,6 +141,15 @@ fluid = fluid || {};
     };
 
     /**
+     * Adds the loading style from the component, so that the loading message is displayed
+     * 
+     * @param {Object} that, the component
+     */
+    var addLoadStyling = function (that) {
+        that.container.addClass(that.options.styles.load);
+    };
+    
+    /**
      * Removes the loading style from the component, so that the rendered page is displayed
      * 
      * @param {Object} that, the component
@@ -157,12 +165,15 @@ fluid = fluid || {};
      */
     var bindEvents = function (that) {
         that.events.afterRender.addListener(removeLoadStyling);
+        that.events.afterRender.addListener(initReorderer);
     };
 
     fluid.initMyCollection = function (container, options) {
         var that = fluid.initView("fluid.initMyCollection", container, options);
         
         that.toggleView = function() {
+        	addLoadStyling(that);
+        	
         	that.locate("listGroup").removeClass(that.options.styles.listGroup);
         	
         	if (that.options.styles.listGroup === "fl-grid") {
@@ -172,39 +183,81 @@ fluid = fluid || {};
         	}
         	
         	styleGroup(that);
-        }
 
+        	that.reRender();
+        }
+        
         setup(that);
 
         return that;
     };
 
     var setup = function (that) {
-        bindEvents(that);
-        that.events.afterRender.fire(that);
+        var templates = render(that);
+        
+        that.reRender = function() {
 
-        render(that);
-       
+    		var componentOptions = {
+        		    useDefaultImage: true
+       		};
+
+            fluid.transform(that.locate("lists"), function (object, index) {
+                fluid.merge("merge", componentOptions, extractArray(that.options.lists, "listOptions")[index]);
+            });
+        	
+        	// Redundancy of selector map, have to get rid of it
+            var selectorMap = [
+               {selector: that.options.selectors.listItems, id: "listItems:"},
+               {selector: that.options.selectors.link, id: "link"},
+               {selector: that.options.selectors.image, id: "image"},
+               {selector: that.options.selectors.titleText, id: "titleText"},
+               {selector: that.options.selectors.descriptionText, id: "descriptionText"}
+            ];
+        	
+            var resources = {
+                myCollection: {
+                    href: "myCollection.html", // find a way to avoid hardcoding this
+                    cutpoints: selectorMap
+                }
+            };
+
+            fluid.fetchResources(resources, function () {
+            	fluid.reRender(templates, that.locate("listGroup"), generateTree(that, componentOptions));
+            	that.events.afterRender.fire(that);
+            });  
+        }
+        
         styleGroup(that);
         styleToggler(that);
-
-        initReorderer();
         
         addClickEvent(that);
+        
+        bindEvents(that);
+        that.events.afterRender.fire(that);
     }
 
     var initReorderer = function() {
 
-		fluid.reorderImages("#image-grid",
+		fluid.reorderImages(".flc-myCollection-imageContainer",
 			{
 				selectors: {
-					movables: ".movable"
+					movables: ".flc-myCollection-movable",
+					dropTargets: ".flc-myCollection-movable"
+				},
+				styles: {
+				    defaultStyle: null,
+				    selected: null,
+				    dragging: null,
+				    mouseDrag: null,
+				    hover: null,
+				    dropMarker: null,
+				    avatar: null
 				}
 			}
 		);
     }
     
-    var addClickEvent = function(that) {
+    var addClickEvent = function(that, template) {
     	that.locate("toggler").click(that.toggleView);
     }
     
@@ -238,10 +291,10 @@ fluid = fluid || {};
 	 		load: "fl-browse-loading",
 	   		myCollectionContents: "fl-myCollection-contents",
 	 		listHeaderDescription: "fl-cabinet-headerWithDescription",
-			link: null,
+			link: null,			
 			listGroup: "fl-grid",
-			
-			toggler: "fl-icon"
+
+			toggler: "fl-clickable"
 	 	},
 
         strings: {

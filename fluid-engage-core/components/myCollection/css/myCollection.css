@@ -1,9 +1,4 @@
-/*
-#image-grid {
-    width   : 900px;
-}
-
-#image-grid img {
+.flc-myCollection-image {
     background  : #eee;
     border  	: 1px solid #CCC;
     margin      : 5px;
@@ -11,10 +6,18 @@
     text-align  : center;
     display     : inline;
     float       : left; 
-    width	: 64px;
-    height	: 64px;
+    width		: 96px;
+    height		: 96px;
 }
-*/
+
 .fl-browse-loading .fl-myCollection-contents {
-    display	: none;
+    display		: none;
+}
+
+.fl-browse-loading .flc-myCollection-toggler {
+	display		: none;
+}
+
+.fl-clickable {
+	cursor		: pointer;
 }
