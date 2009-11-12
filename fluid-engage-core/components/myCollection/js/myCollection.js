@@ -60,11 +60,7 @@ fluid = fluid || {};
             
             if (styles.listGroup === "fl-list") {
            		tree.children.push(treeNode("titleText", "value", title, styles.titleText));
-            }
-            
-            // Left over to replace with artifact period
-            if (object.description) {
-                tree.children.push(treeNode("descriptionText", "value", object.description || "", styles.descriptionText));
+                tree.children.push(treeNode("periodText", "value", object.dated, styles.periodText));
             }
             
             if (object.image || that.options.useDefaultImage) {
@@ -93,7 +89,7 @@ fluid = fluid || {};
            {selector: that.options.selectors.link, id: "link"},
            {selector: that.options.selectors.image, id: "image"},
            {selector: that.options.selectors.titleText, id: "titleText"},
-           {selector: that.options.selectors.descriptionText, id: "descriptionText"}
+           {selector: that.options.selectors.periodText, id: "periodText"}
         ];
     	
 		var componentOptions = {
@@ -211,7 +207,7 @@ fluid = fluid || {};
                {selector: that.options.selectors.link, id: "link"},
                {selector: that.options.selectors.image, id: "image"},
                {selector: that.options.selectors.titleText, id: "titleText"},
-               {selector: that.options.selectors.descriptionText, id: "descriptionText"}
+               {selector: that.options.selectors.periodText, id: "periodText"}
             ];
         	
             var resources = {
@@ -262,16 +258,6 @@ fluid = fluid || {};
     }
     
     fluid.defaults("fluid.initMyCollection", {
-        description: {
-            type: "fluid.description",
-            options: {
-                model: "",
-                selectors: {
-                    content: ".flc-browse-description"
-                }
-            }
-        },
-
         selectors: {
             title: ".flc-myCollection-title",
             myCollectionContents: ".flc-myCollection-contents",
@@ -282,7 +268,7 @@ fluid = fluid || {};
             link: ".flc-myCollection-link",
             image: ".flc-myCollection-image",
             titleText: ".flc-myCollection-titleText",
-            descriptionText: ".flc-myCollection-descriptionText",
+            periodText: ".flc-myCollection-period",
             
             toggler: ".flc-myCollection-toggler"
         },
@@ -290,9 +276,10 @@ fluid = fluid || {};
 	 	styles: {
 	 		load: "fl-browse-loading",
 	   		myCollectionContents: "fl-myCollection-contents",
-	 		listHeaderDescription: "fl-cabinet-headerWithDescription",
 			link: null,			
 			listGroup: "fl-grid",
+			titleText: null,
+			periodText: null,
 
 			toggler: "fl-clickable"
 	 	},
@@ -323,7 +310,7 @@ fluid = fluid || {};
                     target: "",
                     image: "",
                     title: "",
-                    description: null,
+                    dated: "",
                     category: null,
                     size: null
                 }

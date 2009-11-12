@@ -53,10 +53,10 @@ fluid.myCollection = fluid.myCollection || {};
 	    
 	    model.lists[0].listOptions.links = fluid.transform(data, function (artifact) {
 	        return {
-		    target: "myCollection.html",
+		    target: "myCollection.html", // TODO - supply link to artifact page
 	            image: artifact.linkImage,
 	            title: artifact.linkTitle,
-	            description: artifact.linkDescription
+	            dated: artifact.artifactDate
 	        };
 	    });
 	    

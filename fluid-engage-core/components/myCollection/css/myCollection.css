@@ -10,6 +10,10 @@
     height		: 96px;
 }
 
+.flc-myCollection-period {
+	color		: #777;
+}
+
 .fl-browse-loading .fl-myCollection-contents {
     display		: none;
 }
