@@ -58,7 +58,7 @@ fluid = fluid || {};
                                                            	treeNode("link", "target", object.target || "", styles.link),
                                                            	], styles.listItems);
 
-            if (styles.listGroup === "fl-list") {
+            if (that.currentView === "list") {
                 tree.children.push(treeNode("titleText", "value", title, styles.titleText));
                 tree.children.push(treeNode("periodText", "value", object.dated, styles.periodText));
             }
@@ -108,8 +108,8 @@ fluid = fluid || {};
         var componentOptions = {
                 useDefaultImage: true
         };
-
-        fluid.transform(that.locate("lists"), function (object, index) {
+        
+        that.locate("lists").each(function (index) {
             fluid.merge("merge", componentOptions, extractArray(that.options.lists, "listOptions")[index]);
         });
 
@@ -142,9 +142,21 @@ fluid = fluid || {};
      * 
      * @param {Object} that, the component
      */
-    var styleGroup = function (that) {
-        that.locate("listGroup").addClass(that.options.styles.listGroup);
+    var addGroupStyle = function (that) {
+    	if (that.currentView === "grid") {
+    		that.locate("listGroup").addClass(that.options.styles.gridGroup);
+    	} else {
+    		that.locate("listGroup").addClass(that.options.styles.listGroup);
+    	}
     };
+    
+    var removeGroupStyle = function(that) {    	
+    	if (that.currentView === "grid") {
+    		that.locate("listGroup").removeClass(that.options.styles.gridGroup);
+    	} else {
+    		that.locate("listGroup").removeClass(that.options.styles.listGroup);
+    	}
+    }
 
     var styleToggler = function (that) {
         that.locate("toggler").addClass(that.options.styles.toggler);
@@ -184,7 +196,9 @@ fluid = fluid || {};
     var setup = function (that) {
         that.templates = render(that);
 
-        styleGroup(that);
+        that.currentView = that.options.defaultView;
+        
+        addGroupStyle(that);
         styleToggler(that);
 
         addClickEvent(that);
@@ -202,15 +216,15 @@ fluid = fluid || {};
         that.toggleView = function () {
             addLoadStyling(that);
 
-            that.locate("listGroup").removeClass(that.options.styles.listGroup);
+            removeGroupStyle(that);
 
-            if (that.options.styles.listGroup === "fl-grid") {
-                that.options.styles.listGroup = "fl-list";
+            if (that.currentView === "grid") {
+                that.currentView = "list";
             } else {
-                that.options.styles.listGroup = "fl-grid";
+                that.currentView = "grid";
             }
 
-            styleGroup(that);
+            addGroupStyle(that);
 
             render(that);
         };
@@ -268,7 +282,8 @@ fluid = fluid || {};
 			        load: "fl-browse-loading",
 			        myCollectionContents: "fl-myCollection-contents",
 			        link: null,         
-			        listGroup: "fl-grid",
+			        listGroup: "fl-list",
+			        gridGroup: "fl-grid",
 			        titleText: null,
 			        periodText: null,			
 			        toggler: "fl-clickable"
@@ -297,7 +312,9 @@ fluid = fluid || {};
 			            }
 			     ],
 			
-			     useDefaultImage: true
+			     useDefaultImage: true,
+			     
+			     defaultView: "grid"
     		}
     );
 
