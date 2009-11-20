@@ -38,20 +38,11 @@ fluid.myCollection = fluid.myCollection || {};
     };
     
     var compileData = function (data, dbName) {
-        var categoryText = (typeof data[0].category === "string") ? 
-                data[0].category : $.makeArray(data[0].category).toString();
         var model = {
-            strings: {
-                title: categoryText
-            },
-            useCabinet: false,
-            lists: [{
-                category: categoryText,
-                listOptions: {}
-            }]
+            data: {}
         };
         
-        model.lists[0].listOptions.links = fluid.transform(data, function (artifact) {
+        model.data.links = fluid.transform(data, function (artifact) {
             return {
             target: "myCollection.html", // TODO - supply link to artifact page
                 image: artifact.linkImage,

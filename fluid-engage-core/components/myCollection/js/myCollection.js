@@ -23,72 +23,75 @@ fluid = fluid || {};
      * @param {Object} value, the value assigned to the key
      * @param {Object} classes, (optional) can add classes without having to specify the decorator key. 
      */
-    var treeNode = function (id, key, value, classes) {
+    var treeNode = function (id, key, value, classes, index) {
         var obj = {ID: id};
         obj[key] = value;
         if (classes) {
             obj.decorators = {
                     type: "addClass",
                     classes: classes
-            	};
+                };
+        }
+        
+        if (index === 0 || index) {
+        	obj["index"] = index;
         }
 
         return obj; 
     };
 
-
-    /**
-     * Will return the result of a function wich is run based on a condition.
-     * 
-     * @param {Object} condition, the test condition
-     * @param {Object} onTrue, the function to run if the condition passes
-     * @param {Object} onFalse, the function to run if the condition fails
-     */
-    var conditionalNode = function (condition, onTrue, onFalse) {
-        var func = condition ? onTrue : onFalse;
-
-        return func();
-    };
-
-    var generateTree = function (that, componentOptions) {
+    var generateTree = function (that) {
         var styles = that.options.styles;
-        return fluid.transform(componentOptions.links, function (object) {
-            var title = object.title || "";
-            var tree = treeNode("listItems:", "children", [
-                                                           	treeNode("link", "target", object.target || "", styles.link),
-                                                           	], styles.listItems);
+        
+        var componentOptions = {
+                useDefaultImage: that.options.useDefaultImages
+        };
+        
+        fluid.merge("merge", componentOptions, that.options.data);
 
-            if (that.currentView === "list") {
-                tree.children.push(treeNode("titleText", "value", title, styles.titleText));
-                tree.children.push(treeNode("periodText", "value", object.dated, styles.periodText));
+        if (that.model) {
+            // TODO: manipulate the model in a more jQuery-like way
+            for (var i = 0; i < that.model.length; i++) {
+                var object = that.model[i];
+                if (that.currentView === "list") {
+                	var index = object["index"];
+                	
+                    object.children.push(treeNode("titleText", "value", that.options.data.links[index].title,
+                            styles.titleText));
+                    object.children.push(treeNode("periodText", "value", that.options.data.links[index].dated,
+                            styles.periodText));
+                } else {
+                    object.children.pop();
+                    object.children.pop();
+                }
             }
+        } else {
+            that.model = fluid.transform(componentOptions.links, function (object, index) {
+                var tree = treeNode("listItems:", "children", [
+                                                    treeNode("link", "target", object.target || "", styles.link)
+                                                    ], styles.listItems, index);
+        
+                if (object.image || that.options.useDefaultImage) {
+                    tree.children.push({
+                        ID: "image",
+                        target: object.image,
+                        decorators: [{
+                            type: "addClass",
+                            classes: styles.image
+                        }]
+                    });
+                }
 
-            if (object.image || that.options.useDefaultImage) {
-                tree.children.push({
-                    ID: "image",
-                    target: object.image,
-                    decorators: [{
-                        type: "addClass",
-                        classes: styles.image
-                    }]
-                });
-            }
-            
-            return tree;
-        });
-    };
-
-    /**
-     * Traverses through an array of objects returning an array of all the values for a specified key.
-     * 
-     * @param {Object} array, an array of Objects to search through
-     * @param {Object} key, the key for whose value to return from each object. Will return an empty string "",
-     * if the key does not exist in the any of the objects.
-     */
-    var extractArray = function (array, key) {
-        return fluid.transform(array, function (object, index) {
-            return object[key] || null;
-        });
+                if (that.currentView === "list") {
+                    tree.children.push(treeNode("titleText", "value", object.title, styles.titleText));
+                    tree.children.push(treeNode("periodText", "value", object.dated, styles.periodText));
+                }
+                
+                return tree;
+            });        
+        }
+        
+        return that.model;
     };
 
     /**
@@ -105,35 +108,27 @@ fluid = fluid || {};
                            {selector: that.options.selectors.periodText, id: "periodText"}
                            ];
 
-        var componentOptions = {
-                useDefaultImage: true
-        };
-        
-        that.locate("lists").each(function (index) {
-            fluid.merge("merge", componentOptions, extractArray(that.options.lists, "listOptions")[index]);
-        });
-
         if (that.templates) {
             var resources = {
                 myCollection: {
-        			href: "myCollection.html", // find a way to avoid hardcoding this
-        			cutpoints: selectorMap
-        		}
+                    href: "myCollection.html", // find a way to avoid hardcoding this
+                    cutpoints: selectorMap
+                }
             };
 
-	        fluid.fetchResources(resources, function () {
-	            fluid.reRender(that.templates, that.locate("listGroup"), generateTree(that, componentOptions));
-	            that.events.afterRender.fire(that);
-	        });
+            fluid.fetchResources(resources, function () {
+                fluid.reRender(that.templates, that.locate("collectionGroup"), generateTree(that));
+                that.events.afterRender.fire(that);
+            });
         } else {
             var options = {
                     cutpoints: selectorMap,
                     messageSource: {
-            			type: "data"
-            		}    		
+                        type: "data"
+                    }           
             };
-        	
-        	return fluid.selfRender(that.locate("listGroup"), generateTree(that, componentOptions), options);         
+            
+            return fluid.selfRender(that.locate("collectionGroup"), generateTree(that), options);
         }
     };
 
@@ -143,24 +138,24 @@ fluid = fluid || {};
      * @param {Object} that, the component
      */
     var addGroupStyle = function (that) {
-    	if (that.currentView === "grid") {
-    		that.locate("listGroup").addClass(that.options.styles.gridGroup);
-    	} else {
-    		that.locate("listGroup").addClass(that.options.styles.listGroup);
-    	}
+        if (that.currentView === "grid") {
+            that.locate("collectionGroup").addClass(that.options.styles.gridGroup);
+        } else {
+            that.locate("collectionGroup").addClass(that.options.styles.listGroup);
+        }
     };
     
-    var removeGroupStyle = function(that) {    	
-    	if (that.currentView === "grid") {
-    		that.locate("listGroup").removeClass(that.options.styles.gridGroup);
-    	} else {
-    		that.locate("listGroup").removeClass(that.options.styles.listGroup);
-    	}
-    }
+    var removeGroupStyle = function(that) {     
+        if (that.currentView === "grid") {
+            that.locate("collectionGroup").removeClass(that.options.styles.gridGroup);
+        } else {
+            that.locate("collectionGroup").removeClass(that.options.styles.listGroup);
+        }
+    };
 
     var styleToggler = function (that) {
         that.locate("toggler").addClass(that.options.styles.toggler);
-    }
+    };
 
     /**
      * Adds the loading style from the component, so that the loading message is displayed
@@ -180,6 +175,12 @@ fluid = fluid || {};
         that.container.removeClass(that.options.styles.load);
     };
 
+    var refreshReorderer = function (that) {
+        if (that.imageReorderer) {
+            that.imageReorderer.refresh();
+        }
+    };
+    
     /**
      * Binds the after render event to a lister that calls the removeLoadStyling function
      * 
@@ -187,10 +188,38 @@ fluid = fluid || {};
      */
     var bindEvents = function (that) {
         that.events.afterRender.addListener(removeLoadStyling);
+        that.events.afterRender.addListener(refreshReorderer);
     };
 
     var addClickEvent = function (that) {
         that.locate("toggler").click(that.toggleView);
+    };
+    
+    var reorderModel = function (model, index, oldIndex) {
+        var result = [];
+        var start = [];
+        var middle = [];
+        var end = [];
+
+        if (index > oldIndex) {
+            start = model.slice(0, oldIndex);
+            middle = model.slice(oldIndex + 1, index + 1);
+            end = model.slice(index + 1);
+            
+            result = start.concat(middle);
+            result.push(model[oldIndex]);               
+            result = result.concat(end);                
+        } else {
+            start = model.slice(0, index);
+            middle = model.slice(index, oldIndex);
+            end = model.slice(oldIndex + 1);
+            
+            result = start;
+            result.push(model[oldIndex]);
+            result = result.concat(middle).concat(end);
+        }
+        
+        return result;
     };
 
     var setup = function (that) {
@@ -205,6 +234,9 @@ fluid = fluid || {};
 
         bindEvents(that);
         that.events.afterRender.fire(that);
+        
+        that.options.imageReorderer.options.listeners.afterMove = that.afterMoveListener;
+        that.options.imageReorderer.options.listeners.onBeginMove = that.onBeginMoveListener;
         
         that.imageReorderer = fluid.initSubcomponent(that, "imageReorderer", [that.locate("myCollectionContainer"),
                                                                               that.options.imageReorderer.options]);
@@ -228,94 +260,101 @@ fluid = fluid || {};
 
             render(that);
         };
+        
+        that.afterMoveListener = function(object, requestedPosition, allObjects) {
+            var index = allObjects.index(object);
+            var oldIndex = that.reordererModel.index(object);
+
+            if (index === oldIndex) {
+                return;
+            }
+            
+            that.model = reorderModel(that.model, index, oldIndex);
+        };
+        
+        that.onBeginMoveListener = function(item) {
+            that.reordererModel = that.imageReorderer.dom.fastLocate("movables");
+        };
 
         setup(that);
 
         return that;
     };
     
-    var imageReordererOptions = {
-		selectors: {
-			movables: ".flc-myCollection-movable"
-		},
-	
-		styles: {
-			defaultStyle: null,
-	        selected: null,
-	        dragging: null,
-	        mouseDrag: null,
-	        hover: null,
-	        dropMarker: null,
-	        avatar: null
-		}
-	} 
-    
     fluid.defaults("fluid.initMyCollection",
-    		{
-    			imageReorderer: {
-    				type: "fluid.reorderImages",
-    				options: imageReordererOptions
-    			},    			
-    		
-    			decorators: {
-        			type: "fluid",
-        			func: "fluid.reorderImages",
-        			container: ".flc-myCollection-imageContainer",
-        			options: imageReordererOptions
-        		},
-    			
-		        selectors: {
-    				myCollectionContainer: ".flc-myCollection-imageContainer",
-    				title: ".flc-myCollection-title",
-    				myCollectionContents: ".flc-myCollection-contents",
-			        lists: ".flc-myCollection-lists",			
-			        listGroup: ".flc-myCollection-listGroup",
-			        listItems: ".flc-myCollection-items",
-			        link: ".flc-myCollection-link",
-			        image: ".flc-myCollection-image",
-			        titleText: ".flc-myCollection-titleText",
-			        periodText: ".flc-myCollection-period",			
-			        toggler: ".flc-myCollection-toggler"
-		    	},
+            {
+                imageReorderer: {
+                    type: "fluid.reorderImages",
+                    options: {
+                        selectors: {
+                            movables: ".flc-myCollection-movable",
+                            selectables: ".flc-myCollection-movable",
+                            dropTargets: ".flc-myCollection-movable"
+                        },
+                    
+                        styles: {
+                            defaultStyle: null,
+                            selected: null,
+                            dragging: null,
+                            mouseDrag: null,
+                            hover: null,
+                            dropMarker: null,
+                            avatar: null
+                        },
+                        
+                        listeners: {
+                            afterMove: null,
+                            onBeginMove: null
+                        }
+                    }
+                },
+                
+                selectors: {
+                    myCollectionContainer: ".flc-myCollection-imageContainer",
+                    title: ".flc-myCollection-title",
+                    myCollectionContents: ".flc-myCollection-contents",
+                    lists: ".flc-myCollection-lists",           
+                    collectionGroup: ".flc-myCollection-listGroup",
+                    listItems: ".flc-myCollection-items",
+                    link: ".flc-myCollection-link",
+                    image: ".flc-myCollection-image",
+                    titleText: ".flc-myCollection-titleText",
+                    periodText: ".flc-myCollection-period",         
+                    toggler: ".flc-myCollection-toggler"
+                },
 
-		    	styles: {
-			        load: "fl-browse-loading",
-			        myCollectionContents: "fl-myCollection-contents",
-			        link: null,         
-			        listGroup: "fl-list",
-			        gridGroup: "fl-grid",
-			        titleText: null,
-			        periodText: null,			
-			        toggler: "fl-clickable"
-		    	},
+                styles: {
+                    load: "fl-browse-loading",
+                    myCollectionContents: "fl-myCollection-contents",
+                    link: null,         
+                    listGroup: "fl-list",
+                    gridGroup: "fl-grid",
+                    titleText: null,
+                    periodText: null,           
+                    toggler: "fl-clickable"
+                },
 
-		    	events: {
-			        afterRender: null
-			    },
+                events: {
+                    afterRender: null
+                },
 
-			    lists: [
-			            {
-			                category: "",
-			                description: "",
-			                listOptions: {}
-			            }
-			    ],
+                data : {},
 
-			    links: [
-			            {
-			                target: "",
-			                image: "",
-			                title: "",
-			                dated: "",
-			                category: null,
-			                size: null
-			            }
-			     ],
-			
-			     useDefaultImage: true,
-			     
-			     defaultView: "grid"
-    		}
+                links: [
+                        {
+                            target: "",
+                            image: "",
+                            title: "",
+                            dated: "",
+                            category: null,
+                            size: null
+                        }
+                 ],
+            
+                 useDefaultImage: true,
+                 
+                 defaultView: "grid"
+            }
     );
 
 })(jQuery);
