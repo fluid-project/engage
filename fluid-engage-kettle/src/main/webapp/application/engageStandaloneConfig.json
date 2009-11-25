@@ -5,7 +5,6 @@ includes: "kettle/KettleIncludes.json",
 includesPrefix: "kettle/",
 loaderFunction: "fluid.engage.initEngageApp",
 queryURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
-myCollectionQueryURLTemplate: "http://titan.atrc.utoronto.ca:5984/mmi/_fti/lucene/by_collection_category?include_docs=true&q=Merchandising",
 initServices: [
     "fluid.artifactView.initMarkupFeed", 
     "fluid.artifactView.initDataFeed", 
@@ -17,18 +16,20 @@ initServices: [
 ],
 views: {
     all: "all",
-    byCollectionCategory: "by_collection_category"
+    byCollectionCategory: "by_collection_category",
+    byUserCollection: "by_user_collection",
+    byId: "by_id"
 },
 mount: {
     infusion: {
-        target: "infusion/",
-        source: "infusion/",
-        rewriteSource: "../../../infusion/src/webapp/"
+        target: "fluid-infusion/",
+        source: "fluid-infusion/",
+        rewriteSource: "../../../fluid-infusion/src/webapp/"
         },
     engage: {
-        target: "engage-core/",
-        source: "engage-core/", 
-        rewriteSource: "../../../engage-core/"
+        target: "fluid-engage-core/",
+        source: "fluid-engage-core/", 
+        rewriteSource: "../../../fluid-engage-core/"
         },
     engageDemo: {
         target: "engageDemo/",

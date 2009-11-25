@@ -9,7 +9,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://source.fluidproject.org/svn/LICENSE.txt
 */
 
-/*global jQuery, fluid, location*/
+/*global jQuery, fluid*/
 
 (function ($, fluid) {
 	
@@ -32,8 +32,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 			url: isFile ? localTestDataURL : getDataFeedUrl(currentUrl),
 			success: initEngageComponent,
 			dataType: "json",
-			async: true,
-			data: isFile ? null : location.search.replace("?", "")
+			async: true
 		});
 	};
 	
