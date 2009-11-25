@@ -34,7 +34,7 @@ fluid = fluid || {};
         }
         
         if (index === 0 || index) {
-        	obj["index"] = index;
+            obj["index"] = index;
         }
 
         return obj; 
@@ -54,8 +54,8 @@ fluid = fluid || {};
             for (var i = 0; i < that.model.length; i++) {
                 var object = that.model[i];
                 if (that.currentView === "list") {
-                	var index = object["index"];
-                	
+                    var index = object["index"];
+                    
                     object.children.push(treeNode("titleText", "value", that.options.data.links[index].title,
                             styles.titleText));
                     object.children.push(treeNode("periodText", "value", that.options.data.links[index].dated,
