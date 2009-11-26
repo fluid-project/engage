@@ -9,16 +9,21 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://source.fluidproject.org/svn/LICENSE.txt
 */
 
-/*global jQuery*/
-/*global fluid*/
-/*global jqUnit, expect, window*/
+/*global jQuery, fluid, jqUnit, expect, window*/
 
 
 (function ($) {
-    var CONTAINER = ".cabinet";
     
-    var setup = function (container, options) {
-        return fluid.cabinet(container, options);
+    var setup = function (options, container) {
+        var obj = {};
+        obj.that = fluid.cabinet(container || ".cabinet", options);
+        obj.selectors = obj.that.options.selectors;
+        obj.styles = obj.that.options.styles;
+        obj.drawers = obj.that.locate("drawer");
+        obj.contents = obj.that.locate("contents");
+        obj.handles = obj.that.locate("handle");
+        
+        return obj;
     };
     
     function simulateKeyDown(onElement, withKeycode, modifier) {
@@ -98,507 +103,211 @@ https://source.fluidproject.org/svn/LICENSE.txt
         jqUnit.assertTrue("Drawer has aria-expanded set to true", hasAttribute(drawerSelector, "aria-expanded", "true"));
         jqUnit.assertTrue("Contents are visible", hasStyle(contentSelector, "display", "block"));
     };
+    
+    var assembleMessage = function (condition, beginning, end) {
+        var m = condition ? " " : " not ";
+        var b = beginning || "";
+        var e = end || "";
+        return b + m + e; 
+    };
+    
+    var apiBasedTests = function (func, startOpen, drawers, options) {
+        var cab = setup(fluid.merge("merge", {startOpen: startOpen}, options));
+        var drawer = typeof drawers === "number" ? cab.drawers.eq(drawers) : cab.drawers;
+        var content = typeof drawers === "number" ? cab.contents.eq(drawers) : cab.contents;
+        
+        if (typeof func === "function") {
+            func(cab);
+        } else {
+            cab.that[func](drawer);
+        }
+
+        (startOpen ? closeStylingTests : openStylingTests)(drawer, content, cab.styles.drawerOpened, cab.styles.drawerClosed);
+        (startOpen ? openStylingTests : closeStylingTests)(cab.drawers.not(drawer), cab.contents.not(content), cab.styles.drawerOpened, cab.styles.drawerClosed);
+    };
+    
+    var simulateKeyTest = function (keyCode, startOpen, drawers, options) {
+        if (!$.browser.mozilla) {
+            return;
+        }
+        function keyboardActivate(cab) {
+            simulateKeyDown(cab.handles.eq(drawers), $.ui.keyCode.SPACE);
+        }
+        apiBasedTests(keyboardActivate, startOpen, drawers, options);
+        return true;
+    };
+    
+    var eventBasedTests = function (startOpen, prevent, funcName, drawers) {
+        var openedEventFired, closedEventFired, openShouldFire, closeShouldFire;
+        var options = {
+                preventEventFireOnInit: prevent,
+                listeners: {
+                    afterOpen: function () {
+                        openedEventFired = true;
+                    },
+                    afterClose: function () {
+                        closedEventFired = true;
+                    }
+                }
+            };
+            
+        openShouldFire = !startOpen;
+        closeShouldFire = startOpen;
+        
+        switch (funcName) {
+        case "mouse":
+            function mouseClick(cab) {
+                cab.handles.eq(drawers).click();
+            }
+            apiBasedTests(mouseClick, startOpen, drawers, options);
+            break;
+        case "space":
+            if (!simulateKeyTest($.ui.keyCode.SPACE, startOpen, drawers, options)) {
+                return;
+            }
+            break;
+        case "enter":
+            if (!simulateKeyTest($.ui.keyCode.ENTER, startOpen, drawers, options)) {
+                return;
+            }
+            break;
+        case null:
+        case undefined: 
+            openShouldFire = !prevent && startOpen;
+            closeShouldFire = !prevent && !startOpen;
+            setup(fluid.merge("merge", {startOpen: startOpen}, options));
+            break;
+        default:
+            apiBasedTests(funcName, startOpen, drawers, options);
+        }     
+        jqUnit[openShouldFire ? "assertTrue" : "assertFalse"](assembleMessage(openShouldFire, "Opened events", "fired"), openedEventFired);
+        jqUnit[closeShouldFire ? "assertTrue" : "assertFalse"](assembleMessage(closeShouldFire, "Closed events", "fired"), closedEventFired);
+    };
         
     var cabinetTests = function () {
         var tests = jqUnit.testCase("Cabinet Tests");
                     
         tests.test("CSS class insertion", function () {
-            var cabinet = setup(CONTAINER);
-            var selectors = cabinet.options.selectors;
-            var styles = cabinet.options.styles;
-            var string = selectors.drawer + "," + selectors.handle + "," + selectors.contents;
+            var cab = setup();
+            
+            var string = cab.selectors.drawer + "," + cab.selectors.handle + "," + cab.selectors.contents;
             expect($(string).length);
 
-            assertStyling(selectors.drawer, styles.drawer, true, "All drawers have CSS styling");
-            assertStyling(selectors.handle, styles.handle, true, "All handles have CSS styling");
-            assertStyling(selectors.contents, styles.contents, true, "All content has CSS styling");
+            assertStyling(cab.drawers, cab.styles.drawer, true, "All drawers have CSS styling");
+            assertStyling(cab.handles, cab.styles.handle, true, "All handles have CSS styling");
+            assertStyling(cab.contents, cab.styles.contents, true, "All content has CSS styling");
         });
         
         tests.test("Aria insertion", function () {
-            var cabinet = setup(CONTAINER);
-            var  selectors = cabinet.options.selectors;
+            var cab = setup();
             expect(4);
            
-            jqUnit.assertTrue("Cabinet has role of tablist", hasAttribute(cabinet.container, "role", "tablist"));
-            jqUnit.assertTrue("Cabinet has attribute aria-multiselectable set to true", hasAttribute(cabinet.container, "aria-multiselectable", "true"));
-            jqUnit.assertTrue("Drawer has role of tab", hasAttribute(selectors.drawer, "role", "tab"));
-            jqUnit.assertTrue("Drawer has attribute of aria-expanded set", hasAttribute(selectors.drawer));
+            jqUnit.assertTrue("Cabinet has role of tablist", hasAttribute(cab.that.container, "role", "tablist"));
+            jqUnit.assertTrue("Cabinet has attribute aria-multiselectable set to true", hasAttribute(cab.that.container, "aria-multiselectable", "true"));
+            jqUnit.assertTrue("Drawer has role of tab", hasAttribute(cab.drawers, "role", "tab"));
+            jqUnit.assertTrue("Drawer has attribute of aria-expanded set", hasAttribute(cab.drawers));
         });
         
         tests.test("Start Closed", function () {
-            var cabinet = setup(CONTAINER, {startOpen: false});
-            var selectors = cabinet.options.selectors;
-            var styles = cabinet.options.styles;
-            expect($(selectors.drawer).length * 2 + 2);
+            var cab = setup({startOpen: false});
+            expect(cab.drawers.length * 2 + 2);
 
-            closeStylingTests(selectors.drawer, selectors.contents, styles.drawerOpened, styles.drawerClosed);
+            closeStylingTests(cab.drawers, cab.contents, cab.styles.drawerOpened, cab.styles.drawerClosed);
         });
         
         tests.test("Start Open", function () {
-            var cabinet = setup(CONTAINER, {startOpen: true});
-            var selectors = cabinet.options.selectors;
-            var styles = cabinet.options.styles;
-            expect($(selectors.drawer).length * 2 + 2);
+            var cab = setup({startOpen: true});
+            expect(cab.drawers.length * 2 + 2);
 
-            openStylingTests(selectors.drawer, selectors.contents, styles.drawerOpened, styles.drawerClosed);
+            openStylingTests(cab.drawers, cab.contents, cab.styles.drawerOpened, cab.styles.drawerClosed);
         });
         
         tests.test("Close a Single Drawer", function () {
-            var cabinet = setup(CONTAINER, {startOpen: true});
-            var selectors = cabinet.options.selectors;
-            var styles = cabinet.options.styles;
-            var drawer = $(selectors.drawer).eq(0);
-            var content = $(selectors.contents).eq(0);
-            expect($(selectors.drawer).length * 2 + 4);
-            
-            cabinet.closeDrawers(drawer);
-            
-            closeStylingTests(drawer, content, styles.drawerOpened, styles.drawerClosed);
-            openStylingTests($(selectors.drawer).not(drawer), $(selectors.contents).not(content), styles.drawerOpened, styles.drawerClosed);
+            apiBasedTests("closeDrawers", true, 0);
         });
         
         tests.test("Open a Single Drawer", function () {
-            var cabinet = setup(CONTAINER, {startOpen: false});
-            var selectors = cabinet.options.selectors;
-            var styles = cabinet.options.styles;
-            var drawer = $(selectors.drawer).eq(0);
-            var content = $(selectors.contents).eq(0);
-            expect($(selectors.drawer).length * 2 + 4);
-            
-            cabinet.openDrawers(drawer);
-            
-            openStylingTests(drawer, content, styles.drawerOpened, styles.drawerClosed);
-            closeStylingTests($(selectors.drawer).not(drawer), $(selectors.contents).not(content), styles.drawerOpened, styles.drawerClosed);
+            apiBasedTests("openDrawers", false, 0);
         });
         
         tests.test("Toggle Close a Single Drawer", function () {
-            var cabinet = setup(CONTAINER, {startOpen: true});
-            var selectors = cabinet.options.selectors;
-            var styles = cabinet.options.styles;
-            var drawer = $(selectors.drawer).eq(0);
-            var content = $(selectors.contents).eq(0);
-            expect($(selectors.drawer).length * 2 + 4);
-            
-            cabinet.toggleDrawers(drawer);
-            
-            closeStylingTests(drawer, content, styles.drawerOpened, styles.drawerClosed);
-            openStylingTests($(selectors.drawer).not(drawer), $(selectors.contents).not(content), styles.drawerOpened, styles.drawerClosed);
+            apiBasedTests("toggleDrawers", true, 0);
         });
         
         tests.test("Toggle Open a Single Drawer", function () {
-            var cabinet = setup(CONTAINER, {startOpen: false});
-            var selectors = cabinet.options.selectors;
-            var styles = cabinet.options.styles;
-            var drawer = $(selectors.drawer).eq(0);
-            var content = $(selectors.contents).eq(0);
-            expect($(selectors.drawer).length * 2 + 4);
-            
-            cabinet.toggleDrawers(drawer);
-            
-            openStylingTests(drawer, content, styles.drawerOpened, styles.drawerClosed);
-            closeStylingTests($(selectors.drawer).not(drawer), $(selectors.contents).not(content), styles.drawerOpened, styles.drawerClosed);
+            apiBasedTests("toggleDrawers", false, 0);
         });
         
         tests.test("Close All Drawers", function () {
-            var cabinet = setup(CONTAINER, {startOpen: true});
-            var selectors = cabinet.options.selectors;
-            var styles = cabinet.options.styles;
-            expect($(selectors.drawer).length * 2 + 2);
-            
-            cabinet.closeDrawers(selectors.drawer);
-            
-            closeStylingTests(selectors.drawer, selectors.contents, styles.drawerOpened, styles.drawerClosed);
+            apiBasedTests("closeDrawers", true);
         });
         
         tests.test("Open All Drawers", function () {
-            var cabinet = setup(CONTAINER, {startOpen: false});
-            var selectors = cabinet.options.selectors;
-            var styles = cabinet.options.styles;
-            expect($(selectors.drawer).length * 2 + 2);
-            
-            cabinet.openDrawers(selectors.drawer);
-            
-            openStylingTests(selectors.drawer, selectors.contents, styles.drawerOpened, styles.drawerClosed);
+            apiBasedTests("openDrawers", false);
         });
         
         tests.test("Toggle Closed All Drawers", function () {
-            var cabinet = setup(CONTAINER, {startOpen: true});
-            var selectors = cabinet.options.selectors;
-            var styles = cabinet.options.styles;
-            expect($(selectors.drawer).length * 2 + 2);
-            
-            cabinet.toggleDrawers(selectors.drawer);
-            
-            closeStylingTests(selectors.drawer, selectors.contents, styles.drawerOpened, styles.drawerClosed);
+            apiBasedTests("toggleDrawers", true);
         });
         
         tests.test("Toggle Open All Drawers", function () {
-            var cabinet = setup(CONTAINER, {startOpen: false});
-            var selectors = cabinet.options.selectors;
-            var styles = cabinet.options.styles;
-            expect($(selectors.drawer).length * 2 + 2);
-            
-            cabinet.toggleDrawers(selectors.drawer);
-            
-            openStylingTests(selectors.drawer, selectors.contents, styles.drawerOpened, styles.drawerClosed);
+            apiBasedTests("toggleDrawers", false);
         });
         
         tests.test("Prevent Events on Init Closed Drawers", function () {
-            var openedEventFired, closedEventFired = false;
-            var options = {
-                startOpen: false,
-                preventEventFireOnInit: true,
-                listeners: {
-                    afterOpen: function () {
-                        openedEventFired = true;
-                    },
-                    afterClose: function () {
-                        closedEventFired = true;
-                    }
-                }
-            };
-            setup(CONTAINER, options);
-            
-            jqUnit.assertFalse("Opened events not fired", openedEventFired);
-            jqUnit.assertFalse("Closed events not fired", closedEventFired);
+            eventBasedTests(false, true);
         });
         
         tests.test("Prevent Events on Init Opened Drawers", function () {
-            var openedEventFired, closedEventFired = false;
-            var options = {
-                startOpen: true,
-                preventEventFireOnInit: true,
-                listeners: {
-                    afterOpen: function () {
-                        openedEventFired = true;
-                    },
-                    afterClose: function () {
-                        closedEventFired = true;
-                    }
-                }
-            };
-            setup(CONTAINER, options);
-            
-            jqUnit.assertFalse("Opened events not fired", openedEventFired);
-            jqUnit.assertFalse("Closed events not fired", closedEventFired);
+            eventBasedTests(true, true);
         });
         
         tests.test("Fire Events on Init Closed Drawers", function () {
-            var openedEventFired, closedEventFired = false;
-            var options = {
-                startOpen: false,
-                preventEventFireOnInit: false,
-                listeners: {
-                    afterOpen: function () {
-                        openedEventFired = true;
-                    },
-                    afterClose: function () {
-                        closedEventFired = true;
-                    }
-                }
-            };
-            setup(CONTAINER, options);
-            
-            jqUnit.assertFalse("Opened events not fired", openedEventFired);
-            jqUnit.assertTrue("Closed events fired", closedEventFired);
+            eventBasedTests(false, false);
         });
         
         tests.test("Fire Events on Init Opened Drawers", function () {
-            var openedEventFired, closedEventFired = false;
-            var options = {
-                startOpen: true,
-                preventEventFireOnInit: false,
-                listeners: {
-                    afterOpen: function () {
-                        openedEventFired = true;
-                    },
-                    afterClose: function () {
-                        closedEventFired = true;
-                    }
-                }
-            };
-            setup(CONTAINER, options);
-            
-            jqUnit.assertTrue("Opened events fired", openedEventFired);
-            jqUnit.assertFalse("Closed events not fired", closedEventFired);
+            eventBasedTests(true, false);
         });
         
         tests.test("Fire Events on Drawer Closed", function () {
-            var openedEventFired, closedEventFired = false;
-            var options = {
-                startOpen: true,
-                preventEventFireOnInit: true,
-                listeners: {
-                    afterOpen: function () {
-                        openedEventFired = true;
-                    },
-                    afterClose: function () {
-                        closedEventFired = true;
-                    }
-                }
-            };
-            var cabinet = setup(CONTAINER, options);
-            cabinet.closeDrawers(cabinet.options.selectors.drawer);
-            
-            jqUnit.assertFalse("Opened events not fired", openedEventFired);
-            jqUnit.assertTrue("Closed events fired", closedEventFired);
+            eventBasedTests(true, true, "closeDrawers");
         });
         
         tests.test("Fire Events on Drawer Opened", function () {
-            var openedEventFired, closedEventFired = false;
-            var options = {
-                startOpen: false,
-                preventEventFireOnInit: true,
-                listeners: {
-                    afterOpen: function () {
-                        openedEventFired = true;
-                    },
-                    afterClose: function () {
-                        closedEventFired = true;
-                    }
-                }
-            };
-            var cabinet = setup(CONTAINER, options);
-            cabinet.openDrawers(cabinet.options.selectors.drawer);
-            
-            jqUnit.assertTrue("Opened events fired", openedEventFired);
-            jqUnit.assertFalse("Closed events not fired", closedEventFired);
+            eventBasedTests(false, true, "openDrawers");
         });
         
         tests.test("Fire Events on Toggle Closed", function () {
-            var openedEventFired, closedEventFired = false;
-            var options = {
-                startOpen: true,
-                preventEventFireOnInit: true,
-                listeners: {
-                    afterOpen: function () {
-                        openedEventFired = true;
-                    },
-                    afterClose: function () {
-                        closedEventFired = true;
-                    }
-                }
-            };
-            var cabinet = setup(CONTAINER, options);
-            cabinet.toggleDrawers(cabinet.options.selectors.drawer);
-            
-            jqUnit.assertFalse("Opened events not fired", openedEventFired);
-            jqUnit.assertTrue("Closed events fired", closedEventFired);
+            eventBasedTests(true, true, "toggleDrawers");
         });
         
         tests.test("Fire Events on Toggle Opened", function () {
-            var openedEventFired, closedEventFired = false;
-            var options = {
-                startOpen: false,
-                preventEventFireOnInit: true,
-                listeners: {
-                    afterOpen: function () {
-                        openedEventFired = true;
-                    },
-                    afterClose: function () {
-                        closedEventFired = true;
-                    }
-                }
-            };
-            var cabinet = setup(CONTAINER, options);
-            cabinet.toggleDrawers(cabinet.options.selectors.drawer);
-            
-            jqUnit.assertTrue("Opened events fired", openedEventFired);
-            jqUnit.assertFalse("Closed events not fired", closedEventFired);
+            eventBasedTests(false, true, "toggleDrawers");
         });
         
         tests.test("Close Drawer With a Click", function () {
-            var openedEventFired, closedEventFired = false;
-            var options = {
-                startOpen: true,
-                preventEventFireOnInit: true,
-                listeners: {
-                    afterOpen: function () {
-                        openedEventFired = true;
-                    },
-                    afterClose: function () {
-                        closedEventFired = true;
-                    }
-                }
-            };
-            var cabinet = setup(CONTAINER, options);
-            var selectors = cabinet.options.selectors;
-            var styles = cabinet.options.styles;
-            var drawer = $(selectors.drawer).eq(0);
-            var content = $(selectors.contents).eq(0);
-            var handle = $(selectors.handle).eq(0);
-            
-            handle.click();
-            
-            closeStylingTests(drawer, content, styles.drawerOpened, styles.drawerClosed);
-            openStylingTests($(selectors.drawer).not(drawer), $(selectors.contents).not(content), styles.drawerOpened, styles.drawerClosed);
-            jqUnit.assertFalse("Opened events not fired", openedEventFired);
-            jqUnit.assertTrue("Closed events fired", closedEventFired);
+            eventBasedTests(true, true, "mouse", 0);
         });
         
         tests.test("Open Drawer With a Click", function () {
-            var openedEventFired, closedEventFired = false;
-            var options = {
-                startOpen: false,
-                preventEventFireOnInit: true,
-                listeners: {
-                    afterOpen: function () {
-                        openedEventFired = true;
-                    },
-                    afterClose: function () {
-                        closedEventFired = true;
-                    }
-                }
-            };
-            var cabinet = setup(CONTAINER, options);
-            var selectors = cabinet.options.selectors;
-            var styles = cabinet.options.styles;
-            var drawer = $(selectors.drawer).eq(0);
-            var content = $(selectors.contents).eq(0);
-            var handle = $(selectors.handle).eq(0);
-            
-            handle.click();
-            
-            openStylingTests(drawer, content, styles.drawerOpened, styles.drawerClosed);
-            closeStylingTests($(selectors.drawer).not(drawer), $(selectors.contents).not(content), styles.drawerOpened, styles.drawerClosed);
-            jqUnit.assertTrue("Opened events fired", openedEventFired);
-            jqUnit.assertFalse("Closed events not fired", closedEventFired);
+            eventBasedTests(false, true, "mouse", 0);
         });
         
         tests.test("Close Drawer With a Space Key", function () {
-            // This test can only be run on FF, due to reliance on DOM 2 for synthesizing events.
-            if (!$.browser.mozilla) {
-                return;
-            }
-            
-            var openedEventFired, closedEventFired = false;
-            var options = {
-                startOpen: true,
-                preventEventFireOnInit: true,
-                listeners: {
-                    afterOpen: function () {
-                        openedEventFired = true;
-                    },
-                    afterClose: function () {
-                        closedEventFired = true;
-                    }
-                }
-            };
-            var cabinet = setup(CONTAINER, options);
-            var selectors = cabinet.options.selectors;
-            var styles = cabinet.options.styles;
-            var drawer = $(selectors.drawer).eq(0);
-            var content = $(selectors.contents).eq(0);
-            var handle = $(selectors.handle).eq(0);
-            
-            simulateKeyDown(handle, $.ui.keyCode.SPACE);
-            
-            closeStylingTests(drawer, content, styles.drawerOpened, styles.drawerClosed);
-            openStylingTests($(selectors.drawer).not(drawer), $(selectors.contents).not(content), styles.drawerOpened, styles.drawerClosed);
-            jqUnit.assertFalse("Opened events not fired", openedEventFired);
-            jqUnit.assertTrue("Closed events fired", closedEventFired);
+            eventBasedTests(true, true, "space", 0);
         });
         
         tests.test("Open Drawer With a Space Key", function () {
-            // This test can only be run on FF, due to reliance on DOM 2 for synthesizing events.
-            if (!$.browser.mozilla) {
-                return;
-            }
-            
-            var openedEventFired, closedEventFired = false;
-            var options = {
-                startOpen: false,
-                preventEventFireOnInit: true,
-                listeners: {
-                    afterOpen: function () {
-                        openedEventFired = true;
-                    },
-                    afterClose: function () {
-                        closedEventFired = true;
-                    }
-                }
-            };
-            var cabinet = setup(CONTAINER, options);
-            var selectors = cabinet.options.selectors;
-            var styles = cabinet.options.styles;
-            var drawer = $(selectors.drawer).eq(0);
-            var content = $(selectors.contents).eq(0);
-            var handle = $(selectors.handle).eq(0);
-            
-            simulateKeyDown(handle, $.ui.keyCode.SPACE);
-            
-            openStylingTests(drawer, content, styles.drawerOpened, styles.drawerClosed);
-            closeStylingTests($(selectors.drawer).not(drawer), $(selectors.contents).not(content), styles.drawerOpened, styles.drawerClosed);
-            jqUnit.assertTrue("Opened events fired", openedEventFired);
-            jqUnit.assertFalse("Closed events not fired", closedEventFired);
+            eventBasedTests(true, true, "space", 0);
         });
         
         tests.test("Close Drawer With a Enter Key", function () {
-            // This test can only be run on FF, due to reliance on DOM 2 for synthesizing events.
-            if (!$.browser.mozilla) {
-                return;
-            }
-            
-            var openedEventFired, closedEventFired = false;
-            var options = {
-                startOpen: true,
-                preventEventFireOnInit: true,
-                listeners: {
-                    afterOpen: function () {
-                        openedEventFired = true;
-                    },
-                    afterClose: function () {
-                        closedEventFired = true;
-                    }
-                }
-            };
-            var cabinet = setup(CONTAINER, options);
-            var selectors = cabinet.options.selectors;
-            var styles = cabinet.options.styles;
-            var drawer = $(selectors.drawer).eq(0);
-            var content = $(selectors.contents).eq(0);
-            var handle = $(selectors.handle).eq(0);
-            
-            simulateKeyDown(handle, $.ui.keyCode.ENTER);
-            
-            closeStylingTests(drawer, content, styles.drawerOpened, styles.drawerClosed);
-            openStylingTests($(selectors.drawer).not(drawer), $(selectors.contents).not(content), styles.drawerOpened, styles.drawerClosed);
-            jqUnit.assertFalse("Opened events not fired", openedEventFired);
-            jqUnit.assertTrue("Closed events fired", closedEventFired);
+            eventBasedTests(false, true, "enter", 0);
         });
         
         tests.test("Open Drawer With a Enter Key", function () {
-            // This test can only be run on FF, due to reliance on DOM 2 for synthesizing events.
-            if (!$.browser.mozilla) {
-                return;
-            }
-            
-            var openedEventFired, closedEventFired = false;
-            var options = {
-                startOpen: false,
-                preventEventFireOnInit: true,
-                listeners: {
-                    afterOpen: function () {
-                        openedEventFired = true;
-                    },
-                    afterClose: function () {
-                        closedEventFired = true;
-                    }
-                }
-            };
-            var cabinet = setup(CONTAINER, options);
-            var selectors = cabinet.options.selectors;
-            var styles = cabinet.options.styles;
-            var drawer = $(selectors.drawer).eq(0);
-            var content = $(selectors.contents).eq(0);
-            var handle = $(selectors.handle).eq(0);
-            
-            simulateKeyDown(handle, $.ui.keyCode.ENTER);
-            
-            openStylingTests(drawer, content, styles.drawerOpened, styles.drawerClosed);
-            closeStylingTests($(selectors.drawer).not(drawer), $(selectors.contents).not(content), styles.drawerOpened, styles.drawerClosed);
-            jqUnit.assertTrue("Opened events fired", openedEventFired);
-            jqUnit.assertFalse("Closed events not fired", closedEventFired);
+            eventBasedTests(true, true, "enter", 0);
         });
     };
     
