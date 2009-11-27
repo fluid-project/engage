@@ -34,7 +34,7 @@ fluid = fluid || {};
         }
         
         if (index === 0 || index) {
-            obj["index"] = index;
+            obj.index = index;
         }
 
         return obj; 
@@ -44,7 +44,7 @@ fluid = fluid || {};
         var styles = that.options.styles;
         
         var componentOptions = {
-                useDefaultImage: that.options.useDefaultImages
+            useDefaultImage: that.options.useDefaultImages
         };
         
         fluid.merge("merge", componentOptions, that.options.data);
@@ -54,7 +54,7 @@ fluid = fluid || {};
             for (var i = 0; i < that.model.length; i++) {
                 var object = that.model[i];
                 if (that.currentView === "list") {
-                    var index = object["index"];
+                    var index = object.index;
                     
                     object.children.push(treeNode("titleText", "value", that.options.data.links[index].title,
                             styles.titleText));
@@ -68,8 +68,8 @@ fluid = fluid || {};
         } else {
             that.model = fluid.transform(componentOptions.links, function (object, index) {
                 var tree = treeNode("listItems:", "children", [
-                                                    treeNode("link", "target", object.target || "", styles.link)
-                                                    ], styles.listItems, index);
+                    treeNode("link", "target", object.target || "", styles.link)
+                ], styles.listItems, index);
         
                 if (object.image || that.options.useDefaultImage) {
                     tree.children.push({
@@ -100,13 +100,13 @@ fluid = fluid || {};
      * @param {Object} that, the component
      */
     var render = function (that) {
-        var selectorMap = [
-                           {selector: that.options.selectors.listItems, id: "listItems:"},
-                           {selector: that.options.selectors.link, id: "link"},
-                           {selector: that.options.selectors.image, id: "image"},
-                           {selector: that.options.selectors.titleText, id: "titleText"},
-                           {selector: that.options.selectors.periodText, id: "periodText"}
-                           ];
+        var selectorMap = [ 
+            {selector: that.options.selectors.listItems, id: "listItems:"},
+            {selector: that.options.selectors.link, id: "link"},
+            {selector: that.options.selectors.image, id: "image"},
+            {selector: that.options.selectors.titleText, id: "titleText"},
+            {selector: that.options.selectors.periodText, id: "periodText"}
+        ];
 
         if (that.templates) {
             var resources = {
@@ -122,10 +122,10 @@ fluid = fluid || {};
             });
         } else {
             var options = {
-                    cutpoints: selectorMap,
-                    messageSource: {
-                        type: "data"
-                    }           
+                cutpoints: selectorMap,
+                messageSource: {
+                    type: "data"
+                }           
             };
             
             return fluid.selfRender(that.locate("collectionGroup"), generateTree(that), options);
@@ -145,7 +145,7 @@ fluid = fluid || {};
         }
     };
     
-    var removeGroupStyle = function(that) {     
+    var removeGroupStyle = function (that) {     
         if (that.currentView === "grid") {
             that.locate("collectionGroup").removeClass(that.options.styles.gridGroup);
         } else {
@@ -261,7 +261,7 @@ fluid = fluid || {};
             render(that);
         };
         
-        that.afterMoveListener = function(object, requestedPosition, allObjects) {
+        that.afterMoveListener = function (object, requestedPosition, allObjects) {
             var index = allObjects.index(object);
             var oldIndex = that.reordererModel.index(object);
 
@@ -272,7 +272,7 @@ fluid = fluid || {};
             that.model = reorderModel(that.model, index, oldIndex);
         };
         
-        that.onBeginMoveListener = function(item) {
+        that.onBeginMoveListener = function (item) {
             that.reordererModel = that.imageReorderer.dom.fastLocate("movables");
         };
 
@@ -282,79 +282,79 @@ fluid = fluid || {};
     };
     
     fluid.defaults("fluid.initMyCollection",
-            {
-                imageReorderer: {
-                    type: "fluid.reorderImages",
-                    options: {
-                        selectors: {
-                            movables: ".flc-myCollection-movable",
-                            selectables: ".flc-myCollection-movable",
-                            dropTargets: ".flc-myCollection-movable"
-                        },
+        {
+            imageReorderer: {
+                type: "fluid.reorderImages",
+                options: {
+                    selectors: {
+                        movables: ".flc-myCollection-movable",
+                        selectables: ".flc-myCollection-movable",
+                        dropTargets: ".flc-myCollection-movable"
+                    },
                     
-                        styles: {
-                            defaultStyle: null,
-                            selected: null,
-                            dragging: null,
-                            mouseDrag: null,
-                            hover: null,
-                            dropMarker: null,
-                            avatar: null
-                        },
-                        
-                        listeners: {
-                            afterMove: null,
-                            onBeginMove: null
-                        }
+                    styles: {
+                        defaultStyle: null,
+                        selected: null,
+                        dragging: null,
+                        mouseDrag: null,
+                        hover: null,
+                        dropMarker: null,
+                        avatar: null
+                    },
+                            
+                    listeners: {
+                        afterMove: null,
+                        onBeginMove: null
                     }
-                },
+                }
+            },
                 
-                selectors: {
-                    myCollectionContainer: ".flc-myCollection-imageContainer",
-                    title: ".flc-myCollection-title",
-                    myCollectionContents: ".flc-myCollection-contents",
-                    lists: ".flc-myCollection-lists",           
-                    collectionGroup: ".flc-myCollection-listGroup",
-                    listItems: ".flc-myCollection-items",
-                    link: ".flc-myCollection-link",
-                    image: ".flc-myCollection-image",
-                    titleText: ".flc-myCollection-titleText",
-                    periodText: ".flc-myCollection-period",         
-                    toggler: ".flc-myCollection-toggler"
-                },
+            selectors: {
+                myCollectionContainer: ".flc-myCollection-imageContainer",
+                title: ".flc-myCollection-title",
+                myCollectionContents: ".flc-myCollection-contents",
+                lists: ".flc-myCollection-lists",           
+                collectionGroup: ".flc-myCollection-listGroup",
+                listItems: ".flc-myCollection-items",
+                link: ".flc-myCollection-link",
+                image: ".flc-myCollection-image",
+                titleText: ".flc-myCollection-titleText",
+                periodText: ".flc-myCollection-period",         
+                toggler: ".flc-myCollection-toggler"
+            },
 
-                styles: {
-                    load: "fl-browse-loading",
-                    myCollectionContents: "fl-myCollection-contents",
-                    link: null,         
-                    listGroup: "fl-list",
-                    gridGroup: "fl-grid",
-                    titleText: null,
-                    periodText: null,           
-                    toggler: "fl-clickable"
-                },
+            styles: {
+                load: "fl-browse-loading",
+                myCollectionContents: "fl-myCollection-contents",
+                link: null,         
+                listGroup: "fl-list",
+                gridGroup: "fl-grid",
+                titleText: null,
+                periodText: null,           
+                toggler: "fl-clickable"
+            },
 
-                events: {
-                    afterRender: null
-                },
+            events: {
+                afterRender: null
+            },
 
-                data : {},
+            data : {},
 
-                links: [
-                        {
-                            target: "",
-                            image: "",
-                            title: "",
-                            dated: "",
-                            category: null,
-                            size: null
-                        }
-                 ],
+            links: [
+                {
+                    target: "",
+                    image: "",
+                    title: "",
+                    dated: "",
+                    category: null,
+                    size: null
+                }
+            ],
             
-                 useDefaultImage: true,
+            useDefaultImage: true,
                  
-                 defaultView: "grid"
-            }
+            defaultView: "grid"
+        }
     );
 
 })(jQuery);

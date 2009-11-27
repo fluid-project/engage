@@ -19,11 +19,9 @@ fluid.myCollection = fluid.myCollection || {};
 (function ($) {
 
     var compileUserDatabaseURL = function (params, config) {
-        var userQueryType = "type:\"User Collection\" ";
-        
         var query = "";
         if (params.q) {
-            query = userQueryType + params.q;
+            query = "type:\"User%20Collection\"%20AND%20" + params.q;
         }
         
         return fluid.stringTemplate(config.myCollectionsQueryURLTemplate, 
@@ -36,41 +34,44 @@ fluid.myCollection = fluid.myCollection || {};
                 {dbName: database || "", view: config.views.byId, query: query || ""});
     };
     
-    var getArtifactsByMuseum = function(rawData) {
-        // TODO: refactor the next lines to use jquery and fluid functions
+    var getArtifactsByMuseum = function (rawData) {
+        // TODO - find a way to avoid this global
+        var result = [];
         var rows = rawData.rows || [];
-        for (var row in rows) {
-            if (row.doc) {
-                var collection = row.doc.collection;
-                var result = [];
-                for (var artefact in collection.artefacts) {
-                    result[artefact.museum].push(artefact._id);
+        
+        fluid.transform(rows, function (row) {
+            var collection = row.doc.collection;
+            fluid.transform(collection.artefacts, function (artefact) {
+                if (!result[artefact.museum]) {
+                    result.push(artefact.museum);
+                    result[artefact.museum] = [];
                 }
-            }
-        };
-
+                result[artefact.museum].push(artefact._id);
+            });
+        });
+        
         return result;
-    }
+    };
     
     var compileDataURLs = function (config, rawData) {
-        var dataRows = rawData.rows || [];
         var artifactsByMuseum = getArtifactsByMuseum(rawData);
         
-        return fluid.transform(artifactsByMuseum, function (artifacts, index) {
+        return fluid.transform(artifactsByMuseum, function (artifact, index) {
             var database = artifactsByMuseum[index];
+            
+            var artifacts = artifactsByMuseum[database];
+
             var query = "";
-            for (var i = o; i < artifacts.length; i++) {
-                var artifact = artifacts[i];
-                
-                query += artifact;
+            for (var i = 0; i < artifacts.length; i++) {
+                query += artifacts[i];
                 if (i < artifacts.length - 1) {
-                    query += " OR "
+                    query += "%20OR%20";
                 }
             }
-
-            return compileDatabaseURL(config, database, query);
+            
+            return {database: database, url: compileDatabaseURL(config, database, query)};
         });
-    }
+    };
     
     var compileTargetURL = function (URLBase, params) {
         return URLBase + "?" + $.param(params); 
@@ -79,11 +80,7 @@ fluid.myCollection = fluid.myCollection || {};
     var compileData = function (data, dbName) {
         var baseArtifactURL = "view.html";
         
-        var model = {
-            data: {}
-        };
-        
-        model.data.links = fluid.transform(data, function (artifact) {
+        return fluid.transform(data, function (artifact) {
             return {
                 target: compileTargetURL(baseArtifactURL, {
                     q: artifact.linkTarget,
@@ -94,8 +91,6 @@ fluid.myCollection = fluid.myCollection || {};
                 dated: artifact.artifactDate
             };
         });
-        
-        return JSON.stringify(model);
     };
     
     var errorCallback = function (XMLHttpRequest, textStatus, errorThrown) {
@@ -111,31 +106,28 @@ fluid.myCollection = fluid.myCollection || {};
             dataType: "json",
             async: false,
             success: success,
-            error: error,
-            username: "admin",
-            password: "123456",
-            cache: false
+            error: error
         });
     };
     
     var getAjax = function (url, error) {
-        var data = {};
+        var data;
         
         var success = function (returnedData) {
             data = returnedData;
-        }
+        };
         
         ajaxCall(url, success, error);
         
-        return JSON.parse(data);
-    }
-    
-    var getArtifactData = function (rawArtifactDataSet, database) {
-        var dataRows = [];
-        
-        for (var rawArtifactData in rawArtifactDataSet) {
-            dataRows = dataRows.concat(rawArtifactData.rows);
+        if (data) {
+            return JSON.parse(data);
+        } else {
+            return {};
         }
+    };
+    
+    var getArtifactData = function (rawArtifactData, database) {
+        var dataRows = rawArtifactData.rows || [];
         
         return fluid.transform(dataRows, function (row) {
             var artifact = row.doc;
@@ -146,17 +138,31 @@ fluid.myCollection = fluid.myCollection || {};
     var getData = function (error, params, config) {
         var url = compileUserDatabaseURL(params, config);
         var rawData = getAjax(url, error);
-    
-        var urls = compileDataURLs(params, config, rawData);
-        var rawArtifactData = [];
-        for (var artifactURL in urls) {
-            rawArtifactData.push(getAjax(artifactURL, config));
-        }
+
+        var urls = compileDataURLs(config, rawData);
+
+        var dataSet = fluid.transform(urls, function (artifactURL) {
+            var rawArtifactData = getAjax(artifactURL.url, error);
+            var artifactData = getArtifactData(rawArtifactData, artifactURL.database);
+
+            return compileData(artifactData, artifactURL.database);            
+        });
+
+        fluid.log(JSON.stringify(dataSet));
         
-        var db = params.db;
-        var dataSet = getArtifactData(rawArtifactData, db);
+        var model = {
+            data: {}
+        };
         
-        return compileData(dataSet, db);
+        model.data.links = jQuery.map(dataSet, function (dataItem) {        
+            return fluid.transform(dataItem, function (link) {
+                return link;
+            });         
+        });
+        
+        fluid.log(JSON.stringify(model));
+        
+        return JSON.stringify(model);
     };
 
 
@@ -173,9 +179,9 @@ fluid.myCollection = fluid.myCollection || {};
         var handler = fluid.engage.mountRenderHandler({
             config: config,
             app: app,
-        target: "artifacts/",
-        source: "components/myCollection/html/",
-        sourceMountRelative: "engage"
+            target: "artifacts/",
+            source: "components/myCollection/html/",
+            sourceMountRelative: "engage"
         });
         
         handler.registerProducer("myCollection", function (context, env) {
