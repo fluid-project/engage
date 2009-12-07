@@ -16,26 +16,13 @@ fluid = fluid || {};
 (function ($) {
     
     /**
-     * Wrapper for jQuery's ajax function, including parameters for limit and skip which are added as parameters to the url
+     * Used to ensure that the data is returned as an object, 
+     * when it is unclear if it is an object or a string representing an object
      * 
-     * @param {Object} url, the url for the ajax call
-     * @param {Object} success, the function to run on success, it will be passed the data
-     * @param {Object} error, the function to run on error, it will be passed the following args XMLHttpRequest, textStatus, errorThrown.
-     * @param {Object} limit, the number of items to return from the query
-     * @param {Object} skip, the number of items to skip over before searching
+     * @param {Object} data
      */
-    function ajaxCall(url, success, error, limit, skip) {
-        $.ajax({
-            url: url,
-            success: success,
-            error: error,
-            dataType: "json",
-            async: false,
-            data: {
-                limit: limit,
-                skip: skip
-            }
-        });
+    function cleanseData(data) {
+        return typeof data === "object" ? data : JSON.parse(String(data));
     }
     
     /**
@@ -51,15 +38,34 @@ fluid = fluid || {};
         var obj = {};
         
         function assembleDataInfo(data) {
-            data = JSON.parse(String(data));
+            data = cleanseData(data);
             obj.setSize = data.total_rows;
-            obj.numSets = Math.ceil(obj.setSize / that.options.numberOfItems);
-            obj.cachedData = that.options.useCaching ? [data] : null;
+            obj.numSets = Math.ceil(obj.setSize / that.options.maxSetSize);
+            obj.cachedData = that.options.useCaching ? [data] : [];
         }
         
-        ajaxCall(that.options.url, assembleDataInfo, null, that.options.numberOfItems);
+        that.options.dataAccessor(that.options.url, assembleDataInfo, {limit: that.options.maxSetSize});
         
         return obj;
+    }
+
+    /**
+     * Increments that.setNumber by 1, as long as numSets is smaller than the number of sets - 1
+     * 
+     * @param {Object} that, the component
+     */
+    function incrementSetNumber(that) {
+        var lastSet = that.dataInfo.numSets - 1;
+        return that.setNumber < lastSet ? ++that.setNumber : lastSet;
+    }
+    
+    /**
+     * Decrements that.setNumber by 1, as long as it is already larger than 0
+     * 
+     * @param {Object} that, the component
+     */
+    function decrementSetNumber(that) {
+        return that.setNumber > 0 ? --that.setNumber : 0;
     }
     
     /**
@@ -70,48 +76,35 @@ fluid = fluid || {};
      * @param {Object} that, the component
      * @param {Object} goToNext, a boolean specifying whether it goes to next (true) or previous (false)
      */
-    function fetchData(that, goToNext) {
+    function fetchData(that, func) {
         var data;
-        var newSetNumber;
         var skipAmount;
         var dInfo = that.dataInfo;
         var opts = that.options;
-        var cachedData = dInfo.cachedData[newSetNumber];
-        
-        function setInfo() {
-            if (goToNext) {
-                newSetNumber = that.setNumber < dInfo.numSets - 1 ? ++that.setNumber : dInfo.numSets - 1;
-            } else {
-                newSetNumber = that.setNumber > 0 ? --that.setNumber : 0;
-            }
-            
-            skipAmount = newSetNumber * opts.numberOfItems;
-        }
         
         function updateData(d) {
             data = opts.dataMapFunction ? opts.dataMapFunction(d) : d;
         }
         
         function setData(d) {
-            d = JSON.parse(String(d));
+            d = cleanseData(d);
             updateData(d);
             
             if (opts.useCaching) {
-                dInfo.cachedData[newSetNumber] = d;
+                dInfo.cachedData[that.setNumber] = d;
             }
         }
         
-        setInfo();
-        
-        if (opts.useCaching && cachedData) {
+        func(that, dInfo.numSets);
+        skipAmount = that.setNumber * opts.maxSetSize;
+
+        var cachedData = dInfo.cachedData[that.setNumber];
+        if (cachedData) {
             updateData(cachedData);
         } else {
-            ajaxCall(opts.url, setData, null, opts.numberOfItems, skipAmount);
+            that.options.dataAccessor(opts.url, setData, {limit: opts.maxSetSize, skip: skipAmount});
         }
         
-        if (newSetNumber === 0 || newSetNumber === (dInfo.numSets - 1)) {
-            that.events[newSetNumber === 0 ? "onFirstSet" : "onLastSet"].fire(that);
-        }
         return data;
     }
     
@@ -131,8 +124,8 @@ fluid = fluid || {};
      * @param {Object} container, the components container
      * @param {Object} options, the options passed into the component
      */
-    fluid.paging = function (container, options) {
-        var that = fluid.initView("fluid.paging", container, options);
+    fluid.paging = function (options) {
+        var that = fluid.initLittleComponent("fluid.paging", options);
         
         setup(that);
         
@@ -144,7 +137,7 @@ fluid = fluid || {};
          * any subsequent calls to it will just return the last set.
          */
         that.next = function () {
-            return fetchData(that, true);
+            return fetchData(that, incrementSetNumber);
         };
         
         /**
@@ -155,25 +148,75 @@ fluid = fluid || {};
          * any subsequent calls to it will just return the first set.
          */
         that.previous = function () {
-            return fetchData(that);
+            return fetchData(that, decrementSetNumber);
+        };
+        
+        /**
+         * Returns true if there is another set of data availble,
+         * false otherwise.
+         * 
+         * This is useful for determining when you are at the end of the data.
+         */
+        that.hasNext = function () {
+            return that.setNumber < that.dataInfo.numSets - 1;
+        };
+        
+        /**
+         * Returns true if there is a previous set of data available,
+         * false otherwise.
+         * 
+         * This is useful for determining when you are at the beginning of the data.
+         */
+        that.hasPrevious = function () {
+            return that.setNumber > 0;
         };
         
         return that;
     };
     
     /**
+     * An error callback function to be used with the dataAccessor ajax call. 
+     * It will report the errors via the fluid.log function
+     * 
+     * @param {Object} request, XMLHttpRequest object 
+     * @param {Object} status, A string describing the type of error
+     * @param {Object} error, exception object
+     */
+    fluid.paging.errorCallback = function (request, status, error) {
+        fluid.setLogging(true);
+        fluid.log("XMLHttpRequest: " + request);
+        fluid.log("textStatus: " + status);
+        fluid.log("error: " + error);
+    };
+    
+    /**
+     * Wrapper for jQuery's ajax function.
+     * Internally fluid.paging will pass an object with keys "skip" and "limit" as the data to the server.
+     * 
+     * @param {Object} url, the url for the ajax call
+     * @param {Object} success, the function to run on success, it will be passed the returned data
+     * @param {Object} data, optional data to be sent to the server.
+     */
+    fluid.paging.dataAccessor = function (url, success, data) {
+        $.ajax({
+            url: url,
+            success: success,
+            error: fluid.paging.errorCallback,
+            dataType: "json",
+            async: false,
+            data: data
+        });
+    };
+    
+    /**
      * The components defaults
      */
     fluid.defaults("fluid.paging", {
-        events: {
-            onFirstSet: null,
-            onLastSet: null
-        },
-        
         url: "",
-        numberOfItems: 20,
+        maxSetSize: 20,
         dataMapFunction: null,
-        useCaching: true
+        useCaching: true,
+        dataAccessor: fluid.paging.dataAccessor
     });
     
 })(jQuery);
