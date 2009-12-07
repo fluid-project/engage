@@ -24,13 +24,13 @@ fluid.myCollection = fluid.myCollection || {};
             query = "type:\"User%20Collection\"%20AND%20" + params.q;
         }
         
-        return fluid.stringTemplate(config.myCollectionsQueryURLTemplate, 
+        return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
             {dbName: params.db || "", view: config.views.byUserCollection,
                 query: query});
     };
     
     var compileDatabaseURL = function (config, database, query) {
-        return fluid.stringTemplate(config.myCollectionsQueryURLTemplate, 
+        return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
                 {dbName: database || "", view: config.views.byId, query: query || ""});
     };
     
@@ -148,8 +148,6 @@ fluid.myCollection = fluid.myCollection || {};
             return compileData(artifactData, artifactURL.database);            
         });
 
-        fluid.log(JSON.stringify(dataSet));
-        
         var model = {
             data: {}
         };
@@ -159,8 +157,6 @@ fluid.myCollection = fluid.myCollection || {};
                 return link;
             });         
         });
-        
-        fluid.log(JSON.stringify(model));
         
         return JSON.stringify(model);
     };

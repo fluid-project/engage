@@ -222,6 +222,36 @@ fluid = fluid || {};
         return result;
     };
 
+    var ajaxCall = function (url, error, data) {
+        $.ajax({
+            url: url,
+            dataType: "text",
+            async: false,
+            data: data,
+            error: error
+        });
+    };
+    
+    var parsePath = function(pathname) {
+        return pathname.substring(0, pathname.lastIndexOf("/"));
+    };
+    
+    var testCouch = function() {
+        var error = function (XMLHttpRequest, textStatus, errorThrown) {
+            fluid.log("XMLHttpRequest: " + XMLHttpRequest);
+            fluid.log("Status: " + textStatus);
+            fluid.log("Error: " + errorThrown);
+            fluid.log(errorThrown);
+        };
+        
+        var data = {"_id":"c6cf773089bdf684dcd66981cbd95d81", "userid":"5000"};
+        
+        var path = parsePath(location.pathname);
+        
+        ajaxCall("http://" + location.host + path + "/updateDatabase.js",
+                error, data);
+    }
+    
     var setup = function (that) {
         that.templates = render(that);
 
@@ -240,6 +270,9 @@ fluid = fluid || {};
         
         that.imageReorderer = fluid.initSubcomponent(that, "imageReorderer", [that.locate("myCollectionContainer"),
                                                                               that.options.imageReorderer.options]);
+        
+        testCouch();
+        
     };
 
     fluid.initMyCollection = function (container, options) {

@@ -5,6 +5,8 @@ includes: "kettle/KettleIncludes.json",
 includesPrefix: "kettle/",
 loaderFunction: "fluid.engage.initEngageApp",
 queryURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
+myCollectionQueryURLTemplate: "http://localhost:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
+myCollectionUpdateURLTemplate: "http://localhost:5984/users/%id",
 initServices: [
     "fluid.artifactView.initMarkupFeed", 
     "fluid.artifactView.initDataFeed", 
@@ -12,7 +14,8 @@ initServices: [
     "fluid.browseDemo.initBrowseDataFeed",
     "fluid.engageDemo.initEngageDemo",
     "fluid.myCollection.initMarkupFeed",
-    "fluid.myCollection.initDataFeed"    
+    "fluid.myCollection.initDataFeed",
+    "fluid.updateDatabase.initDataFeed"    
 ],
 views: {
     all: "all",
