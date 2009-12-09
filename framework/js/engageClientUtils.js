@@ -70,13 +70,14 @@ https://source.fluidproject.org/svn/LICENSE.txt
         var obj = {};
         
         function assembleDataInfo(data) {
+            var size = that.options.dataSetSize;
             data = cleanseData(data);
-            obj.setSize = data.total_rows;
-            obj.numSets = Math.ceil(obj.setSize / that.options.maxSetSize);
+            obj.setSize = typeof size === "string" ? fluid.model.getBeanValue(data, size) : size;
+            obj.numSets = Math.ceil(obj.setSize / that.options.maxPageSize);
             obj.cachedData = that.options.useCaching ? [data] : [];
         }
         
-        that.options.dataAccessor(that.options.url, assembleDataInfo, {limit: that.options.maxSetSize});
+        that.options.dataAccessor(that.options.url, assembleDataInfo, {limit: that.options.useCaching ? that.options.maxPageSize : 1});
         
         return obj;
     }
@@ -128,13 +129,13 @@ https://source.fluidproject.org/svn/LICENSE.txt
         }
         
         func(that, dInfo.numSets);
-        skipAmount = that.setNumber * opts.maxSetSize;
+        skipAmount = that.setNumber * opts.maxPageSize;
 
-        var cachedData = dInfo.cachedData[that.setNumber];
+        var cachedData = dInfo.cachedData ? dInfo.cachedData[that.setNumber] : null;
         if (cachedData) {
             updateData(cachedData);
         } else {
-            that.options.dataAccessor(opts.url, setData, {limit: opts.maxSetSize, skip: skipAmount});
+            that.options.dataAccessor(opts.url, setData, {limit: opts.maxPageSize, skip: skipAmount >= 0 ? skipAmount : 0});
         }
         
         return data;
@@ -245,9 +246,10 @@ https://source.fluidproject.org/svn/LICENSE.txt
      */
     fluid.defaults("fluid.engage.paging", {
         url: "",
-        maxSetSize: 20,
+        maxPageSize: 20,
         dataMapFunction: null,
         useCaching: true,
+        dataSetSize: "total_rows",
         dataAccessor: fluid.engage.paging.dataAccessor
     });
 	
