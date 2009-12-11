@@ -689,12 +689,25 @@ var window = this;
 					var connection = url.openConnection();
 					
 					connection.setRequestMethod( self.method );
+
+                    // Set output mode                  
+                    connection.setDoOutput(true);
 					
 					// Add headers to Java connection
 					for (var header in self.headers)
 						connection.addRequestProperty(header, self.headers[header]);
 				
 					connection.connect();
+	
+                    // Write the data                   
+                    text = new java.lang.String( data || "" )                   
+                    if (text.length() > 0) {
+                        // Write content to the connection's stream
+                        var out = connection.getOutputStream();
+                        out.write(text.getBytes());
+                        out.flush();
+                        out.close();
+                    }
 					
 					// Stick the response headers into responseHeaders
 					for (var i = 0; ; i++) { 

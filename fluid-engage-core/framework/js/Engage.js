@@ -54,7 +54,9 @@ fluid = fluid || {};
                 "artifactDescription": {
                     "path": "Description",
                     "func": "getDescription"
-                }
+                },
+		"id": "_id",
+		"museum": "museum"
             },
             mappers: {
                 getDescription: function (value) {
@@ -132,7 +134,9 @@ fluid = fluid || {};
                 "artifactDescription": {
                     "path": "artefacts.artefact.descriptions.description_museum",
                     "func": "getArtifactDescription"
-                }
+                },
+		"id": "_id",
+		"museum": "museum"
 	        },
             mappers: {
                 getArtifactDescription: function (value) {

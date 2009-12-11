@@ -15,15 +15,18 @@ fluid = fluid || {};
 
 (function ($) {
     /**
-     * Creates a render component for the component tree. The key can be any key that a componet tree would take and the value is what would be assigned to it.
+     * Creates a render component for the component tree. The key can be any key that a component tree would take and the value is what would be assigned to it.
      * For example if you wanted to have node that just prints out "Hello World" you could set the key to "value" and the value to "Hello World"
      * 
      * @param {Object} id, the ID used by the component tree
      * @param {Object} key, a key representing an entry in a renderer component
      * @param {Object} value, the value assigned to the key
-     * @param {Object} classes, (optional) can add classes without having to specify the decorator key. 
+     * @param {Object} classes, (optional) can add classes without having to specify the decorator key.
+     * @param index, (optional - only for top level nodes) the index of this tree node that is used to map
+     * the feed data with the current order.
+     * @param artifactId, (optional - only for top level nodes) the artifact CouchDB id. 
      */
-    var treeNode = function (id, key, value, classes, index) {
+    var treeNode = function (id, key, value, classes, index, artifactId, museum) {
         var obj = {ID: id};
         obj[key] = value;
         if (classes) {
@@ -36,10 +39,20 @@ fluid = fluid || {};
         if (index === 0 || index) {
             obj.index = index;
         }
+        
+        if (artifactId && museum) {
+            obj.artifactId = artifactId;
+            obj.museum = museum;
+        }
 
         return obj; 
     };
 
+    /**
+     * Generates the component tree used by the renderer
+     * 
+     * @param {Object} that, the component
+     */
     var generateTree = function (that) {
         var styles = that.options.styles;
         
@@ -69,7 +82,7 @@ fluid = fluid || {};
             that.model = fluid.transform(componentOptions.links, function (object, index) {
                 var tree = treeNode("listItems:", "children", [
                     treeNode("link", "target", object.target || "", styles.link)
-                ], styles.listItems, index);
+                ], styles.listItems, index, object.id, object.museum);
         
                 if (object.image || that.options.useDefaultImage) {
                     tree.children.push({
@@ -95,7 +108,7 @@ fluid = fluid || {};
     };
 
     /**
-     * Renders the copmonent based on values passed into the options
+     * Renders the component based on values passed into the options
      * 
      * @param {Object} that, the component
      */
@@ -133,7 +146,7 @@ fluid = fluid || {};
     };
 
     /**
-     * The styles to be set on the group containing the list of links
+     * Changes the style on the group containing the list of links, transition from grid to list to grid.
      * 
      * @param {Object} that, the component
      */
@@ -145,6 +158,9 @@ fluid = fluid || {};
         }
     };
     
+    /**
+     * Removes the style on the group containing the list of links.
+     */
     var removeGroupStyle = function (that) {     
         if (that.currentView === "grid") {
             that.locate("collectionGroup").removeClass(that.options.styles.gridGroup);
@@ -153,6 +169,9 @@ fluid = fluid || {};
         }
     };
 
+    /**
+     * Add style to the view toggler link.
+     */
     var styleToggler = function (that) {
         that.locate("toggler").addClass(that.options.styles.toggler);
     };
@@ -175,6 +194,11 @@ fluid = fluid || {};
         that.container.removeClass(that.options.styles.load);
     };
 
+    /**
+     * Refreshes the reorderer.
+     * 
+     * @param {Object} that, the component
+     */
     var refreshReorderer = function (that) {
         if (that.imageReorderer) {
             that.imageReorderer.refresh();
@@ -191,10 +215,22 @@ fluid = fluid || {};
         that.events.afterRender.addListener(refreshReorderer);
     };
 
+    /**
+     * Add the event to be triggered when the toggle view link is clicked.
+     * 
+     * @param {Object} that, the component
+     */
     var addClickEvent = function (that) {
         that.locate("toggler").click(that.toggleView);
     };
     
+    /**
+     * Reorders the model by manipulating the array.
+     * 
+     * @param {Object} model, the underlying data model.
+     * @param index, the new index of a moved element.
+     * @param oldIndex, the old index of a moved element.
+     */
     var reorderModel = function (model, index, oldIndex) {
         var result = [];
         var start = [];
@@ -221,37 +257,62 @@ fluid = fluid || {};
         
         return result;
     };
-
+    
+    /**
+     * Returns the directory part of a path.
+     */
+    var parsePath = function (pathname) {
+        return pathname.substring(0, pathname.lastIndexOf("/"));
+    };
+    
+    /**
+     * Invokes jQuery $.ajax function.
+     * 
+     * @param url, the url to call
+     * @param error, the error callback
+     * @param data, the data to pass
+     */
     var ajaxCall = function (url, error, data) {
         $.ajax({
             url: url,
-            dataType: "text",
             async: false,
             data: data,
             error: error
         });
     };
     
-    var parsePath = function(pathname) {
-        return pathname.substring(0, pathname.lastIndexOf("/"));
-    };
-    
-    var testCouch = function() {
+    /**
+     * Invokes an update on CouchDB with the new order of artifacts in the collection.
+     * 
+     * @param {Object} model, the underlying data model.
+     * @param collectionId, the id of the user collection.
+     */
+    var updateOrder = function (model, collectionId) {
         var error = function (XMLHttpRequest, textStatus, errorThrown) {
-            fluid.log("XMLHttpRequest: " + XMLHttpRequest);
             fluid.log("Status: " + textStatus);
             fluid.log("Error: " + errorThrown);
-            fluid.log(errorThrown);
         };
         
-        var data = {"_id":"c6cf773089bdf684dcd66981cbd95d81", "userid":"5000"};
+        var data = {};
+        data.collectionId = collectionId;
+        data.collection = {};
+        data.collection.artefacts = [];
         
+        fluid.transform(model, function (object) {
+            data.collection.artefacts.push({museum: object.museum, _id: object.artifactId});
+        });
+
         var path = parsePath(location.pathname);
         
         ajaxCall("http://" + location.host + path + "/updateDatabase.js",
-                error, data);
-    }
+                error, "orderData=" + encodeURIComponent(JSON.stringify(data)));
+    };            
     
+    /**
+     * Initializes all elements of the collection view that have not been initialized.
+     * 
+     * @param {Object} that, the component
+     */
     var setup = function (that) {
         that.templates = render(that);
 
@@ -270,11 +331,14 @@ fluid = fluid || {};
         
         that.imageReorderer = fluid.initSubcomponent(that, "imageReorderer", [that.locate("myCollectionContainer"),
                                                                               that.options.imageReorderer.options]);
-        
-        testCouch();
-        
     };
 
+    /**
+     * The component's creator function 
+     * 
+     * @param {Object} container, the container which will hold the component
+     * @param {Object} options, options passed into the component
+     */
     fluid.initMyCollection = function (container, options) {
         var that = fluid.initView("fluid.initMyCollection", container, options);
 
@@ -303,6 +367,8 @@ fluid = fluid || {};
             }
             
             that.model = reorderModel(that.model, index, oldIndex);
+            
+            updateOrder(that.model, that.options.data.collectionId);
         };
         
         that.onBeginMoveListener = function (item) {

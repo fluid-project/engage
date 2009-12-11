@@ -15,7 +15,7 @@ initServices: [
     "fluid.engageDemo.initEngageDemo",
     "fluid.myCollection.initMarkupFeed",
     "fluid.myCollection.initDataFeed",
-    "fluid.updateDatabase.initDataFeed"    
+    "fluid.updateDatabase.initAcceptor"    
 ],
 views: {
     all: "all",
