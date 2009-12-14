@@ -63,9 +63,7 @@ fluid = fluid || {};
         fluid.merge("merge", componentOptions, that.options.data);
 
         if (that.model) {
-            // TODO: manipulate the model in a more jQuery-like way
-            for (var i = 0; i < that.model.length; i++) {
-                var object = that.model[i];
+            fluid.transform(that.model, function (object) {
                 if (that.currentView === "list") {
                     var index = object.index;
                     
@@ -77,7 +75,7 @@ fluid = fluid || {};
                     object.children.pop();
                     object.children.pop();
                 }
-            }
+            });
         } else {
             that.model = fluid.transform(componentOptions.links, function (object, index) {
                 var tree = treeNode("listItems:", "children", [
@@ -282,6 +280,15 @@ fluid = fluid || {};
     };
     
     /**
+     * Returns the update URL relative to the current host.
+     * 
+     * @param path, the path segment of the URL.
+     */
+    var compileUrl = function (path) {
+        return "http://" + location.host + path + "/updateDatabase.js";
+    };
+    
+    /**
      * Invokes an update on CouchDB with the new order of artifacts in the collection.
      * 
      * @param {Object} model, the underlying data model.
@@ -299,13 +306,12 @@ fluid = fluid || {};
         data.collection.artefacts = [];
         
         fluid.transform(model, function (object) {
-            data.collection.artefacts.push({museum: object.museum, _id: object.artifactId});
+            data.collection.artefacts.push({museum: object.museum, id: object.artifactId});
         });
 
         var path = parsePath(location.pathname);
         
-        ajaxCall("http://" + location.host + path + "/updateDatabase.js",
-                error, "orderData=" + encodeURIComponent(JSON.stringify(data)));
+        ajaxCall(compileUrl(path), error, "orderData=" + encodeURIComponent(JSON.stringify(data)));
     };            
     
     /**

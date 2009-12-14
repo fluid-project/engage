@@ -27,7 +27,7 @@ fluid.myCollection = fluid.myCollection || {};
     var compileUserDatabaseURL = function (params, config) {
         var query = "";
         if (params.q) {
-            query = "type:\"User%20Collection\"%20AND%20" + params.q;
+            query = encodeURIComponent("type:\"User Collection\" AND ") + params.q;
         }
         
         return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
@@ -53,7 +53,6 @@ fluid.myCollection = fluid.myCollection || {};
      * @param {Object} rawData, the collection data as it is returned by CouchDB.
      */
     var getArtifactsByMuseum = function (rawData) {
-        // TODO - find a way to avoid this out-scoped variable
         var result = [];
         var rows = rawData.rows || [];
         
@@ -64,7 +63,7 @@ fluid.myCollection = fluid.myCollection || {};
                     result.push(artefact.museum);
                     result[artefact.museum] = [];
                 }
-                result[artefact.museum].push(artefact._id);
+                result[artefact.museum].push(artefact.id);
             });
         });
         
@@ -89,7 +88,7 @@ fluid.myCollection = fluid.myCollection || {};
             for (var i = 0; i < artifacts.length; i++) {
                 query += artifacts[i];
                 if (i < artifacts.length - 1) {
-                    query += "%20OR%20";
+                    query += encodeURIComponent(" OR ");
                 }
             }
             
@@ -116,12 +115,13 @@ fluid.myCollection = fluid.myCollection || {};
     var getArtifactIds = function (rawData) {
         var rows = rawData.rows || [];
         
+        // External to the transforms, because we need a flat array
         var result = [];
         
         fluid.transform(rows, function (row) {
             var collection = row.doc.collection;
             return fluid.transform(collection.artefacts, function (artefact) {
-                result.push(artefact._id);
+                result.push(artefact.id);
             });
         });
         
@@ -249,7 +249,7 @@ fluid.myCollection = fluid.myCollection || {};
             });
         });
 
-        // Restore the original order for artifacts as they were aggregated by museum
+        // Restore the original order for artifacts the as they have been aggregated by museum
         var artifactIds = fluid.transform(links, function (link) {
             return link.id;
         });
