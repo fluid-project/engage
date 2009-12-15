@@ -14,14 +14,32 @@
 	color		: #777;
 }
 
-.fl-browse-loading .fl-myCollection-contents {
+.fl-myCollection-loading .fl-myCollection-contents {
     display		: none;
 }
 
-.fl-browse-loading .flc-myCollection-toggler {
+.fl-myCollection-loading .flc-myCollection-navbar {
 	display		: none;
+}
+
+.fl-myCollection-loading .flc-myCollection-subHeading {
+    display     : none;
 }
 
 .fl-clickable {
 	cursor		: pointer;
+}
+
+.flc-myCollection-items {
+	background  : #d8d8d8
+}
+
+.fl-myCollection-loading .fl-myCollection-loadMessage {
+    display     : block;
+    text-align  : center;
+    margin-top  : 100px;
+}
+
+.fl-myCollection-loadMessage {
+	display     : none
 }

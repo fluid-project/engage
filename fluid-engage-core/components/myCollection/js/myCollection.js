@@ -321,6 +321,8 @@ fluid = fluid || {};
      */
     var setup = function (that) {
         that.templates = render(that);
+        that.locate("artifactsNumber").html(that.options.data.links.length);
+        that.locate("artifactsPlural").html(that.options.data.links.length == 1 ? "" : "s");
 
         that.currentView = that.options.defaultView;
         
@@ -425,11 +427,13 @@ fluid = fluid || {};
                 image: ".flc-myCollection-image",
                 titleText: ".flc-myCollection-titleText",
                 periodText: ".flc-myCollection-period",         
-                toggler: ".flc-myCollection-toggler"
+                toggler: ".flc-myCollection-toggler",
+                artifactsNumber: ".flc-myCollection-artifactsNumber",
+                artifactsPlural: ".flc-myCollection-artifactsPlural"
             },
 
             styles: {
-                load: "fl-browse-loading",
+                load: "fl-myCollection-loading",
                 myCollectionContents: "fl-myCollection-contents",
                 link: null,         
                 listGroup: "fl-list",
