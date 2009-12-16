@@ -67,19 +67,18 @@ https://source.fluidproject.org/svn/LICENSE.txt
      * @param {Object} that, the component
      */
     function getSetupData(that) {
-        var obj = {};
-        
+        that.dataInfo = {};
         function assembleDataInfo(data) {
             var size = that.options.dataSetSize;
             data = cleanseData(data);
-            obj.setSize = typeof size === "string" ? fluid.model.getBeanValue(data, size) : size;
-            obj.numSets = Math.ceil(obj.setSize / that.options.maxPageSize);
-            obj.cachedData = that.options.useCaching ? [data] : [];
+            that.dataInfo.setSize = typeof size === "string" ? fluid.model.getBeanValue(data, size) : size;
+            that.dataInfo.numSets = Math.ceil(that.dataInfo.setSize / that.options.maxPageSize);
+            that.dataInfo.cachedData = that.options.useCaching ? [data] : [];
+            that.setNumber = -1;
+            that.events.afterInit.fire(that);
         }
         
         that.options.dataAccessor(that.options.url, assembleDataInfo, {limit: that.options.useCaching ? that.options.maxPageSize : 1});
-        
-        return obj;
     }
 
     /**
@@ -110,22 +109,18 @@ https://source.fluidproject.org/svn/LICENSE.txt
      * @param {Object} goToNext, a boolean specifying whether it goes to next (true) or previous (false)
      */
     function fetchData(that, func) {
-        var data;
         var skipAmount;
         var dInfo = that.dataInfo;
         var opts = that.options;
         
-        function updateData(d) {
-            data = opts.dataMapFunction ? opts.dataMapFunction(d) : d;
-        }
-        
         function setData(d) {
             d = cleanseData(d);
-            updateData(d);
             
             if (opts.useCaching) {
                 dInfo.cachedData[that.setNumber] = d;
             }
+            
+            that.events.modelChanged.fire(d);
         }
         
         func(that, dInfo.numSets);
@@ -133,12 +128,10 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
         var cachedData = dInfo.cachedData ? dInfo.cachedData[that.setNumber] : null;
         if (cachedData) {
-            updateData(cachedData);
+            that.events.modelChanged.fire(cachedData);
         } else {
             that.options.dataAccessor(opts.url, setData, {limit: opts.maxPageSize, skip: skipAmount >= 0 ? skipAmount : 0});
         }
-        
-        return data;
     }
     
     /**
@@ -147,8 +140,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
      * @param {Object} that, the component
      */
     function setup(that) {
-        that.dataInfo = getSetupData(that);
-        that.setNumber = -1;
+        getSetupData(that);
     }
     
     /**
@@ -160,6 +152,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
     fluid.engage.paging = function (options) {
         var that = fluid.initLittleComponent("fluid.engage.paging", options);
         
+        fluid.instantiateFirers(that, that.options);
         setup(that);
         
         /**
@@ -170,7 +163,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
          * any subsequent calls to it will just return the last set.
          */
         that.next = function () {
-            return fetchData(that, incrementSetNumber);
+            fetchData(that, incrementSetNumber);
         };
         
         /**
@@ -181,7 +174,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
          * any subsequent calls to it will just return the first set.
          */
         that.previous = function () {
-            return fetchData(that, decrementSetNumber);
+            fetchData(that, decrementSetNumber);
         };
         
         /**
@@ -236,7 +229,6 @@ https://source.fluidproject.org/svn/LICENSE.txt
             success: success,
             error: fluid.engage.paging.errorCallback,
             dataType: "json",
-            async: false,
             data: data
         });
     };
@@ -245,9 +237,13 @@ https://source.fluidproject.org/svn/LICENSE.txt
      * The components defaults
      */
     fluid.defaults("fluid.engage.paging", {
+        events: {
+            modelChanged: null,
+            afterInit: null
+        },
+        
         url: "",
         maxPageSize: 20,
-        dataMapFunction: null,
         useCaching: true,
         dataSetSize: "total_rows",
         dataAccessor: fluid.engage.paging.dataAccessor
