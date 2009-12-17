@@ -43,3 +43,13 @@
 .flc-myCollection-items {
 	background  : #d8d8d8
 }
+
+.flc-myCollection-items {
+	outline     : none
+}
+
+/*
+.flc-myCollection-items .flc-myCollection-image {
+	outline     :2px solid red
+}
+*/

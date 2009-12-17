@@ -336,6 +336,7 @@ fluid = fluid || {};
         
         that.options.imageReorderer.options.listeners.afterMove = that.afterMoveListener;
         that.options.imageReorderer.options.listeners.onBeginMove = that.onBeginMoveListener;
+        that.options.imageReorderer.options.avatarCreator = that.avatarCreator;
         
         that.imageReorderer = fluid.initSubcomponent(that, "imageReorderer", [that.locate("myCollectionContainer"),
                                                                               that.options.imageReorderer.options]);
@@ -382,9 +383,22 @@ fluid = fluid || {};
         that.onBeginMoveListener = function (item) {
             that.reordererModel = that.imageReorderer.dom.fastLocate("movables");
         };
-
+        
+        that.avatarCreator = function(item) {
+        	var image = {};
+        	
+        	fluid.dom.iterateDom(item, function (node) {
+        		image = node;
+        		if ($(node).hasClass(".flc-myCollection-image")) {
+        			return "stop";
+        		}
+        	}, false);
+        	
+        	return $(image).clone();
+        }
+        
         setup(that);
-
+        
         return that;
     };
     
@@ -397,8 +411,7 @@ fluid = fluid || {};
                         movables: ".flc-myCollection-movable",
                         selectables: ".flc-myCollection-movable",
                         dropTargets: ".flc-myCollection-movable"
-                    },
-                    
+                    },                    
                     styles: {
                         defaultStyle: null,
                         selected: null,
@@ -407,12 +420,12 @@ fluid = fluid || {};
                         hover: null,
                         dropMarker: null,
                         avatar: null
-                    },
-                            
+                    },                            
                     listeners: {
                         afterMove: null,
                         onBeginMove: null
-                    }
+                    },                    
+                    avatarCreator: null
                 }
             },
                 
