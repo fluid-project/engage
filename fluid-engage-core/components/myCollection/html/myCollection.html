@@ -10,8 +10,8 @@
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/components/reorderer/css/ImageReorderer.css" media="all"></link>
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-layout.css" ></link>
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-transitions.css" ></link>
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-iphone-layout.css" ></link>
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-iphone-theme.css" ></link>
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" ></link>
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" ></link>
 		<link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/myCollection/css/myCollection.css" ></link>
 
 		<script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
@@ -33,13 +33,13 @@
 		<script type="text/javascript" src="../../../../fluid-engage-core/components/myCollection/js/myCollection.js"></script>
 	  
 	</head>
-<!--	<body class="myCollection fl-theme-iphone fl-myCollection-loading" style="background-color: #D8D8D8"> -->
+<!--	<body class="flc-myCollection fl-theme-iphone fl-myCollection-loading" style="background-color: #D8D8D8"> -->
     <body class="flc-myCollection fl-myCollection-loading" style="background-color: #D8D8D8">
 
 		<div class="flc-myCollection-navbar fl-navbar fl-table">
 		    <div class="fl-backButton">Back</div>
 			<h1 class="flc-mycollection-title fl-table-cell">My Collection</h1>
-            <div class="flc-myCollection-toggler" title="Toggle View">Toggle View</div>
+            <div class="flc-myCollection-toggler" alt="Toggle View" title="Toggle View">Toggle View</div>
 		</div>
 
 		<!-- loading message -->
@@ -56,7 +56,7 @@
 				<div class="flc-myCollection-lists">
 					<ul class="flc-myCollection-listGroup">
 					    <li class="flc-myCollection-items flc-myCollection-movable">
-   							<a class="flc-myCollection-link">
+   							<a class="flc-myCollection-link flc-myCollection-selectable">
 								<img src="../../../../fluid-engage-core/components/myCollection/images/no_image_64x64.png" class="flc-myCollection-image"/>
 								<div class="flc-myCollection-description">
 									<span class="flc-myCollection-titleText"></span>
@@ -70,6 +70,7 @@
 		</form>
 
 		<script type="text/javascript">
+		    fluid.setLogging(true);
 			fluid.engage.initComponentWithDataFeed(window.location, "fluid.initMyCollection", ".flc-myCollection");
 		</script>
 	</body>

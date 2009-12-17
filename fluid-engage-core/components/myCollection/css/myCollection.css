@@ -26,14 +26,6 @@
     display     : none;
 }
 
-.fl-clickable {
-	cursor		: pointer;
-}
-
-.flc-myCollection-items {
-	background  : #d8d8d8
-}
-
 .fl-myCollection-loading .fl-myCollection-loadMessage {
     display     : block;
     text-align  : center;
@@ -41,5 +33,13 @@
 }
 
 .fl-myCollection-loadMessage {
-	display     : none
+    display     : none
+}
+
+.fl-clickable {
+	cursor		: pointer;
+}
+
+.flc-myCollection-items {
+	background  : #d8d8d8
 }

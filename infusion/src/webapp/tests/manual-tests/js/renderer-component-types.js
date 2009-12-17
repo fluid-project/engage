@@ -20,31 +20,30 @@ var demo = demo || {};
 
     var listTree = {
         children: [{
-            ID: "H1s:",
+            ID: "template2:subtemplate1",
             children: [{
-                ID: "H1item:toc",
-                children: [{
-                    ID: "toc_anchor",
-                    linktext: "foo",
-                    target: "#foo"
-                }]
-            }, {
-                ID: "H1item:H2s",
-                children: [{
-                    ID: "H2item:toc",
+                ID: "anch",
+                linktext: "foo",
+                target: "#foo"
+            }]
+        }, {
+            ID: "template2:subtemplate2",
+            children: [
+                {
+                    ID: "template2:subtemplate1",
                     children: [{
-                        ID: "toc_anchor",
+                        ID: "anch",
                         linktext: "bar",
                         target: "#bar"
                     }]
-                }]
-            }, {
-                ID: "H1item:toc",
-                children: [{
-                    ID: "toc_anchor",
-                    linktext: "foobar",
-                    target: "#foobar"
-                }]
+                }
+            ]
+        }, {
+            ID: "template2:subtemplate1",
+            children: [{
+                ID: "anch",
+                linktext: "foobar",
+                target: "#foobar"
             }]
         }]
     };

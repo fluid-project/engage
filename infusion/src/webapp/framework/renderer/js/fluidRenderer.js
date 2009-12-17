@@ -259,7 +259,6 @@ fluid_1_2 = fluid_1_2 || {};
       var seenset = {};
       var collected = {};
       var out = "";
-      var debugMode = false;
       var renderOptions = options;
       var decoratorQueue = [];
       
@@ -461,7 +460,8 @@ fluid_1_2 = fluid_1_2 || {};
       }
     
       function dumpTemplateBody() {
-          if (trc.endopen.lumpindex === trc.close.lumpindex) {
+          // TODO: Think about bringing fastXmlPull into version management
+          if (trc.endopen.lumpindex === trc.close.lumpindex && XMLP.closedTags[trc.uselump.tagname]) {
               if (!trc.iselide) {
                   out += "/>";
               }
