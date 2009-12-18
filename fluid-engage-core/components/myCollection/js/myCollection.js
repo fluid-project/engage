@@ -322,7 +322,7 @@ fluid = fluid || {};
     var setup = function (that) {
         that.templates = render(that);
         that.locate("artifactsNumber").html(that.options.data.links.length);
-        that.locate("artifactsPlural").html(that.options.data.links.length == 1 ? "" : "s");
+        that.locate("artifactsPlural").html(that.options.data.links.length === 1 ? "" : "s");
 
         that.currentView = that.options.defaultView;
         
@@ -384,18 +384,18 @@ fluid = fluid || {};
             that.reordererModel = that.imageReorderer.dom.fastLocate("movables");
         };
         
-        that.avatarCreator = function(item) {
-        	var image = {};
-        	
-        	fluid.dom.iterateDom(item, function (node) {
-        		image = node;
-        		if ($(node).hasClass(".flc-myCollection-image")) {
-        			return "stop";
-        		}
-        	}, false);
-        	
-        	return $(image).clone();
-        }
+        that.avatarCreator = function (item) {
+            var image = {};
+            
+            fluid.dom.iterateDom(item, function (node) {
+                image = node;
+                if ($(node).hasClass(".flc-myCollection-image")) {
+                    return "stop";
+                }
+            }, false);
+            
+            return $(image).clone();
+        };
         
         setup(that);
         
