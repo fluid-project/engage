@@ -256,6 +256,8 @@ fluid = fluid || {};
                 }
             }
         }
+        // Add the museum to the data so that artifacts can be collected with background information
+        normalizedModel["museum"] = dbName;
         
         return normalizedModel;
     };

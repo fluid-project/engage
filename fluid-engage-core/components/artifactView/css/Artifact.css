@@ -6,3 +6,8 @@
 .fl-demo-image {
     padding: 1px 0;
 }
+
+.flc-collect-artifact {
+    cursor: pointer;
+}
+

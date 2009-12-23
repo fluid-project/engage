@@ -168,13 +168,6 @@ fluid = fluid || {};
     };
 
     /**
-     * Add style to the view toggler link.
-     */
-    var styleToggler = function (that) {
-        that.locate("toggler").addClass(that.options.styles.toggler);
-    };
-
-    /**
      * Adds the loading style from the component, so that the loading message is displayed
      * 
      * @param {Object} that, the component
@@ -311,7 +304,8 @@ fluid = fluid || {};
 
         var path = parsePath(location.pathname);
         
-        ajaxCall(compileUrl(path), error, "orderData=" + encodeURIComponent(JSON.stringify(data)));
+        ajaxCall(compileUrl(path), error, "operation=updateOrder&orderData=" +
+        		encodeURIComponent(JSON.stringify(data)));
     };            
     
     /**
@@ -327,7 +321,6 @@ fluid = fluid || {};
         that.currentView = that.options.defaultView;
         
         addGroupStyle(that);
-        styleToggler(that);
 
         addClickEvent(that);
 
@@ -431,9 +424,6 @@ fluid = fluid || {};
                 
             selectors: {
                 myCollectionContainer: ".flc-myCollection-imageContainer",
-                title: ".flc-myCollection-title",
-                myCollectionContents: ".flc-myCollection-contents",
-                lists: ".flc-myCollection-lists",           
                 collectionGroup: ".flc-myCollection-listGroup",
                 listItems: ".flc-myCollection-items",
                 link: ".flc-myCollection-link",
@@ -447,13 +437,11 @@ fluid = fluid || {};
 
             styles: {
                 load: "fl-myCollection-loading",
-                myCollectionContents: "fl-myCollection-contents",
                 link: null,         
                 listGroup: "fl-list",
                 gridGroup: "fl-grid",
                 titleText: null,
-                periodText: null,           
-                toggler: "fl-clickable"
+                periodText: null           
             },
 
             events: {

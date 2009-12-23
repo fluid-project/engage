@@ -33,23 +33,28 @@
 		<script type="text/javascript" src="../../../../fluid-engage-core/components/myCollection/js/myCollection.js"></script>
 	  
 	</head>
-<!--	<body class="flc-myCollection fl-theme-iphone fl-myCollection-loading" style="background-color: #D8D8D8"> -->
-    <body class="flc-myCollection fl-myCollection-loading" style="background-color: #D8D8D8">
 
+	<body class="flc-myCollection fl-theme-iphone fl-myCollection-loading">
 		<div class="flc-myCollection-navbar fl-navbar fl-table">
-		    <div class="fl-backButton">Back</div>
-			<h1 class="flc-mycollection-title fl-table-cell">My Collection</h1>
-            <div class="flc-myCollection-toggler" alt="Toggle View" title="Toggle View">Toggle View</div>
+		    <div class="fl-table-row">
+    		    <a class="fl-backButton fl-table-cell">Back</a>
+                <h1 class="flc-mycollection-title fl-table-cell">My Collection</h1>
+                <a class="flc-myCollection-toggler fl-table-cell fl-button" alt="Toggle View" title="Toggle View">Toggle View</a>
+            </div>
+            <div class="fl-table-row">
+                <div class="fl-table-cell"/>
+                <div class="fl-table-cell">
+                    Your collection contains <span class="flc-myCollection-artifactsNumber"/>
+                    artifact<span class="flc-myCollection-artifactsPlural"/>.
+                    Touch and drag the thumbnails to reorganize.
+                </div>
+            </div>
 		</div>
 
 		<!-- loading message -->
 		<div class="fl-myCollection-loadMessage fl-note fl-bevel-white">
 			Loading...
 		</div>
-        
-        <div class="flc-myCollection-subHeading">
-            Your collection contains <span class="flc-myCollection-artifactsNumber"/> artifact<span class="flc-myCollection-artifactsPlural"/>. Touch and drag the thumbnails to reorganize.
-        </div>	
 
   		<form class="flc-myCollection-imageContainer">
 		    <div class="flc-myCollection-contents fl-myCollection-contents">

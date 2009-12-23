@@ -2,13 +2,14 @@
     background  : #eee;
     border  	: 1px solid #CCC;
     margin      : 5px;
-    padding     : 15px;
+/*    padding     : 15px;*/
     text-align  : center;
     display     : inline;
     float       : left; 
     width		: 96px;
     height		: 96px;
 }
+
 
 .flc-myCollection-period {
 	color		: #777;
@@ -36,7 +37,7 @@
     display     : none
 }
 
-.fl-clickable {
+.flc-myCollection-toggler {
 	cursor		: pointer;
 }
 

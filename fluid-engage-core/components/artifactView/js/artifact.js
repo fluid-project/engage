@@ -45,6 +45,35 @@ fluid = fluid || {};
 		that.relatedArtifacts = fluid.initSubcomponent(that, "artifactsLink", [that.locate("realtedArtifacts"),
 		        {messageBundle: {linkToMoreMessage: "Go to Related artifacts"}, links: [{category: "", target: that.options.toRender.relatedArtifacts}]}]);
 
+		var userCollection = options.toRender.model.userCollection;
+		
+		var operation;
+		
+		if (userCollection ) {
+			that.locate("collectArtifact").html("Uncollect Artifact");
+			operation = "uncollect";
+		} else {
+			that.locate("collectArtifact").html("Collect Artifact");
+			operation = "collect";
+		}
+				
+        that.locate("collectArtifac").click(function () {
+        	var path = location.pathname.substring(0, location.pathname.lastIndexOf("/"));
+        	var url = "http://" + location.host + path + "/updateDatabase.js";
+        	var data = "operation=" + operation + "&artifactData=" + encodeURIComponent(JSON.stringify({
+        		"collectionId": userCollection,
+        		"museum": options.toRender.model.museum,
+        		"id": options.toRender.model.id}));
+        	
+            $.ajax({
+                url: url,
+                async: false,
+                data: data                
+            });
+            
+            return false;
+        });
+		
 		renderArtifactPage(that);
 		
 		return that; 
@@ -57,7 +86,8 @@ fluid = fluid || {};
 			tagsScope: ".fl-tags",
 	        renderScope: ".flc-artifact-renderscope",
 	        cabinetScope: ".cabinet",
-	        relatedArtifacts: ".relatedArtifacts"        
+	        relatedArtifacts: ".relatedArtifacts",
+	        collectArtifact: ".flc-collect-artifact"
 	    },
 	    toRender: null,
 	    description: {

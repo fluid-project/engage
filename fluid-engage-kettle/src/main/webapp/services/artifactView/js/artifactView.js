@@ -123,6 +123,37 @@ fluid.artifactView = fluid.artifactView || {};
         return catString;
     };
     
+    var buildShadowArtifactUrl = function (artifactId, params, config) {
+        return fluid.stringTemplate(config.queryURLTemplate, 
+            {dbName: params.db || "", view: config.views.shadowArtifact,
+        	query: encodeURIComponent("\"Shadow Artifact\" AND \"" + artifactId + "\"")});    	
+    }
+    
+    var getUserCollection = function (artifactId, params, config) {
+    	var shadowArtifactUrl = buildShadowArtifactUrl(artifactId, params, config);
+    	
+    	var shadowArtifact;
+    	
+    	var successCallback = function (data) {
+    		shadowArtifact = data;
+    	}
+    	
+        $.ajax({
+            url: shadowArtifactUrl, 
+            success: successCallback,
+            dataType: "json",
+            async: false
+        });
+        
+        if (shadowArtifact) {
+        	$.each(shadowArtifact.rows[0].inCollections, function (collection) {
+        		if (params.userId === collection.userid) {
+        			return  collection.collectionId;
+        		}
+        	});
+        }
+    }
+    
     fluid.artifactView.initDataFeed = function (config, app) {
         var artifactDataHandler = function (env) {	
             var urlBase = "browse.html?",
@@ -139,7 +170,8 @@ fluid.artifactView = fluid.artifactView || {};
                     model: model,
                     cutpoints: artifactViewCutpoints,
                     tree: buildComponentTree(model),
-                    relatedArtifacts: relatedArtifacts
+                    relatedArtifacts: relatedArtifacts,
+                    userCollection: getUserCollection(model.id, params, config)
                 }
             })];
         };
