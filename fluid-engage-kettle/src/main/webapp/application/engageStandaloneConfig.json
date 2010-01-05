@@ -6,7 +6,7 @@ includesPrefix: "kettle/",
 loaderFunction: "fluid.engage.initEngageApp",
 queryURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
 myCollectionQueryURLTemplate: "http://megastud.asteasolutions.net:11929/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
-myCollectionUpdateURLTemplate: "http://megastud.asteasolutions.net:11929/users/%id",
+myCollectionUpdateURLTemplate: "http://megastud.asteasolutions.net:11929/%dbName/%id",
 initServices: [
     "fluid.artifactView.initMarkupFeed", 
     "fluid.artifactView.initDataFeed", 

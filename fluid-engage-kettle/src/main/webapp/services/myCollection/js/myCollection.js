@@ -27,7 +27,7 @@ fluid.myCollection = fluid.myCollection || {};
     var compileUserDatabaseURL = function (params, config) {
         var query = "";
         if (params.q) {
-            query = encodeURIComponent("type:\"User Collection\" AND ") + params.q;
+            query = encodeURIComponent("User Collection AND " + params.q);
         }
         
         return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 

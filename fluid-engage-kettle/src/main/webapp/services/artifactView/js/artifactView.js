@@ -54,7 +54,7 @@ fluid.artifactView = fluid.artifactView || {};
                 model = model.rows[0].doc;
             }       
         };   
-        
+
         $.ajax({
             url: modelURL, 
             success: successCallback,
@@ -124,20 +124,20 @@ fluid.artifactView = fluid.artifactView || {};
     };
     
     var buildShadowArtifactUrl = function (artifactId, params, config) {
-        return fluid.stringTemplate(config.queryURLTemplate, 
+        return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
             {dbName: params.db || "", view: config.views.shadowArtifact,
-        	query: encodeURIComponent("\"Shadow Artifact\" AND \"" + artifactId + "\"")});    	
+            query: encodeURIComponent("\"Shadow Artifact\" AND \"" + artifactId + "\"")});      
     }
     
     var getUserCollection = function (artifactId, params, config) {
-    	var shadowArtifactUrl = buildShadowArtifactUrl(artifactId, params, config);
-    	
-    	var shadowArtifact;
-    	
-    	var successCallback = function (data) {
-    		shadowArtifact = data;
-    	}
-    	
+        var shadowArtifactUrl = buildShadowArtifactUrl(artifactId, params, config);
+        
+        var shadowArtifact;
+        
+        var successCallback = function (data) {
+            shadowArtifact = JSON.parse(data);
+        }
+        
         $.ajax({
             url: shadowArtifactUrl, 
             success: successCallback,
@@ -145,17 +145,17 @@ fluid.artifactView = fluid.artifactView || {};
             async: false
         });
         
-        if (shadowArtifact) {
-        	$.each(shadowArtifact.rows[0].inCollections, function (collection) {
-        		if (params.userId === collection.userid) {
-        			return  collection.collectionId;
-        		}
-        	});
+        if (shadowArtifact && shadowArtifact.rows) {
+            return fluid.transform(shadowArtifact.rows[0].doc.inCollections, function (collection) {
+                if (params.userid === collection.userid) {
+                    return  collection.collectionId;
+                }
+            });
         }
     }
     
     fluid.artifactView.initDataFeed = function (config, app) {
-        var artifactDataHandler = function (env) {	
+        var artifactDataHandler = function (env) {  
             var urlBase = "browse.html?",
                 params = env.urlState.params,
                 model = fetchAndNormalizeModel(params, config),
@@ -164,15 +164,16 @@ fluid.artifactView = fluid.artifactView || {};
             
             relatedParams.q = buildCategoryQuery(model.category);
             relatedArtifacts = urlBase + $.param(relatedParams); 
-            
+    
             return [200, {"Content-Type": "text/plain"}, JSON.stringify({
                 toRender: {
                     model: model,
                     cutpoints: artifactViewCutpoints,
                     tree: buildComponentTree(model),
-                    relatedArtifacts: relatedArtifacts,
-                    userCollection: getUserCollection(model.id, params, config)
-                }
+                    relatedArtifacts: relatedArtifacts
+                },
+                museum: params.db,
+                userCollection: getUserCollection(model.id, params, config)[0]
             })];
         };
         

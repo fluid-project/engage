@@ -305,7 +305,7 @@ fluid = fluid || {};
         var path = parsePath(location.pathname);
         
         ajaxCall(compileUrl(path), error, "operation=updateOrder&orderData=" +
-        		encodeURIComponent(JSON.stringify(data)));
+                encodeURIComponent(JSON.stringify(data)));
     };            
     
     /**

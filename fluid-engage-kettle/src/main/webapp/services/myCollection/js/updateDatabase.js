@@ -18,32 +18,32 @@ fluid.updateDatabase = fluid.updateDatabase || {};
 
 (function ($) {
     
-    var dbName = "users";
+    var usersDbName = "users";
     var idField = "_id:";
-    var userIdField = "userid:";
     var getOperation = "GET";
     var putOperation = "PUT";
     
-    /**
-     * Returns an URL for querying the museum databases for arfitacts by collection id.
-     *
-     * @param {Object} params, the HTTP parameters passed to this handler.
-     * @param {Object} config, the JSON config file for Engage.
-     */
-    var compileDatabaseUrl = function (params, config) {
+    var compileDatabaseUrl = function (dbName, params, config) {
         return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
                 {dbName: dbName || "", view: config.views.byId,
                     query: idField + params.collectionId});
     };
 
-    /**
-     * Returns the collection URL used for updating the collection order.
-     * 
-     * @param {Object} config, the JSON config file for Engage.
-     */
-    var compileCollectionUrl = function (collectionId, config) {
+    var compileUpdateUrl = function (dbName, id, config) {
         return fluid.stringTemplate(config.myCollectionUpdateURLTemplate, 
-            {id: collectionId});
+            {dbName: dbName, id: id});
+    };
+
+    var compileShadowArtifactUrl = function (params, config) {
+        return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
+                {dbName: params.museum || "", view: config.views.shadowArtifact,
+                    query: encodeURIComponent("Shadow Artifact AND " + params.id)});
+    };
+
+    var compileUserCollectionUrl = function (userid, config) {
+        return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
+            {dbName: "users", view: config.views.byUserCollection,
+            query: encodeURIComponent("User Collection AND " + userid)});       
     };
     
     /**
@@ -87,7 +87,11 @@ fluid.updateDatabase = fluid.updateDatabase || {};
      * @param {Object} config, the JSON config file for Engage. 
      */
     var getCollection = function (params, config) {
-        var databaseUrl = compileDatabaseUrl(params, config);
+        if (!params.collectionId) {
+            return getCollectionByUserId(params, config);
+        }
+        
+        var databaseUrl = compileDatabaseUrl(usersDbName, params, config);
         
         var data;
         
@@ -98,35 +102,106 @@ fluid.updateDatabase = fluid.updateDatabase || {};
         ajaxCall(databaseUrl, success, errorCallback, "", getOperation);        
         
         if (data) {
-        	var parsedData = JSON.parse(data);
-        	if (parsedData.rows) {
-        		// We have made a query by id so there should be only one row
-        		return parsedData.rows[0].doc;
-        	}
-        }	
+            var parsedData = JSON.parse(data);
+            if (parsedData.rows && parsedData.rows[0]) {
+                // We have made a query by id so there should be only one row
+                return parsedData.rows[0].doc;
+            }
+        }
+    };
+    
+    var getCollectionByUserId = function (params, config) {
+        var data;
+        
+        var success = function (returnedData) {
+            data = returnedData;
+        };
+
+        var userCollectionUrl = compileUserCollectionUrl(params.userid, config);
+        
+        ajaxCall(userCollectionUrl, success, errorCallback, "", getOperation);
+        
+        if (data) {
+            var parsedData = JSON.parse(data);
+            if (parsedData.rows && parsedData.rows[0]) {
+                // We have made a query by id so there should be only one row
+                return parsedData.rows[0].doc;
+            }
+        }
+    };
+
+    var getShadowArtifact = function (artifactData, config) {
+        var shadowArtifactUrl = compileShadowArtifactUrl(artifactData, config);
+            
+        var data;
+        
+        var success = function (returnedData) {
+            data = returnedData;
+        };
+        
+        ajaxCall(shadowArtifactUrl, success, errorCallback, "", getOperation);
+        
+        if (data) {
+            var parsedData = JSON.parse(data);
+            if (parsedData.rows) {
+                return parsedData.rows[0].doc;
+            }
+        }
+    };
+    
+    var addToShadow = function (artifactData, userid, collectionId, config) {
+        var shadowArtifact = getShadowArtifact(artifactData, config);
+        
+        shadowArtifact.inCollections.push({"userid": userid,
+                "collectionId": collectionId});
+        
+        var shadowArtifactUrl = compileUpdateUrl(artifactData.museum, shadowArtifact._id, config);
+        
+        ajaxCall(shadowArtifactUrl, function () {}, errorCallback, JSON.stringify(shadowArtifact), putOperation);
+    };
+
+    var removeFromShadow = function (artifactData, collectionId, config) {
+        var shadowArtifact = getShadowArtifact(artifactData, config);
+        
+        shadowArtifact.inCollections = $.makeArray(
+            $(shadowArtifact.inCollections).filter(function () {
+                return this.collectionId != collectionId;
+            })
+        );
+        
+        var shadowArtifactUrl = compileUpdateUrl(artifactData.museum, shadowArtifact._id, config);
+
+        ajaxCall(shadowArtifactUrl, function () {}, errorCallback, JSON.stringify(shadowArtifact), putOperation);
     };
     
     var collect = function (artifactData, config) {
-    	var userCollection = getCollection(artifactData, config);
-    	
-    	userCollection.collection.artefacts.push({"museum": artifactData.museum, "id": artifactData.id});
-    	
-    	var collectionUrl = compileCollectionUrl(userCollection._id, config);
-    	
-    	ajaxCall(collectionUrl, function () {}, errorCallback, JSON.stringify(userCollection), putOperation);
-    }
+        var userCollection = getCollection(artifactData, config);
+        
+        userCollection.collection.artefacts.push({"museum": artifactData.museum, "id": artifactData.id});
+        
+        var collectionUrl = compileUpdateUrl(usersDbName, userCollection._id, config);
+        
+        ajaxCall(collectionUrl, function () {}, errorCallback, JSON.stringify(userCollection), putOperation);
+        
+        addToShadow(artifactData, artifactData.userid, userCollection._id, config);
+    };
 
     var uncollect = function (artifactData, config) {
-    	var userCollection = getCollection(artifactData, config);
-    	
-    	userCollection.collection.artefacts = $.filter(userCollection.collection.artefacts, function (index, artifact) {
-    		return artifact.id != artifactData.id;
-    	});
-    	
-    	var collectionUrl = compileCollectionUrl(userCollection._id, config);
-    	
-    	ajaxCall(collectionUrl, function () {}, errorCallback, JSON.stringify(userCollection), putOperation);
-    }
+        fluid.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        var userCollection = getCollection(artifactData, config);
+        
+        userCollection.collection.artefacts = $.makeArray(
+            $(userCollection.collection.artefacts).filter(function () {
+                return this.id != artifactData.id;
+            })
+        );
+
+        var collectionUrl = compileUpdateUrl(usersDbName, userCollection._id, config);
+        
+        ajaxCall(collectionUrl, function () {}, errorCallback, JSON.stringify(userCollection), putOperation);
+        
+        removeFromShadow(artifactData, userCollection._id, config);
+    };
     
     /**
      * Main method - retrieves an user collection an invokes an update on CouchDB with the new order.
@@ -139,7 +214,7 @@ fluid.updateDatabase = fluid.updateDatabase || {};
         
         userCollection.collection = params.collection;
         
-        var collectionUrl = compileCollectionURL(params.collectionId, config);
+        var collectionUrl = compileUpdateUrl(usersDbName, params.collectionId, config);
         
         ajaxCall(collectionUrl, function () {}, errorCallback, JSON.stringify(userCollection), putOperation);
     };
@@ -152,17 +227,17 @@ fluid.updateDatabase = fluid.updateDatabase || {};
      */
     fluid.updateDatabase.initAcceptor = function (config, app) {
         var dataHandler = function (env) {
-        	var params = env.urlState.params;
-        	if (params.operation === "collect") {
-        		collect(JSON.parse(decodeURIComponent(params.artifactData)), config);
-        	} else if (params.operation === "uncollect"){
-        		uncollect(JSON.parse(decodeURIComponent(params.artifactData)), config);
-        	} else if (params.operation === "updateOrder") {
-        		updateCollection(JSON.parse(decodeURIComponent(params.orderData)), config);
-        	} else {
-        		fluid.log("Bad operation: " + params.operation);
-        		return [500, {"Content-Type": "text/plain"}, "Invalid operation '" + params.operation];
-        	}
+            var params = env.urlState.params;
+            if (params.operation === "collect") {
+                collect(JSON.parse(decodeURIComponent(params.artifactData)), config);
+            } else if (params.operation === "uncollect"){
+                uncollect(JSON.parse(decodeURIComponent(params.artifactData)), config);
+            } else if (params.operation === "updateOrder") {
+                updateCollection(JSON.parse(decodeURIComponent(params.orderData)), config);
+            } else {
+                fluid.log("Bad operation: " + params.operation);
+                return [500, {"Content-Type": "text/plain"}, "Invalid operation '" + params.operation];
+            }
             return [200, {"Content-Type": "text/plain"}, "OK"];
         };
 

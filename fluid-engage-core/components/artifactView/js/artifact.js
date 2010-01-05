@@ -20,12 +20,12 @@ fluid = fluid || {};
      * Renderers out the pieces of the component
      * 
      * @param {Object} that,the component
-     */	
-	var renderArtifactPage = function (that) {		
-		fluid.selfRender(that.locate("renderScope"), 
-				that.options.toRender.tree, 
-				{cutpoints: that.options.toRender.cutpoints, model: that.options.toRender.model, debug: true});
-	};
+     */ 
+    var renderArtifactPage = function (that) {      
+        fluid.selfRender(that.locate("renderScope"), 
+                that.options.toRender.tree, 
+                {cutpoints: that.options.toRender.cutpoints, model: that.options.toRender.model, debug: true});
+    };
 
     /**
      * The component's creator function 
@@ -33,67 +33,41 @@ fluid = fluid || {};
      * @param {Object} container, the container which will hold the component
      * @param {Object} options, options passed into the component
      */
-	fluid.artifact = function (container, options) {
-		var that = fluid.initView("fluid.artifact", container, options);
-		
-		that.description = fluid.initSubcomponent(that, "description", [that.locate("descriptionScope"), 
-				{model: that.options.toRender.model.artifactDescription}]);
-		that.artifactTags = fluid.initSubcomponent(that, "artifactTags", [that.locate("tagsScope"), 
-				{tags: that.options.toRender.model.artifactTags}]);
-		that.artifactCabinet = fluid.initSubcomponent(that, "artifactCabinet", that.locate("cabinetScope"));
-		
-		that.relatedArtifacts = fluid.initSubcomponent(that, "artifactsLink", [that.locate("realtedArtifacts"),
-		        {messageBundle: {linkToMoreMessage: "Go to Related artifacts"}, links: [{category: "", target: that.options.toRender.relatedArtifacts}]}]);
+    fluid.artifact = function (container, options) {
+        var that = fluid.initView("fluid.artifact", container, options);
+        
+        that.description = fluid.initSubcomponent(that, "description", [that.locate("descriptionScope"), 
+                {model: that.options.toRender.model.artifactDescription}]);
+        that.artifactTags = fluid.initSubcomponent(that, "artifactTags", [that.locate("tagsScope"), 
+                {tags: that.options.toRender.model.artifactTags}]);
+        that.artifactCabinet = fluid.initSubcomponent(that, "artifactCabinet", that.locate("cabinetScope"));
+        
+        that.relatedArtifacts = fluid.initSubcomponent(that, "artifactsLink", [that.locate("realtedArtifacts"),
+                {messageBundle: {linkToMoreMessage: "Go to Related artifacts"}, links: [{category: "", target: that.options.toRender.relatedArtifacts}]}]);
 
-		var userCollection = options.toRender.model.userCollection;
-		
-		var operation;
-		
-		if (userCollection ) {
-			that.locate("collectArtifact").html("Uncollect Artifact");
-			operation = "uncollect";
-		} else {
-			that.locate("collectArtifact").html("Collect Artifact");
-			operation = "collect";
-		}
-				
-        that.locate("collectArtifac").click(function () {
-        	var path = location.pathname.substring(0, location.pathname.lastIndexOf("/"));
-        	var url = "http://" + location.host + path + "/updateDatabase.js";
-        	var data = "operation=" + operation + "&artifactData=" + encodeURIComponent(JSON.stringify({
-        		"collectionId": userCollection,
-        		"museum": options.toRender.model.museum,
-        		"id": options.toRender.model.id}));
-        	
-            $.ajax({
-                url: url,
-                async: false,
-                data: data                
-            });
-            
-            return false;
-        });
-		
-		renderArtifactPage(that);
-		
-		return that; 
-	};
-	
-	//start of Fluid defaults
-	fluid.defaults("fluid.artifact", {
-	    selectors: {
-			descriptionScope: ".flc-description",
-			tagsScope: ".fl-tags",
-	        renderScope: ".flc-artifact-renderscope",
-	        cabinetScope: ".cabinet",
-	        relatedArtifacts: ".relatedArtifacts",
-	        collectArtifact: ".flc-collect-artifact"
-	    },
-	    toRender: null,
-	    description: {
+        that.collectionOperations = fluid.initSubcomponent(that, "collectionOperations", [that.locate("collectArtifact"),
+                {userCollection: options.userCollection, museum: options.museum, artifactId: options.toRender.model.id}]);
+        
+        renderArtifactPage(that);
+        
+        return that; 
+    };
+    
+    //start of Fluid defaults
+    fluid.defaults("fluid.artifact", {
+        selectors: {
+            descriptionScope: ".flc-description",
+            tagsScope: ".fl-tags",
+            renderScope: ".flc-artifact-renderscope",
+            cabinetScope: ".cabinet",
+            relatedArtifacts: ".relatedArtifacts",
+            collectArtifact: ".flc-collect-artifact"
+        },
+        toRender: null,
+        description: {
             type: "fluid.description"
         },
-	    artifactCabinet: {
+        artifactCabinet: {
             type: "fluid.cabinet"
         },
         artifactTags: {
@@ -101,7 +75,10 @@ fluid = fluid || {};
         },
         artifactsLink: {
             type: "fluid.navigationList"
+        },
+        collectionOperations : {
+            type: "fluid.collectionOperations"
         }
-	});
-	
+    });
+    
 }(jQuery));

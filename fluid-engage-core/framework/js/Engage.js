@@ -69,7 +69,7 @@ fluid = fluid || {};
                     };
                     return tryFunc(getDescr, value);
                 },
-	            getImageFromMarkup: function (value) {
+                getImageFromMarkup: function (value) {
                     var getImage = function (value) {
                         var img = $(value).each(function (index) {
                             if ($(value).eq(index).is("img")) {
@@ -97,7 +97,7 @@ fluid = fluid || {};
             }
         },
         mccord: {
-	        dataSpec: {
+            dataSpec: {
                 "category": {
                     "path": "artefacts.artefact.links.type.category",
                     "func": "getArtifactCategory"
@@ -135,7 +135,7 @@ fluid = fluid || {};
                     "func": "getArtifactDescription"
                 },
                 "id": "_id"
-	        },
+            },
             mappers: {
                 getArtifactDescription: function (value) {
                     var getDescription = function (value) {
@@ -153,16 +153,16 @@ fluid = fluid || {};
                     };
                     return tryFunc(getCategory, value);
                 },
-	            getArtifactTags: function (value) {
-					var getTags = function (value) {
-						if (!isString(value)) {
+                getArtifactTags: function (value) {
+                    var getTags = function (value) {
+                        if (!isString(value)) {
                             return fluid.transform($.makeArray(value), function (val) {
-								return val.label;
-							});
-						}
-					};
-					return tryFunc(getTags, value);
-				},
+                                return val.label;
+                            });
+                        }
+                    };
+                    return tryFunc(getTags, value);
+                },
                 getTitleFromObject: function (value) {
                     var getTitle = function (value) {
                         if (isString(value)) {
@@ -171,7 +171,7 @@ fluid = fluid || {};
                         else {
                             return $.makeArray(value)[0].nodetext || noTitle;
                         }
-                    };				
+                    };              
                     return tryFunc(getTitle, value, noTitle);
                 },
                 getThumbImageFromObjectArray: function (value) {
@@ -256,9 +256,7 @@ fluid = fluid || {};
                 }
             }
         }
-        // Add the museum to the data so that artifacts can be collected with background information
-        normalizedModel["museum"] = dbName;
-        
+
         return normalizedModel;
     };
     
