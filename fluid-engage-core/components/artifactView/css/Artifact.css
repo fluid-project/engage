@@ -7,7 +7,10 @@
     padding: 1px 0;
 }
 
-.flc-collect-artifact {
+.flc-collect-link {
     cursor: pointer;
 }
 
+.flc-collect-status {
+    display: none;
+}

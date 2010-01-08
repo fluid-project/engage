@@ -13,43 +13,61 @@
 fluid = fluid || {};
 
 (function ($) {
+	
+	var toggleCollectLink = function(that) {
+		if (that.options.operation === "collect") {
+			fluid.jById("artifactCollectLink").text("Uncollect Artifact");
+    		that.options.operation = "uncollect";
+    	} else {
+    		fluid.jById("artifactCollectLink").text("Collect Artifact");
+    		that.options.operation = "collect";
+    	}
+	};
+	
     fluid.collectionOperations = function (container, options) {
         var that = fluid.initView("fluid.collectionOperations", container, options);
         
-        
         var userCollection = options.userCollection;
-        var path = location.pathname.substring(0, location.pathname.lastIndexOf("/"));      
         var operation;
         
-        if (userCollection === 0 || userCollection) {
-            container.html("Uncollect Artifact");
-            container[0].href = "http://" + location.host + path + "/browse.html?q=Merchandising&db=" + options.museum;
-            operation = "uncollect";
-        } else {
-            container.html("Collect Artifact");
-            container[0].href = "http://" + location.host + path + "/myCollection.html?db=users&q=" + that.options.userid;
-            operation = "collect";
-        }
+        that.collectLink = that.locate("collect");
         
-        container.click(function () {
+        if (userCollection === 0 || userCollection) {
+        	that.collectLink.text("Uncollect Artifact");
+            that.options.operation = "uncollect";
+        } else {
+        	that.collectLink.text("Collect Artifact");
+        	that.options.operation = "collect";
+        }
+
+        that.collectHandler = function() {
+            var path = location.pathname.substring(0, location.pathname.lastIndexOf("/"));
             var url = "http://" + location.host + path + "/updateDatabase.js";
-            var data = "operation=" + operation + "&artifactData=" + encodeURIComponent(JSON.stringify({
-                collectionId: userCollection,
-                museum: options.museum,
-                id: options.artifactId,
-                userid: that.options.userid}));
+            var data = "operation=" + that.options.operation + "&artifactData=" +
+            	encodeURIComponent(JSON.stringify({
+            		collectionId: userCollection,
+            		museum: options.museum,
+            		id: options.artifactId,
+            		userid: that.options.userid
+            	}));
             
             $.ajax({
                 url: url,
                 async: false,
                 data: data
             });
-            
-            return true;
-        });
+
+            toggleCollectLink(that);
+    	};
+    	
+        return that;
     }
     
     fluid.defaults("fluid.collectionOperations", {
-        userid: "3" 
+        userid: "3",
+        operation: null,
+        selectors : {
+    		collect: ".flc-collect-link"
+    	}
     });
 })(jQuery);

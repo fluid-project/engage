@@ -21,10 +21,26 @@ fluid = fluid || {};
      * 
      * @param {Object} that,the component
      */ 
-    var renderArtifactPage = function (that) {      
+    var renderArtifactPage = function (that) {
         fluid.selfRender(that.locate("renderScope"), 
                 that.options.toRender.tree, 
                 {cutpoints: that.options.toRender.cutpoints, model: that.options.toRender.model, debug: true});
+    };
+    
+    var addCollectArtifactDecorator = function (that, options) {
+    	var i = 0;
+    	for (; i < that.options.toRender.tree.children.length; i++) {
+    		if (that.options.toRender.tree.children[i].ID === "artifactCollectLink") {
+    			break;
+    		}
+    	}
+    	
+    	that.options.toRender.tree.children[i].decorators = 
+    		[{
+    			type: "jQuery",
+    			func: "click",
+    			args: that.collectionOperations.collectHandler
+			}]
     };
 
     /**
@@ -34,8 +50,9 @@ fluid = fluid || {};
      * @param {Object} options, options passed into the component
      */
     fluid.artifact = function (container, options) {
+    	
         var that = fluid.initView("fluid.artifact", container, options);
-        
+
         that.description = fluid.initSubcomponent(that, "description", [that.locate("descriptionScope"), 
                 {model: that.options.toRender.model.artifactDescription}]);
         that.artifactTags = fluid.initSubcomponent(that, "artifactTags", [that.locate("tagsScope"), 
@@ -47,9 +64,12 @@ fluid = fluid || {};
 
         that.collectionOperations = fluid.initSubcomponent(that, "collectionOperations", [that.locate("collectArtifact"),
                 {userCollection: options.userCollection, museum: options.museum, artifactId: options.toRender.model.id}]);
-        
+        // Sveto: As the collect link is in the render scope of this component, we need to add the
+        // event handler as a decorator, so it is attached after rendering.
+        addCollectArtifactDecorator(that, options);
+
         renderArtifactPage(that);
-        
+
         return that; 
     };
     

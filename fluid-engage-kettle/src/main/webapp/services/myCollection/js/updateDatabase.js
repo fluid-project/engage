@@ -187,7 +187,6 @@ fluid.updateDatabase = fluid.updateDatabase || {};
     };
 
     var uncollect = function (artifactData, config) {
-        fluid.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         var userCollection = getCollection(artifactData, config);
         
         userCollection.collection.artefacts = $.makeArray(

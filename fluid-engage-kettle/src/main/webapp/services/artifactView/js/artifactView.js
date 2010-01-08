@@ -42,6 +42,10 @@ fluid.artifactView = fluid.artifactView || {};
         {
             id: "artifactAccessionNumber",
             selector: ".artifact-accession-number"
+        },
+        {
+        	id: "artifactCollectLink",
+        	selector: ".flc-collect-link"
         }
     ];
     
@@ -95,6 +99,9 @@ fluid.artifactView = fluid.artifactView || {};
             {
                 ID: "artifactAccessionNumber",
                 valuebinding: "artifactAccessionNumber"
+            },
+            {
+            	ID: "artifactCollectLink"
             }
         ]};
         if (model.artifactImage) {
