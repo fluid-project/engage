@@ -44,8 +44,8 @@ fluid.artifactView = fluid.artifactView || {};
             selector: ".artifact-accession-number"
         },
         {
-        	id: "artifactCollectLink",
-        	selector: ".flc-collect-link"
+            id: "artifactCollectLink",
+            selector: ".flc-collect-link"
         }
     ];
     
@@ -101,7 +101,7 @@ fluid.artifactView = fluid.artifactView || {};
                 valuebinding: "artifactAccessionNumber"
             },
             {
-            	ID: "artifactCollectLink"
+                ID: "artifactCollectLink"
             }
         ]};
         if (model.artifactImage) {
@@ -134,7 +134,7 @@ fluid.artifactView = fluid.artifactView || {};
         return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
             {dbName: params.db || "", view: config.views.shadowArtifact,
             query: encodeURIComponent("\"Shadow Artifact\" AND \"" + artifactId + "\"")});      
-    }
+    };
     
     var getUserCollection = function (artifactId, params, config) {
         var shadowArtifactUrl = buildShadowArtifactUrl(artifactId, params, config);
@@ -143,7 +143,7 @@ fluid.artifactView = fluid.artifactView || {};
         
         var successCallback = function (data) {
             shadowArtifact = JSON.parse(data);
-        }
+        };
         
         $.ajax({
             url: shadowArtifactUrl, 
@@ -152,14 +152,14 @@ fluid.artifactView = fluid.artifactView || {};
             async: false
         });
         
-        if (shadowArtifact && shadowArtifact.rows) {
+        if (shadowArtifact && shadowArtifact.rows.length > 0) {
             return fluid.transform(shadowArtifact.rows[0].doc.inCollections, function (collection) {
                 if (params.userid === collection.userid) {
                     return  collection.collectionId;
                 }
-            });
+            })[0];
         }
-    }
+    };
     
     fluid.artifactView.initDataFeed = function (config, app) {
         var artifactDataHandler = function (env) {  
@@ -180,7 +180,7 @@ fluid.artifactView = fluid.artifactView || {};
                     relatedArtifacts: relatedArtifacts
                 },
                 museum: params.db,
-                userCollection: getUserCollection(model.id, params, config)[0]
+                userCollection: getUserCollection(model.id, params, config)
             })];
         };
         

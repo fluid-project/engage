@@ -28,19 +28,19 @@ fluid = fluid || {};
     };
     
     var addCollectArtifactDecorator = function (that, options) {
-    	var i = 0;
-    	for (; i < that.options.toRender.tree.children.length; i++) {
-    		if (that.options.toRender.tree.children[i].ID === "artifactCollectLink") {
-    			break;
-    		}
-    	}
-    	
-    	that.options.toRender.tree.children[i].decorators = 
-    		[{
-    			type: "jQuery",
-    			func: "click",
-    			args: that.collectionOperations.collectHandler
-			}]
+        var i = 0;
+        for (; i < that.options.toRender.tree.children.length; i++) {
+            if (that.options.toRender.tree.children[i].ID === "artifactCollectLink") {
+                break;
+            }
+        }
+        
+        that.options.toRender.tree.children[i].decorators = 
+            [{
+                type: "jQuery",
+                func: "click",
+                args: that.collectionOperations.collectHandler
+            }];
     };
 
     /**
@@ -50,7 +50,7 @@ fluid = fluid || {};
      * @param {Object} options, options passed into the component
      */
     fluid.artifact = function (container, options) {
-    	
+        
         var that = fluid.initView("fluid.artifact", container, options);
 
         that.description = fluid.initSubcomponent(that, "description", [that.locate("descriptionScope"), 

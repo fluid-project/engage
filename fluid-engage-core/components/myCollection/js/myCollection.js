@@ -9,7 +9,7 @@
  https://source.fluidproject.org/svn/LICENSE.txt
 
  */
-/*global jQuery, fluid*/
+/*global jQuery, fluid, window*/
 
 fluid = fluid || {};
 
@@ -215,6 +215,12 @@ fluid = fluid || {};
         that.locate("toggler").click(that.toggleView);
     };
     
+    var addBackEvent = function (that) {
+        that.locate("backButton").click(function () {
+            window.history.back();
+        });
+    };
+    
     /**
      * Reorders the model by manipulating the array.
      * 
@@ -323,6 +329,7 @@ fluid = fluid || {};
         addGroupStyle(that);
 
         addClickEvent(that);
+        addBackEvent(that);
 
         bindEvents(that);
         that.events.afterRender.fire(that);
@@ -431,6 +438,7 @@ fluid = fluid || {};
                 titleText: ".flc-myCollection-titleText",
                 periodText: ".flc-myCollection-period",         
                 toggler: ".flc-myCollection-toggler",
+                backButton: ".flc-myCollection-back",
                 artifactsNumber: ".flc-myCollection-artifactsNumber",
                 artifactsPlural: ".flc-myCollection-artifactsPlural"
             },

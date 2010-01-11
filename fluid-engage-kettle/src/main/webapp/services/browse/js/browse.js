@@ -47,7 +47,7 @@ fluid.browseDemo = fluid.browseDemo || {};
 	            target: compileTargetURL(baseArtifactURL, {
                     q: artifact.linkTarget,
                     db: dbName,
-                    // XXX Svetoslav - add a user id to the browse link, for now hardcode it
+                    // XXX Sveto - add a user id to the browse link, for now hardcode it
                     userid: "3"
                 }),
 	            image: artifact.linkImage,

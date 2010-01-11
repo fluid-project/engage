@@ -41,6 +41,10 @@
 	cursor		: pointer;
 }
 
+.flc-myCollection-back {
+    cursor      : pointer;
+}
+
 .flc-myCollection-items {
 	background  : #d8d8d8
 }

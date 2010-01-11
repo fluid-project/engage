@@ -153,7 +153,8 @@ fluid.myCollection = fluid.myCollection || {};
                 museum: dbName,
                 target: compileTargetURL(baseArtifactURL, {
                     q: artifact.linkTarget,
-                    db: dbName
+                    db: dbName,
+                    userid: "3" // TODO: get real user id
                 }),
                 image: artifact.linkImage,
                 title: artifact.linkTitle,
