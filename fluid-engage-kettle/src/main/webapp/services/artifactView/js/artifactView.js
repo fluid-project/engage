@@ -130,35 +130,29 @@ fluid.artifactView = fluid.artifactView || {};
         return catString;
     };
     
-    var buildShadowArtifactUrl = function (artifactId, params, config) {
-        return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
-            {dbName: params.db || "", view: config.views.shadowArtifact,
-            query: encodeURIComponent("\"Shadow Artifact\" AND \"" + artifactId + "\"")});      
-    };
-    
-    var getUserCollection = function (artifactId, params, config) {
-        var shadowArtifactUrl = buildShadowArtifactUrl(artifactId, params, config);
+    var checkCollectStatus = function (config, params, artifactId) {
+        if (!params.uuid) {
+            return false;
+        }
         
-        var shadowArtifact;
+        var url = fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
+                {dbName: "users", view: config.views.byUserArtifact,
+                    query: encodeURIComponent("user AND " + params.uuid + " AND " + artifactId)});
+        
+        var collected = false;
         
         var successCallback = function (data) {
-            shadowArtifact = JSON.parse(data);
+            collected = JSON.parse(data).total_rows > 0;
         };
         
-        $.ajax({
-            url: shadowArtifactUrl, 
-            success: successCallback,
-            dataType: "json",
-            async: false
-        });
+        var errorCallback = function (XMLHttpRequest, textStatus, errorThrown) {
+            fluid.log("Status: " + textStatus);
+            fluid.log("Error: " + errorThrown);
+        };
         
-        if (shadowArtifact && shadowArtifact.rows.length > 0) {
-            return fluid.transform(shadowArtifact.rows[0].doc.inCollections, function (collection) {
-                if (params.userid === collection.userid) {
-                    return  collection.collectionId;
-                }
-            })[0];
-        }
+        $.ajax({url: url, async: false, success: successCallback, error: errorCallback});
+        
+        return collected;
     };
     
     fluid.artifactView.initDataFeed = function (config, app) {
@@ -180,7 +174,7 @@ fluid.artifactView = fluid.artifactView || {};
                     relatedArtifacts: relatedArtifacts
                 },
                 museum: params.db,
-                userCollection: getUserCollection(model.id, params, config)
+                artifactCollected: checkCollectStatus(config, params, model.id)
             })];
         };
         

@@ -17,14 +17,15 @@ initServices: [
     "fluid.kettleDemo.initJSGIHandlerDemo",
     "fluid.myCollection.initMarkupFeed",
     "fluid.myCollection.initDataFeed",
-    "fluid.updateDatabase.initAcceptor"
+    "fluid.updateDatabase.initAcceptor",
+    "fluid.userService.initAcceptor"
 ],
 views: {
     all: "all",
     byCollectionCategory: "by_collection_category",
     byUserCollection: "by_user_collection",
     byId: "by_id",
-    shadowArtifact: "shadow_artifact"
+    byUserArtifact: "by_user_artifact"
 },
 mount: {
     infusion: {

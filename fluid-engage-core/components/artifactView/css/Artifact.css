@@ -11,6 +11,12 @@
     cursor: pointer;
 }
 
-.flc-collect-status {
+.flc-status-div {
     height: 20px;
 }
+
+.fl-collection-link {
+    cursor: pointer;
+}
+
+

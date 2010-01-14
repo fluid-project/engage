@@ -122,7 +122,7 @@ fluid = fluid || {};
         if (that.templates) {
             var resources = {
                 myCollection: {
-                    href: "myCollection.html", // find a way to avoid hardcoding this
+                    href: "myCollection.html",
                     cutpoints: selectorMap
                 }
             };
@@ -291,26 +291,25 @@ fluid = fluid || {};
      * Invokes an update on CouchDB with the new order of artifacts in the collection.
      * 
      * @param {Object} model, the underlying data model.
-     * @param collectionId, the id of the user collection.
+     * @param uuid, the id of the user and collection.
      */
-    var updateOrder = function (model, collectionId) {
+    var updateOrder = function (model, uuid) {
         var error = function (XMLHttpRequest, textStatus, errorThrown) {
             fluid.log("Status: " + textStatus);
             fluid.log("Error: " + errorThrown);
         };
         
         var data = {};
-        data.collectionId = collectionId;
         data.collection = {};
-        data.collection.artefacts = [];
+        data.collection.artifacts = [];
         
         fluid.transform(model, function (object) {
-            data.collection.artefacts.push({museum: object.museum, id: object.artifactId});
+            data.collection.artifacts.push({museum: object.museum, id: object.artifactId});
         });
 
         var path = parsePath(location.pathname);
         
-        ajaxCall(compileUrl(path), error, "operation=updateOrder&orderData=" +
+        ajaxCall(compileUrl(path), error, "operation=updateOrder&uuid=" + uuid + "&orderData=" +
                 encodeURIComponent(JSON.stringify(data)));
     };            
     
@@ -351,6 +350,10 @@ fluid = fluid || {};
     fluid.initMyCollection = function (container, options) {
         var that = fluid.initView("fluid.initMyCollection", container, options);
 
+        that.user = fluid.initSubcomponent(that, "user", [container, {}]);
+
+        that.uuid = that.user.getUuid();
+        
         that.toggleView = function () {
             addLoadStyling(that);
 
@@ -377,7 +380,7 @@ fluid = fluid || {};
             
             that.model = reorderModel(that.model, index, oldIndex);
             
-            updateOrder(that.model, that.options.data.collectionId);
+            updateOrder(that.model, that.uuid);
         };
         
         that.onBeginMoveListener = function (item) {
@@ -404,6 +407,9 @@ fluid = fluid || {};
     
     fluid.defaults("fluid.initMyCollection",
         {
+            user: {
+                type: "fluid.user"
+            },
             imageReorderer: {
                 type: "fluid.reorderImages",
                 options: {
@@ -416,10 +422,8 @@ fluid = fluid || {};
                         defaultStyle: null,
                         selected: null,
                         dragging: null,
-                        mouseDrag: null,
-                        hover: null,
-                        dropMarker: null,
-                        avatar: null
+                        mouseDrag: "fl-invisible",
+                        dropMarker: "fl-myCollection-dropMarker",
                     },                            
                     listeners: {
                         afterMove: null,

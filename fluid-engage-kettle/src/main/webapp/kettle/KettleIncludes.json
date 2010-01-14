@@ -20,5 +20,6 @@
    "../services/kettleDemo/js/kettleCherryDemo.js",
    "../services/kettleDemo/js/kettleJSGIDemo.js",
    "../services/myCollection/js/myCollection.js",
-   "../services/myCollection/js/updateDatabase.js"
+   "../services/myCollection/js/updateDatabase.js",
+   "../services/user/js/userService.js"
   ]

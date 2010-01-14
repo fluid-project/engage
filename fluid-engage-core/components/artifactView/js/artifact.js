@@ -63,7 +63,7 @@ fluid = fluid || {};
                 {messageBundle: {linkToMoreMessage: "Go to Related artifacts"}, links: [{category: "", target: that.options.toRender.relatedArtifacts}]}]);
 
         that.collectionOperations = fluid.initSubcomponent(that, "collectionOperations", [that.locate("collectArtifact"),
-                {userCollection: options.userCollection, museum: options.museum, artifactId: options.toRender.model.id}]);
+                {artifactCollected: options.artifactCollected, museum: options.museum, artifactId: options.toRender.model.id}]);
         // Sveto: As the collect link is in the render scope of this component, we need to add the
         // event handler as a decorator, so it is attached after rendering.
         addCollectArtifactDecorator(that, options);

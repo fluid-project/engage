@@ -26,12 +26,12 @@ fluid.myCollection = fluid.myCollection || {};
      */
     var compileUserDatabaseURL = function (params, config) {
         var query = "";
-        if (params.q) {
-            query = encodeURIComponent("User Collection AND " + params.q);
+        if (params.uuid) {
+            query = encodeURIComponent("user AND " + params.uuid);
         }
         
         return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
-            {dbName: params.db || "", view: config.views.byUserCollection,
+            {dbName: "users" || "", view: config.views.byUserCollection,
                 query: query});
     };
     
@@ -58,12 +58,12 @@ fluid.myCollection = fluid.myCollection || {};
         
         fluid.transform(rows, function (row) {
             var collection = row.doc.collection;
-            fluid.transform(collection.artefacts, function (artefact) {
-                if (!result[artefact.museum]) {
-                    result.push(artefact.museum);
-                    result[artefact.museum] = [];
+            fluid.transform(collection.artifacts, function (artifact) {
+                if (!result[artifact.museum]) {
+                    result.push(artifact.museum);
+                    result[artifact.museum] = [];
                 }
-                result[artefact.museum].push(artefact.id);
+                result[artifact.museum].push(artifact.id);
             });
         });
         
@@ -120,8 +120,8 @@ fluid.myCollection = fluid.myCollection || {};
         
         fluid.transform(rows, function (row) {
             var collection = row.doc.collection;
-            return fluid.transform(collection.artefacts, function (artefact) {
-                result.push(artefact.id);
+            return fluid.transform(collection.artifacts, function (artifact) {
+                result.push(artifact.id);
             });
         });
         
@@ -144,7 +144,7 @@ fluid.myCollection = fluid.myCollection || {};
      * @param {Object} data, the normalized artifact data.
      * @param dbName, the name of the museum database that contains the set of artifacts.
      */
-    var compileData = function (data, dbName) {
+    var compileData = function (data, dbName, uuid) {
         var baseArtifactURL = "view.html";
         
         return fluid.transform(data, function (artifact) {
@@ -154,7 +154,7 @@ fluid.myCollection = fluid.myCollection || {};
                 target: compileTargetURL(baseArtifactURL, {
                     q: artifact.linkTarget,
                     db: dbName,
-                    userid: "3" // TODO: get real user id
+                    uuid: uuid
                 }),
                 image: artifact.linkImage,
                 title: artifact.linkTitle,
@@ -227,9 +227,10 @@ fluid.myCollection = fluid.myCollection || {};
      */
     var assembleData = function (params, config) {
         var url = compileUserDatabaseURL(params, config);
+        
         var rawData = ajaxCall(url, errorCallback);
 
-        var urls = compileDataURLs(config, rawData);
+        var urls = compileDataURLs(config, rawData, params.uuid);
         var collectionId = getCollectionId(rawData);
         var originalArtifactIds = getArtifactIds(rawData);
 
@@ -237,7 +238,7 @@ fluid.myCollection = fluid.myCollection || {};
             var rawArtifactData = ajaxCall(artifactURL.url, errorCallback);
             var artifactData = getArtifactData(rawArtifactData, artifactURL.database);
 
-            return compileData(artifactData, artifactURL.database);            
+            return compileData(artifactData, artifactURL.database, params.uuid);            
         });
 
         var model = {

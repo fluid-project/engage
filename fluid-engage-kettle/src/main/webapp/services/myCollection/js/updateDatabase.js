@@ -18,35 +18,21 @@ fluid.updateDatabase = fluid.updateDatabase || {};
 
 (function ($) {
     
-    var usersDbName = "users";
-    var idField = "_id:";
     var getOperation = "GET";
     var putOperation = "PUT";
     var postOperation = "POST";
     
-    var compileDatabaseUrl = function (dbName, params, config) {
+    var compileDatabaseUrl = function (params, config) {
         return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
-                {dbName: dbName || "", view: config.views.byId,
-                    query: idField + params.collectionId});
+                {dbName: "users", view: config.views.byId,
+                    query: "_id:" + params.uuid});
     };
 
-    var compileUpdateUrl = function (dbName, id, config) {
+    var compileUpdateUrl = function (id, config) {
         return fluid.stringTemplate(config.myCollectionUpdateURLTemplate, 
-            {dbName: dbName, id: id ? id : ""});
+            {dbName: "users", id: id ? id : ""});
     };
 
-    var compileShadowArtifactUrl = function (params, config) {
-        return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
-                {dbName: params.museum || "", view: config.views.shadowArtifact,
-                    query: encodeURIComponent("Shadow Artifact AND " + params.id)});
-    };
-
-    var compileUserCollectionUrl = function (userid, config) {
-        return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
-            {dbName: "users", view: config.views.byUserCollection,
-            query: encodeURIComponent("User Collection AND " + userid)});       
-    };
-    
     /**
      * Error callback function - logs errors.
      * 
@@ -81,26 +67,6 @@ fluid.updateDatabase = fluid.updateDatabase || {};
         });
     };
 
-    var getCollectionByUserId = function (params, config) {
-        var data;
-        
-        var success = function (returnedData) {
-            data = returnedData;
-        };
-
-        var userCollectionUrl = compileUserCollectionUrl(params.userid, config);
-        
-        ajaxCall(userCollectionUrl, success, errorCallback, "", getOperation);
-        
-        if (data) {
-            var parsedData = JSON.parse(data);
-            if (parsedData.rows && parsedData.rows[0]) {
-                // We have made a query by id so there should be only one row
-                return parsedData.rows[0].doc;
-            }
-        }
-    };
-    
     /**
      * Returns the JSON object returned by CouchDB for a user collection.
      * 
@@ -108,11 +74,7 @@ fluid.updateDatabase = fluid.updateDatabase || {};
      * @param {Object} config, the JSON config file for Engage. 
      */
     var getCollection = function (params, config) {
-        if (!params.collectionId) {
-            return getCollectionByUserId(params, config);
-        }
-        
-        var databaseUrl = compileDatabaseUrl(usersDbName, params, config);
+        var databaseUrl = compileDatabaseUrl(params, config);
         
         var data;
         
@@ -131,87 +93,32 @@ fluid.updateDatabase = fluid.updateDatabase || {};
         }
     };
     
-    var getShadowArtifact = function (artifactData, config) {
-        var shadowArtifactUrl = compileShadowArtifactUrl(artifactData, config);
-            
-        var data;
-        
-        var success = function (returnedData) {
-            data = returnedData;
-        };
-        
-        ajaxCall(shadowArtifactUrl, success, errorCallback, "", getOperation);
-        
-        if (data) {
-            var parsedData = JSON.parse(data);
-            if (parsedData.rows.length > 0) {
-                return parsedData.rows[0].doc;
-            }
-        }
-    };
-    
-    var addToShadow = function (artifactData, userid, collectionId, config) {
-        var shadowArtifact = getShadowArtifact(artifactData, config);
-
-        if (!shadowArtifact) {
-            shadowArtifact = {};
-            shadowArtifact.artifactId = artifactData.id;
-            shadowArtifact.inCollections = [];
-            shadowArtifact.type = "Shadow Artifact";
-        }
-        
-        shadowArtifact.inCollections.push({"userid": userid,
-                "collectionId": collectionId});
-        
-        var shadowArtifactUrl = compileUpdateUrl(artifactData.museum, shadowArtifact._id, config);
-        
-        ajaxCall(shadowArtifactUrl, function () {}, errorCallback, JSON.stringify(shadowArtifact), shadowArtifact._id ? putOperation : postOperation);
-    };
-
-    var removeFromShadow = function (artifactData, collectionId, config) {
-        var shadowArtifact = getShadowArtifact(artifactData, config);
-        
-        shadowArtifact.inCollections = $.makeArray(
-            $(shadowArtifact.inCollections).filter(function () {
-                return this.collectionId !== collectionId;
-            })
-        );
-        
-        var shadowArtifactUrl = compileUpdateUrl(artifactData.museum, shadowArtifact._id, config);
-
-        ajaxCall(shadowArtifactUrl, function () {}, errorCallback, JSON.stringify(shadowArtifact), putOperation);
-    };
-    
     var collect = function (artifactData, config) {
         var userCollection = getCollection(artifactData, config);
         
-        userCollection.collection.artefacts.push({"museum": artifactData.museum, "id": artifactData.id});
+        userCollection.collection.artifacts.push({"museum": artifactData.museum, "id": artifactData.id});
         
-        var collectionUrl = compileUpdateUrl(usersDbName, userCollection._id, config);
+        var collectionUrl = compileUpdateUrl(userCollection._id, config);
         
         ajaxCall(collectionUrl, function () {}, errorCallback, JSON.stringify(userCollection), putOperation);
-        
-        addToShadow(artifactData, artifactData.userid, userCollection._id, config);
     };
 
     var uncollect = function (artifactData, config) {
         var userCollection = getCollection(artifactData, config);
         
-        userCollection.collection.artefacts = $.makeArray(
-            $(userCollection.collection.artefacts).filter(function () {
+        userCollection.collection.artifacts = $.makeArray(
+            $(userCollection.collection.artifacts).filter(function () {
                 return this.id !== artifactData.id;
             })
         );
 
-        var collectionUrl = compileUpdateUrl(usersDbName, userCollection._id, config);
+        var collectionUrl = compileUpdateUrl(userCollection._id, config);
         
         ajaxCall(collectionUrl, function () {}, errorCallback, JSON.stringify(userCollection), putOperation);
-        
-        removeFromShadow(artifactData, userCollection._id, config);
     };
     
     /**
-     * Main method - retrieves an user collection an invokes an update on CouchDB with the new order.
+     * Retrieves an user collection an invokes an update on CouchDB with the new order.
      * 
      * @param {Object} params, the HTTP parameters passed to this handler.
      * @param {Object} config, the JSON config file for Engage.  
@@ -219,9 +126,11 @@ fluid.updateDatabase = fluid.updateDatabase || {};
     var updateCollection = function (params, config) {
         var userCollection = getCollection(params, config);
         
-        userCollection.collection = params.collection;
+        var parsedParams = JSON.parse(decodeURIComponent(params.orderData));l
         
-        var collectionUrl = compileUpdateUrl(usersDbName, params.collectionId, config);
+        userCollection.collection = parsedParams.collection;
+        
+        var collectionUrl = compileUpdateUrl(userCollection._id, config);
         
         ajaxCall(collectionUrl, function () {}, errorCallback, JSON.stringify(userCollection), putOperation);
     };
@@ -240,7 +149,7 @@ fluid.updateDatabase = fluid.updateDatabase || {};
             } else if (params.operation === "uncollect") {
                 uncollect(JSON.parse(decodeURIComponent(params.artifactData)), config);
             } else if (params.operation === "updateOrder") {
-                updateCollection(JSON.parse(decodeURIComponent(params.orderData)), config);
+                updateCollection(params, config);
             } else {
                 fluid.log("Bad operation: " + params.operation);
                 return [500, {"Content-Type": "text/plain"}, "Invalid operation '" + params.operation];

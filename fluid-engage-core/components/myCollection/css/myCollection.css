@@ -1,13 +1,9 @@
 .flc-myCollection-image {
     background  : #eee;
-    border  	: 1px solid #CCC;
-    margin      : 5px;
-/*    padding     : 15px;*/
-    text-align  : center;
-    display     : inline;
-    float       : left; 
+    margin-left : auto;
+    margin-right: auto;
     width		: 96px;
-    height		: 96px;
+    height      : 96px;
 }
 
 
@@ -34,7 +30,7 @@
 }
 
 .fl-myCollection-loadMessage {
-    display     : none
+    display     : none;
 }
 
 .flc-myCollection-toggler {
@@ -46,15 +42,33 @@
 }
 
 .flc-myCollection-items {
-	background  : #d8d8d8
+	outline     : none;
+    padding     : 15px;
 }
 
-.flc-myCollection-items {
-	outline     : none
-}
 
-/*
 .flc-myCollection-items .flc-myCollection-image {
-	outline     :2px solid red
+	outline     : 2px solid red;
 }
-*/
+
+.fl-invisible {
+    display     : none !important;
+}
+
+
+.fl-myCollection-dropMarker {    
+  height: 96px !important;
+  width: 96px !important;
+  margin: 0 -2px;
+  padding: 0 2px;
+  background-color: red !important;
+  float: left;
+}
+
+.flc-myCollection-titleText {
+  padding-left: 40px;
+}
+
+.flc-myCollection-period {
+  padding-left: 40px;
+}
