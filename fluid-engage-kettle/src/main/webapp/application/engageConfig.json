@@ -5,6 +5,8 @@ includes: "kettle/KettleIncludes.json",
 includesPrefix: "kettle/",
 loaderFunction: "fluid.engage.initEngageApp",
 queryURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
+viewURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/%view",
+viewURLTemplateWithKey: "http://titan.atrc.utoronto.ca:5984/%dbName/%view?key=%key",
 myCollectionQueryURLTemplate: "http://unistud.asteasolutions.net:11929/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
 myCollectionUpdateURLTemplate: "http://unistud.asteasolutions.net:11929/%dbName/%id",
 initServices: [
@@ -15,6 +17,14 @@ initServices: [
     "fluid.engageDemo.initEngageDemo",
     "fluid.kettleDemo.initCherryDemo",
     "fluid.kettleDemo.initJSGIHandlerDemo",
+    "fluid.exhibitionService.initExhibitionsService",
+    "fluid.exhibitionService.initExhibitionsDataFeed",
+    "fluid.exhibitionService.initExhibitionViewService",
+    "fluid.exhibitionService.initExhibitionViewDataFeed",
+    "fluid.catalogueService.initCatalogueService",
+    "fluid.catalogueService.initCatalogueDataFeed",
+    "fluid.catalogueService.initBrowseCatalogueService",
+    "fluid.catalogueService.initBrowseCatalogueDataFeed"       
     "fluid.myCollection.initMarkupFeed",
     "fluid.myCollection.initDataFeed",
     "fluid.updateDatabase.initAcceptor",
@@ -23,6 +33,10 @@ initServices: [
 views: {
     all: "all",
     byCollectionCategory: "by_collection_category",
+    exhibitionByTitle: "_design/exhibitions/_view/view",
+    catalogueByTitle: "_design/catalogue/_view/view",
+    catalogueArtifacts: "_design/catalogueArtefacts/_view/view",
+    exhibitions: "_design/exhibitions/_view/browse"    
     byUserCollection: "by_user_collection",
     byId: "by_id",
     byUserArtifact: "by_user_artifact"
@@ -46,6 +60,6 @@ mount: {
         source: "services/kettleDemo/",
         rewriteSource: "../../services/kettleDemo/"
       }
-    }
+    },
 debugMode: true
 }

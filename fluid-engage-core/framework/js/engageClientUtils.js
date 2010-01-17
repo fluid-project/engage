@@ -67,14 +67,20 @@ https://source.fluidproject.org/svn/LICENSE.txt
      * @param {Object} that, the component
      */
     function getSetupData(that) {
-        that.dataInfo = {};
+        that.model = {
+            pageSize: that.options.maxPageSize
+        };
         function assembleDataInfo(data) {
             var size = that.options.dataSetSize;
+            
             data = cleanseData(data);
-            that.dataInfo.setSize = typeof size === "string" ? fluid.model.getBeanValue(data, size) : size;
-            that.dataInfo.numSets = Math.ceil(that.dataInfo.setSize / that.options.maxPageSize);
-            that.dataInfo.cachedData = that.options.useCaching ? [data] : [];
-            that.setNumber = -1;
+            that.cachedData = that.options.useCahcing ? [data] : [];
+            
+            that.model.totalRange = typeof size === "string" ? fluid.model.getBeanValue(data, size) || 1 : size;
+            that.model.pageCount = Math.ceil(that.model.totalRange / that.options.maxPageSize);
+            that.model.pageIndex = -1;
+            
+            
             that.events.afterInit.fire(that);
         }
         
@@ -82,22 +88,44 @@ https://source.fluidproject.org/svn/LICENSE.txt
     }
 
     /**
-     * Increments that.setNumber by 1, as long as numSets is smaller than the number of sets - 1
+     * Increments that.model.pageIndex by 1, as long as pageCount is smaller than the pageCount - 1
      * 
      * @param {Object} that, the component
      */
-    function incrementSetNumber(that) {
-        var lastSet = that.dataInfo.numSets - 1;
-        return that.setNumber < lastSet ? ++that.setNumber : lastSet;
+    function incrementPageIndex(that) {
+        var lastSet = that.model.pageCount - 1;
+        return that.model.pageIndex < lastSet ? ++that.model.pageIndex : lastSet;
     }
     
     /**
-     * Decrements that.setNumber by 1, as long as it is already larger than 0
+     * Decrements that.model.pageIndex by 1, as long as it is already larger than 0
      * 
      * @param {Object} that, the component
      */
-    function decrementSetNumber(that) {
-        return that.setNumber > 0 ? --that.setNumber : 0;
+    function decrementPageIndex(that) {
+        return that.model.pageIndex > 0 ? --that.model.pageIndex : 0;
+    }
+    
+    /**
+     * Generates a function to update that.model.pageIndex to the requested page, and returns the page index.
+     * If the index is out of range, it will return the closest valid page index.
+     * 
+     * @param {Object} that, the component
+     * @param {Object} index, the requested page index
+     */
+    function generatePageIndex(that, index) {
+        var newPageIndex;
+        if (index >= that.model.totalRange) {
+            newPageIndex = (that.model.totalRange - 1);
+        } else if (index < 0) {
+            newPageIndex = 0;
+        } else {
+            newPageIndex = index;
+        }
+        return function () {
+            that.model.pageIndex = newPageIndex;
+            return that.model.pageIndex;
+        };
     }
     
     /**
@@ -106,27 +134,26 @@ https://source.fluidproject.org/svn/LICENSE.txt
      * it will pull from the cache instead of making an ajax call
      * 
      * @param {Object} that, the component
-     * @param {Object} goToNext, a boolean specifying whether it goes to next (true) or previous (false)
+     * @param {Object} func, a function which sets the pageIndex. It takes the arguements (that,  pageCount)
      */
     function fetchData(that, func) {
         var skipAmount;
-        var dInfo = that.dataInfo;
         var opts = that.options;
         
         function setData(d) {
             d = cleanseData(d);
             
             if (opts.useCaching) {
-                dInfo.cachedData[that.setNumber] = d;
+                that.cachedData[that.model.pageIndex] = d;
             }
             
             that.events.modelChanged.fire(d);
         }
         
-        func(that, dInfo.numSets);
-        skipAmount = that.setNumber * opts.maxPageSize;
+        func(that, that.model.pageCount);
+        skipAmount = that.model.pageIndex * opts.maxPageSize;
 
-        var cachedData = dInfo.cachedData ? dInfo.cachedData[that.setNumber] : null;
+        var cachedData = that.cachedData ? that.cachedData[that.model.pageIndex] : null;
         if (cachedData) {
             that.events.modelChanged.fire(cachedData);
         } else {
@@ -156,6 +183,16 @@ https://source.fluidproject.org/svn/LICENSE.txt
         setup(that);
         
         /**
+         * Returns the requested page of data.
+         * If index is out of range, the closest valid page will be returned.
+         * 
+         * @param {Object} index, the index of the page to be returned.
+         */
+        that.goToPage = function (index) {
+            fetchData(that, generatePageIndex(that, index));
+        };
+        
+        /**
          * Returns the next set of paged data. 
          * If caching is on, and there is cached data it will return from the cache.
          * 
@@ -163,7 +200,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
          * any subsequent calls to it will just return the last set.
          */
         that.next = function () {
-            fetchData(that, incrementSetNumber);
+            fetchData(that, incrementPageIndex);
         };
         
         /**
@@ -174,7 +211,17 @@ https://source.fluidproject.org/svn/LICENSE.txt
          * any subsequent calls to it will just return the first set.
          */
         that.previous = function () {
-            fetchData(that, decrementSetNumber);
+            fetchData(that, decrementPageIndex);
+        };
+        
+        /**
+         * Returns the current page of data.
+         * 
+         * If this is the first call made after init, and a starting page has been specified, this page will be returned.
+         * Otherwise the first page will be given.
+         */
+        that.current = function () {
+            that.goToPage(that.model.pageIndex < 0 && that.options.initialPage ? that.options.initialPage : that.model.pageIndex);
         };
         
         /**
@@ -184,7 +231,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
          * This is useful for determining when you are at the end of the data.
          */
         that.hasNext = function () {
-            return that.setNumber < that.dataInfo.numSets - 1;
+            return that.model.pageIndex < that.model.pageCount - 1;
         };
         
         /**
@@ -194,7 +241,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
          * This is useful for determining when you are at the beginning of the data.
          */
         that.hasPrevious = function () {
-            return that.setNumber > 0;
+            return that.model.pageIndex > 0;
         };
         
         return that;
@@ -245,6 +292,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         url: "",
         maxPageSize: 20,
         useCaching: true,
+        initialPage: undefined,
         dataSetSize: "total_rows",
         dataAccessor: fluid.engage.paging.dataAccessor
     });
