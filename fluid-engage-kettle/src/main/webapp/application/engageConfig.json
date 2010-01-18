@@ -36,7 +36,7 @@ views: {
     exhibitionByTitle: "_design/exhibitions/_view/view",
     catalogueByTitle: "_design/catalogue/_view/view",
     catalogueArtifacts: "_design/catalogueArtefacts/_view/view",
-    exhibitions: "_design/exhibitions/_view/browse"    
+    exhibitions: "_design/exhibitions/_view/browse",
     byUserCollection: "by_user_collection",
     byId: "by_id",
     byUserArtifact: "by_user_artifact"
@@ -61,5 +61,5 @@ mount: {
         rewriteSource: "../../services/kettleDemo/"
       }
     },
-debugMode: true
+debugMode: false
 }
