@@ -96,7 +96,7 @@ fluid = fluid || {};
         that.artifactCabinet = fluid.initSubcomponent(that, "artifactCabinet", that.locate("cabinetScope"));
         
         that.relatedArtifacts = fluid.initSubcomponent(that, "artifactsLink", [
-            that.locate("realtedArtifacts"),
+            that.locate("relatedArtifacts"),
             {
                 messageBundle: {
                     linkToMoreMessage: "Go to Related artifacts"
