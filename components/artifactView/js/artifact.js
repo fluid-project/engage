@@ -75,8 +75,8 @@ fluid = fluid || {};
      * @param {Object} container, the container which will hold the component
      * @param {Object} options, options passed into the component
      */
-    fluid.artifact = function (container, options) {
-        var that = fluid.initView("fluid.artifact", container, options);
+    fluid.engage.artifactView = function (container, options) {
+        var that = fluid.initView("fluid.engage.artifactView", container, options);
         that.model = that.options.model; // TODO: By the end of this refactoring, there should be no toRender property
         
         that.description = fluid.initSubcomponent(that, "description", [
@@ -115,7 +115,7 @@ fluid = fluid || {};
     };
     
     //start of Fluid defaults
-    fluid.defaults("fluid.artifact", {
+    fluid.defaults("fluid.engage.artifactView", {
         selectors: {
             descriptionScope: ".flc-description",
             tagsScope: ".fl-tags",
