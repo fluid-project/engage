@@ -15,16 +15,58 @@ https://source.fluidproject.org/svn/LICENSE.txt
 fluid = fluid || {};
 
 (function ($) {
-
+    
+    var buildComponentTree = function (artifact) {
+        var tree = {
+			children: [
+		        {
+		            ID: "artifactTitle",
+		            valuebinding: "artifactTitle"
+		        },
+		        {
+		            ID: "artifactTitle2",
+		            valuebinding: "artifactTitle",
+		            decorators: [{
+		                type: "addClass",
+		                classes: "fl-text-bold"
+		            }]
+		        },
+		        {
+		            ID: "artifactAuthor",
+		            valuebinding: "artifactAuthor"
+		        },
+		        {
+		            ID: "artifactDate",
+		            valuebinding: "artifactDate"
+		        },
+		        {
+		            ID: "artifactAccessionNumber",
+		            valuebinding: "artifactAccessionNumber"
+		        }
+		    ]
+        };
+        
+        if (artifact.artifactImage) {
+            tree.children.push({
+                ID: "artifactImage",
+                target: artifact.artifactImage
+            });
+        }
+        return tree;
+    };
+    
     /**
      * Renderers out the pieces of the component
      * 
      * @param {Object} that,the component
      */	
-	var renderArtifactPage = function (that) {		
-		fluid.selfRender(that.locate("renderScope"), 
-				that.options.toRender.tree, 
-				{cutpoints: that.options.toRender.cutpoints, model: that.options.toRender.model, debug: true});
+	var renderArtifactPage = function (that) {
+		var artifact = that.model.artifact;
+		fluid.selfRender(that.locate("renderScope"), buildComponentTree(artifact), {
+			cutpoints: that.options.cutpoints, 
+			model: artifact, 
+			debug: true
+		});
 	};
 
     /**
@@ -35,15 +77,21 @@ fluid = fluid || {};
      */
 	fluid.artifact = function (container, options) {
 		var that = fluid.initView("fluid.artifact", container, options);
+		that.model = that.options.model; // TODO: By the end of this refactoring, there should be no toRender property
 		
-		that.description = fluid.initSubcomponent(that, "description", [that.locate("descriptionScope"), 
-				{model: that.options.toRender.model.artifactDescription}]);
+		that.description = fluid.initSubcomponent(that, "description", [
+            that.locate("descriptionScope"), 
+            {
+            	model: that.model.artifact.artifactDescription
+            }
+        ]);
+		
 		that.artifactTags = fluid.initSubcomponent(that, "artifactTags", [that.locate("tagsScope"), 
-				{tags: that.options.toRender.model.artifactTags}]);
+				{tags: that.model.artifact.artifactTags}]);
 		that.artifactCabinet = fluid.initSubcomponent(that, "artifactCabinet", that.locate("cabinetScope"));
 		
 		that.relatedArtifacts = fluid.initSubcomponent(that, "artifactsLink", [that.locate("realtedArtifacts"),
-		        {messageBundle: {linkToMoreMessage: "Go to Related artifacts"}, links: [{category: "", target: that.options.toRender.relatedArtifacts}]}]);
+		        {messageBundle: {linkToMoreMessage: "Go to Related artifacts"}, links: [{category: "", target: that.model.relatedArtifacts}]}]);
 
 		renderArtifactPage(that);
 		
@@ -71,7 +119,33 @@ fluid = fluid || {};
         },
         artifactsLink: {
             type: "fluid.navigationList"
-        }
+        },
+        cutpoints: [
+            {
+                id: "artifactTitle",
+                selector: ".artifact-name"
+            },
+            {
+                id: "artifactImage",
+                selector: ".artifact-picture"
+            },
+            {
+                id: "artifactTitle2",
+                selector: ".artifact-descr-name"
+            },
+            {
+                id: "artifactAuthor",
+                selector: ".artifact-provenance"
+            },
+            {
+                id: "artifactDate",
+                selector: ".artifact-date"
+            },
+            {
+                id: "artifactAccessionNumber",
+                selector: ".artifact-accession-number"
+            }
+        ]
 	});
 	
 }(jQuery));
