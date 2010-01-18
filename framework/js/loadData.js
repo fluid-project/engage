@@ -1,5 +1,5 @@
 /*
-Copyright 2009 University of Toronto
+Copyright 2009-2010 University of Toronto
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -9,7 +9,8 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://source.fluidproject.org/svn/LICENSE.txt
 */
 
-/*global jQuery, fluid*/
+/*global jQuery, fluid, window*/
+"use strict";
 
 (function ($, fluid) {
 	
@@ -52,7 +53,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 		options = options || {};
 		if (!feedURL) {
 			var loc = window.location;
-			feedURL = loc.protocol === "file:" ? localTestDataURL : getFeedURL(loc)
+			feedURL = loc.protocol === "file:" ? localTestDataURL : getFeedURL(loc);
 		}
 		
 		$.ajax({
