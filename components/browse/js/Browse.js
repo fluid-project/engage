@@ -72,11 +72,21 @@ fluid = fluid || {};
      * @param {Object} container, the set of container elements used by the navigationLists
      * @param {Object} options, an array of options to be used by the navigationLists
      */
-    var initComponents = function (that, container, options) {
-        fluid.transform(container, function (object, index) {
-            var componentOptions = fluid.copy(that.options.navigationList.options);
-            fluid.merge("merge", componentOptions, options[index]);
-            fluid.initSubcomponent(that, "navigationList", [object, componentOptions]);
+    var initComponents = function (that, navListContainers, artifactsByCategory) {
+        navListContainers.each(function (idx, container) {          
+            // Transform Browse's model of artifacts into NavList's generic model consisting of link objects.
+            var navListModel = fluid.transform(artifactsByCategory[idx], function (artifact) {
+                return {
+                    target: artifact.url,
+                    image: artifact.imageUrl,
+                    title: artifact.title,
+                    description: artifact.description
+                }
+            });
+            
+            var componentOptions = fluid.copy(that.options.navigationList.options);  
+            fluid.merge("merge", componentOptions, {links: navListModel});
+            fluid.initSubcomponent(that, "navigationList", [container, componentOptions]);
         });
     };
     
@@ -112,15 +122,6 @@ fluid = fluid || {};
     };
     
     /**
-     * Sets the title that will be displayed at the top of the page. It takes the value from the options.
-     * 
-     * @param {Object} that, the component
-     */
-    var setTitle = function (that) {
-        that.locate("title").text(that.options.strings.title);
-    };
-    
-    /**
      * Renderers out the pieces of the component
      * 
      * @param {Object} that,the component
@@ -133,16 +134,16 @@ fluid = fluid || {};
         ];
 
         var renderTree = function () {
-            return fluid.transform(that.options.lists, function (object, index) {
+            return fluid.transform(that.model.categories, function (category) {
                 return {
                     ID: "lists:",
-                    children: branchChildren("listHeader", object.category, "listHeaderDescription", object.description)
+                    children: branchChildren("listHeader", category.name, "listHeaderDescription", category.description)
                 };
             });
         };
         
-        fluid.selfRender(that.locate("browseContents"), that.options.componentTree || renderTree(), {cutpoints: that.options.selectorMap || selectorMap});
-        initComponents(that, that.locate("lists"), extractArray(that.options.lists, "listOptions"));
+        fluid.selfRender(that.locate("browseContents"), renderTree(), {cutpoints: selectorMap});
+        initComponents(that, that.locate("lists"), extractArray(that.model.categories, "artifacts"));
         addDescriptionStyle(that);
     };
     
@@ -171,7 +172,7 @@ fluid = fluid || {};
      */
     var setup = function (that) {
         bindEvents(that);
-        setTitle(that);
+        that.locate("title").text(that.title); // Set the page title
         initDescription(that);
         renderBrowse(that);
         that.events.afterRender.fire(that);
@@ -190,9 +191,10 @@ fluid = fluid || {};
      */
     fluid.browse = function (container, options) {
         var that = fluid.initView("fluid.browse", container, options);
-        
+    	that.model = that.options.model;
+    	that.title = that.options.title || that.model.categories[0].name;
+    	
         setup(that);
-        
         return that;
     };
     
@@ -240,26 +242,24 @@ fluid = fluid || {};
             listHeaderDescription: "fl-cabinet-headerWithDescription"
         },
         
-        strings: {
-            title: "Browse Title"
-        },
-        
         events: {
             afterRender: null
         },
         
-        useCabinet: true,
+        useCabinet: false,
         
-        componentTree: null,
-        selectorMap: null,
+        title: null,
         
-        lists: [
-            {
-                category: "",
-                description: "",
-                listOptions: {}
-            }
-        ]
+        model: {
+            categories: [
+                         {
+                             name: "",
+                             artifacts: [{
+                                 description: ""
+                             }]
+                         }
+            ]
+        }
     });
     
 })(jQuery);

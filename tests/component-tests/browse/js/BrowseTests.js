@@ -21,18 +21,17 @@ https://source.fluidproject.org/svn/LICENSE.txt
         return fluid.browse(container, options);
     };
 
-    var initTests = function (component) {
+    var testBrowseInitialized = function (component) {
         var selectors = component.options.selectors;
-        var strings = component.options.strings;
         
         if (component.options.useCabinet) {
             jqUnit.assertTrue("Cabinet Initialized", component.cabinet);
         } else {
-            jqUnit.assertFalse("Cabinet not Initializede", component.cabinet);
+            jqUnit.assertFalse("Cabinet not Initialized", component.cabinet);
         }
         
-        jqUnit.assertEquals("Correct Title text", strings.title, $(selectors.title).text());
-        jqUnit.assertEquals("Correct Number of NavigationLists Rendered", component.options.lists.length, $(".flc-nagivationList-listGroup").length);
+        jqUnit.assertEquals("Correct Title text", component.title, $(selectors.title).text());
+        jqUnit.assertEquals("Correct Number of NavigationLists Rendered", component.model.categories.length, $(".flc-nagivationList-listGroup").length);
     };
         
     var browseTests = function () {
@@ -41,25 +40,29 @@ https://source.fluidproject.org/svn/LICENSE.txt
         tests.test("Initialize with a cabinet", function () {
             var browse = setup(CONTAINER, {useCabinet: true});
             
-            initTests(browse);
+            testBrowseInitialized(browse);
         });
         
         tests.test("Initialize without a cabinet", function () {
             var browse = setup(CONTAINER, {useCabinet: false});
             
-            initTests(browse);
+            testBrowseInitialized(browse);
         });
         
         tests.test("Description on cabinet header", function () {
             var options = {
-                lists: [
-                    {
-                        category: "category",
-                        description: "description",
-                        listOptions: {}
-                    }
-                ]
+                model: {
+	                categories: [
+	                    {
+	                        name: "category",
+	                        description: "description",
+	                        artifacts: [
+	                        ]
+	                    }
+	                ]
+                }
             };
+            
             var browse = setup(CONTAINER, options);
             var selectors = browse.options.selectors;
             
@@ -70,12 +73,13 @@ https://source.fluidproject.org/svn/LICENSE.txt
         
         tests.test("No Description on cabinet header", function () {
             var options = {
-                lists: [
-                    {
-                        category: "category",
-                        listOptions: {}
-                    }
-                ]
+                model: {
+                    categories: [
+                        {
+                            name: "category",
+	                    }
+	                ]
+                }
             };
             var browse = setup(CONTAINER, options);
             var selectors = browse.options.selectors;
