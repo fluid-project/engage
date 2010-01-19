@@ -1,5 +1,5 @@
 /*
- Copyright 2009 University of Toronto
+ Copyright 2009-2010 University of Toronto
  
  Licensed under the Educational Community License (ECL), Version 2.0 or the New
  BSD license. You may not use this file except in compliance with one these
@@ -10,6 +10,7 @@
  
  */
 /*global jQuery, fluid*/
+"use strict";
 
 fluid = fluid || {};
 
@@ -81,7 +82,7 @@ fluid = fluid || {};
                     image: artifact.imageUrl,
                     title: artifact.title,
                     description: artifact.description
-                }
+                };
             });
             
             var componentOptions = fluid.copy(that.options.navigationList.options);  
@@ -191,9 +192,9 @@ fluid = fluid || {};
      */
     fluid.browse = function (container, options) {
         var that = fluid.initView("fluid.browse", container, options);
-    	that.model = that.options.model;
-    	that.title = that.options.title || that.model.categories[0].name;
-    	
+        that.model = that.options.model;
+        that.title = that.options.title || that.model.categories[0].name;
+        
         setup(that);
         return that;
     };
@@ -252,12 +253,12 @@ fluid = fluid || {};
         
         model: {
             categories: [
-                         {
-                             name: "",
-                             artifacts: [{
-                                 description: ""
-                             }]
-                         }
+                {
+                    name: "",
+                    artifacts: [{
+                        description: ""
+                    }]
+                }
             ]
         }
     });

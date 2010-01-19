@@ -1,5 +1,5 @@
 /*
-Copyright 2009 University of Toronto
+Copyright 2009-2010 University of Toronto
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -12,7 +12,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 /*global jQuery*/
 /*global fluid*/
 /*global jqUnit*/
-
+"use strict";
 
 (function ($) {
     var CONTAINER = "#main";
@@ -76,7 +76,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 model: {
                     categories: [
                         {
-                            name: "category",
+                            name: "category"
 	                    }
 	                ]
                 }
