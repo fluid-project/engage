@@ -11,6 +11,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
 // Declare dependencies.
 /*global jQuery, fluid*/
+"use strict";
 
 fluid = fluid || {};
 
@@ -424,8 +425,8 @@ fluid = fluid || {};
                     var format = function (data) {
                         var t = $.map(data, function (value) {
                             return {
-                                target: "../artifacts/view.html?db=mccord&q=" + value.accessnumber,
-                                image: getImage(value.thumbnail),
+                                url: "../artifacts/view.html?db=mccord&q=" + value.accessnumber,
+                                imageUrl: getImage(value.thumbnail),
                                 title: value.title.substring(value.title.indexOf(':') + 2),
                                 description: "Descr"
                             };
