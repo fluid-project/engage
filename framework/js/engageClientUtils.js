@@ -296,5 +296,91 @@ https://source.fluidproject.org/svn/LICENSE.txt
         dataSetSize: "total_rows",
         dataAccessor: fluid.engage.paging.dataAccessor
     });
-	
+    
+    /*******************************
+     * Renderer Utilities          *
+     * --------------------------- *
+     * depends on fluidRenderer.js *
+     *******************************/
+    
+    fluid.engage.renderUtils = fluid.engage.renderUtils || {};
+    
+    fluid.engage.renderUtils.createRendererFunction = function (container, selectors, options) {
+        var that = fluid.merge("merge", {container: container, selectors: selectors}, options);
+        
+        var renderFunc = function (tree, options) {
+            if (that.template) {
+                fluid.reRender(that.template, that.container, tree, options);
+            } else {
+                that.template = fluid.selfRender(that.container, tree, options);
+            }
+        };
+        
+        var render = function (tree) {
+            var mapFunc = "fluid.engage.renderUtils.selectorMapper";
+            
+            that.selectorMap = that.selectorMap || fluid.invokeGlobalFunction(that.selectorMapper || mapFunc, [that.selectors, that]);
+            renderFunc(tree, fluid.merge("merge", {cutpoints: that.selectorMap}, that.rendererOptions));
+        };
+        
+        return function (tree) {
+            render(tree);
+        };
+    };
+    
+    fluid.engage.renderUtils.removeSelectors = function (selectors, ignore) {
+        $.each(ignore || [], function (index, selectorToIgnore) {
+            delete selectors[selectorToIgnore];
+        });
+        return selectors;
+    };
+    
+    fluid.engage.renderUtils.markRepeated = function (selector, repeat) {
+        $.each(repeat || [], function (index, repeatingSelector) {
+            if (selector === repeatingSelector) {
+                selector = selector + ":";
+            }
+        });
+        return selector;
+    };
+    
+    fluid.engage.renderUtils.selectorMapper = function (selectors, options) {
+        var map = [];
+        options = options || {};
+        
+        if (options.selectorsToIgnore) {
+            selectors = fluid.engage.renderUtils.removeSelectors(selectors, options.selectorsToIgnore);
+        }
+        
+        for (var key in selectors) {
+            if (selectors.hasOwnProperty(key)) {
+                map.push({
+                    id: fluid.engage.renderUtils.markRepeated(key, options.repeatingSelectors),
+                    selector: selectors[key]
+                });
+            }
+        }
+        
+        return map;
+    };
+    
+    fluid.engage.renderUtils.uiBound = function (id, value) {
+    	var uiBound = {ID: id};
+    	if (value) {
+    		uiBound.markup = value;
+    	}
+        return uiBound;
+    };
+    
+    fluid.engage.renderUtils.decoratedUIBound = function (id, decorators, value) {
+        return fluid.merge("merge", fluid.engage.renderUtils.uiBound(id, value), {decorators: decorators});
+    };
+    
+    fluid.engage.renderUtils.attrDecoratedUIBound  = function (id, attrName, attrValue, nodeValue) {
+        var decObj = {attrs:{}};
+        decObj.attrs[attrName] = attrValue;
+        
+        
+        return fluid.engage.renderUtils.decoratedUIBound(id, [decObj], nodeValue);
+    };
 })(jQuery, fluid);
