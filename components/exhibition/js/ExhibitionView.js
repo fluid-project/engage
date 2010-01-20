@@ -15,8 +15,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
 fluid = fluid || {};
 
 (function ($) {
-	
-	var buildComponentTree = function (that) {
+    
+    var buildComponentTree = function (that) {
         var utils = fluid.engage.renderUtils;
         return {
             children: [
@@ -43,68 +43,68 @@ fluid = fluid || {};
             ]
         };
     };
-	
-	var renderExhibition = function (that, buildTree) {
-		fluid.engage.renderUtils.createRendererFunction(that.container,
-			that.options.selectors, {
-				selectorsToIgnore: ["exhibitionPreview"]
-			})(buildTree(that));
-	};
-	
-	var setupSubcomponents = function (that) {
-		that.model.cataloguePreview = [{
-			title: "TITLE",
-			target: "#",
-			thumbnail: "http://helios.gsfc.nasa.gov/image_euv_press.jpg",
-			media: true
-		}];
-		that.exhibitionPreview = fluid.initSubcomponent(that, "exhibitionPreview", 
-			[that.locate("exhibitionPreview"), 
-			 {model: that.model.cataloguePreview ? that.model.cataloguePreview : []}]);
-	};
-	
-	var setup = function (that) {
-		renderExhibition(that, buildComponentTree);
-		setupSubcomponents(that);
-	};
-	
-	fluid.exhibition = function (container, options) {
-		var that = fluid.initView("fluid.exhibition", container, options);		
-		that.model = that.options.model;
-		setup(that);		
-		return that;
-	};
-	
-	fluid.defaults("fluid.exhibition", {
-		selectors: {
+    
+    var renderExhibition = function (that, buildTree) {
+        fluid.engage.renderUtils.createRendererFunction(that.container,
+            that.options.selectors, {
+                selectorsToIgnore: ["exhibitionPreview"]
+            })(buildTree(that));
+    };
+    
+    var setupSubcomponents = function (that) {
+        that.model.cataloguePreview = [{
+            title: "TITLE",
+            target: "#",
+            thumbnail: "http://helios.gsfc.nasa.gov/image_euv_press.jpg",
+            media: true
+        }];
+        that.exhibitionPreview = fluid.initSubcomponent(that, "exhibitionPreview", 
+            [that.locate("exhibitionPreview"), 
+             {model: that.model.cataloguePreview ? that.model.cataloguePreview : []}]);
+    };
+    
+    var setup = function (that) {
+        renderExhibition(that, buildComponentTree);
+        setupSubcomponents(that);
+    };
+    
+    fluid.exhibition = function (container, options) {
+        var that = fluid.initView("fluid.exhibition", container, options);        
+        that.model = that.options.model;
+        setup(that);        
+        return that;
+    };
+    
+    fluid.defaults("fluid.exhibition", {
+        selectors: {
             about: ".flc-exhibition-about",
             aboutLink: ".flc-exhibition-aboutLink",
             aboutLinkText: ".flc-exhibition-aboutLinkText",
             navBarTitle: ".flc-exhibition-navBarTitle",
-			title: ".flc-exhibition-title",
-			image: ".flc-exhibition-image",
+            title: ".flc-exhibition-title",
+            image: ".flc-exhibition-image",
             shortDescription: ".flc-exhibtion-shortDescription",
-			description: ".flc-exhibition-description",
-			displayDate: ".flc-exhibition-displayDate",
-			catalogue: ".flc-exhibition-catalogue",
-			catalogueLink: ".flc-exhibition-catalogueLink",
+            description: ".flc-exhibition-description",
+            displayDate: ".flc-exhibition-displayDate",
+            catalogue: ".flc-exhibition-catalogue",
+            catalogueLink: ".flc-exhibition-catalogueLink",
             catalogueLinkText: ".flc-exhibition-catalogueLinkText",
             guestbook: ".flc-exhibition-guestbook",
             guestbookLink: ".flc-exhibition-guestbookLink",
             guestbookLinkText: ".flc-exhibition-guestbookLinkText",
             guestbookInvitation: ".flc-exhibition-guestbookInvitation",
             exhibitionPreview: ".flc-exhibition-preview"
-		},
-		strings: {
+        },
+        strings: {
             guestBookInvitationString: "No comments yet. Create your own comment.",
-			catalogue: "Catalogue (%size)",
+            catalogue: "Catalogue (%size)",
             guestbook: "Guestbook (%size)",
             guestbookLinkText: "Read all comments",
             catalogueLinkText: "View the full catalogue",
             aboutLink: "Read more"
-		},
-		exhibitionPreview: {
+        },
+        exhibitionPreview: {
             type: "fluid.engage.preview"
         }
-	});
+    });
 }(jQuery));
