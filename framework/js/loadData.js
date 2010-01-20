@@ -49,6 +49,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
      * @param options options for the component; note that the model option will be replaced with data if any is returned from the feed
      * @param feedURL an optional URL to a data feed; this will be automatically calculated from window.location if not specified
      */
+    // TODO: refactor this so it's only used for the file system load
     fluid.engage.initComponentWithDataURL = function (componentName, container, options, feedURL) {
         options = options || {};
         if (!feedURL) {
