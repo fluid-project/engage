@@ -1,5 +1,5 @@
 /*
-Copyright 2009 University of Toronto
+Copyright 2009 - 2010 University of Toronto
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -307,6 +307,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
     
     fluid.engage.renderUtils.createRendererFunction = function (container, selectors, options) {
         var that = fluid.merge("merge", {container: container, selectors: selectors}, options);
+        that.container = $(that.container);
         
         var renderFunc = function (tree, options) {
             if (that.template) {
@@ -365,10 +366,10 @@ https://source.fluidproject.org/svn/LICENSE.txt
     };
     
     fluid.engage.renderUtils.uiBound = function (id, value) {
-    	var uiBound = {ID: id};
-    	if (value) {
-    		uiBound.markup = value;
-    	}
+        var uiBound = {ID: id};
+        if (value) {
+            uiBound.markup = value;
+        }
         return uiBound;
     };
     
@@ -377,9 +378,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
     };
     
     fluid.engage.renderUtils.attrDecoratedUIBound  = function (id, attrName, attrValue, nodeValue) {
-        var decObj = {attrs:{}};
+        var decObj = {attrs: {}};
         decObj.attrs[attrName] = attrValue;
-        
         
         return fluid.engage.renderUtils.decoratedUIBound(id, [decObj], nodeValue);
     };
