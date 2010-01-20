@@ -11,15 +11,10 @@
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-transitions.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" />
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationList/css/NavigationList.css" />
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/cabinet/css/Cabinet.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/exhibition/css/Exhibition.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/preview/css/Preview.css" />
         
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
-        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/ui/js/ui.core.js"></script>
-        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/plugins/delegate/js/jquery.delegate.js"></script>
-        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/jquery.keyboard-a11y.js"></script>
-        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/json/js/json2.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/FluidDOMUtilities.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/DataBinding.js"></script>
@@ -27,13 +22,73 @@
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>
         
-        <script type="text/javascript" src="../../../../fluid-engage-core/components/exhibition/js/ExhibitionView.js"></script>
-        <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationList/js/NavigationList.js"></script>
-        <script type="text/javascript" src="../../../../fluid-engage-core/components/cabinet/js/Cabinet.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/loadData.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/preview/js/Preview.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/exhibition/js/ExhibitionView.js"></script>
+        
     </head>   
     <body class="fl-theme-iphone">
-        <div class="flc-exhibition-container fl-exhibition"></div>
+        <div class="flc-exhibition-container fl-exhibition">
+            <div class="fl-navbar">
+                <span class="fl-force-left fl-navBar-left">Home</span>
+                <h1 class="flc-exhibition-navBarTitle fl-exhibitionNavBar-title">
+                    push the screen and
+                </h1>
+            </div>
+            <!--<div class="fl-navbar fl-table">
+                <div class="fl-table-row">              
+                    <h1 class="flc-exhibition-title fl-table-cell">Exhibition Name</h1>                          
+                </div>
+            </div>-->
+            <ol class="fl-list-menu">
+                <li>
+                    <h2 class="flc-exhibition-title">title</h2>
+                    <div class="fl-exhibitionAbout-textBlock">
+                        <div class="flc-exhibtion-shortDescription fl-link-summary">Short Discription</div>
+                        <div class="flc-exhibition-displayDate fl-link-summary">Display Date</div>
+                    </div>
+                    <div class="fl-force-right fl-exhibition-linkContainer">
+                        <a class="flc-exhibition-aboutLink" href="#">
+                            <span class="flc-exhibition-aboutLinkText fl-exhibition-linkText">link</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="fl-exhibition-header">
+                        <div class="flc-exhibition-catalogue fl-exhibitionAbout-textBlock">catalogue</div>
+                    </div>
+                    <ul class="flc-exhibition-preview fl-list fl-list-thumbnails fl-thumbnails-expanded fl-grid">
+                        <li class="flc-preview-items">                
+                            <div class="fl-table">
+                                <a class="flc-preview-item-link fl-table-cell fl-exhibition-preview-thumb" href="#">
+                                    <img class="flc-preview-item-image fl-icon" src="19.png" alt="icon" />
+                                </a>
+                            </div>
+                            <div class="flc-preview-item-caption fl-grid-caption">title</div>
+                        </li>
+                    </ul>
+                    <div class="fl-force-right fl-exhibition-linkContainer">
+                        <a class="flc-exhibition-catalogueLink" href="#">
+                            <span class="flc-exhibition-catalogueLinkText fl-exhibition-linkText">link</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="fl-exhibition-header">
+                        <div class="flc-exhibition-guestbook fl-exhibitionAbout-textBlock">guestbook</div>
+                    </div>
+                    <div class="fl-exhibitionAbout-textBlock">
+                        <div class="flc-exhibition-guestbookInvitation fl-link-summary"></div>
+                    </div>
+                    <div class="fl-force-right fl-exhibition-linkContainer">
+                        <a class="flc-exhibition-guestbookLink" href="#">
+                            <span class="flc-exhibition-guestbookLinkText fl-exhibition-linkText">link</span>
+                        </a>
+                    </div>
+                </li>
+            </ol>
+        </div>
         <script type="text/javascript">
             fluid.engage.initComponentWithDataFeed(window.location, "fluid.exhibition", ".flc-exhibition-container");
         </script>

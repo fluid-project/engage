@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <title>About</title>
+        
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-text.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-transitions.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/exhibition/css/Exhibition.css" />
+        
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/FluidDOMUtilities.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/DataBinding.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>
+        
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/exhibition/js/ExhibitionView.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/loadData.js"></script>
+    </head>   
+    <body class="fl-theme-iphone">
+        <div class="flc-exhibition-container">
+           <div class="fl-navbar">
+                <span class="fl-force-left fl-navBar-left">Home</span>
+                <span class="fl-force-right fl-navBar-right">toggle</span>
+                <h1 class="flc-exhibition-navBarTitle fl-exhibitionNavBar-title">
+                    <span class="flc-exhibition-about"></span>
+                    push the screen and
+                    <!-- <span class="flc-exhibition-about">About:</span> -->
+                    <!-- <div class="fl-exhibitionAbout-title">push the text off screen and replace with ellipsis</div> -->
+                    <!-- <span class="flc-exhibition-navBarTitle fl-exhibitionAbout-title">Exhibitions</span> -->
+                </h1>
+                
+            </div> 
+            <div class="fl-container, fl-exhibition-content">
+                <div class="fl-col-flex2">
+                    <img src="../images/a.jpg" alt="Exhibition Image" class="flc-exhibition-image fl-col" />
+                    <div class="fl-col">
+                        <h2 class="flc-exhibition-title">Exhibition Title: with a bunch of extra information blah blah blah</h2>
+                        <span class="flc-exhibition-displayDate fl-exhibitionAbout-textBlock">From Date</span>
+                    </div>
+                </div>
+                <p class="flc-exhibtion-shortDescription fl-exhibition-shortDescription">Short Discription</p>
+                <div class="flc-exhibition-description">Exhibition Description</div> 
+            </div>
+        </div>
+        <script type="text/javascript">
+            fluid.engage.initComponentWithDataFeed(window.location, "fluid.exhibition", ".flc-exhibition-container");
+        </script>
+    </body>
+</html>
