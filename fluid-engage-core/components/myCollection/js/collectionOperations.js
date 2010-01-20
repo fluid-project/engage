@@ -16,14 +16,21 @@ fluid = fluid || {};
 
 (function ($) {
     
+	var compileUsersPath = function () {
+        var artifactPath = location.pathname.substring(0, location.pathname.lastIndexOf("/"));
+        var path = artifactPath.substring(0, artifactPath.lastIndexOf("/")) + "/users";
+
+        return path;
+	};
+	
     var confirmCollect = function (that) {
         var collectLink = fluid.jById("artifactCollectLink");
         var collectStatus = collectLink.next().children();
         
         var path = location.pathname.substring(0, location.pathname.lastIndexOf("/"));
-        collectStatus.attr("href", "http://" + location.host + path +
+        collectStatus.attr("href", "http://" + location.host + compileUsersPath() + 
                 "/myCollection.html" + "?uuid=" + that.uuid);
-        collectStatus.addClass("fl-collection-link");
+        collectStatus.addClass("active");
         
         if (that.options.operation === "collect") {
             collectStatus.text("This artifact has been added to your personal collection; tap here to go there now.");
@@ -41,7 +48,8 @@ fluid = fluid || {};
                     that.options.operation = "collect";
                 }
                 
-                collectStatus.removeClass("fl-collection-link");
+                collectStatus.removeClass("active");
+                collectStatus.removeAttr("href");
             });
         });
     };
@@ -49,7 +57,7 @@ fluid = fluid || {};
     fluid.collectionOperations = function (container, options) {
         var that = fluid.initView("fluid.collectionOperations", container, options);
         
-        that.user = fluid.initSubcomponent(that, "user", [container, {}]);
+        that.user = fluid.initSubcomponent(that, "user");
 
         that.uuid = that.user.getUuid();
         
@@ -68,8 +76,7 @@ fluid = fluid || {};
         }
         
         that.collectHandler = function () {
-            var path = location.pathname.substring(0, location.pathname.lastIndexOf("/"));
-            var url = "http://" + location.host + path + "/updateDatabase.js";
+            var url = "http://" + location.host + compileUsersPath() + "/updateDatabase.js";
             var data = "operation=" + that.options.operation + "&artifactData=" +
                 encodeURIComponent(JSON.stringify({
                     museum: options.museum,

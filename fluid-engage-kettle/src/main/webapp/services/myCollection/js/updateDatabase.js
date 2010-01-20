@@ -23,13 +23,12 @@ fluid.updateDatabase = fluid.updateDatabase || {};
     var postOperation = "POST";
     
     var compileDatabaseUrl = function (params, config) {
-        return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
-                {dbName: "users", view: config.views.byId,
-                    query: "_id:" + params.uuid});
+        return fluid.stringTemplate(config.myCollectionDocumentURLTemplate, 
+                {dbName: "users", id: params.uuid});
     };
 
     var compileUpdateUrl = function (id, config) {
-        return fluid.stringTemplate(config.myCollectionUpdateURLTemplate, 
+        return fluid.stringTemplate(config.myCollectionDocumentURLTemplate, 
             {dbName: "users", id: id ? id : ""});
     };
 
@@ -79,42 +78,36 @@ fluid.updateDatabase = fluid.updateDatabase || {};
         var data;
         
         var success = function (returnedData) {
-            data = returnedData;
+            data = returnedData.replace("\n", "");
         };
         
         ajaxCall(databaseUrl, success, errorCallback, "", getOperation);        
         
         if (data) {
-            var parsedData = JSON.parse(data);
-            if (parsedData.rows && parsedData.rows[0]) {
-                // We have made a query by id so there should be only one row
-                return parsedData.rows[0].doc;
-            }
+            return JSON.parse(data);
         }
     };
-    
-    var collect = function (artifactData, config) {
-        var userCollection = getCollection(artifactData, config);
-        
-        userCollection.collection.artifacts.push({"museum": artifactData.museum, "id": artifactData.id});
-        
-        var collectionUrl = compileUpdateUrl(userCollection._id, config);
-        
-        ajaxCall(collectionUrl, function () {}, errorCallback, JSON.stringify(userCollection), putOperation);
-    };
 
-    var uncollect = function (artifactData, config) {
-        var userCollection = getCollection(artifactData, config);
-        
+    var addArtifact = function (userCollection, artifactData) {    
+    	userCollection.collection.artifacts.push({"museum": artifactData.museum, "id": artifactData.id});
+    };
+    
+    var removeArtifact = function (userCollection, artifactData) {
         userCollection.collection.artifacts = $.makeArray(
             $(userCollection.collection.artifacts).filter(function () {
                 return this.id !== artifactData.id;
             })
         );
-
+    };
+    
+    var collectOperation = function (artifactData, config, fn) {
+        var userCollection = getCollection(artifactData, config);
+        
+        fn(userCollection, artifactData);
+        
         var collectionUrl = compileUpdateUrl(userCollection._id, config);
         
-        ajaxCall(collectionUrl, function () {}, errorCallback, JSON.stringify(userCollection), putOperation);
+        ajaxCall(collectionUrl, function () {}, errorCallback, JSON.stringify(userCollection), putOperation);    	
     };
     
     /**
@@ -126,7 +119,7 @@ fluid.updateDatabase = fluid.updateDatabase || {};
     var updateCollection = function (params, config) {
         var userCollection = getCollection(params, config);
         
-        var parsedParams = JSON.parse(decodeURIComponent(params.orderData));l
+        var parsedParams = JSON.parse(decodeURIComponent(params.orderData));
         
         userCollection.collection = parsedParams.collection;
         
@@ -145,9 +138,9 @@ fluid.updateDatabase = fluid.updateDatabase || {};
         var dataHandler = function (env) {
             var params = env.urlState.params;
             if (params.operation === "collect") {
-                collect(JSON.parse(decodeURIComponent(params.artifactData)), config);
+                collectOperation(JSON.parse(decodeURIComponent(params.artifactData)), config, addArtifact);
             } else if (params.operation === "uncollect") {
-                uncollect(JSON.parse(decodeURIComponent(params.artifactData)), config);
+                collectOperation(JSON.parse(decodeURIComponent(params.artifactData)), config, removeArtifact);
             } else if (params.operation === "updateOrder") {
                 updateCollection(params, config);
             } else {
@@ -158,6 +151,6 @@ fluid.updateDatabase = fluid.updateDatabase || {};
         };
 
         var acceptor = fluid.engage.makeAcceptorForResource("updateDatabase", "js", dataHandler);
-        fluid.engage.mountAcceptor(app, "artifacts", acceptor);
+        fluid.engage.mountAcceptor(app, "users", acceptor);
     };
 })(jQuery);

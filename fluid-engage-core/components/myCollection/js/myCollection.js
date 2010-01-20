@@ -127,10 +127,8 @@ fluid = fluid || {};
                 }
             };
 
-            fluid.fetchResources(resources, function () {
-                fluid.reRender(that.templates, that.locate("collectionGroup"), generateTree(that));
-                that.events.afterRender.fire(that);
-            });
+            fluid.reRender(that.templates, that.locate("collectionGroup"), generateTree(that));
+            that.events.afterRender.fire(that);
         } else {
             var options = {
                 cutpoints: selectorMap,
@@ -309,8 +307,10 @@ fluid = fluid || {};
 
         var path = parsePath(location.pathname);
         
-        ajaxCall(compileUrl(path), error, "operation=updateOrder&uuid=" + uuid + "&orderData=" +
+        try {
+        	ajaxCall(compileUrl(path), error, "operation=updateOrder&uuid=" + uuid + "&orderData=" +
                 encodeURIComponent(JSON.stringify(data)));
+        } catch (e) {};
     };            
     
     /**
@@ -350,10 +350,10 @@ fluid = fluid || {};
     fluid.initMyCollection = function (container, options) {
         var that = fluid.initView("fluid.initMyCollection", container, options);
 
-        that.user = fluid.initSubcomponent(that, "user", [container, {}]);
+        that.user = fluid.initSubcomponent(that, "user");
 
         that.uuid = that.user.getUuid();
-        
+
         that.toggleView = function () {
             addLoadStyling(that);
 

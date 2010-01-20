@@ -25,14 +25,8 @@ fluid.myCollection = fluid.myCollection || {};
      *  @param {Object} config, the JSON config file for Engage.
      */
     var compileUserDatabaseURL = function (params, config) {
-        var query = "";
-        if (params.uuid) {
-            query = encodeURIComponent("user AND " + params.uuid);
-        }
-        
-        return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
-            {dbName: "users" || "", view: config.views.byUserCollection,
-                query: query});
+        return fluid.stringTemplate(config.myCollectionDocumentURLTemplate, 
+            {dbName: "users", id: params.uuid});
     };
     
     /**
@@ -53,18 +47,14 @@ fluid.myCollection = fluid.myCollection || {};
      * @param {Object} rawData, the collection data as it is returned by CouchDB.
      */
     var getArtifactsByMuseum = function (rawData) {
-        var result = [];
-        var rows = rawData.rows || [];
-        
-        fluid.transform(rows, function (row) {
-            var collection = row.doc.collection;
-            fluid.transform(collection.artifacts, function (artifact) {
-                if (!result[artifact.museum]) {
-                    result.push(artifact.museum);
-                    result[artifact.museum] = [];
-                }
-                result[artifact.museum].push(artifact.id);
-            });
+    	var result = []; 
+        var collection = rawData.collection;
+        fluid.transform(collection.artifacts, function (artifact) {
+            if (!result[artifact.museum]) {
+                result.push(artifact.museum);
+                result[artifact.museum] = [];
+            }
+            result[artifact.museum].push(artifact.id);
         });
         
         return result;
@@ -113,16 +103,13 @@ fluid.myCollection = fluid.myCollection || {};
      * @param rawData, the raw collection data, as returned by CouchDB.
      */
     var getArtifactIds = function (rawData) {
-        var rows = rawData.rows || [];
-        
         // External to the transforms, because we need a flat array
         var result = [];
         
-        fluid.transform(rows, function (row) {
-            var collection = row.doc.collection;
-            return fluid.transform(collection.artifacts, function (artifact) {
-                result.push(artifact.id);
-            });
+        var collection = rawData.collection;
+
+        fluid.transform(collection.artifacts, function (artifact) {
+            result.push(artifact.id);
         });
         
         return result;
@@ -145,7 +132,7 @@ fluid.myCollection = fluid.myCollection || {};
      * @param dbName, the name of the museum database that contains the set of artifacts.
      */
     var compileData = function (data, dbName, uuid) {
-        var baseArtifactURL = "view.html";
+        var baseArtifactURL = "../artifacts/view.html";
         
         return fluid.transform(data, function (artifact) {
             return {                
@@ -198,7 +185,7 @@ fluid.myCollection = fluid.myCollection || {};
         });
         
         if (data) {
-            return JSON.parse(data);
+            return JSON.parse(data.replace("\n", ""));
         } else {
             return {};
         }
@@ -230,8 +217,7 @@ fluid.myCollection = fluid.myCollection || {};
         
         var rawData = ajaxCall(url, errorCallback);
 
-        var urls = compileDataURLs(config, rawData, params.uuid);
-        var collectionId = getCollectionId(rawData);
+        var urls = compileDataURLs(config, rawData);
         var originalArtifactIds = getArtifactIds(rawData);
 
         var dataSet = fluid.transform(urls, function (artifactURL) {
@@ -251,7 +237,8 @@ fluid.myCollection = fluid.myCollection || {};
             });
         });
 
-        // Restore the original order for artifacts the as they have been aggregated by museum
+        // Restore the original order for artifacts as they have been aggregated by museum
+
         var artifactIds = fluid.transform(links, function (link) {
             return link.id;
         });
@@ -261,10 +248,8 @@ fluid.myCollection = fluid.myCollection || {};
             model.data.links.push(links[$.inArray(originalArtifactIds[i], artifactIds)]);
         }
         
-        if (collectionId) {
-            model.data.collectionId = collectionId;
-        }
-
+        model.data.collectionId = params.uuid;
+        
         return JSON.stringify(model);
     };
 
@@ -280,7 +265,7 @@ fluid.myCollection = fluid.myCollection || {};
         };
 
         var acceptor = fluid.engage.makeAcceptorForResource("myCollection", "json", dataHandler);
-        fluid.engage.mountAcceptor(app, "artifacts", acceptor);
+        fluid.engage.mountAcceptor(app, "users", acceptor);
     };
 
     /**
@@ -293,7 +278,7 @@ fluid.myCollection = fluid.myCollection || {};
         var handler = fluid.engage.mountRenderHandler({
             config: config,
             app: app,
-            target: "artifacts/",
+            target: "users/",
             source: "components/myCollection/html/",
             sourceMountRelative: "engage"
         });

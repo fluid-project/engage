@@ -18,7 +18,7 @@ fluid.userService = fluid.userService || {};
 
 (function ($) {
     var compileUrl = function (config) {
-        return fluid.stringTemplate(config.myCollectionUpdateURLTemplate, 
+        return fluid.stringTemplate(config.myCollectionDocumentURLTemplate, 
                 {dbName: "users", id: ""});
     };
     
@@ -64,6 +64,6 @@ fluid.userService = fluid.userService || {};
         };
 
         var acceptor = fluid.engage.makeAcceptorForResource("userService", "js", dataHandler);
-        fluid.engage.mountAcceptor(app, "user", acceptor);
+        fluid.engage.mountAcceptor(app, "users", acceptor);
     };
 })(jQuery);

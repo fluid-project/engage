@@ -12,11 +12,10 @@
 }
 
 .flc-status-div {
-    height: 20px;
+    height: 30px;
+    white-space: normal;
 }
 
-.fl-collection-link {
+.flc-collection-link .active {
     cursor: pointer;
 }
-
-

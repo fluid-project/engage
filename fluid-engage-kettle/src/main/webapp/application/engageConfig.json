@@ -8,7 +8,7 @@ queryURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/_fti/lucene/%view?
 viewURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/%view",
 viewURLTemplateWithKey: "http://titan.atrc.utoronto.ca:5984/%dbName/%view?key=%key",
 myCollectionQueryURLTemplate: "http://unistud.asteasolutions.net:11929/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
-myCollectionUpdateURLTemplate: "http://unistud.asteasolutions.net:11929/%dbName/%id",
+myCollectionDocumentURLTemplate: "http://unistud.asteasolutions.net:11929/%dbName/%id",
 initServices: [
     "fluid.artifactView.initMarkupFeed", 
     "fluid.artifactView.initDataFeed", 
@@ -38,8 +38,8 @@ views: {
     catalogueArtifacts: "_design/catalogueArtefacts/_view/view",
     exhibitions: "_design/exhibitions/_view/browse",
     byUserCollection: "by_user_collection",
-    byId: "by_id",
-    byUserArtifact: "by_user_artifact"
+    byUserArtifact: "by_user_artifact",
+	byId: "by_id"
 },
 mount: {
     infusion: {

@@ -18,15 +18,14 @@ fluid = fluid || {};
 
     var compileUrl = function () {
         var path = location.pathname.substring(0, location.pathname.lastIndexOf("/"));
-        var url = "http://" + location.host + "/user/userService.js";
+        var url = "http://" + location.host + "/users/userService.js";
         
         return url;
     };
-    
-    fluid.user = function (container, options) {
-        var that = fluid.initView("fluid.user", container, options);
 
-        
+    var setup = function () {
+    	that = {};
+    	
         that.generateUuid = function () {
             var uuid;
             
@@ -41,15 +40,22 @@ fluid = fluid || {};
             
             $.ajax({url: compileUrl(), async: false, success: successCallback, error: errorCallback});
             
-            fluid.engage.setCookie(that.options.cookieName, uuid);
+            fluid.engage.setCookie(that.options.cookieName, uuid, {path: "/"});
             
             return uuid;
         };
         
         that.getUuid = function () {
-            return fluid.engage.getCookie(that.options.cookieName);
+            return fluid.engage.getCookie(that.options.cookieName, {path: "/"});
         };
         
+        return that;
+    };
+    
+    fluid.user = function (container, options) {
+    	var that = setup();
+    	fluid.mergeComponentOptions(that, "fluid.user");
+    	
         return that;
     };
     
