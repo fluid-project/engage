@@ -27,10 +27,10 @@ fluid = fluid || {};
 						attrs: {
 							href: value.target
 						}
-						}, {
-							type: "addClass",
-							classes: value.media ? options.styles.mediaIncluded : ""
-						}]),
+					}, {
+						type: "addClass",
+						classes: value.media ? options.styles.mediaIncluded : ""
+					}]),
                     fluid.engage.renderUtils.attrDecoratedUIBound("previewItemImage", "src", value.thumbnail)
 				]
 			});
