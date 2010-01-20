@@ -1,5 +1,5 @@
 /*
-Copyright 2009 University of Toronto
+Copyright 2009 - 2010 University of Toronto
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -99,7 +99,9 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var decoratorArray = [
                 {type: "jQuery",
                     func: "click",
-                    args: function() { $(this).hide(); }
+                    args: function () { 
+                        $(this).hide(); 
+                    }
                 },
                 {
                     type: "attrs",
@@ -109,10 +111,10 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var attrObj = {};
             attrObj[attrName] = attrValue;
             
-            jqUnit.assertDeepEq("Proper uiBound node object created", {ID: id, markup: value},fluid.engage.renderUtils.uiBound(id, value));
-            jqUnit.assertDeepEq("Proper uiBound node object created, no value passed", {ID: id},fluid.engage.renderUtils.uiBound(id));
+            jqUnit.assertDeepEq("Proper uiBound node object created", {ID: id, markup: value}, fluid.engage.renderUtils.uiBound(id, value));
+            jqUnit.assertDeepEq("Proper uiBound node object created, no value passed", {ID: id}, fluid.engage.renderUtils.uiBound(id));
             
-            jqUnit.assertDeepEq("Proper uiBound node with a decorator created", {ID: id, decorators: decoratorArray, markup: value}, fluid.engage.renderUtils.decoratedUIBound(id, decoratorArray,value));
+            jqUnit.assertDeepEq("Proper uiBound node with a decorator created", {ID: id, decorators: decoratorArray, markup: value}, fluid.engage.renderUtils.decoratedUIBound(id, decoratorArray, value));
             jqUnit.assertDeepEq("Proper uiBound node with a decorator created, no value passed", {ID: id, decorators: decoratorArray}, fluid.engage.renderUtils.decoratedUIBound(id, decoratorArray));
             
             jqUnit.assertDeepEq("Proper uiBound with an attr decorator created", {ID: id, markup: value, decorators: [{attrs: attrObj}]}, fluid.engage.renderUtils.attrDecoratedUIBound(id, attrName, attrValue, value));
@@ -121,7 +123,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         
         tests.test("Renderer Utilities Test: selector mapper", function () {
             jqUnit.assertDeepEq("Selector Map generation", [{id: "selector", selector: ".className"}], fluid.engage.renderUtils.selectorMapper({selector: ".className"}));
-            jqUnit.assertDeepEq("Selector Map generation, with repeating items", [{id: "selector1", selector: ".class1"},{id: "selector2:", selector: ".class2"}], fluid.engage.renderUtils.selectorMapper({selector1: ".class1", selector2: ".class2"}, {repeatingSelectors: ["selector2"]}));
+            jqUnit.assertDeepEq("Selector Map generation, with repeating items", [{id: "selector1", selector: ".class1"}, {id: "selector2:", selector: ".class2"}], fluid.engage.renderUtils.selectorMapper({selector1: ".class1", selector2: ".class2"}, {repeatingSelectors: ["selector2"]}));
             jqUnit.assertDeepEq("Selector Map generation, with ignored selectors", [{id: "selector1", selector: ".class1"}], fluid.engage.renderUtils.selectorMapper({selector1: ".class1", selector2: ".class2"}, {selectorsToIgnore: ["selector2"]}));
             jqUnit.assertDeepEq("Selector Map generation, with repeating items and ignored selectors", [{id: "selector1:", selector: ".class1"}], fluid.engage.renderUtils.selectorMapper({selector1: ".class1", selector2: ".class2"}, {repeatingSelectors: ["selector1"], selectorsToIgnore: ["selector2"]}));
         });
