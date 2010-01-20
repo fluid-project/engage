@@ -1,0 +1,3 @@
+.fl-preview-media-included {
+    background-image: -webkit-gradient(radial, 50% -15%, 10, 50% -50%, 45, from(rgba(255,255,255,1)), to(rgba(255,255,255,0)), color-stop(90%, rgba(255,255,255,.65))) ! important;
+}
