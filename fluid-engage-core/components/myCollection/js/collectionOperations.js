@@ -16,11 +16,20 @@ fluid = fluid || {};
 
 (function ($) {
     
+	var compileArtifactPath = function (uuid, museum, artifactId) {
+        var tmpPath = location.pathname.substring(0, location.pathname.lastIndexOf("/"));
+        var path = tmpPath.substring(0, tmpPath.lastIndexOf("/"));
+
+        path += "/users/" + uuid;
+        path += "/collection/" + museum;
+        path += "/artifacts/" + artifactId;
+        
+        return path;
+	};
+	
 	var compileUsersPath = function () {
         var artifactPath = location.pathname.substring(0, location.pathname.lastIndexOf("/"));
-        var path = artifactPath.substring(0, artifactPath.lastIndexOf("/")) + "/users";
-
-        return path;
+        return artifactPath.substring(0, artifactPath.lastIndexOf("/")) + "/users";		
 	};
 	
     var confirmCollect = function (that) {
@@ -69,25 +78,19 @@ fluid = fluid || {};
         
         if (!options.artifactCollected) {
             that.collectLink.text("Collect Artifact");
-            that.options.operation = "collect";
+            that.options.operation = "POST";
         } else {
             that.collectLink.text("Uncollect Artifact");
-            that.options.operation = "uncollect";
+            that.options.operation = "DELETE";
         }
         
         that.collectHandler = function () {
-            var url = "http://" + location.host + compileUsersPath() + "/updateDatabase.js";
-            var data = "operation=" + that.options.operation + "&artifactData=" +
-                encodeURIComponent(JSON.stringify({
-                    museum: options.museum,
-                    id: options.artifactId,
-                    uuid: that.uuid
-                }));
+            var url = "http://" + location.host + compileArtifactPath(that.uuid, options.museum, options.artifactId);
             
             $.ajax({
                 url: url,
                 async: false,
-                data: data
+                type: that.options.operation
             });
 
             confirmCollect(that);

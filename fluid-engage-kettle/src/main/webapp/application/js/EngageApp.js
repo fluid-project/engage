@@ -21,7 +21,8 @@ fluid.engage = fluid.engage || {};
     fluid.engage.makeAcceptorForResource = function (atSegment, extension, handler) {
         return {
             accept: function (segment, relPath, pathInfo) {
-                if (segment.match(atSegment) != null && (pathInfo.extension === extension || !pathInfo.extension)) {
+                if (pathInfo.pathInfo.join("/").match(atSegment) ||
+                		(segment === atSegment && pathInfo.extension === extension)) {
                     return {
                         handle: handler
                     };

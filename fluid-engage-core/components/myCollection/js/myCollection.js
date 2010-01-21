@@ -281,8 +281,8 @@ fluid = fluid || {};
      * 
      * @param path, the path segment of the URL.
      */
-    var compileUrl = function (path) {
-        return "http://" + location.host + path + "/updateDatabase.js";
+    var compileReorderUrl = function (path) {
+        return "http://" + location.host + path + "/reorder.js";
     };
     
     /**
@@ -308,7 +308,7 @@ fluid = fluid || {};
         var path = parsePath(location.pathname);
         
         try {
-        	ajaxCall(compileUrl(path), error, "operation=updateOrder&uuid=" + uuid + "&orderData=" +
+        	ajaxCall(compileReorderUrl(path), error, "uuid=" + uuid + "&orderData=" +
                 encodeURIComponent(JSON.stringify(data)));
         } catch (e) {};
     };            

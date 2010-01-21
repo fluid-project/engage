@@ -261,7 +261,11 @@ fluid.myCollection = fluid.myCollection || {};
      */
     fluid.myCollection.initDataFeed = function (config, app) {
         var dataHandler = function (env) {
-            return [200, {"Content-Type": "text/plain"}, assembleData(env.urlState.params, config)];
+        	if (!env.urlState.params.uuid) {
+        		return [500, {"Content-Type": "text/plain"}, "No uuid parameter specified, cannot retrieve collection."];
+        	} else {
+        		return [200, {"Content-Type": "text/plain"}, assembleData(env.urlState.params, config)];
+        	}
         };
 
         var acceptor = fluid.engage.makeAcceptorForResource("myCollection", "json", dataHandler);

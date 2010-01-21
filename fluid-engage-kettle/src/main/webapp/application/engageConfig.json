@@ -27,7 +27,8 @@ initServices: [
     "fluid.catalogueService.initBrowseCatalogueDataFeed"       
     "fluid.myCollection.initMarkupFeed",
     "fluid.myCollection.initDataFeed",
-    "fluid.updateDatabase.initAcceptor",
+    "fluid.collectOperations.initAcceptor",
+	"fluid.reorder.initAcceptor",
     "fluid.userService.initAcceptor"
 ],
 views: {
