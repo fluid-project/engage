@@ -462,17 +462,6 @@ fluid = fluid || {};
 
             data : {},
 
-            links: [
-                {
-                    target: "",
-                    image: "",
-                    title: "",
-                    dated: "",
-                    category: null,
-                    size: null
-                }
-            ],
-            
             useDefaultImage: true,
                  
             defaultView: "grid"

@@ -51,10 +51,10 @@ fluid = fluid || {};
             collectStatus.fadeTo(4000, 0, function () {
                 if (that.options.operation === "collect") {
                     collectLink.text("Uncollect Artifact");
-                    that.options.operation = "uncollect";
+                    that.options.operation = "DELETE";
                 } else {
                     collectLink.text("Collect Artifact");
-                    that.options.operation = "collect";
+                    that.options.operation = "POST";
                 }
                 
                 collectStatus.removeClass("active");
