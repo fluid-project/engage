@@ -1,5 +1,5 @@
 /*
- Copyright 2009 University of Toronto
+ Copyright 2009-2010 University of Toronto
  
  Licensed under the Educational Community License (ECL), Version 2.0 or the New
  BSD license. You may not use this file except in compliance with one these
@@ -10,6 +10,7 @@
  
  */
 /*global jQuery, fluid*/
+"use strict";
 
 fluid = fluid || {};
 
@@ -139,6 +140,7 @@ fluid = fluid || {};
     var setup = function (that) {
         render(that);
         styleGroup(that);
+        that.locate("gridToggle").click(that.toggleGrid);
     };
     
     /**
@@ -149,6 +151,10 @@ fluid = fluid || {};
      */
     fluid.navigationList = function (container, options) {
         var that = fluid.initView("fluid.navigationList", container, options);
+        
+        that.toggleGrid = function () {
+            that.locate("listGroup").toggleClass(that.options.styles.grid);
+        };
         
         setup(that);
         
@@ -165,10 +171,12 @@ fluid = fluid || {};
             link: ".flc-navigationList-link",
             image: ".flc-navigationList-image",
             titleText: ".flc-navigationList-titleText",
-            descriptionText: ".flc-navigationList-descriptionText"
+            descriptionText: ".flc-navigationList-descriptionText",
+            gridToggle: ".flc-navigationList-gridToggle"
         },
         
         styles: {
+            grid: "fl-grid",
             listGroup: "fl-list-menu fl-list-thumbnails fl-thumbnails-expanded",
             listItems: null,
             link: null,
