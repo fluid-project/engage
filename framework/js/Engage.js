@@ -387,6 +387,7 @@ fluid = fluid || {};
             dataSpec: {
                 "exhibitionTitle": "key.exhibitTitle",
                 "sectionTitle": "key.sectionTitle",
+                "sectionSize": "value.sectionSize",
                 "sectionIntroduction": {
                     "path": "value.sectionIntroduction",
                     "func": "getSectionIntroduction"

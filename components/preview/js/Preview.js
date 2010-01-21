@@ -19,21 +19,18 @@ fluid = fluid || {};
 	var renderPreview = function (container, options) {
 		var tree = {children: []};
 		$.each(options.model, function (index, value) {
-			tree.children.push({
-				ID: "previewItems:",
-				children: [
-					fluid.engage.renderUtils.uiBound("previewItemCaption", value.title),
-					fluid.engage.renderUtils.decoratedUIBound("previewItemLink", [{
-						attrs: {
-							href: value.target
-						}
-					}, {
-						type: "addClass",
-						classes: value.media ? options.styles.mediaIncluded : ""
-					}]),
-                    fluid.engage.renderUtils.attrDecoratedUIBound("previewItemImage", "src", value.thumbnail)
-				]
-			});
+			tree.children.push(fluid.engage.renderUtils.uiContainer("previewItems:", [
+				fluid.engage.renderUtils.uiBound("previewItemCaption", value.title),
+				fluid.engage.renderUtils.decoratedUIBound("previewItemLink", [{
+					attrs: {
+						href: value.target
+					}
+				}, {
+					type: "addClass",
+					classes: value.media ? options.styles.mediaIncluded : ""
+				}]),
+                fluid.engage.renderUtils.attrDecoratedUIBound("previewItemImage", "src", value.thumbnail)
+			]));
 		});
 		fluid.engage.renderUtils.createRendererFunction(container,
 			options.selectors, {

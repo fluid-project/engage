@@ -1,5 +1,5 @@
 /*
-Copyright 2009 University of Toronto
+Copyright 2009 - 2010 University of Toronto
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -50,35 +50,6 @@ fluid = fluid || {};
         that.locate("content").addClass(that.options.styles.content);
         that.container.addClass(that.options.styles.container);
     };
-	
-    /**
-     * Generates the component tree used by the renderer
-     * 
-     * @param {Object} that, the component
-     */
-	var generateTree = function (that) {
-		return {
-			children: [{
-				ID: "content",
-				value: that.options.model
-			}]
-		};
-	};	
-	
-    /**
-     * Creates the options object used by the renderer
-     * 
-     * @param {Object} that, the component
-     */
-	var createRenderOptions = function (that) {
-		var selectorMap = [
-			{
-				selector: that.options.selectors.content, 
-				id: "content"
-			}
-		];
-		return {cutpoints: selectorMap, debug: true};
-	};
 
     /**
      * Binds a click handler to the toggler to call that.toggleDescription on click
@@ -117,7 +88,20 @@ fluid = fluid || {};
 	var setUpDescription = function (that) {
         addStyleClasses(that);
 		that.options.model = that.options.model.replace(/(<([^>]+)>)/gi, "");
-		fluid.selfRender(that.container, generateTree(that), createRenderOptions(that));
+		
+		var renderOpts = {
+            selectorsToIgnore: ["toggler"]
+        };
+		var utils = fluid.engage.renderUtils;
+		var renderer = utils.createRendererFunction(that.container, that.options.selectors, renderOpts);
+		
+		var tree = {
+			children: [
+			    utils.uiBound("content", that.options.model)
+			]	
+		};
+		
+		renderer(tree);
         
 		if (needToggle(that)) {
 			that.locate("content").addClass(that.options.styles.descriptionCollapsed);

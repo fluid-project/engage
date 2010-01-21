@@ -365,6 +365,13 @@ https://source.fluidproject.org/svn/LICENSE.txt
         return map;
     };
     
+    fluid.engage.renderUtils.uiContainer = function (id, children) {
+        return {
+            ID: id, 
+            children: children
+        };
+    };
+    
     fluid.engage.renderUtils.uiBound = function (id, value) {
         var uiBound = {ID: id};
         if (value) {
