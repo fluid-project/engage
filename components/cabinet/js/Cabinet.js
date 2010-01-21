@@ -55,9 +55,12 @@ fluid = fluid || {};
      * @param {Object} that, the component
      */
     var addCSS = function (that) {
-        that.locate("drawer").addClass(that.options.styles.drawer);
+        that.locate("drawer").not(that.shelves || "").addClass(that.options.styles.drawer);
         that.locate("contents").addClass(that.options.styles.contents);
         that.locate("handle").addClass(that.options.styles.handle);
+        if (that.shelves) {
+            that.shelves.addClass(that.options.styles.shelf);
+        }
     };
     
     /**
@@ -197,9 +200,9 @@ fluid = fluid || {};
      * @param {Object} that, the component
      */
     var setup = function (that) {
+        findShelves(that);
         addAria(that);
         addCSS(that);
-        findShelves(that);
         moveDrawers(that, that.options.startOpen ? open : close, that.locate("drawer"), that.options.preventEventFireOnInit);
         if (!that.options.startOpen) {
             that.openDrawers(that.locate("openByDefault"));
@@ -273,6 +276,7 @@ fluid = fluid || {};
             drawerOpened: "fl-cabinet-drawerOpened",
             
             drawer: "fl-container fl-container-autoHeading fl-cabinet-animation fl-container-collapsable",
+            shelf: "fl-container",
             contents: "fl-cabinet-contents",
             handle: "fl-cabinet-handle"
         },
