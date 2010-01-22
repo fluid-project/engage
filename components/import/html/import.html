@@ -9,10 +9,17 @@
     <link href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" rel="stylesheet" />
     <link href="../../../../fluid-engage-core/components/import/css/import.css" rel="stylesheet" />
     
-    <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>     
-    <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
-       
-    <script type="text/javascript" src="../../../../fluid-engage-core/components/import/js/index.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/FluidDOMUtilities.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/DataBinding.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>
+        
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>
+         
+    <script type="text/javascript" src="../../../../fluid-engage-core/components/import/js/import.js"></script>
         
   </head>
 
@@ -20,7 +27,7 @@
     <h1>Data Import Tool</h1>
     <h3>Select a data set for data import</h3>
     <br/>
-    <form>
+    <form class="flc-import-root">
         <label for="databaseUrl">Database URL: </label>
           <input id="databaseUrl" size="80" type="text" value="http://titan.atrc.utoronto.ca:5984" />
           <br/>
@@ -39,7 +46,10 @@
         <label for="dataSource">List of URLs or directory of XML files:</label><br/>
           <textarea id="dataSource" rows="10" cols="80"></textarea>
         <br/>
-        <input type="submit" value="Submit documents"/>
+        <input class="flc-import-submit" type="submit" value="Submit documents"/>
     </form>
+    <script class="flc-import-init-block">
+       fluid.engage.importer.view(".flc-import-root");
+    </script> 
   </body>
 </html>

@@ -365,6 +365,54 @@ https://source.fluidproject.org/svn/LICENSE.txt
         return map;
     };
     
+       
+    fluid.renderer.makeProtoExpander = function (options) {
+        var ELstyle = options.ELstyle;
+        function extractEL(string) {
+            if (ELstyle === "ALL") {
+                return string;
+            }
+            else if (ELstyle.length === 1) {
+                if (string.charAt(0) === ELstyle) {
+                    return ELstyle.substring(1);
+                }
+            }
+            else if (ELstyle === "${}") {
+                var i1 = string.indexOf("${");
+                var i2 = string.indexOf("}");
+                if (i1 === 0 && i2 !== -1) {
+                    return ELstyle.substring(2, i2);
+                }
+            }
+        }
+        function expandStringEntry(proto, string) {
+            var EL = options.ELstyle? extractEL(string): null;
+            if (EL) {
+                proto.valuebinding = EL;
+            }
+            else {
+                proto.value = string;
+            }
+        }
+        return function (proto) {
+            var togo = [];
+            for (key in proto) {
+               var entry = proto[key];
+               var comp = {ID: key};
+               if (typeof(entry) === "string") {
+                   expandStringEntry(comp, entry);
+                 }
+               else {
+                   jQuery.extend(true, comp, entry);
+               }
+               togo.push(comp);
+            }
+            return {children: togo};
+        };
+    };
+    
+        
+    
     fluid.engage.renderUtils.uiContainer = function (id, children) {
         return {
             ID: id, 
