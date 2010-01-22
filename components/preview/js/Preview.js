@@ -15,53 +15,53 @@ https://source.fluidproject.org/svn/LICENSE.txt
 fluid = fluid || {};
 
 (function ($) {
-	
-	var renderPreview = function (container, options) {
-		var tree = {children: []};
-		$.each(options.model, function (index, value) {
-			tree.children.push(fluid.engage.renderUtils.uiContainer("previewItems:", [
-				fluid.engage.renderUtils.uiBound("previewItemCaption", value.title),
-				fluid.engage.renderUtils.decoratedUIBound("previewItemLink", [{
-					attrs: {
-						href: value.target
-					}
-				}, {
-					type: "addClass",
-					classes: value.media ? options.styles.mediaIncluded : ""
-				}]),
+    
+    var renderPreview = function (container, options) {
+        var tree = {children: []};
+        $.each(options.model, function (index, value) {
+            tree.children.push(fluid.engage.renderUtils.uiContainer("previewItems:", [
+                fluid.engage.renderUtils.uiBound("previewItemCaption", value.title),
+                fluid.engage.renderUtils.decoratedUIBound("previewItemLink", [{
+                    attrs: {
+                        href: value.target
+                    }
+                }, {
+                    type: "addClass",
+                    classes: value.media ? options.styles.mediaIncluded : ""
+                }]),
                 fluid.engage.renderUtils.attrDecoratedUIBound("previewItemImage", "src", value.thumbnail)
-			]));
-		});
-		fluid.engage.renderUtils.createRendererFunction(container,
-			options.selectors, {
-				repeatingSelectors: ["previewItems"]
-			})(tree);
-	};
-	
-	var setup = function (that) {
-		if (that.options.model.length && that.options.model.length > 0) {
-			renderPreview(that.container, that.options);
-		}
-		else {
-			that.container.parent().remove();
-		}
-	}; 
-	
-	fluid.engage.preview = function (container, options) {
-		var that = fluid.initView("fluid.engage.preview", container, options);
-		setup(that);
-		return that;
-	};
+            ]));
+        });
+        fluid.engage.renderUtils.createRendererFunction(container,
+            options.selectors, {
+                repeatingSelectors: ["previewItems"]
+            })(tree);
+    };
+    
+    var setup = function (that) {
+        if (that.options.model.length && that.options.model.length > 0) {
+            renderPreview(that.container, that.options);
+        }
+        else {
+            that.container.parent().remove();
+        }
+    }; 
+    
+    fluid.engage.preview = function (container, options) {
+        var that = fluid.initView("fluid.engage.preview", container, options);
+        setup(that);
+        return that;
+    };
 
     fluid.defaults("fluid.engage.preview", {
-		selectors: {
-			previewItems: ".flc-preview-items",
+        selectors: {
+            previewItems: ".flc-preview-items",
             previewItemLink: ".flc-preview-item-link",
             previewItemImage: ".flc-preview-item-image",
             previewItemCaption: ".flc-preview-item-caption"
-		},
-		styles: {
-			mediaIncluded: "fl-preview-media-included"
-		}
-	});
+        },
+        styles: {
+            mediaIncluded: "fl-preview-media-included"
+        }
+    });
 }(jQuery));
