@@ -154,6 +154,10 @@ fluid = fluid || {};
         
         that.toggleGrid = function () {
             that.locate("listGroup").toggleClass(that.options.styles.grid);
+            that.locate("linkContainer").toggleClass(that.options.styles.gridLinkContainer);
+            that.locate("link").toggleClass(that.options.styles.gridLink);
+            that.locate("titleText").toggle();
+            that.locate("descriptionText").toggle();
         };
         
         setup(that);
@@ -168,6 +172,7 @@ fluid = fluid || {};
         selectors: {
             listGroup: ".flc-nagivationList-listGroup",
             listItems: ".flc-navigationList-items",
+            linkContainer: ".flc-navigationList-linkContainer",
             link: ".flc-navigationList-link",
             image: ".flc-navigationList-image",
             titleText: ".flc-navigationList-titleText",
@@ -176,14 +181,18 @@ fluid = fluid || {};
         },
         
         styles: {
-            grid: "fl-grid",
             listGroup: "fl-list-menu fl-list-thumbnails fl-thumbnails-expanded",
             listItems: null,
+            linkContainer: "",
             link: null,
             image: "fl-icon",
             titleText: null,
             descriptionText: "fl-link-summary",
-            category: null
+            category: null,
+            
+            grid: "fl-grid",
+            gridLinkContainer: "fl-table",
+            gridLink: "fl-table-cell"
         },
         
         strings: {},
