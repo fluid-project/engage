@@ -18,14 +18,38 @@ fluid.collectOperations = fluid.collectOperations || {};
 
 (function ($) {
     
-	var UUID_INDEX = 1;
-	var MUSEUM_INDEX = 3;
-	var ARTIFACT_INDEX = 5;
-
-    var addArtifact = function (userCollection, artifactData) {    
-    	userCollection.collection.artifacts.push({"museum": artifactData.museum, "id": artifactData.id});
+    /** Those constants are used to parse the restful URL that is handled by this acceptor */
+    var UUID_INDEX = 1;
+    var MUSEUM_INDEX = 3;
+    var ARTIFACT_INDEX = 5;
+    
+    /**
+     * Extracts the artifact data from a restful path object.
+     * 
+     * @param {Object} pathInfo, the parsed path segments of the query URL.
+     */
+    var compileArtifactData = function (pathInfo) {
+        return {
+            id: pathInfo[ARTIFACT_INDEX],
+            museum: pathInfo[MUSEUM_INDEX],
+            uuid: pathInfo[UUID_INDEX]
+        };
     };
     
+    /**
+     * Helper function for adding an artifact to a collection object.
+     * @param {Object} userCollection, the user collection.
+     * @param {Object} artifactData, the artifact object.
+     */
+    var addArtifact = function (userCollection, artifactData) {    
+        userCollection.collection.artifacts.push({"museum": artifactData.museum, "id": artifactData.id});
+    };
+    
+    /**
+     * Helper function for removing an artifact from a collection object.
+     * @param {Object} userCollection, the user collection.
+     * @param {Object} artifactData, the artifact object.
+     */
     var removeArtifact = function (userCollection, artifactData) {
         userCollection.collection.artifacts = $.makeArray(
             $(userCollection.collection.artifacts).filter(function () {
@@ -34,28 +58,27 @@ fluid.collectOperations = fluid.collectOperations || {};
         );
     };
     
+    /**
+     * Collect/uncollect logic - the user collection is retreived from CouchDB and updated.
+     * 
+     * @param {Object} pathInfo, the parsed path segments of the query URL.
+     * @param config, the JSON config file for Engage.
+     * @param {Function} fn, alternatively the add/remove artifact function.
+     */
     var collectOperation = function (pathInfo, config, fn) {
-    	var artifactData = parseRequest(pathInfo);
-    	
+        var artifactData = compileArtifactData(pathInfo);
+        
         var userCollection = fluid.myCollection.common.getCollection(artifactData, config);
         
         fn(userCollection, artifactData);
         
-        var collectionUrl = fluid.myCollection.common.compileUpdateUrl(userCollection._id, config);
+        var collectionUrl = fluid.myCollection.common.compileUserDocumentUrl(userCollection._id, config);
         
-        fluid.myCollection.common.ajaxCall(collectionUrl, function () {}, JSON.stringify(userCollection), "PUT");    	
-    };
-    
-    var parseRequest = function (pathInfo) {
-    	return {
-    		id: pathInfo[ARTIFACT_INDEX],
-    		museum: pathInfo[MUSEUM_INDEX],
-    		uuid: pathInfo[UUID_INDEX]
-    	};
+        fluid.myCollection.common.ajaxCall(collectionUrl, function () {}, JSON.stringify(userCollection), "PUT");       
     };
     
     /**
-     * Creates an acceptor for collecting and uncollecting artifacts.
+     * Creates an acceptor for adding and removing artifacts from the user collection.
      * 
      *  @param {Object} config, the JSON config file for Engage.
      *  @param {Object} app, the Engage application.

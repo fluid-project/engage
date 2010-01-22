@@ -15,16 +15,18 @@ fluid = fluid || {};
 
 (function ($) {
     /**
-     * Creates a render component for the component tree. The key can be any key that a component tree would take and the value is what would be assigned to it.
-     * For example if you wanted to have node that just prints out "Hello World" you could set the key to "value" and the value to "Hello World"
-     * 
+     * Creates a model node.
+     * There are two types of nodes - top level and children, the former have additional
+     * properties like index and artifact ID.
+     *  
      * @param {Object} id, the ID used by the component tree
      * @param {Object} key, a key representing an entry in a renderer component
      * @param {Object} value, the value assigned to the key
      * @param {Object} classes, (optional) can add classes without having to specify the decorator key.
      * @param index, (optional - only for top level nodes) the index of this tree node that is used to map
      * the feed data with the current order.
-     * @param artifactId, (optional - only for top level nodes) the artifact CouchDB id. 
+     * @param artifactId, (optional - only for top level nodes) the artifact CouchDB id.
+     * @param museum, (optional - only for top level nodes) the museum for the artifact.
      */
     var treeNode = function (id, key, value, classes, index, artifactId, museum) {
         var obj = {ID: id};
@@ -49,9 +51,9 @@ fluid = fluid || {};
     };
 
     /**
-     * Generates the component tree used by the renderer
+     * Generates the component tree used by the renderer.
      * 
-     * @param {Object} that, the component
+     * @param {Object} that, the component.
      */
     var generateTree = function (that) {
         var styles = that.options.styles;
@@ -85,11 +87,7 @@ fluid = fluid || {};
                 if (object.image || that.options.useDefaultImage) {
                     tree.children.push({
                         ID: "image",
-                        target: object.image,
-                        decorators: [{
-                            type: "addClass",
-                            classes: styles.image
-                        }]
+                        target: object.image
                     });
                 }
 
@@ -106,9 +104,9 @@ fluid = fluid || {};
     };
 
     /**
-     * Renders the component based on values passed into the options
+     * Renders the component based on values passed into the options.
      * 
-     * @param {Object} that, the component
+     * @param {Object} that, the component.
      */
     var render = function (that) {
         var selectorMap = [ 
@@ -120,13 +118,6 @@ fluid = fluid || {};
         ];
 
         if (that.templates) {
-            var resources = {
-                myCollection: {
-                    href: "myCollection.html",
-                    cutpoints: selectorMap
-                }
-            };
-
             fluid.reRender(that.templates, that.locate("collectionGroup"), generateTree(that));
             that.events.afterRender.fire(that);
         } else {
@@ -144,7 +135,7 @@ fluid = fluid || {};
     /**
      * Changes the style on the group containing the list of links, transition from grid to list to grid.
      * 
-     * @param {Object} that, the component
+     * @param {Object} that, the component.
      */
     var addGroupStyle = function (that) {
         if (that.currentView === "grid") {
@@ -156,6 +147,8 @@ fluid = fluid || {};
     
     /**
      * Removes the style on the group containing the list of links.
+     * 
+     * @param {Object} that, the component.
      */
     var removeGroupStyle = function (that) {     
         if (that.currentView === "grid") {
@@ -168,7 +161,7 @@ fluid = fluid || {};
     /**
      * Adds the loading style from the component, so that the loading message is displayed
      * 
-     * @param {Object} that, the component
+     * @param {Object} that, the component.
      */
     var addLoadStyling = function (that) {
         that.container.addClass(that.options.styles.load);
@@ -177,7 +170,7 @@ fluid = fluid || {};
     /**
      * Removes the loading style from the component, so that the rendered page is displayed
      * 
-     * @param {Object} that, the component
+     * @param {Object} that, the component.
      */
     var removeLoadStyling = function (that) {
         that.container.removeClass(that.options.styles.load);
@@ -186,7 +179,7 @@ fluid = fluid || {};
     /**
      * Refreshes the reorderer.
      * 
-     * @param {Object} that, the component
+     * @param {Object} that, the component.
      */
     var refreshReorderer = function (that) {
         if (that.imageReorderer) {
@@ -197,7 +190,7 @@ fluid = fluid || {};
     /**
      * Binds the after render event to a lister that calls the removeLoadStyling function
      * 
-     * @param {Object} that, the component
+     * @param {Object} that, the component.
      */
     var bindEvents = function (that) {
         that.events.afterRender.addListener(removeLoadStyling);
@@ -207,17 +200,22 @@ fluid = fluid || {};
     /**
      * Add the event to be triggered when the toggle view link is clicked.
      * 
-     * @param {Object} that, the component
+     * @param {Object} that, the component.
      */
     var addClickEvent = function (that) {
         that.locate("toggler").click(that.toggleView);
     };
     
-    var addBackHref = function (that) {
-    	var backUrl = document.referrer;
-    	if (backUrl.indexOf("uuid") < 0) {
-    		backUrl += "&" + $.param({uuid: that.uuid});
-    	}
+    /**
+     * Assigns the href attribute to the back button to document.referrer.
+     * 
+     * @param {Object} that, the component.
+     */
+    var initBackLink = function (that) {
+        var backUrl = document.referrer;
+        if (backUrl.indexOf("uuid") < 0) {
+            backUrl += "&" + $.param({uuid: that.uuid});
+        }
         that.locate("backButton").attr("href", backUrl);
     };
     
@@ -265,9 +263,9 @@ fluid = fluid || {};
     /**
      * Invokes jQuery $.ajax function.
      * 
-     * @param url, the url to call
-     * @param error, the error callback
-     * @param data, the data to pass
+     * @param url, the url to call.
+     * @param error, the error callback.
+     * @param data, the data to pass.
      */
     var ajaxCall = function (url, error, data) {
         $.ajax({
@@ -310,9 +308,9 @@ fluid = fluid || {};
         var path = parsePath(location.pathname);
         
         try {
-        	ajaxCall(compileReorderUrl(path), error, "uuid=" + uuid + "&orderData=" +
+            ajaxCall(compileReorderUrl(path), error, "uuid=" + uuid + "&orderData=" +
                 encodeURIComponent(JSON.stringify(data)));
-        } catch (e) {};
+        } catch (e) {}
     };            
     
     /**
@@ -330,7 +328,7 @@ fluid = fluid || {};
         addGroupStyle(that);
 
         addClickEvent(that);
-        addBackHref(that);
+        initBackLink(that);
 
         bindEvents(that);
         that.events.afterRender.fire(that);
@@ -344,7 +342,7 @@ fluid = fluid || {};
     };
 
     /**
-     * The component's creator function 
+     * The component's creator function. 
      * 
      * @param {Object} container, the container which will hold the component
      * @param {Object} options, options passed into the component
@@ -425,7 +423,7 @@ fluid = fluid || {};
                         selected: null,
                         dragging: null,
                         mouseDrag: "fl-invisible",
-                        dropMarker: "fl-myCollection-dropMarker",
+                        dropMarker: "fl-myCollection-dropMarker"
                     },                            
                     listeners: {
                         afterMove: null,

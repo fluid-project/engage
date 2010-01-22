@@ -17,11 +17,12 @@ fluid = fluid || {};
 fluid.userService = fluid.userService || {};
 
 (function ($) {
-    var compileUrl = function (config) {
-        return fluid.stringTemplate(config.myCollectionDocumentURLTemplate, 
-                {dbName: "users", id: ""});
-    };
-    
+    /**
+     * Creates a user document for Engage in the users database.
+     * The UUID returned is the CouchDB ID of the document.
+     * 
+     * @param {Object} config, the JSON config file for Engage.
+     */
     var generateUuid = function (config) {
         var data;
         
@@ -35,7 +36,7 @@ fluid.userService = fluid.userService || {};
                                                    // that seems to crash the JSON parser, so we remove it.
         };
 
-        var url = compileUrl(config);
+        var url = fluid.myCollection.common.compileUserDocumentUrl("", config);
         
         var userDocument = {};
         userDocument.type = "user";
@@ -51,11 +52,18 @@ fluid.userService = fluid.userService || {};
             data: JSON.stringify(userDocument),
             processData: false,
             dataType: "json",
-            type: "POST"});
+            type: "POST"
+        });
         
         return JSON.parse(data).id;
     };
     
+    /**
+     * Creates an acceptor for the user service.
+     * 
+     *  @param {Object} config, the JSON config file for Engage.
+     *  @param {Object} app, the Engage application.
+     */
     fluid.userService.initAcceptor = function (config, app) {
         var dataHandler = function (env) {
             var uuid = generateUuid(config);

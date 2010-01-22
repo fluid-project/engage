@@ -16,16 +16,22 @@ fluid = fluid || {};
 
 (function ($) {
 
+    /**
+     * Creates a URL for the user server side service.
+     */
     var compileUrl = function () {
-        var path = location.pathname.substring(0, location.pathname.lastIndexOf("/"));
         var url = "http://" + location.host + "/users/userService.js";
         
         return url;
     };
 
+    /**
+     * Creates an empty object to use in the creator function and attaches two functions to it - 
+     * for UUID generation and retrieval. 
+     */
     var setup = function () {
-    	that = {};
-    	
+        var that = {};
+        
         that.generateUuid = function () {
             var uuid;
             
@@ -52,10 +58,16 @@ fluid = fluid || {};
         return that;
     };
     
+    /**
+     * The component's creator function 
+     * 
+     * @param {Object} container, the container which will hold the component
+     * @param {Object} options, options passed into the component
+     */
     fluid.user = function (container, options) {
-    	var that = setup();
-    	fluid.mergeComponentOptions(that, "fluid.user");
-    	
+        var that = setup();
+        fluid.mergeComponentOptions(that, "fluid.user");
+        
         return that;
     };
     

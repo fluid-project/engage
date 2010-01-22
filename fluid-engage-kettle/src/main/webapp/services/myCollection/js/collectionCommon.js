@@ -17,13 +17,6 @@ fluid = fluid || {};
 fluid.myCollection.common = fluid.myCollection.common || {};
 
 (function ($) {
-
-    
-	var compileDatabaseUrl = function (params, config) {
-        return fluid.stringTemplate(config.myCollectionDocumentURLTemplate, 
-                {dbName: "users", id: params.uuid});
-    };
-
     /**
      * Error callback function - logs errors.
      * 
@@ -35,8 +28,14 @@ fluid.myCollection.common = fluid.myCollection.common || {};
         fluid.log("Status: " + textStatus);
         fluid.log("Error: " + errorThrown);
     };
-    
-    fluid.myCollection.common.compileUpdateUrl = function (id, config) {
+
+    /**
+     * Creates an URL referring to a single user document in CouchDB.
+     * 
+     * @param id, the unique user ID.
+     * @param {Object} config, the JSON config file for Engage.
+     */
+    fluid.myCollection.common.compileUserDocumentUrl = function (id, config) {
         return fluid.stringTemplate(config.myCollectionDocumentURLTemplate, 
             {dbName: "users", id: id ? id : ""});
     };
@@ -46,7 +45,6 @@ fluid.myCollection.common = fluid.myCollection.common || {};
      * 
      * @param url, the url to call
      * @param success, the success callback
-     * @param error, the error callback
      * @param data, the data passed to the server.
      * @param type, the HTTP method - GET or PUT.
      */
@@ -62,15 +60,15 @@ fluid.myCollection.common = fluid.myCollection.common || {};
             processData: false
         });
     };
-	
+    
     /**
      * Returns the JSON object returned by CouchDB for a user collection.
      * 
-     * @param {Object} params, the HTTP parameters passed to this handler.
+     * @param {Object} params, the HTTP parameters passed to a handler.
      * @param {Object} config, the JSON config file for Engage. 
      */
     fluid.myCollection.common.getCollection = function (params, config) {
-        var databaseUrl = compileDatabaseUrl(params, config);
+        var databaseUrl = fluid.myCollection.common.compileUserDocumentUrl(params.uuid, config);
         
         var data;
         

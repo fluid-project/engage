@@ -15,54 +15,92 @@
 fluid = fluid || {};
 
 (function ($) {
-    
-	var compileArtifactPath = function (uuid, museum, artifactId) {
-        var tmpPath = location.pathname.substring(0, location.pathname.lastIndexOf("/"));
-        var path = tmpPath.substring(0, tmpPath.lastIndexOf("/"));
 
-        path += "/users/" + uuid;
+    
+    /**
+     * Creates an URL for the users namespace.
+     */
+    var compileUsersPath = function () {
+        var artifactPath = location.pathname.substring(0, location.pathname.lastIndexOf("/"));
+        return artifactPath.substring(0, artifactPath.lastIndexOf("/")) + "/users";     
+    };
+    
+    /**
+     * Create a restful URL for querying the server side for collect/uncollect operations.
+     * @param uuid, the unique ID of the user.
+     * @param museum, the museum for this artifact.
+     * @param artifactId, the artifact ID.
+     */
+    var compileArtifactPath = function (uuid, museum, artifactId) {
+        var path = compileUsersPath();
+
+        path += "/" + uuid;
         path += "/collection/" + museum;
         path += "/artifacts/" + artifactId;
         
         return path;
-	};
-	
-	var compileUsersPath = function () {
-        var artifactPath = location.pathname.substring(0, location.pathname.lastIndexOf("/"));
-        return artifactPath.substring(0, artifactPath.lastIndexOf("/")) + "/users";		
-	};
-	
+    };
+    
+    /**
+     * Changes the collect/uncollect link text and changes the next operation to be performed -
+     * add artifact or remove artifact from collection.
+     * 
+     * @param {Object} that, the component
+     * @param collect, boolean indicating whether we should change the state to "collect" or
+     * "uncollect"
+     */
+    var switchCollectLink = function (that, collect) {
+        // TODO: that.locate won't work on a rendered DOM, we need to make it work
+        var collectLink = fluid.jById(that.options.collectId);
+        if (collectLink.length === 0) {
+            collectLink = that.locate("collect");
+        }
+        
+        if (collect) {
+            collectLink.text(that.options.strings.collect);
+            that.options.operation = "POST";
+        } else {
+            collectLink.text(that.options.strings.uncollect);
+            that.options.operation = "DELETE";          
+        }
+    };
+    
+    /**
+     * Visualize a confirmation status message that is also a link to the my collection
+     * page.
+     * 
+     * @param {Object} that, the component.
+     */
     var confirmCollect = function (that) {
-        var collectLink = fluid.jById("artifactCollectLink");
+        // TODO: that.locate won't work on a rendered DOM, we need to make it work
+        var collectLink = fluid.jById(that.options.collectId);
         var collectStatus = collectLink.next().children();
         
-        var path = location.pathname.substring(0, location.pathname.lastIndexOf("/"));
         collectStatus.attr("href", "http://" + location.host + compileUsersPath() + 
                 "/myCollection.html" + "?uuid=" + that.uuid);
         collectStatus.addClass("active");
         
         if (that.options.operation === "POST") {
-            collectStatus.text("This artifact has been added to your personal collection; tap here to go there now.");
+            collectStatus.text(that.options.strings.collectedMessage);
         } else {
-            collectStatus.text("This artifact has been removed from your personal collection; tap here to go there now.");
+            collectStatus.text(that.options.strings.uncollectedMessage);
         }
         
         collectStatus.fadeTo(1000, 1, function () {
             collectStatus.fadeTo(4000, 0, function () {
-                if (that.options.operation === "POST") {
-                    collectLink.text("Uncollect Artifact");
-                    that.options.operation = "DELETE";
-                } else {
-                    collectLink.text("Collect Artifact");
-                    that.options.operation = "POST";
-                }
-                
+                switchCollectLink(that, that.options.operation === "DELETE");
                 collectStatus.removeClass("active");
                 collectStatus.removeAttr("href");
             });
         });
     };
     
+    /**
+     * The component's creator function 
+     * 
+     * @param {Object} container, the container which will hold the component
+     * @param {Object} options, options passed into the component
+     */
     fluid.collectionOperations = function (container, options) {
         var that = fluid.initView("fluid.collectionOperations", container, options);
         
@@ -74,15 +112,7 @@ fluid = fluid || {};
             that.uuid = that.user.generateUuid();
         } 
 
-        that.collectLink = that.locate("collect");
-        
-        if (!options.artifactCollected) {
-            that.collectLink.text("Collect Artifact");
-            that.options.operation = "POST";
-        } else {
-            that.collectLink.text("Uncollect Artifact");
-            that.options.operation = "DELETE";
-        }
+        switchCollectLink(that, !options.artifactCollected);
         
         that.collectHandler = function () {
             var url = "http://" + location.host + compileArtifactPath(that.uuid, options.museum, options.artifactId);
@@ -94,7 +124,9 @@ fluid = fluid || {};
             });
 
             confirmCollect(that);
-        };
+        };        
+        
+        that.collectStatus = that.locate("status");
         
         return that;
     };
@@ -106,7 +138,14 @@ fluid = fluid || {};
         operation: null,
         selectors : {
             collect: ".flc-collect-link",
-            status: ".flc-collect-status"
-        }        
+            status: ".flc-collection-link"
+        },
+        collectId: "artifactCollectLink",
+        strings: {
+            collect: "Collect Artifact",
+            uncollect: "Uncollect Artifact",
+            collectedMessage: "This artifact has been added to your personal collection; tap here to go there now.",
+            uncollectedMessage: "This artifact has been removed from your personal collection; tap here to go there now."               
+        }
     });
 })(jQuery);

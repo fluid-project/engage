@@ -18,7 +18,7 @@ fluid.reorder = fluid.reorder || {};
 
 (function ($) {
     /**
-     * Retrieves an user collection an invokes an update on CouchDB with the new order.
+     * Updates CouchDB with the new order for a user collection.
      * 
      * @param {Object} params, the HTTP parameters passed to this handler.
      * @param {Object} config, the JSON config file for Engage.  
@@ -30,11 +30,11 @@ fluid.reorder = fluid.reorder || {};
         
         userCollection.collection = parsedParams.collection;
         
-        var collectionUrl = fluid.myCollection.common.compileUpdateUrl(userCollection._id, config);
+        var collectionUrl = fluid.myCollection.common.compileUserDocumentUrl(userCollection._id, config);
         
         fluid.myCollection.common.ajaxCall(collectionUrl, function () {}, JSON.stringify(userCollection), "PUT");
     };
-	
+    
     /**
      * Creates an acceptor for updating CouchDB with the new artifact order.
      * 

@@ -17,18 +17,6 @@ fluid = fluid || {};
 fluid.myCollection = fluid.myCollection || {};
 
 (function ($) {
-
-    /**
-     * Returns an URL for querying the user database for user collections.
-     * 
-     *  @param {Object} params, the HTTP parameters passed to this handler.
-     *  @param {Object} config, the JSON config file for Engage.
-     */
-    var compileUserDatabaseURL = function (params, config) {
-        return fluid.stringTemplate(config.myCollectionDocumentURLTemplate, 
-            {dbName: "users", id: params.uuid});
-    };
-    
     /**
      * Returns an URL for querying the museum databases for arfitacts.
      * 
@@ -36,7 +24,7 @@ fluid.myCollection = fluid.myCollection || {};
      * @param database, the name of the museum database.
      * @param query, the query to perform.
      */
-    var compileDatabaseURL = function (config, database, query) {
+    var compileArtifactQueryURL = function (config, database, query) {
         return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
                 {dbName: database || "", view: config.views.byId, query: query || ""});
     };
@@ -47,7 +35,7 @@ fluid.myCollection = fluid.myCollection || {};
      * @param {Object} rawData, the collection data as it is returned by CouchDB.
      */
     var getArtifactsByMuseum = function (rawData) {
-    	var result = []; 
+        var result = []; 
         var collection = rawData.collection;
         fluid.transform(collection.artifacts, function (artifact) {
             if (!result[artifact.museum]) {
@@ -82,7 +70,7 @@ fluid.myCollection = fluid.myCollection || {};
                 }
             }
             
-            return {database: database, url: compileDatabaseURL(config, database, query)};
+            return {database: database, url: compileArtifactQueryURL(config, database, query)};
         });
     };
   
@@ -130,6 +118,7 @@ fluid.myCollection = fluid.myCollection || {};
      * 
      * @param {Object} data, the normalized artifact data.
      * @param dbName, the name of the museum database that contains the set of artifacts.
+     * @param uuid, the unique user id for the owner of the collection.
      */
     var compileData = function (data, dbName, uuid) {
         var baseArtifactURL = "../artifacts/view.html";
@@ -151,38 +140,18 @@ fluid.myCollection = fluid.myCollection || {};
     };
     
     /**
-     * Error callback function - logs errors.
-     * 
-     * @param {Object} XMLHttpRequest, the object used to do network operations.
-     * @param textStatus, a textual representation of the error status.
-     * @param errorThrown, the error thrown.
-     */
-    var errorCallback = function (XMLHttpRequest, textStatus, errorThrown) {
-        fluid.log("Status: " + textStatus);
-        fluid.log("Error: " + errorThrown);
-    };
-        
-    /**
-     * Invokes jQuery $.ajax function.
+     * Performs a GET method via ajax to retrieve data from the database.
      * 
      * @param url, the url to call
-     * @param success, the success callback
-     * @param error, the error callback
      */
-    var ajaxCall = function (url, error) {
+    var ajaxCall = function (url) {
         var data;
         
         var success = function (returnedData) {
             data = returnedData;
         };
-        
-        $.ajax({
-            url: url,
-            dataType: "json",
-            async: false,
-            success: success,
-            error: error
-        });
+
+        fluid.myCollection.common.ajaxCall(url, success, data, "GET");
         
         if (data) {
             return JSON.parse(data.replace("\n", ""));
@@ -213,15 +182,15 @@ fluid.myCollection = fluid.myCollection || {};
      *  @param {Object} config, the JSON config file for Engage.
      */
     var assembleData = function (params, config) {
-        var url = compileUserDatabaseURL(params, config);
+        var url = fluid.myCollection.common.compileUserDocumentUrl(params.uuid, config);
         
-        var rawData = ajaxCall(url, errorCallback);
+        var rawData = ajaxCall(url);
 
         var urls = compileDataURLs(config, rawData);
         var originalArtifactIds = getArtifactIds(rawData);
 
         var dataSet = fluid.transform(urls, function (artifactURL) {
-            var rawArtifactData = ajaxCall(artifactURL.url, errorCallback);
+            var rawArtifactData = ajaxCall(artifactURL.url);
             var artifactData = getArtifactData(rawArtifactData, artifactURL.database);
 
             return compileData(artifactData, artifactURL.database, params.uuid);            
@@ -261,11 +230,11 @@ fluid.myCollection = fluid.myCollection || {};
      */
     fluid.myCollection.initDataFeed = function (config, app) {
         var dataHandler = function (env) {
-        	if (!env.urlState.params.uuid) {
-        		return [500, {"Content-Type": "text/plain"}, "No uuid parameter specified, cannot retrieve collection."];
-        	} else {
-        		return [200, {"Content-Type": "text/plain"}, assembleData(env.urlState.params, config)];
-        	}
+            if (!env.urlState.params.uuid) {
+                return [500, {"Content-Type": "text/plain"}, "No uuid parameter specified, cannot retrieve collection."];
+            } else {
+                return [200, {"Content-Type": "text/plain"}, assembleData(env.urlState.params, config)];
+            }
         };
 
         var acceptor = fluid.engage.makeAcceptorForResource("myCollection", "json", dataHandler);
