@@ -67,20 +67,6 @@ https://source.fluidproject.org/svn/LICENSE.txt
         return string && string !== "";
     };
     
-    var categorySelector = function (component) {
-        var links = component.options.links;
-        var allSel = $(component.options.selectors.titleText);
-        var selector = "";
-        
-        for (var i = 0; i < links.length; i++) {
-            if (links[i].category) {
-                selector = selector ? selector.add(allSel.eq(i)) : allSel.eq(i);
-            }
-        }
-        
-        return selector;
-    };
-    
     var numKeys = function (set, key) {
         var count = 0;
         for (var i = 0; i < set.length; i++) {
@@ -99,24 +85,10 @@ https://source.fluidproject.org/svn/LICENSE.txt
         return vals;
     };
     
-    var assembleCategoryArray = function (links, template) {
-        var categories = arrayFromKey(links, "category");
-        var sizes = arrayFromKey(links, "size");
-        
-        return fluid.transform(categories, function (object, index) {
-            var string = template;
-            string = string.replace(/\{0\}/g, object);
-            string = string.replace(/\{1\}/g, sizes[index]);
-            return string;
-        });
-        
-    };
-    
     var renderingTests = function (component, selectors, links) {
         jqUnit.assertEquals("All list items rendered", links.length, $(selectors.listItems).length);
         jqUnit.assertEquals("All links rendered", links.length, $(selectors.link).length);
-        jqUnit.assertEquals("All titles rendered", numKeys(links, "title"), $(selectors.titleText).not(categorySelector(component)).length || 0);
-        jqUnit.assertEquals("All categories rendered", numKeys(links, "category"), categorySelector(component).length);
+        jqUnit.assertEquals("All titles rendered", numKeys(links, "title"), $(selectors.titleText).length || 0);
         jqUnit.assertEquals("All descriptions rendered", numKeys(links, "description"), $(selectors.descriptionText).length);
         jqUnit.assertEquals("All images rendered", numKeys(links, "image"), $(selectors.image).length);
     };
@@ -148,56 +120,17 @@ https://source.fluidproject.org/svn/LICENSE.txt
             image: "../../../integration_demo/images/Snuffbox.jpg",
             title: "Title 3",
             description: "Description 3"
-        },
-        {
-            target: "http://build.fluidproject.org",
-            category: "Category",
-            size: 100
         }
-    ]};
-    
-    var noCategoryData = {links: [
-        {
-            target: "../../../integration_demo/images/Artifacts-.jpg",
-            image: "../../../integration_demo/images/Artifacts-.jpg",
-            title: "Title 1",
-            description: "Description 1"
-        },
-        {
-            target: "../../../integration_demo/images/Snuffbox.jpg",
-            image: "../../../integration_demo/images/Snuffbox.jpg",
-            title: "Title 2",
-            description: "Description 2"
-        }
-    ]};
-    
-    var changeMessageData = {
-        messageBundle: {linkToMoreMessage: "{0} has a total of ({1}) artifacts"},
-        
-        links: [
-            {
-                target: "../../../integration_demo/images/Snuffbox.jpg",
-                image: "../../../integration_demo/images/Snuffbox.jpg",
-                title: "Title 3",
-                description: "Description 3"
-            },
-            {
-                target: "http://build.fluidproject.org",
-                category: "Animals",
-                size: 500
-            }
     ]};
     
     var navigationListTests = function () {
         var tests = jqUnit.testCase("NavigationList Tests");
-       
-        //TODO: Proper text replacement in message
             
         tests.test("Rendering of elements", function () {
             var navList = setup(CONTAINER, generalData);
             var selectors = navList.options.selectors;
             var links = navList.options.links;
-            expect(6);
+            expect(5);
             
             renderingTests(navList, selectors, links);
         });
@@ -217,13 +150,10 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 assertStyling(selectors.link, styles.link, true, "All links have the specified CSS class(es)");
             });
             conditionalAssert(isValidString(styles.titleText), function () {
-                assertStyling($(selectors.titleText).not(categorySelector(navList)), styles.titleText, true, "All titles have the specified CSS class(es)");
+                assertStyling($(selectors.titleText), styles.titleText, true, "All titles have the specified CSS class(es)");
             });
             conditionalAssert(isValidString(styles.descriptionText), function () {
                 assertStyling(selectors.descriptionText, styles.descriptionText, true, "All descriptions have the specified CSS class(es)");
-            });
-            conditionalAssert(isValidString(styles.category), function () {
-                assertStyling(categorySelector(navList), styles.category, true, "All categories have the specified CSS class(es)");
             });
             conditionalAssert(isValidString(styles.image), function () {
                 assertStyling(selectors.image, styles.image, true, "All images have the specified CSS class(es)");
@@ -234,30 +164,11 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var navList = setup(CONTAINER, generalData);
             var selectors = navList.options.selectors;
             var links = navList.options.links;
-            var categoryText = assembleCategoryArray(links, navList.options.messageBundle.linkToMoreMessage);
             
             valueTests(links, "image", selectors.image, "Image has correct source", "attr", "src");
             valueTests(links, "description", selectors.descriptionText, "Description text is correct", "text");
-            valueTests(links, "title", $(selectors.titleText).not(categorySelector(navList)), "Title text is correct", "text");
+            valueTests(links, "title", $(selectors.titleText), "Title text is correct", "text");
             valueTests(links, "target", selectors.link, "Links have the correct href", "attr", "href");
-            valueTests(links, "category", categorySelector(navList), "Category text is correct", "text", null, categoryText);
-        });
-        
-        tests.test("No category link", function () {
-            var navList = setup(CONTAINER, noCategoryData);
-            var selectors = navList.options.selectors;
-            var links = navList.options.links;
-            expect(6);
-            
-            renderingTests(navList, selectors, links);
-        });
-        
-        tests.test("Changed message template", function () {
-            var navList = setup(CONTAINER, changeMessageData);
-            var links = navList.options.links;
-            var categoryText = assembleCategoryArray(links, navList.options.messageBundle.linkToMoreMessage);
-            
-            valueTests(links, "category", categorySelector(navList), "Category text is correct", "text", null, categoryText);
         });
     };
     

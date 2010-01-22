@@ -85,11 +85,7 @@ fluid = fluid || {};
                 var title = object.title || "";
                 var tree = treeNode("listItems:", "children", [
                     treeNode("link", "target", object.target || "", styles.link),
-                    conditionalNode(object.category, function () {
-                        return compileMessage("titleText", "linkToMoreMessage", [object.category || "", object.size || ""], styles.category);
-                    }, function () {
-                        return treeNode("titleText", "value", title, styles.titleText);
-                    })
+                    treeNode("titleText", "value", title, styles.titleText)
                 ], styles.listItems);
                 
                 if (object.description) {
@@ -201,16 +197,12 @@ fluid = fluid || {};
         
         useDefaultImage: false,
         
-        messageBundle: {linkToMoreMessage: "See all in {0} ({1})"},
-        
         links: [
                 {
                     target: "",
                     image: "",
                     title: "",
-                    description: null,
-                    category: null,
-                    size: null
+                    description: null
                 }
             ]
         }
