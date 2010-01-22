@@ -3,6 +3,14 @@
     padding: 5px 0 5px 0;
 }
 
+.fl-exhibition-image {
+    padding: 0 ! important;
+}
+
+.fl-exhibition-title-date {
+    padding: 0 ! important;
+}
+
 .fl-exhibition-preview-thumb {
 	background-image: none ! important;
 }
@@ -19,9 +27,19 @@
     height: 45px;
 }
 
+.fl-theme-iphone {
+	background: none;
+}
+
+.fl-list-menu li:last-child {
+    border-bottom-width: 0px;
+}
+
+[class*=fl-list] > li {
+    border-style: none;
+}
+
 .fl-exhibition-content {
-    background-color: white;
-    -webkit-border-radius: 8px;
     padding: 4px;
 }
 
