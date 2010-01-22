@@ -213,10 +213,12 @@ fluid = fluid || {};
         that.locate("toggler").click(that.toggleView);
     };
     
-    var addBackEvent = function (that) {
-        that.locate("backButton").click(function () {
-            window.history.back();
-        });
+    var addBackHref = function (that) {
+    	var backUrl = document.referrer;
+    	if (backUrl.indexOf("uuid") < 0) {
+    		backUrl += "&" + $.param({uuid: that.uuid});
+    	}
+        that.locate("backButton").attr("href", backUrl);
     };
     
     /**
@@ -328,7 +330,7 @@ fluid = fluid || {};
         addGroupStyle(that);
 
         addClickEvent(that);
-        addBackEvent(that);
+        addBackHref(that);
 
         bindEvents(that);
         that.events.afterRender.fire(that);

@@ -41,7 +41,7 @@ fluid = fluid || {};
                 "/myCollection.html" + "?uuid=" + that.uuid);
         collectStatus.addClass("active");
         
-        if (that.options.operation === "collect") {
+        if (that.options.operation === "POST") {
             collectStatus.text("This artifact has been added to your personal collection; tap here to go there now.");
         } else {
             collectStatus.text("This artifact has been removed from your personal collection; tap here to go there now.");
@@ -49,7 +49,7 @@ fluid = fluid || {};
         
         collectStatus.fadeTo(1000, 1, function () {
             collectStatus.fadeTo(4000, 0, function () {
-                if (that.options.operation === "collect") {
+                if (that.options.operation === "POST") {
                     collectLink.text("Uncollect Artifact");
                     that.options.operation = "DELETE";
                 } else {

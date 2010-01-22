@@ -27,7 +27,7 @@ fluid = fluid || {};
                 {cutpoints: that.options.toRender.cutpoints, model: that.options.toRender.model, debug: true});
     };
     
-    var addCollectArtifactDecorator = function (that, options) {
+    var addCollectArtifactDecorator = function (that) {
         var i = 0;
         for (; i < that.options.toRender.tree.children.length; i++) {
             if (that.options.toRender.tree.children[i].ID === "artifactCollectLink") {
@@ -64,9 +64,7 @@ fluid = fluid || {};
 
         that.collectionOperations = fluid.initSubcomponent(that, "collectionOperations", [that.locate("collectArtifact"),
                 {artifactCollected: options.artifactCollected, museum: options.museum, artifactId: options.toRender.model.id}]);
-        // Sveto: As the collect link is in the render scope of this component, we need to add the
-        // event handler as a decorator, so it is attached after rendering.
-        addCollectArtifactDecorator(that, options);
+        addCollectArtifactDecorator(that);
 
         renderArtifactPage(that);
 
