@@ -16,31 +16,43 @@ fluid = fluid || {};
 
 (function ($) {
     
-    var renderPreview = function (container, options) {
-        var tree = {children: []};
-        $.each(options.model, function (index, value) {
-            tree.children.push(fluid.engage.renderUtils.uiContainer("previewItems:", [
-                fluid.engage.renderUtils.uiBound("previewItemCaption", value.title),
-                fluid.engage.renderUtils.decoratedUIBound("previewItemLink", [{
-                    attrs: {
-                        href: value.target
-                    }
-                }, {
-                    type: "addClass",
-                    classes: value.media ? options.styles.mediaIncluded : ""
-                }]),
-                fluid.engage.renderUtils.attrDecoratedUIBound("previewItemImage", "src", value.thumbnail)
-            ]));
-        });
-        fluid.engage.renderUtils.createRendererFunction(container,
-            options.selectors, {
-                repeatingSelectors: ["previewItems"]
-            })(tree);
+    var generateTreeForArtifact = function (artifact) {
+        var itemChildren = [
+            fluid.engage.renderUtils.uiBound("previewItemCaption", artifact.title),
+            {
+                ID: "previewItemLink",
+                target: artifact.target
+            },
+            {
+                ID: "previewItemImage",
+                target: artifact.thumbnail
+            }
+        ];
+        
+        // Add the media icon badge if this artifact has media associated with it.
+        if (artifact.media) {
+            itemChildren.push({
+                ID: "badgeIcon"
+            });
+        }
+        
+        return fluid.engage.renderUtils.uiContainer("previewItems:", itemChildren)
+    };
+    
+    var generateComponentTree = function (model) {
+        return {
+            children: fluid.transform(model, generateTreeForArtifact)
+        };
     };
     
     var setup = function (that) {
-        if (that.options.model.length && that.options.model.length > 0) {
-            renderPreview(that.container, that.options);
+        that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
+                repeatingSelectors: ["previewItems"]
+        });
+        
+        // TODO: This smells! Why are we blasting a component's parent if we have no model?    
+        if (that.model.length && that.model.length > 0) {
+            that.refreshView();
         }
         else {
             that.container.parent().remove();
@@ -49,6 +61,12 @@ fluid = fluid || {};
     
     fluid.engage.preview = function (container, options) {
         var that = fluid.initView("fluid.engage.preview", container, options);
+        that.model = that.options.model;
+        
+        that.refreshView = function () {
+            that.render(generateComponentTree(that.model))
+        };
+        
         setup(that);
         return that;
     };
@@ -58,10 +76,8 @@ fluid = fluid || {};
             previewItems: ".flc-preview-items",
             previewItemLink: ".flc-preview-item-link",
             previewItemImage: ".flc-preview-item-image",
-            previewItemCaption: ".flc-preview-item-caption"
-        },
-        styles: {
-            mediaIncluded: "fl-preview-media-included"
+            previewItemCaption: ".flc-preview-item-caption",
+            badgeIcon: ".flc-preview-badge-icon"
         }
     });
 }(jQuery));
