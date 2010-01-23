@@ -50,13 +50,7 @@ fluid = fluid || {};
                 repeatingSelectors: ["previewItems"]
         });
         
-        // TODO: This smells! Why are we blasting a component's parent if we have no model?    
-        if (that.model.length && that.model.length > 0) {
-            that.refreshView();
-        }
-        else {
-            that.container.parent().remove();
-        }
+        that.refreshView();
     }; 
     
     fluid.engage.preview = function (container, options) {
