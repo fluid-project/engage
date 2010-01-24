@@ -41,7 +41,6 @@ fluid.engage.importer = fluid.engage.importer || {};
         }]}});
         renderer(tree);
     }
-
     
     fluid.engage.importer.view = function (container, options) {
         var that = fluid.initView("fluid.engage.importer.view", container, options);        
@@ -49,22 +48,6 @@ fluid.engage.importer = fluid.engage.importer || {};
         init(that);
         return that;
     };
-    
-  
-    function makeProtoComponents(model, options) {
-        return {
-        "about": "About:",
-        "navBarTitle": "%title",
-        "displayDate": "%displayDate",
-        "shortDescription": "%shortDescription",
-        "description": that.model.introduction ? that.model.introduction : that.model.content,
-        "catalogue": {messagekey: "catalogue", args: model.catalogueSize},
-        "guestBook": {messagekey: "guestbook", args: model.guestbookSize},
-        "guestbookLink": {target: "%guestbookLink", linkText: {messagekey: "guestbookLinkText"}},
-        "image": {target: "%image"},
-        };
-    };
-    
     
     fluid.defaults("fluid.engage.importer.view", {
         selectors: {

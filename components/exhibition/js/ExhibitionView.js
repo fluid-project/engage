@@ -59,6 +59,27 @@ fluid = fluid || {};
         };
     };
     
+    function makeProtoComponents(model) {
+        return {
+            about: "About:",
+            navBarTitle: "%title",
+            displayDate: "%displayDate",
+            shortDescription: "%shortDescription",
+            description: model.introduction ? model.introduction : model.content,
+            catalogue: {messagekey: "catalogue", args: "%catalogueSize"},
+            guestBook: {messagekey: "guestbook", args: "%guestbookSize"},
+            guestbookLink: {target: "%guestbookLink"},
+            guestbookLinkText: {messagekey: "guestbookLinkText"},
+            image: {target: "%image"},
+            catalogueLink: {target: "%catalogueLink"},
+            catalogueLinkText: {messagekey: "catalogueLinkText"},
+            aboutLink: {target: "%aboutLink"},
+            aboutLinkText: {messagekey: "aboutLink"},
+            title: "%title",
+            guestbookInvitation: model.comments || {messagekey: "guestBookInvitationString"}
+        };
+    };
+    
     var setupSubcomponents = function (that) {        
         // Render the Exhibition Preview component only if we have artifacts to preview.
         if (that.model.catalogueSize > 0) {
