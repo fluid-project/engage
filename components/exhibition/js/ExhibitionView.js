@@ -65,7 +65,7 @@ fluid = fluid || {};
             navBarTitle: "%title",
             displayDate: "%displayDate",
             shortDescription: "%shortDescription",
-            description: model.introduction ? model.introduction : model.content,
+            description: {markup: model.introduction ? model.introduction : model.content},
             catalogue: {messagekey: "catalogue", args: "%catalogueSize"},
             guestBook: {messagekey: "guestbook", args: "%guestbookSize"},
             guestbookLink: {target: "%guestbookLink"},
