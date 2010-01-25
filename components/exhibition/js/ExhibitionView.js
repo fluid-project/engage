@@ -16,58 +16,14 @@ fluid = fluid || {};
 
 (function ($) {
     
-    var generateCatalogSubtree = function (model, strings) {
-        return [
-            {
-                ID: "catalogue"
-            },
-            {
-                ID: "catalogueTitle",
-                value: fluid.stringTemplate(strings.catalogueTitle, {
-                    size: model.catalogueSize
-                })
-            }
-        ];
-    };
-    
-    var generateComponentTree = function (model, strings) {
-        var utils = fluid.engage.renderUtils;
-        var children = [
-            utils.uiBound("about", "About:"), // TODO: Does this need ot be localized?
-            utils.uiBound("navBarTitle", model.title),
-            utils.uiBound("displayDate", model.displayDate),
-            utils.uiBound("shortDescription", model.shortDescription),
-            utils.uiBound("description", model.introduction ? model.introduction : model.content),
-            utils.uiBound("guestbook", fluid.stringTemplate(strings.guestbook, {
-                size: model.guestbookSize || 0
-            })),
-            utils.uiBound("guestbookLinkText", strings.guestbookLinkText),
-            utils.attrDecoratedUIBound("guestbookLink", "href", model.guestbookLink),
-            utils.attrDecoratedUIBound("image", "src", model.image),
-            utils.attrDecoratedUIBound("catalogueLink", "href", model.catalogueLink),
-            utils.uiBound("catalogueLinkText", strings.catalogueLinkText),
-            utils.attrDecoratedUIBound("aboutLink", "href", model.aboutLink),
-            utils.uiBound("aboutLinkText", strings.aboutLink),
-            utils.uiBound("title", model.title),
-            utils.uiBound("guestbookInvitation", model.comments || strings.guestBookInvitationString)
-        ];
-        
-        // Only render the catalogue section if there are artifacts in the catalogue.
-        return {
-            children: model.catalogueSize > 0 ? 
-                      children.concat(generateCatalogSubtree(model, strings)) : children
-        };
-    };
-    
     function makeProtoComponents(model) {
-        return {
+        var proto = {
             about: "About:",
             navBarTitle: "%title",
             displayDate: "%displayDate",
             shortDescription: "%shortDescription",
             description: {markup: model.introduction ? model.introduction : model.content},
-            catalogue: {messagekey: "catalogue", args: "%catalogueSize"},
-            guestBook: {messagekey: "guestbook", args: "%guestbookSize"},
+            guestBook: {messagekey: "guestbook", args: {size: "%guestbookSize"}},
             guestbookLink: {target: "%guestbookLink"},
             guestbookLinkText: {messagekey: "guestbookLinkText"},
             image: {target: "%image"},
@@ -78,6 +34,13 @@ fluid = fluid || {};
             title: "%title",
             guestbookInvitation: model.comments || {messagekey: "guestBookInvitationString"}
         };
+        if (model.catalogueSize > 0) {
+            fluid.renderer.mergeComponents(proto, {
+                catalogue: null,
+                catalogueTitle: {messagekey: "catalogueTitle", args: {size: "%catalogueSize"}}
+            });
+        }
+        return proto;
     };
     
     var setupSubcomponents = function (that) {        
@@ -101,8 +64,13 @@ fluid = fluid || {};
             media: true
         }];
 
+        var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
-            selectorsToIgnore: ["exhibitionPreview"]
+            selectorsToIgnore: ["exhibitionPreview"],
+            rendererOptions: {
+                messageLocator: messageLocator,
+                model: that.model
+            }
         });
         
         that.refreshView();
@@ -111,9 +79,13 @@ fluid = fluid || {};
     fluid.engage.exhibitionView = function (container, options) {
         var that = fluid.initView("fluid.engage.exhibitionView", container, options);        
         that.model = that.options.model;
+
+        var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
         
         that.refreshView = function () {
-            that.render(generateComponentTree(that.model, that.options.strings));
+            var protoTree = makeProtoComponents(that.model);
+            var tree = expander(protoTree);
+            that.render(tree);
             setupSubcomponents(that);
         };
         
