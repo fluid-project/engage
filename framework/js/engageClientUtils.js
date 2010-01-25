@@ -373,6 +373,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         for (var key in source) {
             target[key] = source[key];
         }
+        return target;
     };
     
     /** Create a "protoComponent expander" with the supplied set of options.
@@ -433,16 +434,10 @@ https://source.fluidproject.org/svn/LICENSE.txt
                expandStringEntry(comp, entry);
            }
            else {
-               if (comp.children) {
-                   var children = expandChildren(comp);
-                   comp.children = children;
+               function memberPusher(component, key) {
+               comp[key] = component;
                }
-               else {
-                   function memberPusher(component, key) {
-                       comp[key] = component;
-                   }
-                   expandMembers(entry, comp, memberPusher);
-               }
+           expandMembers(entry, comp, memberPusher);
            }
         }
         
@@ -456,9 +451,21 @@ https://source.fluidproject.org/svn/LICENSE.txt
                if (key.charAt(0) === IDescape) {
                    key = key.substring(1);
                }
-               var comp = {};
-               expandComponent(comp, entry);
-               pusher(comp, key);
+               if (entry.children) {
+                   if (key.indexOf(":" === -1)) {
+                       key = key + ":";
+                   }
+                   var children = entry.children;
+                   for (var i = 0; i < children.length; ++ i) {
+                       var comp = expandChildren(children[i]);
+                       pusher(comp, key);
+                   }
+               }
+               else {
+                   var comp = {};
+                   expandComponent(comp, entry);
+                   pusher(comp, key);
+               }
             }
         }
         

@@ -16,51 +16,37 @@ fluid = fluid || {};
 
 (function ($) {
 
-    function hydratedTree(themeData) {
-        return fluid.transform(themeData || [], function (theme) {
-            return {
-                ID: "catalogueThemes:", 
-                children: [
-                    {
-                        ID: "catalogueTheme",
-                        value: theme.title
-                    },
-                    {
-                        ID: "linkToThemeArtifacts",
-                        target: theme.artifactsURL
-                    },
-                    {
-                        ID: "linkToThemeArtifactsText",
-                        messagekey: "linkToThemeArtifacts", 
-                        args: {
-                            category: theme.title, 
-                            size: theme.numberOfArtifacts
-                        }
-                    }
-                ],
-                decorators: {
-                    type: "fluid",
-                    func: "fluid.navigationList",
-                    options: {links: theme.artifacts}
-                }
-            };
-        });
-    }
-    
-    function makeMiniProtoTree(model) {
-        return {
+    function makeProtoComponents(model) {
+        return { 
             exhibitionTitle: "%title",
             linkToArtifacts: {target: "%artifactsURL"},
-            linkToArtifactsText: {messagekey: "linkToArtifacts", args: {size: "%numberOfArtifacts"}}
-        };
+            linkToArtifactsText: {messagekey: "linkToArtifacts", args: {size: "%numberOfArtifacts"}},
+            catalogueThemes: { children:
+                fluid.transform(model.themeData || [], function (theme, index) {
+                    var thisTheme = "%themeData." + index + ".";
+                    return {
+                        catalogueTheme: thisTheme + "title",
+                        linkToThemeArtifacts: {target: thisTheme + "artifactsURL"},
+                        linkToThemeArtifactsText: {messageKey: "linkToThemeArtifacts",
+                            args: {
+                                category: thisTheme + "title", 
+                                size: thisTheme + "numberOfArtifacts"
+                            }
+                        },
+                        decorators: {
+                            type: "fluid",
+                            func: "fluid.navigationList",
+                            options: {links: theme.artifacts}
+                        }
+                };
+         })}};
     }
+
     
     function assembleTree(model, expander) {
-        var protoTree = makeMiniProtoTree(model);
-        var miniTree = expander(protoTree);
-        miniTree.children = miniTree.children.concat(hydratedTree(model.themeData));
-        
-        return miniTree;
+        var protoTree = makeProtoComponents(model);
+        var fullTree = expander(protoTree);
+        return fullTree;
     }
     
     var setup = function (that) {
