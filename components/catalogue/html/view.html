@@ -27,6 +27,7 @@
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>
         
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/components/catalogue/js/Catalogue.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationList/js/NavigationList.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/loadData.js"></script>
@@ -35,22 +36,24 @@
         <div class="flc-catalogue-container fl-catalogue">
             <div class="fl-navbar fl-table">
 			    <div class="fl-table-row">
-			        <h1 class="flc-exhibition-title fl-table-cell">Exhibitions</h1>
-			    </div>
-			    <div class="fl-table-row">
-			        <h3 class="fl-table-cell">Catalogue</h3>
+			        <h1 class="flc-catalogue-title fl-table-cell">Exhibitions</h1>
 			    </div>
 			</div>
-			<div class="flc-catalogueList">
-				<ol class="flc-nagivationList-listGroup fl-list-menu fl-list-thumbnails fl-thumbnails-expanded">
+            <a href="#" class="flc-catalogue-linkToArtifacts">View All</a>
+			<div class="flc-catalogue-themes">
+			    <h2 class="flc-catalogue-theme">Theme</h2>
+				<ul class="flc-nagivationList-listGroup fl-list-menu fl-list-thumbnails fl-thumbnails-expanded">
 				    <li class="flc-navigationList-items">
-				        <a class="flc-navigationList-link" href="">
-				            <img src="../images/a.jpg" alt="Section Image" class="flc-navigationList-image fl-icon" />
-				            <span class="flc-navigationList-titleText">Title</span>
-				            <span class="flc-navigationList-descriptionText fl-link-summary">Introduction</span>
-				        </a>
+				        <div class="flc-navigationList-linkContainer">
+    				        <a class="flc-navigationList-link" href="">
+    				            <img src="../images/a.jpg" alt="Section Image" class="flc-navigationList-image fl-icon" />
+    				            <span class="flc-navigationList-titleText">Title</span>
+    				            <span class="flc-navigationList-descriptionText fl-link-summary">Introduction</span>
+    				        </a>
+                        </div>
 				    </li>
-				</ol>
+				</ul>
+                <a href="#" class="flc-catalogue-linkToThemeArtifacts">All in Theme</a>
 			</div>
         </div>
         <script type="text/javascript">

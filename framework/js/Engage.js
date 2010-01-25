@@ -331,50 +331,39 @@ fluid = fluid || {};
         mccord_exhibitions_catalogue: {
             dataSpec: {
                 "title": "key",
-                "viewAll": "value.viewAll",
-                "sections": {
+                "numberOfArtifacts": "value.viewAll",
+                "themeData": {
                     "path": "value.sections",
                     "func": "formatSections"
                 }
             },
 	        mappers: {
                 formatSections: function (value) {
-                    var getSectionImage = function (value) {
-                        value = $.makeArray(value)[0];
-                        if ($.makeArray(value.small)[0].height) {
-                            return "http://www.mccord-museum.qc.ca" + $.makeArray(value.small)[0].nodetext;
+                    var extractTitle = function (title, delim) {
+                        var index = title.indexOf(delim);
+                        if (index < 0) {
+                            return title;
                         }
-                        else if ($.makeArray(value.medium)[0].height) {
-                            return "http://www.mccord-museum.qc.ca" + $.makeArray(value.medium)[0].nodetext;
-                        }
-                        return "http://www.mccord-museum.qc.ca" + $.makeArray(value.large)[0].nodetext;
+                        var start = index + delim.length;
+                        return title.substring(start);
                     };
-                    var getSectionIntroduction = function (value) {
-                        var intro = "";
-                        var p = value.p;
-                        if (p) {
-                            if (typeof(p) === "string") {
-                                intro = intro + wrap(p, "p");
-                            }
-                            else {
-                                for (var i in value.p) {
-                                    if (value.p.hasOwnProperty(i)) {
-                                        intro = intro + wrap(buildHTML(p[i]), "p");
-                                    }
-                                }
-                            }
-                            return intro;
-                        }
-                        return intro;
+                    var getArtifactInfo = function  (artifacts) {
+                        return fluid.transform(artifacts, function (artifact) {
+                            return artifact ? {
+                                target: artifact.accessNumber,
+                                image: artifact.image,
+                                title: extractTitle(artifact.title, ": "),
+                                description: artifact.description
+                            } : {};
+                        });
                     };
                     var format = function (value) {
                         var sections = [];
                         fluid.transform(value, function (val) {
                             sections.push({
-                                sectionTitle: val.sectionTitle,
-                                sectionSize: val.sectionSize,
-                                sectionImage: getSectionImage(val.sectionImage),
-                                sectionIntroduction: getSectionIntroduction(val.sectionIntroduction)
+                                title: val.sectionTitle,
+                                numberOfArtifacts: val.sectionSize,
+                                artifacts: getArtifactInfo(val.sectionArtefacts)
                             });
                         });
                         return sections;

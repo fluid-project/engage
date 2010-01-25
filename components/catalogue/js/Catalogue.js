@@ -16,35 +16,75 @@ fluid = fluid || {};
 
 (function ($) {
     
-    var buildCutpoints = function (selectors) {
-        return [
-            {id: "exhibitionTitle", selector: selectors.exhibitionTitle}
+    function render(that) {
+        var map =  [
+            {id: "exhibitionTitle", selector: that.options.selectors.exhibitionTitle},
+            {id: "linkToArtifacts", selector: that.options.selectors.linkToArtifacts},
+            {id: "catalogueThemes:", selector: that.options.selectors.catalogueThemes},
+            {id: "catalogueTheme", selector: that.options.selectors.catalogueTheme},
+            {id: "linkToThemeArtifacts", selector: that.options.selectors.linkToThemeArtifacts}
         ];
-    };
-    
-    var buildComponentTree = function (that) {
-        return {
-            children: [{
+        
+        function generateTree() {
+            var children = [];
+            
+            children.push({
                 ID: "exhibitionTitle",
-                value: that.model.strings.title
-            }]
+                value: that.model.title
+            });
+            
+            children.push({
+                ID: "linkToArtifacts",
+                target: that.model.artifactsURL,
+                linktext: {
+                    messagekey: "linkToArtifacts",
+                    args: [that.model.numberOfArtifacts]
+                }
+            });
+            
+            children = children.concat(fluid.transform(that.model.themeData, function (theme) {
+                return {
+                    ID: "catalogueThemes:", 
+                    children: [
+                        {
+                            ID: "catalogueTheme",
+                            value: theme.title
+                        },
+                        {
+                            ID: "linkToThemeArtifacts",
+                            target: theme.artifactsURL, 
+                            linktext: {
+                                messagekey: "linkToThemeArtifacts", 
+                                args: [theme.title, theme.numberOfArtifacts]
+                            }
+                        }
+                    ],
+                    decorators: {
+                        type: "fluid",
+                        func: "fluid.navigationList",
+                        options: {links: theme.artifacts}
+                    }
+                };
+            }));
+            
+            return {
+                children: children
+            };
+        }
+        
+        var options = {
+            cutpoints: map,
+            messageSource: {
+                type: "data",
+                messages: that.options.messageBundle
+            }
         };
-    };
-    
-    var renderCatalogue = function (that) {
-        fluid.selfRender(that.container, 
-            buildComponentTree(that), 
-            {cutpoints: buildCutpoints(that.options.selectors), model: that.model, debug: true});
-    };
-    
-    var initSubcomponents = function (that) {
-        that.catalogueList = fluid.initSubcomponent(that, "navigationList", [that.locate("catalogueList"),
-            {links: that.model.lists[0].listOptions.links}]);
-    };
+        
+        fluid.selfRender(that.container, generateTree(), options);
+    }
     
     var setup = function (that) {
-        renderCatalogue(that);
-        initSubcomponents(that);
+        render(that);
     };
     
     fluid.catalogue = function (container, options) {
@@ -56,12 +96,41 @@ fluid = fluid || {};
     
     fluid.defaults("fluid.catalogue", {
         selectors: {
-            exhibitionTitle: ".flc-exhibition-title",
-            viewAll: ".flc-catalogue-viewAll",
-            catalogueList: ".flc-catalogueList"
+            exhibitionTitle: ".flc-catalogue-title",
+            linkToArtifacts: ".flc-catalogue-linkToArtifacts",
+            catalogueThemes: ".flc-catalogue-themes",
+            catalogueTheme: ".flc-catalogue-theme",
+            linkToThemeArtifacts: ".flc-catalogue-linkToThemeArtifacts"
         },
+        
         navigationList: {
             type: "fluid.navigationList"
+        },
+        
+        messageBundle: {
+            linkToArtifacts: "View all objects ({0})",
+            linkToThemeArtifacts: "View all in {0} ({1})"
+        },
+        
+        model: {
+            title: "",
+            artifactsURL: "",
+            numberOfArtifacts: "",
+            themeData: [
+                {
+                    title: "",
+                    artifactsURL: "",
+                    numberOfArtifacts: "",
+                    artifacts: [
+                        {
+                            target: "",
+                            image: "",
+                            title: "",
+                            description: null
+                        }
+                    ]
+                }
+            ]
         }
     });
 }(jQuery));
