@@ -1,0 +1,18 @@
+.fl-catalogue h2 {
+    background: -webkit-gradient(linear, left top, left bottom, from(#EEE9E9), to(#F5F5F5));
+    padding: 5px 0 5px 0;
+    margin: 0;
+}
+
+[class*=fl-list] {
+    margin: 0px;
+}
+
+[class*=fl-list] li {
+    border-left-width: 0;
+    border-right-width: 0;
+}
+
+[class*=fl-list] > li:first-child {
+    border-top: none;
+}
