@@ -20,9 +20,11 @@ fluid = fluid || {};
         var map =  [
             {id: "exhibitionTitle", selector: that.options.selectors.exhibitionTitle},
             {id: "linkToArtifacts", selector: that.options.selectors.linkToArtifacts},
+            {id: "linkToArtifactsText", selector: that.options.selectors.linkToArtifactsText},
             {id: "catalogueThemes:", selector: that.options.selectors.catalogueThemes},
             {id: "catalogueTheme", selector: that.options.selectors.catalogueTheme},
-            {id: "linkToThemeArtifacts", selector: that.options.selectors.linkToThemeArtifacts}
+            {id: "linkToThemeArtifacts", selector: that.options.selectors.linkToThemeArtifacts},
+            {id: "linkToThemeArtifactsText", selector: that.options.selectors.linkToThemeArtifactsText}
         ];
         
         function generateTree() {
@@ -35,11 +37,13 @@ fluid = fluid || {};
             
             children.push({
                 ID: "linkToArtifacts",
-                target: that.model.artifactsURL,
-                linktext: {
-                    messagekey: "linkToArtifacts",
-                    args: [that.model.numberOfArtifacts]
-                }
+                target: that.model.artifactsURL
+            });
+            
+            children.push({
+                ID: "linkToArtifactsText",
+                messagekey: "linkToArtifacts",
+                args: [that.model.numberOfArtifacts]
             });
             
             children = children.concat(fluid.transform(that.model.themeData, function (theme) {
@@ -52,11 +56,12 @@ fluid = fluid || {};
                         },
                         {
                             ID: "linkToThemeArtifacts",
-                            target: theme.artifactsURL, 
-                            linktext: {
-                                messagekey: "linkToThemeArtifacts", 
-                                args: [theme.title, theme.numberOfArtifacts]
-                            }
+                            target: theme.artifactsURL
+                        },
+                        {
+                            ID: "linkToThemeArtifactsText",
+                            messagekey: "linkToThemeArtifacts", 
+                            args: [theme.title, theme.numberOfArtifacts]
                         }
                     ],
                     decorators: {
@@ -98,9 +103,11 @@ fluid = fluid || {};
         selectors: {
             exhibitionTitle: ".flc-catalogue-title",
             linkToArtifacts: ".flc-catalogue-linkToArtifacts",
+            linkToArtifactsText: ".flc-catalogue-linkToArtifactsText",
             catalogueThemes: ".flc-catalogue-themes",
             catalogueTheme: ".flc-catalogue-theme",
-            linkToThemeArtifacts: ".flc-catalogue-linkToThemeArtifacts"
+            linkToThemeArtifacts: ".flc-catalogue-linkToThemeArtifacts",
+            linkToThemeArtifactsText: ".flc-catalogue-linkToThemeArtifactsText"
         },
         
         navigationList: {
