@@ -15,86 +15,78 @@ https://source.fluidproject.org/svn/LICENSE.txt
 fluid = fluid || {};
 
 (function ($) {
-    
-    function render(that) {
-        var map =  [
-            {id: "exhibitionTitle", selector: that.options.selectors.exhibitionTitle},
-            {id: "linkToArtifacts", selector: that.options.selectors.linkToArtifacts},
-            {id: "linkToArtifactsText", selector: that.options.selectors.linkToArtifactsText},
-            {id: "catalogueThemes:", selector: that.options.selectors.catalogueThemes},
-            {id: "catalogueTheme", selector: that.options.selectors.catalogueTheme},
-            {id: "linkToThemeArtifacts", selector: that.options.selectors.linkToThemeArtifacts},
-            {id: "linkToThemeArtifactsText", selector: that.options.selectors.linkToThemeArtifactsText}
-        ];
-        
-        function generateTree() {
-            var children = [];
-            
-            children.push({
-                ID: "exhibitionTitle",
-                value: that.model.title
-            });
-            
-            children.push({
-                ID: "linkToArtifacts",
-                target: that.model.artifactsURL
-            });
-            
-            children.push({
-                ID: "linkToArtifactsText",
-                messagekey: "linkToArtifacts",
-                args: [that.model.numberOfArtifacts]
-            });
-            
-            children = children.concat(fluid.transform(that.model.themeData, function (theme) {
-                return {
-                    ID: "catalogueThemes:", 
-                    children: [
-                        {
-                            ID: "catalogueTheme",
-                            value: theme.title
-                        },
-                        {
-                            ID: "linkToThemeArtifacts",
-                            target: theme.artifactsURL
-                        },
-                        {
-                            ID: "linkToThemeArtifactsText",
-                            messagekey: "linkToThemeArtifacts", 
-                            args: [theme.title, theme.numberOfArtifacts]
-                        }
-                    ],
-                    decorators: {
-                        type: "fluid",
-                        func: "fluid.navigationList",
-                        options: {links: theme.artifacts}
-                    }
-                };
-            }));
-            
+
+    function hydratedTree(themeData) {
+        return fluid.transform(themeData || [], function (theme) {
             return {
-                children: children
+                ID: "catalogueThemes:", 
+                children: [
+                    {
+                        ID: "catalogueTheme",
+                        value: theme.title
+                    },
+                    {
+                        ID: "linkToThemeArtifacts",
+                        target: theme.artifactsURL
+                    },
+                    {
+                        ID: "linkToThemeArtifactsText",
+                        messagekey: "linkToThemeArtifacts", 
+                        args: {
+                            category: theme.title, 
+                            size: theme.numberOfArtifacts
+                        }
+                    }
+                ],
+                decorators: {
+                    type: "fluid",
+                    func: "fluid.navigationList",
+                    options: {links: theme.artifacts}
+                }
             };
-        }
-        
-        var options = {
-            cutpoints: map,
-            messageSource: {
-                type: "data",
-                messages: that.options.messageBundle
-            }
+        });
+    }
+    
+    function makeMiniProtoTree(model) {
+        return {
+            exhibitionTitle: "%title",
+            linkToArtifacts: {target: "%artifactsURL"},
+            linkToArtifactsText: {messagekey: "linkToArtifacts", args: {size: "%numberOfArtifacts"}}
         };
+    }
+    
+    function assembleTree(model, expander) {
+        var protoTree = makeMiniProtoTree(model);
+        var miniTree = expander(protoTree);
+        miniTree.children = miniTree.children.concat(hydratedTree(model.themeData));
         
-        fluid.selfRender(that.container, generateTree(), options);
+        return miniTree;
     }
     
     var setup = function (that) {
-        render(that);
+        var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
+        
+        that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
+            repeatingSelectors: ["catalogueThemes"],
+            rendererOptions: {
+                messageLocator: messageLocator,
+                model: that.model
+            }
+        });
+
+        that.refreshView();
     };
     
     fluid.catalogue = function (container, options) {
         var that = fluid.initView("fluid.catalogue", container, options);        
         that.model = that.options.model;
+        
+        var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
+        
+        that.refreshView = function () {
+            that.render(assembleTree(that.model, expander));
+        };
+        
         setup(that);
         return that;
     };
@@ -114,9 +106,9 @@ fluid = fluid || {};
             type: "fluid.navigationList"
         },
         
-        messageBundle: {
-            linkToArtifacts: "View all objects ({0})",
-            linkToThemeArtifacts: "View all in {0} ({1})"
+        strings: {
+            linkToArtifacts: "View all objects (%size)",
+            linkToThemeArtifacts: "View all in %category (%size)"
         },
         
         model: {
