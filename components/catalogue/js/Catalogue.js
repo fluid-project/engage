@@ -20,29 +20,29 @@ fluid = fluid || {};
         return fluid.transform(artifacts, function (artifact) {
             return {
                 target: artifact.artifactViewURL,
-                image: artifact.artifactImage,
-                title: artifact.artifactTitle,
-                description: artifact.artifactDescription
+                image: artifact.imageURL,
+                title: artifact.title,
+                description: artifact.description
             };
         });
     }
     
     function makeProtoComponents(model) {
         return { 
-            exhibitionTitle: "%exhibitionTitle",
-            linkToArtifacts: {target: "%exhibitionArtifactsURL"},
-            linkToArtifactsText: {messagekey: "linkToArtifacts", args: {size: "%numberOfArtifactsInExhibition"}},
+            exhibitionTitle: "%title",
+            linkToArtifacts: {target: "%allArtifactsViewURL"},
+            linkToArtifactsText: {messagekey: "linkToArtifacts", args: {size: "%numArtifacts"}},
             catalogueThemes: { 
                 children: fluid.transform(model.themes || [], function (theme, index) {
                     var thisTheme = "%themes." + index + ".";
                     return {
-                        catalogueTheme: thisTheme + "themeTitle",
-                        linkToThemeArtifacts: {target: thisTheme + "themeArtifactsURL"},
+                        catalogueTheme: thisTheme + "title",
+                        linkToThemeArtifacts: {target: thisTheme + "allArtifactsViewURL"},
                         linkToThemeArtifactsText: {
                             messagekey: "linkToThemeArtifacts",
                             args: {
-                                category: thisTheme + "themeTitle", 
-                                size: thisTheme + "numberOfArtifactsInTheme"
+                                category: thisTheme + "title", 
+                                size: thisTheme + "numArtifacts"
                             }
                         },
                         decorators: {
@@ -110,20 +110,20 @@ fluid = fluid || {};
         },
         
         model: {
-            exhibitionTitle: "",
-            exhibitionArtifactsURL: "",
-            numberOfArtifactsInExhibition: "",
+            title: "",
+            allArtifactsViewURL: "",
+            numArtifacts: "",
             themes: [
                 {
-                    themeTitle: "",
-                    themeArtifactsURL: "",
-                    numberOfArtifactsInTheme: "",
+                    title: "",
+                    allArtifactsViewURL: "",
+                    numArtifacts: "",
                     artifacts: [
                         {
                             artifactViewURL: "",
-                            artifactImage: "",
-                            artifactTitle: "",
-                            artifactDescription: null
+                            imageURL: "",
+                            title: "",
+                            description: null
                         }
                     ]
                 }
