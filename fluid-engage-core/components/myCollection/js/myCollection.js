@@ -15,39 +15,48 @@ fluid = fluid || {};
 
 (function ($) {
     /**
-     * Creates a model node.
-     * There are two types of nodes - top level and children, the former have additional
-     * properties like index and artifact ID.
+     * Creates a model child node.
      *  
      * @param {Object} id, the ID used by the component tree
      * @param {Object} key, a key representing an entry in a renderer component
      * @param {Object} value, the value assigned to the key
-     * @param {Object} classes, (optional) can add classes without having to specify the decorator key.
-     * @param index, (optional - only for top level nodes) the index of this tree node that is used to map
-     * the feed data with the current order.
-     * @param artifactId, (optional - only for top level nodes) the artifact CouchDB id.
-     * @param museum, (optional - only for top level nodes) the museum for the artifact.
+     * @param {Object} classes, can add classes without having to specify the
+     *      decorator key.
      */
-    var treeNode = function (id, key, value, classes, index, artifactId, museum) {
+    var treeNode = function (id, key, value, classes) {
         var obj = {ID: id};
         obj[key] = value;
         if (classes) {
             obj.decorators = {
-                    type: "addClass",
-                    classes: classes
-                };
+                type: "addClass",
+                classes: classes
+            };
         }
         
-        if (index === 0 || index) {
-            obj.index = index;
-        }
-        
-        if (artifactId && museum) {
-            obj.artifactId = artifactId;
-            obj.museum = museum;
-        }
-
         return obj; 
+    };
+    
+    /**
+     * Creates a model top node.
+     * 
+     * @param {Object} id, the ID used by the component tree
+     * @param {Object} key, a key representing an entry in a renderer component
+     * @param {Object} value, the value assigned to the key
+     * @param {Object} classes, can add classes without having to specify the 
+     *      decorator key.
+     * @param index, the index of this tree node that is used to map the feed
+     *      data with the current order.
+     * @param artifactId, the artifact CouchDB id.
+     * @param museum, the museum for the artifact.
+     */
+    var topTreeNode = function (id, key, value, classes, index, artifactId, museum) {
+        var obj = treeNode(id, key, value, classes);
+        
+        obj.index = index;
+        obj.artifactId = artifactId;
+        obj.museum = museum;
+        
+        return obj;
     };
 
     /**
@@ -69,10 +78,14 @@ fluid = fluid || {};
                 if (that.currentView === "list") {
                     var index = object.index;
                     
-                    object.children.push(treeNode("titleText", "value", that.options.data.links[index].title,
-                            styles.titleText));
-                    object.children.push(treeNode("periodText", "value", that.options.data.links[index].dated,
-                            styles.periodText));
+                    object.children.push(
+                            treeNode("titleText", "value",
+                                    that.options.data.links[index].title,
+                                    styles.titleText));
+                    object.children.push(
+                            treeNode("periodText", "value",
+                                    that.options.data.links[index].dated,
+                                    styles.periodText));
                 } else {
                     object.children.pop();
                     object.children.pop();
@@ -80,20 +93,24 @@ fluid = fluid || {};
             });
         } else {
             that.model = fluid.transform(componentOptions.links, function (object, index) {
-                var tree = treeNode("listItems:", "children", [
+                var tree = topTreeNode("listItems:", "children", [
                     treeNode("link", "target", object.target || "", styles.link)
                 ], styles.listItems, index, object.id, object.museum);
         
                 if (object.image || that.options.useDefaultImage) {
                     tree.children.push({
                         ID: "image",
-                        target: object.image
+                        target: object.image || that.options.defaultImage
                     });
                 }
 
                 if (that.currentView === "list") {
-                    tree.children.push(treeNode("titleText", "value", object.title, styles.titleText));
-                    tree.children.push(treeNode("periodText", "value", object.dated, styles.periodText));
+                    tree.children.push(
+                            treeNode("titleText", "value", object.title,
+                                    styles.titleText));
+                    tree.children.push(
+                            treeNode("periodText", "value", object.dated,
+                                    styles.periodText));
                 }
                 
                 return tree;
@@ -118,22 +135,22 @@ fluid = fluid || {};
         ];
 
         if (that.templates) {
-            fluid.reRender(that.templates, that.locate("collectionGroup"), generateTree(that));
+            fluid.reRender(that.templates, that.locate("collectionGroup"),
+                generateTree(that));
             that.events.afterRender.fire(that);
         } else {
             var options = {
-                cutpoints: selectorMap,
-                messageSource: {
-                    type: "data"
-                }           
+                cutpoints: selectorMap
             };
             
-            return fluid.selfRender(that.locate("collectionGroup"), generateTree(that), options);
+            return fluid.selfRender(that.locate("collectionGroup"),
+                generateTree(that), options);
         }
     };
 
     /**
-     * Changes the style on the group containing the list of links, transition from grid to list to grid.
+     * Changes the style on the group containing the list of links, transition
+     * from grid to list to grid.
      * 
      * @param {Object} that, the component.
      */
@@ -163,7 +180,7 @@ fluid = fluid || {};
      * 
      * @param {Object} that, the component.
      */
-    var addLoadStyling = function (that) {
+    var addLoadingStyling = function (that) {
         that.container.addClass(that.options.styles.load);
     };
 
@@ -172,7 +189,7 @@ fluid = fluid || {};
      * 
      * @param {Object} that, the component.
      */
-    var removeLoadStyling = function (that) {
+    var removeLoadingStyling = function (that) {
         that.container.removeClass(that.options.styles.load);
     };
 
@@ -188,32 +205,15 @@ fluid = fluid || {};
     };
     
     /**
-     * Binds the after render event to a lister that calls the removeLoadStyling function
-     * 
-     * @param {Object} that, the component.
-     */
-    var bindEvents = function (that) {
-        that.events.afterRender.addListener(removeLoadStyling);
-        that.events.afterRender.addListener(refreshReorderer);
-    };
-
-    /**
-     * Add the event to be triggered when the toggle view link is clicked.
-     * 
-     * @param {Object} that, the component.
-     */
-    var addClickEvent = function (that) {
-        that.locate("toggler").click(that.toggleView);
-    };
-    
-    /**
      * Assigns the href attribute to the back button to document.referrer.
      * 
      * @param {Object} that, the component.
      */
     var initBackLink = function (that) {
         var backUrl = document.referrer;
-        if (backUrl.indexOf("uuid") < 0) {
+        if (backUrl.indexOf("uuid") < 0) { // Workaround for the case when
+                                           // we come from the artifact page
+                                           // for the first time.
             backUrl += "&" + $.param({uuid: that.uuid});
         }
         that.locate("backButton").attr("href", backUrl);
@@ -252,46 +252,14 @@ fluid = fluid || {};
         
         return result;
     };
-    
-    /**
-     * Returns the directory part of a path.
-     */
-    var parsePath = function (pathname) {
-        return pathname.substring(0, pathname.lastIndexOf("/"));
-    };
-    
-    /**
-     * Invokes jQuery $.ajax function.
-     * 
-     * @param url, the url to call.
-     * @param error, the error callback.
-     * @param data, the data to pass.
-     */
-    var ajaxCall = function (url, error, data) {
-        $.ajax({
-            url: url,
-            async: false,
-            data: data,
-            error: error
-        });
-    };
-    
-    /**
-     * Returns the update URL relative to the current host.
-     * 
-     * @param path, the path segment of the URL.
-     */
-    var compileReorderUrl = function (path) {
-        return "http://" + location.host + path + "/reorder.js";
-    };
-    
+
     /**
      * Invokes an update on CouchDB with the new order of artifacts in the collection.
      * 
      * @param {Object} model, the underlying data model.
      * @param uuid, the id of the user and collection.
      */
-    var updateOrder = function (model, uuid) {
+    var updateDatabaseOrder = function (that) {
         var error = function (XMLHttpRequest, textStatus, errorThrown) {
             fluid.log("Status: " + textStatus);
             fluid.log("Error: " + errorThrown);
@@ -301,16 +269,26 @@ fluid = fluid || {};
         data.collection = {};
         data.collection.artifacts = [];
         
-        fluid.transform(model, function (object) {
+        fluid.transform(that.model, function (object) {
             data.collection.artifacts.push({museum: object.museum, id: object.artifactId});
         });
 
-        var path = parsePath(location.pathname);
+        var pathname = location.pathname;
+        var path = pathname.substring(0, pathname.lastIndexOf("/"));
+        var url = "http://" + location.host + path + "/reorder.js";
         
-        try {
-            ajaxCall(compileReorderUrl(path), error, "uuid=" + uuid + "&orderData=" +
-                encodeURIComponent(JSON.stringify(data)));
-        } catch (e) {}
+        var toSend = fluid.stringTemplate(that.options.updateDatabaseOrderDataTemplate, 
+            {
+                uuid: that.uuid,
+                orderData: encodeURIComponent(JSON.stringify(data))
+            });
+        
+        $.ajax({
+            url: url,
+            async: false,
+            data: toSend,
+            error: error
+        });
     };            
     
     /**
@@ -320,25 +298,44 @@ fluid = fluid || {};
      */
     var setup = function (that) {
         that.templates = render(that);
-        that.locate("artifactsNumber").html(that.options.data.links.length);
-        that.locate("artifactsPlural").html(that.options.data.links.length === 1 ? "" : "s");
 
+        // Set the status message
+        var status = fluid.stringTemplate(
+            that.options.strings.statusMessageTemplate, {
+                artifactsNumber: that.options.data.links.length,
+                artifactsPlural: that.options.data.links.length === 1 ? "" : "s"
+            }
+        );
+        that.locate("collectionStatus").html(status);
+        
         that.currentView = that.options.defaultView;
         
+        // Set the style for artifact group
         addGroupStyle(that);
 
-        addClickEvent(that);
+        // Attach a handler to the toggle view button
+        that.locate("toggler").click(that.toggleView);
+        
+        // Set a link target for the back button
         initBackLink(that);
 
-        bindEvents(that);
+        // Bind events
+        that.events.afterRender.addListener(removeLoadingStyling);
+        that.events.afterRender.addListener(refreshReorderer);        
         that.events.afterRender.fire(that);
         
         that.options.imageReorderer.options.listeners.afterMove = that.afterMoveListener;
         that.options.imageReorderer.options.listeners.onBeginMove = that.onBeginMoveListener;
         that.options.imageReorderer.options.avatarCreator = that.avatarCreator;
         
-        that.imageReorderer = fluid.initSubcomponent(that, "imageReorderer", [that.locate("myCollectionContainer"),
-                                                                              that.options.imageReorderer.options]);
+        // Init subcomponents
+        
+        that.imageReorderer = fluid.initSubcomponent(that, "imageReorderer",
+                [that.locate("myCollectionContainer"),
+                 that.options.imageReorderer.options]);
+        
+        that.user = fluid.initSubcomponent(that, "user");
+        that.uuid = that.user.getUuid();
     };
 
     /**
@@ -350,12 +347,8 @@ fluid = fluid || {};
     fluid.initMyCollection = function (container, options) {
         var that = fluid.initView("fluid.initMyCollection", container, options);
 
-        that.user = fluid.initSubcomponent(that, "user");
-
-        that.uuid = that.user.getUuid();
-
         that.toggleView = function () {
-            addLoadStyling(that);
+            addLoadingStyling(that);
 
             removeGroupStyle(that);
 
@@ -380,7 +373,9 @@ fluid = fluid || {};
             
             that.model = reorderModel(that.model, index, oldIndex);
             
-            updateOrder(that.model, that.uuid);
+            if (that.options.updateDatabaseOrder) {
+                updateDatabaseOrder(that);
+            }
         };
         
         that.onBeginMoveListener = function (item) {
@@ -414,9 +409,7 @@ fluid = fluid || {};
                 type: "fluid.reorderImages",
                 options: {
                     selectors: {
-                        movables: ".flc-myCollection-movable",
-                        selectables: ".flc-myCollection-movable",
-                        dropTargets: ".flc-myCollection-movable"
+                        movables: ".flc-myCollection-movable"
                     },                    
                     styles: {
                         defaultStyle: null,
@@ -443,8 +436,7 @@ fluid = fluid || {};
                 periodText: ".flc-myCollection-period",         
                 toggler: ".flc-myCollection-toggler",
                 backButton: ".flc-myCollection-back",
-                artifactsNumber: ".flc-myCollection-artifactsNumber",
-                artifactsPlural: ".flc-myCollection-artifactsPlural"
+                collectionStatus: ".flc-myCollection-status"
             },
 
             styles: {
@@ -460,12 +452,23 @@ fluid = fluid || {};
                 afterRender: null
             },
 
-            data : {},
+            data: {},
 
             useDefaultImage: true,
+            
+            defaultImage: "../../../../fluid-engage-core/components/myCollection/images/no_image_64x64.png",
                  
-            defaultView: "grid"
+            defaultView: "grid",
+            
+            strings: {
+                statusMessageTemplate:
+                    "Your collection contains %artifactsNumber artifact" +
+                    "%artifactsPlural. Touch and drag the thumbnails to reorganize."
+            },
+            
+            updateDatabaseOrder: true,
+            
+            updateDatabaseOrderDataTemplate: "uuid=%uuid&orderData=%orderData"
         }
     );
-
 })(jQuery);
