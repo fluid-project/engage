@@ -23,7 +23,7 @@ fluid = fluid || {};
             displayDate: "%displayDate",
             shortDescription: "%shortDescription",
             description: {markup: model.introduction ? model.introduction : model.content},
-            guestBook: {messagekey: "guestbook", args: {size: "%guestbookSize"}},
+            guestbook: {messagekey: "guestbook", args: {size: "%guestbookSize"}},
             guestbookLink: {target: "%guestbookLink"},
             guestbookLinkText: {messagekey: "guestbookLinkText"},
             image: {target: "%image"},
@@ -32,7 +32,7 @@ fluid = fluid || {};
             aboutLink: {target: "%aboutLink"},
             aboutLinkText: {messagekey: "aboutLink"},
             title: "%title",
-            guestbookInvitation: model.comments || {messagekey: "guestBookInvitationString"}
+            guestbookInvitation: model.comments || {messagekey: "guestbookInvitationString"}
         };
         if (model.catalogueSize > 0) {
             fluid.renderer.mergeComponents(proto, {
@@ -64,8 +64,12 @@ fluid = fluid || {};
         }];
 
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
+        var selectorsToIgnore = ["exhibitionPreview"];
+        if (that.model.catalogueSize) {
+            selectorsToIgnore.push("catalogue");
+        }
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
-            selectorsToIgnore: ["exhibitionPreview", "catalogue"],
+            selectorsToIgnore: selectorsToIgnore,
             rendererOptions: {
                 messageLocator: messageLocator,
                 model: that.model
@@ -114,7 +118,7 @@ fluid = fluid || {};
             exhibitionPreview: ".flc-exhibition-preview"
         },
         strings: {
-            guestBookInvitationString: "No comments yet. Create your own comment.",
+            guestbookInvitationString: "No comments yet. Create your own comment.",
             catalogueTitle: "Catalogue (%size)",
             guestbook: "Guestbook (%size)",
             guestbookLinkText: "Read all comments",
