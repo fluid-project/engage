@@ -330,9 +330,9 @@ fluid = fluid || {};
         },
         mccord_exhibitions_catalogue: {
             dataSpec: {
-                "title": "key",
-                "numberOfArtifacts": "value.viewAll",
-                "themeData": {
+                "exhibitionTitle": "key",
+                "numberOfArtifactsInExhibition": "value.viewAll",
+                "themes": {
                     "path": "value.sections",
                     "func": "formatSections"
                 }
@@ -350,10 +350,10 @@ fluid = fluid || {};
                     var getArtifactInfo = function  (artifacts) {
                         return fluid.transform(artifacts, function (artifact) {
                             return artifact ? {
-                                target: artifact.accessNumber,
-                                image: artifact.image,
-                                title: extractTitle(artifact.title, ": "),
-                                description: artifact.description
+                                accessNumber: artifact.accessNumber,
+                                artifactImage: artifact.image,
+                                artifactTitle: extractTitle(artifact.title, ": "),
+                                artifactDescription: artifact.description
                             } : {};
                         });
                     };
@@ -361,8 +361,8 @@ fluid = fluid || {};
                         var sections = [];
                         fluid.transform(value, function (val) {
                             sections.push({
-                                title: val.sectionTitle,
-                                numberOfArtifacts: val.sectionSize,
+                                themeTitle: val.sectionTitle,
+                                numberOfArtifactsInTheme: val.sectionSize,
                                 artifacts: getArtifactInfo(val.sectionArtefacts)
                             });
                         });

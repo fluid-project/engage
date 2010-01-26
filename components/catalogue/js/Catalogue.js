@@ -16,29 +16,41 @@ fluid = fluid || {};
 
 (function ($) {
 
+    function mapToNavListModel(artifacts) {
+        return fluid.transform(artifacts, function (artifact) {
+            return {
+                target: artifact.artifactViewURL,
+                image: artifact.artifactImage,
+                title: artifact.artifactTitle,
+                description: artifact.artifactDescription
+            };
+        });
+    }
+    
     function makeProtoComponents(model) {
         return { 
-            exhibitionTitle: "%title",
-            linkToArtifacts: {target: "%artifactsURL"},
-            linkToArtifactsText: {messagekey: "linkToArtifacts", args: {size: "%numberOfArtifacts"}},
-            catalogueThemes: { children:
-                fluid.transform(model.themeData || [], function (theme, index) {
-                    var thisTheme = "%themeData." + index + ".";
+            exhibitionTitle: "%exhibitionTitle",
+            linkToArtifacts: {target: "%exhibitionArtifactsURL"},
+            linkToArtifactsText: {messagekey: "linkToArtifacts", args: {size: "%numberOfArtifactsInExhibition"}},
+            catalogueThemes: { 
+                children: fluid.transform(model.themes || [], function (theme, index) {
+                    var thisTheme = "%themes." + index + ".";
                     return {
-                        catalogueTheme: thisTheme + "title",
-                        linkToThemeArtifacts: {target: thisTheme + "artifactsURL"},
-                        linkToThemeArtifactsText: {messageKey: "linkToThemeArtifacts",
+                        catalogueTheme: thisTheme + "themeTitle",
+                        linkToThemeArtifacts: {target: thisTheme + "themeArtifactsURL"},
+                        linkToThemeArtifactsText: {
+                            messageKey: "linkToThemeArtifacts",
                             args: {
-                                category: thisTheme + "title", 
-                                size: thisTheme + "numberOfArtifacts"
+                                category: thisTheme + "themeTitle", 
+                                size: thisTheme + "numberOfArtifactsInTheme"
                             }
                         },
                         decorators: {
                             type: "fluid",
                             func: "fluid.navigationList",
-                            options: {links: theme.artifacts}
+                            options: {links: mapToNavListModel(theme.artifacts)}
                         }
-                };
+                    };
          })}};
     }
 
@@ -98,20 +110,20 @@ fluid = fluid || {};
         },
         
         model: {
-            title: "",
-            artifactsURL: "",
-            numberOfArtifacts: "",
-            themeData: [
+            exhibitionTitle: "",
+            exhibitionArtifactsURL: "",
+            numberOfArtifactsInExhibition: "",
+            themes: [
                 {
-                    title: "",
-                    artifactsURL: "",
-                    numberOfArtifacts: "",
+                    themeTitle: "",
+                    themeArtifactsURL: "",
+                    numberOfArtifactsInTheme: "",
                     artifacts: [
                         {
-                            target: "",
-                            image: "",
-                            title: "",
-                            description: null
+                            artifactViewURL: "",
+                            artifactImage: "",
+                            artifactTitle: "",
+                            artifactDescription: null
                         }
                     ]
                 }
