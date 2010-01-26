@@ -36,12 +36,11 @@ fluid = fluid || {};
         };
         if (model.catalogueSize > 0) {
             fluid.renderer.mergeComponents(proto, {
-                catalogue: null,
                 catalogueTitle: {messagekey: "catalogueTitle", args: {size: "%catalogueSize"}}
             });
         }
         return proto;
-    };
+    }
     
     var setupSubcomponents = function (that) {        
         // Render the Exhibition Preview component only if we have artifacts to preview.
@@ -66,7 +65,7 @@ fluid = fluid || {};
 
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
-            selectorsToIgnore: ["exhibitionPreview"],
+            selectorsToIgnore: ["exhibitionPreview", "catalogue"],
             rendererOptions: {
                 messageLocator: messageLocator,
                 model: that.model
