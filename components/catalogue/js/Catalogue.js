@@ -39,7 +39,7 @@ fluid = fluid || {};
                         catalogueTheme: thisTheme + "themeTitle",
                         linkToThemeArtifacts: {target: thisTheme + "themeArtifactsURL"},
                         linkToThemeArtifactsText: {
-                            messageKey: "linkToThemeArtifacts",
+                            messagekey: "linkToThemeArtifacts",
                             args: {
                                 category: thisTheme + "themeTitle", 
                                 size: thisTheme + "numberOfArtifactsInTheme"
