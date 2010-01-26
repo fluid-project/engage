@@ -1,0 +1,50 @@
+.fl-catalogue .fl-catalogue-themes h2 {
+    background: -webkit-gradient(linear, left top, left bottom, from(#EEE9E9), to(#F5F5F5));
+    padding: 5px 0 5px 5px;
+    margin: 0;
+}
+
+.fl-catalogue-linkToArtifactsHeader {
+    background-color: white;
+}
+
+a.fl-catalogue-linkToArtifacts {
+    background: url(../../../../fluid-infusion/src/webapp/framework/fss/images/themes/iphone/listmenu_arrow.png) no-repeat right 5px;
+}
+
+.flc-catalogue-linkToArtifactsText {
+    background: none;
+    margin-left: 0;
+}
+
+.fl-catalogue-linkToThemeArtifactsText {
+    padding-right: 20px;
+}
+
+[class*=fl-list] {
+    margin: 0px;
+}
+
+.fl-list-thumbnails.fl-thumbnails-expanded > li:last-child {
+    border-left-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0px;
+}
+
+[class*=fl-list] > li:first-child {
+    border-top: none;
+}
+
+[class*=fl-list] li.fl-catalogue-linkToThemeArtifactsContainer {
+    border-top: none;
+    background-color: #FBFBFB;
+}
+
+[class*=fl-list] li a div {
+    padding-right: 20px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    width: auto;
+    height: 45px;
+}

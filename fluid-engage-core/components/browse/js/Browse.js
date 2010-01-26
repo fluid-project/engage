@@ -1,5 +1,5 @@
 /*
- Copyright 2009 University of Toronto
+ Copyright 2009-2010 University of Toronto
  
  Licensed under the Educational Community License (ECL), Version 2.0 or the New
  BSD license. You may not use this file except in compliance with one these
@@ -10,88 +10,11 @@
  
  */
 /*global jQuery, fluid*/
+"use strict";
 
 fluid = fluid || {};
 
 (function ($) {
-    
-    /**
-     * Creates a render component for the component tree. The key can be any key that a componet tree would take and the value is what would be assigned to it.
-     * For example if you wanted to have node that just prints out "Hello World" you could set the key to "value" and the value to "Hello World"
-     * 
-     * @param {Object} id, the ID used by the component tree
-     * @param {Object} key, a key representing an entry in a renderer component
-     * @param {Object} value, the value assigned to the key
-     * @param {Object} classes, (optional) can add classes without having to specify the decorator key. 
-     */
-    var treeNode = function (id, key, value) {
-        var obj = {ID: id};
-        obj[key] = value;
-        
-        return obj;
-    };
-    
-    /**
-     * Children that will be attached to the branch. If no description is provided no markup related to it will be rendered
-     * 
-     * @param {Object} titleID, the ID used by the component tree for the title
-     * @param {Object} title, the title to be rendered
-     * @param {Object} descriptionID, the ID used by the component tree for the description
-     * @param {Object} description, the description to be rendered
-     */
-    var branchChildren = function (titleID, title, descriptionID, description) {
-        title = title || "";
-        
-        var obj = [
-            treeNode(titleID, "value", title)
-        ];
-        
-        if (description && description !== "") {
-            obj.push(treeNode(descriptionID, "value", description));
-        }
-        
-        return obj;
-    };
-    
-    /**
-     * Traverses through an array of objects returning an array of all the values for a specified key.
-     * 
-     * @param {Object} array, an array of Objects to search through
-     * @param {Object} key, the key for whose value to return from each object. Will return an empty string "",
-     * if the key does not exist in the any of the objects.
-     */
-    var extractArray = function (array, key) {
-        return fluid.transform(array, function (object, index) {
-            return object[key] || null;
-        });
-    };
-    
-    /**
-     * Used to initialize multiple navigationList components
-     * 
-     * @param {Object} container, the set of container elements used by the navigationLists
-     * @param {Object} options, an array of options to be used by the navigationLists
-     */
-    var initComponents = function (that, container, options) {
-        fluid.transform(container, function (object, index) {
-            var componentOptions = fluid.copy(that.options.navigationList.options);
-            fluid.merge("merge", componentOptions, options[index]);
-            fluid.initSubcomponent(that, "navigationList", [object, componentOptions]);
-        });
-    };
-    
-    /**
-     * Adds the style necessary for the cabinet headers that have descriptions
-     * 
-     * @param {Object} that, the component
-     */
-    var addDescriptionStyle = function (that) {
-        fluid.transform(that.locate("cabinetHandle"), function (object, index) {
-            if ($(that.options.selectors.listHeaderDescription, object).length > 0) {
-                $(object).addClass(that.options.styles.listHeaderDescription);
-            }
-        });
-    };
     
     /**
      * Removes the loading style from the component, so that the rendered page is displayed
@@ -112,38 +35,52 @@ fluid = fluid || {};
     };
     
     /**
-     * Sets the title that will be displayed at the top of the page. It takes the value from the options.
-     * 
-     * @param {Object} that, the component
-     */
-    var setTitle = function (that) {
-        that.locate("title").text(that.options.strings.title);
-    };
-    
-    /**
      * Renderers out the pieces of the component
      * 
      * @param {Object} that,the component
      */
     var renderBrowse = function (that) {
-        var selectorMap = [
-            {selector: that.options.selectors.lists, id: "lists:"},
-            {selector: that.options.selectors.listHeader, id: "listHeader"},
-            {selector: that.options.selectors.listHeaderDescription, id: "listHeaderDescription"}
-        ];
 
-        var renderTree = function () {
-            return fluid.transform(that.options.lists, function (object, index) {
-                return {
-                    ID: "lists:",
-                    children: branchChildren("listHeader", object.category, "listHeaderDescription", object.description)
-                };
-            });
+        var utils = fluid.engage.renderUtils;
+        var renderOpts = {
+            selectorsToIgnore: ["title", "browseDescription", "browseContents", "browseDescriptionContainer"],
+            repeatingSelectors: ["lists"]
         };
         
-        fluid.selfRender(that.locate("browseContents"), that.options.componentTree || renderTree(), {cutpoints: that.options.selectorMap || selectorMap});
-        initComponents(that, that.locate("lists"), extractArray(that.options.lists, "listOptions"));
-        addDescriptionStyle(that);
+        var renderer = utils.createRendererFunction(that.container, that.options.selectors, renderOpts);
+        
+        var tree = fluid.transform(that.model.categories, function (category) {
+            var children = [];
+            var description = category.description;
+            var name = category.name;
+            if (name) {
+                children.push(utils.uiBound("cabinetHandle"));
+                children.push(utils.uiBound("listHeader", name));
+                if (description) {
+                    children.push(utils.decoratedUIBound("listHeaderDescription", [{
+                        type: "jQuery",
+                        func: "addClass",
+                        args: that.options.styles.listHeaderDescription
+                    }], description));
+                }
+            }
+            var navListModel = fluid.transform(category.items, function (item) {
+                return {
+                    target: item.url,
+                    image: item.imageUrl,
+                    title: item.title,
+                    description: item.description
+                };
+            });
+            children.push(utils.decoratedUIBound("listContents", [{
+                type: "fluid",
+                func: "fluid.navigationList",
+                options: fluid.merge("merge", fluid.copy(that.options.navigationList.options), {links: navListModel})
+            }]));
+            return utils.uiContainer("lists:", children);
+        });
+        
+        renderer(tree);
     };
     
     /**
@@ -161,7 +98,15 @@ fluid = fluid || {};
      * @param {Object} that, the component
      */
     var initDescription = function (that) {
-        that.description = fluid.initSubcomponent(that, "description", [that.locate("browseDescriptionContainer"), fluid.COMPONENT_OPTIONS]);
+        var descr = that.model.desription;
+        if (descr) {
+            that.description = fluid.initSubcomponent(that, "description", 
+            [that.locate("browseDescriptionContainer"), 
+            fluid.merge("merge", fluid.copy(that.options.description.options), {model: descr})]);
+        }
+        else {
+            that.locate("browseDescriptionContainer").remove();
+        }
     };
     
     /**
@@ -171,11 +116,10 @@ fluid = fluid || {};
      */
     var setup = function (that) {
         bindEvents(that);
-        setTitle(that);
+        that.locate("title").text(that.title); // Set the page title
         initDescription(that);
         renderBrowse(that);
         that.events.afterRender.fire(that);
-        
         //Initializing the cabinet must come after all of the rendering is complete and the markup is displayed
         if (that.options.useCabinet) {
             initCabinet(that);
@@ -190,9 +134,10 @@ fluid = fluid || {};
      */
     fluid.browse = function (container, options) {
         var that = fluid.initView("fluid.browse", container, options);
+        that.model = that.options.model;
+        that.title = that.options.title || that.model.categories[0].name;
         
         setup(that);
-        
         return that;
     };
     
@@ -230,6 +175,7 @@ fluid = fluid || {};
             cabinetHandle: ".flc-cabinet-handle",
             listHeader: ".flc-cabinet-header",
             listHeaderDescription: ".flc-cabinet-headerDescription",
+            listContents: ".flc-cabinet-contents",
             lists: ".flc-cabinet-drawer"
         },
         
@@ -240,26 +186,24 @@ fluid = fluid || {};
             listHeaderDescription: "fl-cabinet-headerWithDescription"
         },
         
-        strings: {
-            title: "Browse Title"
-        },
-        
         events: {
             afterRender: null
         },
         
-        useCabinet: true,
+        useCabinet: false,
         
-        componentTree: null,
-        selectorMap: null,
+        title: null,
         
-        lists: [
-            {
-                category: "",
-                description: "",
-                listOptions: {}
-            }
-        ]
+        model: {
+            categories: [
+                {
+                    name: "",
+                    items: [{
+                        description: ""
+                    }]
+                }
+            ]
+        }
     });
     
 })(jQuery);

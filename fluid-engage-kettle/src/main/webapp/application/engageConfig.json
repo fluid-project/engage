@@ -3,6 +3,7 @@ initFunction: "fluid.engage.initEngageApp",
 handlerFunction: "fluid.kettle.servlet.process",
 includes: "kettle/KettleIncludes.json",
 includesPrefix: "kettle/",
+workingDirDepth: 4,
 loaderFunction: "fluid.engage.initEngageApp",
 queryURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
 viewURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/%view",
@@ -10,6 +11,7 @@ viewURLTemplateWithKey: "http://titan.atrc.utoronto.ca:5984/%dbName/%view?key=%k
 myCollectionQueryURLTemplate: "http://unistud.asteasolutions.net:11929/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
 myCollectionDocumentURLTemplate: "http://unistud.asteasolutions.net:11929/%dbName/%id",
 initServices: [
+    "fluid.engage.initHomeService",
     "fluid.artifactView.initMarkupFeed", 
     "fluid.artifactView.initDataFeed", 
     "fluid.browseDemo.initBrowseDemo",
@@ -21,10 +23,13 @@ initServices: [
     "fluid.exhibitionService.initExhibitionsDataFeed",
     "fluid.exhibitionService.initExhibitionViewService",
     "fluid.exhibitionService.initExhibitionViewDataFeed",
+    "fluid.exhibitionService.initExhibitionAboutService",
+    "fluid.exhibitionService.initExhibitionAboutDataFeed",
     "fluid.catalogueService.initCatalogueService",
     "fluid.catalogueService.initCatalogueDataFeed",
     "fluid.catalogueService.initBrowseCatalogueService",
     "fluid.catalogueService.initBrowseCatalogueDataFeed"       
+    "fluid.engage.initImportService"    
     "fluid.myCollection.initMarkupFeed",
     "fluid.myCollection.initDataFeed",
     "fluid.collectOperations.initAcceptor",
@@ -35,7 +40,7 @@ views: {
     all: "all",
     byCollectionCategory: "by_collection_category",
     exhibitionByTitle: "_design/exhibitions/_view/view",
-    catalogueByTitle: "_design/catalogue/_view/view",
+    catalogueByTitle: "_design/catalogue/_view/viewWithArtifacts",
     catalogueArtifacts: "_design/catalogueArtefacts/_view/view",
     exhibitions: "_design/exhibitions/_view/browse",
     byUserCollection: "by_user_collection",
@@ -54,12 +59,12 @@ mount: {
     engageDemo: {
         target: "engageDemo/",
         source: "services/engageDemo/",
-        rewriteSource: "../../engageDemo/"
+        rewriteSource: "../../../services/engageDemo/"
       },
     kettleDemo: {
         target: "kettleDemo/",
         source: "services/kettleDemo/",
-        rewriteSource: "../../services/kettleDemo/"
+        rewriteSource: "../../../services/kettleDemo/"
       }
     },
 debugMode: false

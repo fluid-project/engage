@@ -1,5 +1,5 @@
 /*
-Copyright 2009 University of Toronto
+Copyright 2009 - 2010 University of Toronto
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -12,22 +12,6 @@ https://source.fluidproject.org/svn/LICENSE.txt
 /*global jQuery, fluid, jqUnit*/
 
 (function ($) {  
-
-    function hasSameValues(obj1, obj2) {
-        var result;
-        
-        if (obj1.length === obj2.length) {
-            for (var key in obj1) {
-                if (obj1.hasOwnProperty(key)) {
-                    if (obj1[key] !== obj2[key]) {
-                        return false;
-                    }
-                    result = true;
-                }
-            }
-        }
-        return result;
-    }
     
     function testPaging(initTestFunc, otherTests, options) {
         function testAccessor(url, callback, data) {
@@ -61,7 +45,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         fluid.engage.setCookie(name, value);
         
         if (typeof value === "object") {
-            jqUnit.assertTrue(message, hasSameValues(value, fluid.engage.getCookie(name)));
+            jqUnit.assertDeepEq(message, value, fluid.engage.getCookie(name));
         } else {
             jqUnit.assertEquals(message, value, fluid.engage.getCookie(name));
         }
@@ -105,6 +89,62 @@ https://source.fluidproject.org/svn/LICENSE.txt
             testPaging(function (url, callback) {
                 callback({size: 10});
             }, pagingNextTests, {dataSetSize: "size", useCaching: false});
+        });
+        
+        tests.test("Renderer Utilities Test: Componet Tree Building Functions", function () {
+            var id = "id";
+            var value = "value";
+            var attrName = "src";
+            var attrValue = "http://fluidproject.org";
+            var decoratorArray = [
+                {type: "jQuery",
+                    func: "click",
+                    args: function () { 
+                        $(this).hide(); 
+                    }
+                },
+                {
+                    type: "attrs",
+                    attributes: ""
+                }
+            ];
+            var attrObj = {};
+            attrObj[attrName] = attrValue;
+            
+            jqUnit.assertDeepEq("Proper uiBound node object created", {ID: id, markup: value}, fluid.engage.renderUtils.uiBound(id, value));
+            jqUnit.assertDeepEq("Proper uiBound node object created, no value passed", {ID: id}, fluid.engage.renderUtils.uiBound(id));
+            
+            jqUnit.assertDeepEq("Proper uiBound node with a decorator created", {ID: id, decorators: decoratorArray, markup: value}, fluid.engage.renderUtils.decoratedUIBound(id, decoratorArray, value));
+            jqUnit.assertDeepEq("Proper uiBound node with a decorator created, no value passed", {ID: id, decorators: decoratorArray}, fluid.engage.renderUtils.decoratedUIBound(id, decoratorArray));
+            
+            jqUnit.assertDeepEq("Proper uiBound with an attr decorator created", {ID: id, markup: value, decorators: [{attrs: attrObj}]}, fluid.engage.renderUtils.attrDecoratedUIBound(id, attrName, attrValue, value));
+            jqUnit.assertDeepEq("Proper uiBound with an attr decorator created, no value passed", {ID: id, decorators: [{attrs: attrObj}]}, fluid.engage.renderUtils.attrDecoratedUIBound(id, attrName, attrValue));
+        });
+        
+        tests.test("Renderer Utilities Test: selector mapper", function () {
+            jqUnit.assertDeepEq("Selector Map generation", [{id: "selector", selector: ".className"}], fluid.engage.renderUtils.selectorMapper({selector: ".className"}));
+            jqUnit.assertDeepEq("Selector Map generation, with repeating items", [{id: "selector1", selector: ".class1"}, {id: "selector2:", selector: ".class2"}], fluid.engage.renderUtils.selectorMapper({selector1: ".class1", selector2: ".class2"}, {repeatingSelectors: ["selector2"]}));
+            jqUnit.assertDeepEq("Selector Map generation, with ignored selectors", [{id: "selector1", selector: ".class1"}], fluid.engage.renderUtils.selectorMapper({selector1: ".class1", selector2: ".class2"}, {selectorsToIgnore: ["selector2"]}));
+            jqUnit.assertDeepEq("Selector Map generation, with repeating items and ignored selectors", [{id: "selector1:", selector: ".class1"}], fluid.engage.renderUtils.selectorMapper({selector1: ".class1", selector2: ".class2"}, {repeatingSelectors: ["selector1"], selectorsToIgnore: ["selector2"]}));
+        });
+        
+        tests.test("Renderer Utilities Test: Renderer Init Helper", function () {
+            var selectors = {node: ".flc-renderUtils-test"};
+            var componentTree = function (id, value) {
+                return {
+                    children: [fluid.engage.renderUtils.uiBound(id, value)]
+                };
+            };
+            
+            var renderHelper = fluid.engage.renderUtils.createRendererFunction(".flc-renderUtils-container", selectors);
+            
+            jqUnit.assertEquals("Render function returned", "function", typeof renderHelper);
+            
+            renderHelper(componentTree("node", "selfRender"));
+            jqUnit.assertEquals("Initial Rendering", "selfRender", $(".flc-renderUtils-test").text());
+            
+            renderHelper(componentTree("node", "reRender"));
+            jqUnit.assertEquals("Rerendering", "reRender", $(".flc-renderUtils-test").text());
         });
     }
     

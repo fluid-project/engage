@@ -8,8 +8,8 @@
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-layout.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-text.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-transitions.css" />
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-iphone-layout.css" />
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-iphone-theme.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" />
 
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
@@ -27,11 +27,13 @@
         <div class="simpleList">
             <ul class="flc-nagivationList-listGroup">
                 <li class="flc-navigationList-items">
-                    <a class="flc-navigationList-link">
-                        <img class="flc-navigationList-image"/>
-                        <span class="flc-navigationList-titleText">title/category</span>
-                        <span class="flc-navigationList-descriptionText">description</span>
-                    </a>
+                    <div class="flc-navigationList-linkContainer">
+                        <a class="flc-navigationList-link">
+                            <img class="flc-navigationList-image"/>
+                            <span class="flc-navigationList-titleText">title/category</span>
+                            <span class="flc-navigationList-descriptionText">description</span>
+                        </a>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -55,11 +57,6 @@
                                 image: "../images/Snuffbox.jpg",
                                 title: "Title 3",
                                 description: "Description 3"
-                            },
-                            {
-                                target: "http://build.fluidproject.org",
-                                category: "Category",
-                                size: 100
                             }
                         ];
             

@@ -1,5 +1,5 @@
 /*
- Copyright 2009 University of Toronto
+ Copyright 2009-2010 University of Toronto
  
  Licensed under the Educational Community License (ECL), Version 2.0 or the New
  BSD license. You may not use this file except in compliance with one these
@@ -10,6 +10,7 @@
  
  */
 /*global jQuery, fluid*/
+"use strict";
 
 fluid = fluid || {};
 
@@ -84,11 +85,7 @@ fluid = fluid || {};
                 var title = object.title || "";
                 var tree = treeNode("listItems:", "children", [
                     treeNode("link", "target", object.target || "", styles.link),
-                    conditionalNode(object.category, function () {
-                        return compileMessage("titleText", "linkToMoreMessage", [object.category || "", object.size || ""], styles.category);
-                    }, function () {
-                        return treeNode("titleText", "value", title, styles.titleText);
-                    })
+                    treeNode("titleText", "value", title, styles.titleText)
                 ], styles.listItems);
                 
                 if (object.description) {
@@ -139,6 +136,7 @@ fluid = fluid || {};
     var setup = function (that) {
         render(that);
         styleGroup(that);
+        that.locate("gridToggle").click(that.toggleGrid);
     };
     
     /**
@@ -149,6 +147,14 @@ fluid = fluid || {};
      */
     fluid.navigationList = function (container, options) {
         var that = fluid.initView("fluid.navigationList", container, options);
+        
+        that.toggleGrid = function () {
+            that.locate("listGroup").toggleClass(that.options.styles.grid);
+            that.locate("linkContainer").toggleClass(that.options.styles.gridLinkContainer);
+            that.locate("link").toggleClass(that.options.styles.gridLink);
+            that.locate("titleText").toggle();
+            that.locate("descriptionText").toggle();
+        };
         
         setup(that);
         
@@ -162,20 +168,27 @@ fluid = fluid || {};
         selectors: {
             listGroup: ".flc-nagivationList-listGroup",
             listItems: ".flc-navigationList-items",
+            linkContainer: ".flc-navigationList-linkContainer",
             link: ".flc-navigationList-link",
             image: ".flc-navigationList-image",
             titleText: ".flc-navigationList-titleText",
-            descriptionText: ".flc-navigationList-descriptionText"
+            descriptionText: ".flc-navigationList-descriptionText",
+            gridToggle: ".flc-navigationList-gridToggle"
         },
         
         styles: {
             listGroup: "fl-list-menu fl-list-thumbnails fl-thumbnails-expanded",
             listItems: null,
+            linkContainer: "",
             link: null,
             image: "fl-icon",
             titleText: null,
             descriptionText: "fl-link-summary",
-            category: null
+            category: null,
+            
+            grid: "fl-grid",
+            gridLinkContainer: "fl-table",
+            gridLink: "fl-table-cell"
         },
         
         strings: {},
@@ -184,16 +197,12 @@ fluid = fluid || {};
         
         useDefaultImage: false,
         
-        messageBundle: {linkToMoreMessage: "See all in {0} ({1})"},
-        
         links: [
                 {
                     target: "",
                     image: "",
                     title: "",
-                    description: null,
-                    category: null,
-                    size: null
+                    description: null
                 }
             ]
         }

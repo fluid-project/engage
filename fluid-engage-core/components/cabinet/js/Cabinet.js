@@ -1,5 +1,5 @@
 /*
- Copyright 2009 University of Toronto
+ Copyright 2009 - 2010 University of Toronto
  
  Licensed under the Educational Community License (ECL), Version 2.0 or the New
  BSD license. You may not use this file except in compliance with one these
@@ -55,9 +55,12 @@ fluid = fluid || {};
      * @param {Object} that, the component
      */
     var addCSS = function (that) {
-        that.locate("drawer").addClass(that.options.styles.drawer);
+        that.locate("drawer").not(that.shelves || "").addClass(that.options.styles.drawer);
         that.locate("contents").addClass(that.options.styles.contents);
         that.locate("handle").addClass(that.options.styles.handle);
+        if (that.shelves) {
+            that.shelves.addClass(that.options.styles.shelf);
+        }
     };
     
     /**
@@ -81,6 +84,51 @@ fluid = fluid || {};
     };
     
     /**
+     * A general function to adjust the position of the drawer (open or closed)
+     * 
+     * @param {Object} that, the component
+     * @param {Object} selector, a selector representing the set of drawers
+     * @param {Object} addedStyleName, the style to be added
+     * @param {Object} removedStyleName, the style to be removed
+     * @param {Object} ariaString, the string to be added to the "aria-expanded" attribute
+     * @param {Object} eventName, the name of the event to fire.
+     */
+    var drawerAdjust = function (that, selector, addedStyleName, removedStyleName, ariaString, eventName) {
+        selector = fluid.wrap(selector);
+        selector.addClass(that.options.styles[addedStyleName]);
+        selector.removeClass(that.options.styles[removedStyleName]);
+        selector.attr("aria-expanded", ariaString);
+        toggleVisibility(that, selector);
+
+        if (eventName) {
+            that.events[eventName].fire(selector);
+        }
+    };
+    
+    /**
+     * Causes the drawers to appear open
+     * 
+     * @param {Object} that, the component
+     * @param {Object} selector, a selector representing the set of drawers to open
+     * @param {Object} stopEvent, a boolean value indicating if an event should be fired.
+     */
+    var open = function (that, selector, stopEvent) {
+        drawerAdjust(that, selector, "drawerOpened", "drawerClosed", "true", stopEvent ? null : "afterOpen");
+    };
+    
+    /**
+     * Causes the drawers to apper closed, won't close a drawer that doesn't have a handle
+     * 
+     * @param {Object} that, the component
+     * @param {Object} selector, a selector representing the set of drawers to close
+     * @param {Object} stopEvent, a boolean value indicating if an event should be fired.
+     */
+    var close = function (that, selector, stopEvent) {
+        selector = that.shelves ? fluid.wrap(selector).not(that.shelves) : selector;
+        drawerAdjust(that, selector, "drawerClosed", "drawerOpened", "false", stopEvent ? null : "afterClose");
+    };
+    
+    /**
      * Opens/Closes the specified drawers, and fires the appropriate events.
      * 
      * @param {Object} that, the component
@@ -88,18 +136,16 @@ fluid = fluid || {};
      * @param {Object} selector, a selector representing the drawers to open/close
      * @param {Object} stopEvent, a boolean used to prevent the event from firing. 
      */
-    var moveDrawers = function (that, openState, selector, stopEvent) {
-        selector = fluid.wrap(selector);
-        selector.addClass(openState ? that.options.styles.drawerOpened : that.options.styles.drawerClosed);
-        selector.removeClass(!openState ? that.options.styles.drawerOpened : that.options.styles.drawerClosed);
-        selector.attr("aria-expanded", openState ? "true" : "false");
-        toggleVisibility(that, selector);
-
-        if (!stopEvent) {
-            that.events[openState ? "afterOpen" : "afterClose"].fire(selector);
-        }
+    var moveDrawers = function (that, moveFunc, selector, stopEvent) {
+        moveFunc(that, selector, stopEvent);
     };
     
+    /**
+     * Finds the drawer for a given handle
+     * 
+     * @param {Object} that, the component
+     * @param {Object} element, a handle
+     */
     var findHandleBase = function (that, element) {
         return $(fluid.findAncestor(element, function (el) {
             return $(el).is(that.options.selectors.drawer);
@@ -133,14 +179,34 @@ fluid = fluid || {};
     };
     
     /**
+     * Finds the set of drawers that don't have handles and creates a jquery object called that.shelves with them.
+     * 
+     * @param {Object} that, the component
+     */
+    var findShelves = function (that) {
+        var shelvesList;
+        that.locate("drawer").each(function () {
+            var drawer = $(this);
+            if (drawer.find(that.options.selectors.handle).length === 0) {
+                shelvesList = shelvesList ? shelvesList.add(drawer) : drawer;
+            }
+        });
+        that.shelves = shelvesList;
+    };
+    
+    /**
      * Calls the various setup functions
      * 
      * @param {Object} that, the component
      */
     var setup = function (that) {
+        findShelves(that);
         addAria(that);
         addCSS(that);
-        moveDrawers(that, that.options.startOpen, that.locate("drawer"), that.options.preventEventFireOnInit);
+        moveDrawers(that, that.options.startOpen ? open : close, that.locate("drawer"), that.options.preventEventFireOnInit);
+        if (!that.options.startOpen) {
+            that.openDrawers(that.locate("openByDefault"));
+        }
         addClickEvent(that);
         addKeyNav(that);
     };
@@ -178,7 +244,7 @@ fluid = fluid || {};
          * @param {Object} selector, the set of drawers to open
          */
         that.openDrawers = function (selector) {
-            moveDrawers(that, true, selector);
+            moveDrawers(that, open, selector);
         };
         
         /**
@@ -187,7 +253,7 @@ fluid = fluid || {};
          * @param {Object} selector, the set of drawers to close
          */
         that.closeDrawers = function (selector) {
-            moveDrawers(that, false, selector);
+            moveDrawers(that, close, selector);
         };
         
         setup(that);
@@ -201,7 +267,8 @@ fluid = fluid || {};
             handle: ".flc-cabinet-handle", 
             header: ".flc-cabinet-header",
             headerDescription: ".flc-cabinet-headerDescription",
-            contents: ".flc-cabinet-contents"
+            contents: ".flc-cabinet-contents",
+            openByDefault: ""
         },
         
         styles: {
@@ -209,6 +276,7 @@ fluid = fluid || {};
             drawerOpened: "fl-cabinet-drawerOpened",
             
             drawer: "fl-container fl-container-autoHeading fl-cabinet-animation fl-container-collapsable",
+            shelf: "fl-container",
             contents: "fl-cabinet-contents",
             handle: "fl-cabinet-handle"
         },

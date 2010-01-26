@@ -15,53 +15,119 @@ https://source.fluidproject.org/svn/LICENSE.txt
 fluid = fluid || {};
 
 (function ($) {
-	
-	var buildCutpoints = function (selectors) {
-		return [
-            {id: "exhibitionTitle", selector: selectors.exhibitionTitle}
-        ];
-	};
-	
-	var buildComponentTree = function (that) {
-		return {
-            children: [{
-                ID: "exhibitionTitle",
-                value: that.model.strings.title
-            }]
+
+    function mapToNavListModel(artifacts) {
+        return fluid.transform(artifacts, function (artifact) {
+            return {
+                target: artifact.artifactViewURL,
+                image: artifact.artifactImage,
+                title: artifact.artifactTitle,
+                description: artifact.artifactDescription
+            };
+        });
+    }
+    
+    function makeProtoComponents(model) {
+        return { 
+            exhibitionTitle: "%exhibitionTitle",
+            linkToArtifacts: {target: "%exhibitionArtifactsURL"},
+            linkToArtifactsText: {messagekey: "linkToArtifacts", args: {size: "%numberOfArtifactsInExhibition"}},
+            catalogueThemes: { 
+                children: fluid.transform(model.themes || [], function (theme, index) {
+                    var thisTheme = "%themes." + index + ".";
+                    return {
+                        catalogueTheme: thisTheme + "themeTitle",
+                        linkToThemeArtifacts: {target: thisTheme + "themeArtifactsURL"},
+                        linkToThemeArtifactsText: {
+                            messagekey: "linkToThemeArtifacts",
+                            args: {
+                                category: thisTheme + "themeTitle", 
+                                size: thisTheme + "numberOfArtifactsInTheme"
+                            }
+                        },
+                        decorators: {
+                            type: "fluid",
+                            func: "fluid.navigationList",
+                            options: {links: mapToNavListModel(theme.artifacts)}
+                        }
+                    };
+         })}};
+    }
+
+    
+    function assembleTree(model, expander) {
+        var protoTree = makeProtoComponents(model);
+        var fullTree = expander(protoTree);
+        return fullTree;
+    }
+    
+    var setup = function (that) {
+        var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
+        
+        that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
+            repeatingSelectors: ["catalogueThemes"],
+            rendererOptions: {
+                messageLocator: messageLocator,
+                model: that.model
+            }
+        });
+
+        that.refreshView();
+    };
+    
+    fluid.catalogue = function (container, options) {
+        var that = fluid.initView("fluid.catalogue", container, options);        
+        that.model = that.options.model;
+        
+        var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
+        
+        that.refreshView = function () {
+            that.render(assembleTree(that.model, expander));
         };
-	};
-	
-	var renderCatalogue = function (that) {
-		fluid.selfRender(that.container, 
-			buildComponentTree(that), 
-			{cutpoints: buildCutpoints(that.options.selectors), model: that.model, debug: true});
-	};
-	
-	var initSubcomponents = function (that) {
-		that.catalogueList = fluid.initSubcomponent(that, "navigationList", [that.locate("catalogueList"),
-		    {links: that.model.lists[0].listOptions.links}]);
-	};
-	
-	var setup = function (that) {
-		renderCatalogue(that);
-		initSubcomponents(that);
-	};
-	
-	fluid.catalogue = function (container, options) {
-		var that = fluid.initView("fluid.catalogue", container, options);		
-		that.model = that.options.model;
-		setup(that);
-		return that;
-	};
-	
-	fluid.defaults("fluid.catalogue", {
-		selectors: {
-			exhibitionTitle: ".flc-exhibition-title",
-			viewAll: ".flc-catalogue-viewAll",
-			catalogueList: ".flc-catalogueList"
-		},
-		navigationList: {
+        
+        setup(that);
+        return that;
+    };
+    
+    fluid.defaults("fluid.catalogue", {
+        selectors: {
+            exhibitionTitle: ".flc-catalogue-title",
+            linkToArtifacts: ".flc-catalogue-linkToArtifacts",
+            linkToArtifactsText: ".flc-catalogue-linkToArtifactsText",
+            catalogueThemes: ".flc-catalogue-themes",
+            catalogueTheme: ".flc-catalogue-theme",
+            linkToThemeArtifacts: ".flc-catalogue-linkToThemeArtifacts",
+            linkToThemeArtifactsText: ".flc-catalogue-linkToThemeArtifactsText"
+        },
+        
+        navigationList: {
             type: "fluid.navigationList"
+        },
+        
+        strings: {
+            linkToArtifacts: "View all objects (%size)",
+            linkToThemeArtifacts: "View all in %category (%size)"
+        },
+        
+        model: {
+            exhibitionTitle: "",
+            exhibitionArtifactsURL: "",
+            numberOfArtifactsInExhibition: "",
+            themes: [
+                {
+                    themeTitle: "",
+                    themeArtifactsURL: "",
+                    numberOfArtifactsInTheme: "",
+                    artifacts: [
+                        {
+                            artifactViewURL: "",
+                            artifactImage: "",
+                            artifactTitle: "",
+                            artifactDescription: null
+                        }
+                    ]
+                }
+            ]
         }
-	});
+    });
 }(jQuery));

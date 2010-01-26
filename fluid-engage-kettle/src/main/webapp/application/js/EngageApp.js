@@ -1,5 +1,5 @@
 /*
-Copyright 2009 University of Toronto
+Copyright 2009-2010 University of Toronto
 Copyright 2009 University of Cambridge
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
@@ -12,6 +12,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
 // Declare dependencies.
 /*global jQuery, fluid*/
+"use strict";
 
 fluid = fluid || {};
 fluid.engage = fluid.engage || {};
@@ -62,9 +63,7 @@ fluid.engage = fluid.engage || {};
         }
 
         for (var segment in acceptorMap) {
-            if (acceptorMap.hasOwnProperty(segment)) {
-                mergeAcceptorAtSegment(onApp, segment, acceptorMap[segment]);
-            }            
+            mergeAcceptorAtSegment(onApp, segment, acceptorMap[segment]);
         }
     };
     // temporary function required whilst we use Rhino
@@ -93,50 +92,43 @@ fluid.engage = fluid.engage || {};
     
     fluid.engage.applyMountConfig = function (app, mounts, baseDir) {
         for (var key in mounts) {
-            if (mounts.hasOwnProperty(key)) {
-	            var mount = mounts[key];
-	            fluid.engage.mountAcceptor(app, mount.target, 
-                fluid.kettle.mountDirectory(baseDir, mount.source));
-            }
+            var mount = mounts[key];
+            fluid.engage.mountAcceptor(app, mount.target, 
+            fluid.kettle.mountDirectory(baseDir, mount.source));
         }
-    };
-    
-    fluid.generate = function (n, generator) {
-        var togo = [];
-        for (var i = 0; i < n; ++ i) {
-            togo[i] = typeof(generator) === "function" ?
-                generator.call(null, i) : generator;
-        }
-        return togo;       
     };
     
     fluid.engage.renderHandlerConfig = function (options) {
         var baseOptions = options.baseOptions || {};
         var source = options.source;
         var mounts = options.config.mount;
-        var mount;
         if (options.sourceMountRelative) {
-            mount = mounts[options.sourceMountRelative];
+            var mount = mounts[options.sourceMountRelative];
             source = mount.source + source;
         }
+        var wdDepth = options.config.workingDirDepth;
         var baseDir = options.config.baseDir + source;
-        // NB - current API can only support target depth of 1
+
+        // NB - current API can only support targt depth of 1
         var targetDepth = fluid.kettle.parsePathInfo(options.target).pathInfo.length;
-        var targetPrefix = fluid.generate(targetDepth - 1, "../").join("");
+        var targetPrefix = fluid.kettle.generateDepth(targetDepth - 1);
         
         var prefs = [];
         for (var key in mounts) {
-            if (mounts.hasOwnProperty(key)) {
-	            mount = mounts[key];
-	            var rewSource = mount.rewriteSource ? mount.rewriteSource: mount.source;
-	            var pref = {
-                  source: targetPrefix + rewSource,
-                  target: targetPrefix + mount.target
-              };
-	            prefs[prefs.length] = pref;
-	            fluid.log("Rewriting source " + pref.source + " to target " + pref.target);
-            }
+            var mount = mounts[key];
+            var rewSource = mount.rewriteSource ? mount.rewriteSource: mount.source;
+            var parsedSource = fluid.kettle.parsePathInfo(rewSource);
+            var sourceDepth = fluid.kettle.countDepth(parsedSource.pathInfo);
+            var collapsedSource = fluid.kettle.collapseSegs(parsedSource.pathInfo, sourceDepth);
+            var sourcePrefix = fluid.kettle.generateDepth(wdDepth);
+            var pref = {
+                source: sourcePrefix + collapsedSource,
+                target: targetPrefix + mount.target
+            };
+            prefs[prefs.length] = pref;
+            fluid.log("Rewriting source " + pref.source + " to target " + pref.target);
         }
+        
         var handlerOptions = {
             baseDir: baseDir,
             renderOptions: {
@@ -144,7 +136,7 @@ fluid.engage = fluid.engage || {};
                 rewriteUrlPrefixes: prefs
             }
         };
-        handlerOptions = jQuery.extend(baseOptions, handlerOptions);
+        handlerOptions = jQuery.extend(true, baseOptions, handlerOptions);
         return handlerOptions;
     };
     

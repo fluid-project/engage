@@ -54,61 +54,67 @@ fluid.catalogueService = fluid.catalogueService || {};
 	var compileTargetURL = function (URLBase, params) {
 		return URLBase + "?" + $.param(params);
 	};
-	
-	var buildSectionsLinks = function (sections, links, baseCatalogueURL, db, exhibition) {
-		return $.each(sections, function (index, value) {
-			links.push({
-				target: compileTargetURL(baseCatalogueURL, {
-                    db: db,
-                    exhibition: exhibition,
-                    title: value.sectionTitle
+    
+    var compileArtifacts = function (artifacts, params) {
+        var baseArtifactURL = "../artifacts/view.html";
+        var artifactsArray = [];
+        for (var i = 0; i < artifacts.length && i < 4; i++) {
+            var artifact = artifacts[i];
+            artifactsArray.push({
+                artifactViewURL: compileTargetURL(baseArtifactURL, {
+                    db: params.db.substring(0, params.db.indexOf("_")),
+                    q: artifact.accessNumber
                 }),
-				image: value.sectionImage,
-				title: fluid.stringTemplate(value.sectionTitle + " (%num objects)", {num: value.sectionSize}),
-				description: value.sectionIntroduction
-			});
-		});
-	};
-	
-	var buildSectionsList = function () {
+                artifactImage: artifact.artifactImage,
+                artifactTitle: artifact.artifactTitle,
+                artifactDescription: artifact.artifactDescription
+            });
+        }
+        return artifactsArray;
+    };
+    
+    var compileTheme = function (themes, exhibitionTitle, params, baseURL) {
+        baseURL = baseURL || "";
+        return fluid.transform(themes, function (theme) {
+            return {
+                themeTitle: theme.themeTitle,
+                themeArtifactsURL: compileTargetURL(baseURL, {
+                    db: params.db,
+                    exhibition: exhibitionTitle,
+                    title: theme.themeTitle
+                }),
+                numberOfArtifactsInTheme: theme.numberOfArtifactsInTheme,
+                artifacts: compileArtifacts(theme.artifacts, params)
+            };
+        });
+    };
+    
+    var afterMap = function (data, params) {
+        var baseCatalogueURL = "browse.html";
+        
 		return {
-			listOptions: {
-				links: []
-			}
+			exhibitionTitle: data.exhibitionTitle,
+            exhibitionArtifactsURL: compileTargetURL(baseCatalogueURL, {
+                db: params.db,
+                exhibition: data.exhibitionTitle,
+                title: "viewAll"
+            }),
+            numberOfArtifactsInExhibition: data.numberOfArtifactsInExhibition,
+			themes: compileTheme(data.themes, data.exhibitionTitle, params, baseCatalogueURL)
 		};
-	};
+    };
 	
 	var getData = function (errorCallback, params, config) {
 		var url = compileDatabaseURL(params, config);
 		var rawData = getAjax(url, errorCallback);
 		var dbName = params.db + "_catalogue";
-		var catalogueData = fluid.engage.mapModel(rawData.rows[0], dbName);
-		var sectionsList  = buildSectionsList();
-		var baseCatalogueURL = "browse.html";
-		sectionsList.listOptions.links.push({
-			target: compileTargetURL(baseCatalogueURL, {
-                db: params.db,
-                exhibition: catalogueData.title,
-                title: "viewAll"
-            }),
-			image: "",
-			title: fluid.stringTemplate("View all (%num objects)", {num: catalogueData.viewAll})
-		});
-		buildSectionsLinks(catalogueData.sections, sectionsList.listOptions.links, baseCatalogueURL, params.db, catalogueData.title);
-		var model = {
-			strings: {
-				title: catalogueData.title
-			},
-			lists: [
-			    sectionsList
-			]
-		};
-		return JSON.stringify({model: model});
+        
+		return fluid.engage.mapModel(rawData.rows[0], dbName);
 	};
 	
 	fluid.catalogueService.initCatalogueDataFeed = function (config, app) {
 	    var catalogueDataHandler = function (env) {
-	        return [200, {"Content-Type": "text/plain"}, getData(errorCallback, env.urlState.params, config)];
+	        return [200, {"Content-Type": "text/plain"}, JSON.stringify(getData(errorCallback, env.urlState.params, config))];
 	    };
 	
 	    var acceptor = fluid.engage.makeAcceptorForResource("view", "json", catalogueDataHandler);
@@ -121,12 +127,26 @@ fluid.catalogueService = fluid.catalogueService || {};
 	        app: app,
 	        target: "catalogue/",
 	        source: "components/catalogue/html/",
-	        sourceMountRelative: "engage"
+	        sourceMountRelative: "engage",
+            baseOptions: {
+                renderOptions: {
+                    cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
+                }
+            }
 	    });
 	        
         handler.registerProducer("view", function (context, env) {
-            return {};
+            var params = context.urlState.params;
+            var data = getData(errorCallback, params, config);
+            var options = {
+                model: afterMap(data, params)
+            };
+            
+            return {
+                ID: "initBlock",
+                functionname: "fluid.catalogue",
+                "arguments": [".flc-catalogue-container", options]
+            };
         });
-	        
     };    
 })(jQuery);

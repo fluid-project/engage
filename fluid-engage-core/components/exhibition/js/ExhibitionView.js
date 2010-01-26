@@ -9,143 +9,121 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://source.fluidproject.org/svn/LICENSE.txt
 */
 
-/*global jQuery*/
-/*global fluid*/
+/*global jQuery, fluid*/
+"use strict";
 
 fluid = fluid || {};
 
 (function ($) {
-	
-	var buildCutpoints = function (selectors) {
-		return [
-            {id: "title", selector: selectors.title},
-	        {id: "image", selector: selectors.image},
-	        {id: "displayDate", selector: selectors.displayDate},
-	        {id: "description", selector: selectors.description},
-            {id: "catalogueSize", selector: selectors.catalogueSize},
-		    {id: "catalogueLink", selector: selectors.catalogueLink}
-        ];
-	};
-	
-	var buildComponentTree = function (that) {
-        return {
-            children: [{
-                ID: "title",
-                value: that.model.title
-            }, {
-                ID: "image",
-                decorators: [{
-                    attrs: {
-                        src: that.model.image
-                    }
-                }]
-            }, {
-                ID: "displayDate",
-                value: that.model.displayDate
-            }, {
-                ID: "description",
-                markup: that.model.introduction ? that.model.introduction : that.model.content
-            }, {
-                ID: "catalogueSize",
-                value: fluid.stringTemplate(that.options.strings.catalogueSize, {
-                    size: that.model.catalogueSize
-                })
-            }, {
-                ID: "catalogueLink",
-                decorators: [{
-                    attrs: {
-                        href: that.model.catalogueLink
-                    }
-                }]
-            }]
+    
+    function makeProtoComponents(model) {
+        var proto = {
+            about: "About:",
+            navBarTitle: "%title",
+            displayDate: "%displayDate",
+            shortDescription: "%shortDescription",
+            description: {markup: model.introduction ? model.introduction : model.content},
+            guestBook: {messagekey: "guestbook", args: {size: "%guestbookSize"}},
+            guestbookLink: {target: "%guestbookLink"},
+            guestbookLinkText: {messagekey: "guestbookLinkText"},
+            image: {target: "%image"},
+            catalogueLink: {target: "%catalogueLink"},
+            catalogueLinkText: {messagekey: "catalogueLinkText"},
+            aboutLink: {target: "%aboutLink"},
+            aboutLinkText: {messagekey: "aboutLink"},
+            title: "%title",
+            guestbookInvitation: model.comments || {messagekey: "guestBookInvitationString"}
         };
+        if (model.catalogueSize > 0) {
+            fluid.renderer.mergeComponents(proto, {
+                catalogue: null,
+                catalogueTitle: {messagekey: "catalogueTitle", args: {size: "%catalogueSize"}}
+            });
+        }
+        return proto;
     };
     
-	var setupResources = function (options, isCurrent) {
-		return {
-            view: {
-	            href: isCurrent ? options.templateCurrentURL : options.templateUpcomingURL,
-	            cutpoints: buildCutpoints(options.selectors)
-	        }
-	    };
-	};
-	
-	var extractArray = function (array, key) {
-        return fluid.transform(array, function (object, index) {
-            return object[key] || null;
-        });
-    };
-	
-	var initSubComponents = function (that, container, options) {
-        fluid.transform(container, function (object, index) {
-            var componentOptions = fluid.copy(that.options.navigationList.options);
-            fluid.merge("merge", componentOptions, options[index]);
-            fluid.initSubcomponent(that, "navigationList", [object, componentOptions]);
-        });
+    var setupSubcomponents = function (that) {        
+        // Render the Exhibition Preview component only if we have artifacts to preview.
+        if (that.model.catalogueSize > 0) {
+            that.exhibitionPreview = fluid.initSubcomponent(that, "exhibitionPreview", [
+                that.locate("exhibitionPreview"), 
+                {
+                    model: that.model.cataloguePreview
+                }
+            ]);
+        }
     };
     
-    var initSubComponentsHeaders = function (container, options) {
-        fluid.transform(container, function (object, index) {
-            $(object).html(options[index]);
+    var setup = function (that) {
+        // TODO: Temporary testing data. This should be replaced when Hugues gives us more data.
+        that.model.cataloguePreview = [{
+            title: "TITLE",
+            target: "#",
+            thumbnail: "http://helios.gsfc.nasa.gov/image_euv_press.jpg",
+            media: true
+        }];
+
+        var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
+        that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
+            selectorsToIgnore: ["exhibitionPreview"],
+            rendererOptions: {
+                messageLocator: messageLocator,
+                model: that.model
+            }
         });
+        
+        that.refreshView();
     };
-	
-	var setupSubcomponents = function (that) {
-		initSubComponents(that, that.locate("lists"), extractArray(that.options.exhibitionCabinet.lists, "listOptions"));
-		initSubComponentsHeaders(that.locate("currentCabinetHeaders"), extractArray(that.options.exhibitionCabinet.lists, "category"));
-		that.exhibitionCabinet = fluid.initSubcomponent(that, "exhibitionCabinet", [that.locate("currentCabinet")]);		
-	};
-	
-	var renderExhibition = function (that, resources, buildTree, isCurrent) {
-		fluid.fetchResources(resources, function () {
-            var templates = fluid.parseTemplates(resources, ["view"], {});
-            fluid.reRender(templates, that.container, buildTree(that), {model: that.model});
-            if (isCurrent) {
-                setupSubcomponents(that);
-            }
-        });
-	};
-	
-	var setup = function (that, isCurrent) {
-		var resources = setupResources(that.options, isCurrent);
-		renderExhibition(that, resources, buildComponentTree, isCurrent);
-	};
-	
-	fluid.exhibition = function (container, options) {
-		var that = fluid.initView("fluid.exhibition", container, options);		
-		that.model = that.options.model;
-		setup(that, that.model.isCurrent === "yes");		
-		return that;
-	};
-	
-	fluid.defaults("fluid.exhibition", {
-		selectors: {
-			title: ".flc-exhibition-title",
-			image: ".flc-exhibition-image",
-			description: ".flc-exhibition-description",
-			displayDate: ".flc-exhibition-displayDate",
-			catalogueSize: ".flc-exhibition-catalogue-size",
-			catalogueLink: ".flc-exhibition-catalogueLink",
-			currentCabinet: ".flc-exhibition-cabinet",
-			currentCabinetHeaders: ".flc-cabinet-header",
-			lists: ".flc-cabinet-drawer"
-		},
-		exhibitionCabinet: {
-            type: "fluid.cabinet"
+    
+    fluid.engage.exhibitionView = function (container, options) {
+        var that = fluid.initView("fluid.engage.exhibitionView", container, options);        
+        that.model = that.options.model;
+
+        var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
+        
+        that.refreshView = function () {
+            var protoTree = makeProtoComponents(that.model);
+            var tree = expander(protoTree);
+            that.render(tree);
+            setupSubcomponents(that);
+        };
+        
+        setup(that);        
+        return that;
+    };
+    
+    fluid.defaults("fluid.engage.exhibitionView", {
+        selectors: {
+            about: ".flc-exhibition-about",
+            aboutLink: ".flc-exhibition-aboutLink",
+            aboutLinkText: ".flc-exhibition-aboutLinkText",
+            navBarTitle: ".flc-exhibition-navBarTitle",
+            title: ".flc-exhibition-title",
+            image: ".flc-exhibition-image",
+            shortDescription: ".flc-exhibtion-shortDescription",
+            description: ".flc-exhibition-description",
+            displayDate: ".flc-exhibition-displayDate",
+            catalogue: ".flc-exhibition-catalogue",
+            catalogueTitle: ".flc-exhibition-catalogue-title",
+            catalogueLink: ".flc-exhibition-catalogueLink",
+            catalogueLinkText: ".flc-exhibition-catalogueLinkText",
+            guestbook: ".flc-exhibition-guestbook",
+            guestbookLink: ".flc-exhibition-guestbookLink",
+            guestbookLinkText: ".flc-exhibition-guestbookLinkText",
+            guestbookInvitation: ".flc-exhibition-guestbookInvitation",
+            exhibitionPreview: ".flc-exhibition-preview"
         },
-        navigationList: {
-            type: "fluid.navigationList",
-            options: {
-                styles: {
-                    titleTextnavigationList: "fl-browse-shortenText"
-                },
-                useDefaultImage: false
-            }
+        strings: {
+            guestBookInvitationString: "No comments yet. Create your own comment.",
+            catalogueTitle: "Catalogue (%size)",
+            guestbook: "Guestbook (%size)",
+            guestbookLinkText: "Read all comments",
+            catalogueLinkText: "View the full catalogue",
+            aboutLink: "Read more"
         },
-		strings: {
-			catalogueSize: "%size objects"
-		},
-		templateCurrentURL: "../../../../fluid-engage-core/components/exhibition/html/templateCurrent.html",
-		templateUpcomingURL: "../../../../fluid-engage-core/components/exhibition/html/templateUpcoming.html"
-	});
+        exhibitionPreview: {
+            type: "fluid.engage.preview"
+        }
+    });
 }(jQuery));

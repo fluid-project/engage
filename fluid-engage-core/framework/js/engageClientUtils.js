@@ -1,5 +1,5 @@
 /*
-Copyright 2009 University of Toronto
+Copyright 2009 - 2010 University of Toronto
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -299,5 +299,217 @@ https://source.fluidproject.org/svn/LICENSE.txt
         dataSetSize: "total_rows",
         dataAccessor: fluid.engage.paging.dataAccessor
     });
-	
+    
+    /*******************************
+     * Renderer Utilities          *
+     * --------------------------- *
+     * depends on fluidRenderer.js *
+     *******************************/
+    
+    fluid.engage.renderUtils = fluid.engage.renderUtils || {};
+    
+    fluid.engage.renderUtils.createRendererFunction = function (container, selectors, options) {
+        var that = fluid.merge("merge", {container: container, selectors: selectors}, options);
+        that.container = $(that.container);
+        
+        var renderFunc = function (tree, options) {
+            if (that.template) {
+                fluid.reRender(that.template, that.container, tree, options);
+            } else {
+                that.template = fluid.selfRender(that.container, tree, options);
+            }
+        };
+        
+        var render = function (tree) {
+            var mapFunc = "fluid.engage.renderUtils.selectorMapper";
+            
+            that.selectorMap = that.selectorMap || fluid.invokeGlobalFunction(that.selectorMapper || mapFunc, [that.selectors, that]);
+            renderFunc(tree, fluid.merge("merge", {cutpoints: that.selectorMap}, that.rendererOptions));
+        };
+        
+        return function (tree) {
+            render(tree);
+        };
+    };
+    
+    fluid.engage.renderUtils.removeSelectors = function (selectors, ignore) {
+        $.each(ignore || [], function (index, selectorToIgnore) {
+            delete selectors[selectorToIgnore];
+        });
+        return selectors;
+    };
+    
+    fluid.engage.renderUtils.markRepeated = function (selector, repeat) {
+        $.each(repeat || [], function (index, repeatingSelector) {
+            if (selector === repeatingSelector) {
+                selector = selector + ":";
+            }
+        });
+        return selector;
+    };
+    
+    fluid.engage.renderUtils.selectorMapper = function (selectors, options) {
+        var map = [];
+        options = options || {};
+        
+        if (options.selectorsToIgnore) {
+            selectors = fluid.engage.renderUtils.removeSelectors(selectors, options.selectorsToIgnore);
+        }
+        
+        for (var key in selectors) {
+            if (selectors.hasOwnProperty(key)) {
+                map.push({
+                    id: fluid.engage.renderUtils.markRepeated(key, options.repeatingSelectors),
+                    selector: selectors[key]
+                });
+            }
+        }
+        
+        return map;
+    };
+    
+    /** A special "shallow copy" operation suitable for nondestructively
+     * merging trees of components. jQuery.extend in shallow mode will 
+     * neglect null valued properties.
+     */
+    fluid.renderer.mergeComponents = function(target, source) {
+        for (var key in source) {
+            target[key] = source[key];
+        }
+        return target;
+    };
+    
+    /** Create a "protoComponent expander" with the supplied set of options.
+     * The returned value will be a function which accepts a "protoComponent tree"
+     * as argument, and returns a "fully expanded" tree suitable for supplying
+     * directly to the renderer.
+     * A "protoComponent tree" is similar to the "dehydrated form" accepted by
+     * the historical renderer - only
+     * i) The input format is unambiguous - this expander will NOT accept hydrated
+     * components in the {ID: "myId, myfield: "myvalue"} form - but ONLY in
+     * the dehydrated {myID: {myfield: myvalue}} form.
+     * ii) This expander has considerably greater power to expand condensed trees.
+     * In particular, an "EL style" option can be supplied which will expand bare
+     * strings found as values in the tree into UIBound components by a configurable
+     * strategy. Supported values for "ELstyle" are a) "ALL" - every string will be
+     * interpreted as an EL reference and assigned to the "valuebinding" member of
+     * the UIBound, or b) any single character, which if it appears as the first
+     * character of the string, will mark it out as an EL reference - otherwise it
+     * will be considered a literal value, or c) the value "${}" which will be
+     * recognised bracketing any other EL expression.
+     * 
+     * This expander will be upgraded in the future to support even more powerful
+     * forms of expansion, including model-directed expansion such as selection and
+     * repetition.
+     */
+    
+    fluid.renderer.makeProtoExpander = function (options) {
+        var ELstyle = options.ELstyle;
+        var IDescape = options.IDescape || "\\";
+        function extractEL(string) {
+            if (ELstyle === "ALL") {
+                return string;
+            }
+            else if (ELstyle.length === 1) {
+                if (string.charAt(0) === ELstyle) {
+                    return string.substring(1);
+                }
+            }
+            else if (ELstyle === "${}") {
+                var i1 = string.indexOf("${");
+                var i2 = string.indexOf("}");
+                if (i1 === 0 && i2 !== -1) {
+                    return string.substring(2, i2);
+                }
+            }
+        }
+        function expandStringEntry(proto, string) {
+            var EL = options.ELstyle? extractEL(string): null;
+            if (EL) {
+                proto.valuebinding = EL;
+            }
+            else {
+                proto.value = string;
+            }
+        }
+        function expandComponent(comp, entry) {
+           if (typeof(entry) === "string") {
+               expandStringEntry(comp, entry);
+           }
+           else {
+               function memberPusher(component, key) {
+               comp[key] = component;
+               }
+           expandMembers(entry, comp, memberPusher);
+           }
+        }
+        
+        var expandMembers = function(proto, container, pusher) {
+            for (var key in proto) {
+               var entry = proto[key];
+               if (key === "decorators") {
+                   container.decorators = entry; 
+                   continue;
+               }
+               if (key.charAt(0) === IDescape) {
+                   key = key.substring(1);
+               }
+               if (entry.children) {
+                   if (key.indexOf(":" === -1)) {
+                       key = key + ":";
+                   }
+                   var children = entry.children;
+                   for (var i = 0; i < children.length; ++ i) {
+                       var comp = expandChildren(children[i]);
+                       pusher(comp, key);
+                   }
+               }
+               else {
+                   var comp = {};
+                   expandComponent(comp, entry);
+                   pusher(comp, key);
+               }
+            }
+        }
+        
+        var expandChildren = function(proto) { // proto is a container
+            var childlist = [];
+            var togo = {children: childlist}
+            var childPusher = function(comp, key) {
+                comp.ID = key;
+                childlist.push(comp);
+            }
+            expandMembers(proto, togo, childPusher);
+            return togo;  
+        };
+        return expandChildren;
+    };
+    
+        
+    
+    fluid.engage.renderUtils.uiContainer = function (id, children) {
+        return {
+            ID: id, 
+            children: children
+        };
+    };
+    
+    fluid.engage.renderUtils.uiBound = function (id, value) {
+        var uiBound = {ID: id};
+        if (value) {
+            uiBound.markup = value;
+        }
+        return uiBound;
+    };
+    
+    fluid.engage.renderUtils.decoratedUIBound = function (id, decorators, value) {
+        return fluid.merge("merge", fluid.engage.renderUtils.uiBound(id, value), {decorators: decorators});
+    };
+    
+    fluid.engage.renderUtils.attrDecoratedUIBound  = function (id, attrName, attrValue, nodeValue) {
+        var decObj = {attrs: {}};
+        decObj.attrs[attrName] = attrValue;
+        
+        return fluid.engage.renderUtils.decoratedUIBound(id, [decObj], nodeValue);
+    };
 })(jQuery, fluid);

@@ -1,6 +1,6 @@
 /*
 Copyright 2009 University of Cambridge
-Copyright 2009 University of Toronto
+Copyright 2009-2010 University of Toronto
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -12,42 +12,12 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
 // Declare dependencies.
 /*global jQuery, fluid*/
+"use strict";
 
 fluid = fluid || {};
 fluid.artifactView = fluid.artifactView || {};
 
 (function ($) {
-
-    var artifactViewCutpoints = [
-        {
-            id: "artifactTitle",
-            selector: ".artifact-name"
-        },
-        {
-            id: "artifactImage",
-            selector: ".artifact-picture"
-        },
-        {
-            id: "artifactTitle2",
-            selector: ".artifact-descr-name"
-        },
-        {
-            id: "artifactAuthor",
-            selector: ".artifact-provenance"
-        },
-        {
-            id: "artifactDate",
-            selector: ".artifact-date"
-        },
-        {
-            id: "artifactAccessionNumber",
-            selector: ".artifact-accession-number"
-        },
-        {
-            id: "artifactCollectLink",
-            selector: ".flc-collect-link"
-        }
-    ];
     
     var getData = function (modelURL) {
         var model = {};
@@ -58,7 +28,7 @@ fluid.artifactView = fluid.artifactView || {};
                 model = model.rows[0].doc;
             }       
         };   
-
+        
         $.ajax({
             url: modelURL, 
             success: successCallback,
@@ -72,45 +42,6 @@ fluid.artifactView = fluid.artifactView || {};
     var buildDataURL = function (params, config) {
         return fluid.stringTemplate(config.queryURLTemplate, 
             {dbName: params.db || "", view: config.views.all, query: params.q || ""}); 
-    };
- 
-    var buildComponentTree = function (model) {
-        var tree = {children: [
-            {
-                ID: "artifactTitle",
-                valuebinding: "artifactTitle"
-            },
-            {
-                ID: "artifactTitle2",
-                valuebinding: "artifactTitle",
-                decorators: [{
-                    type: "addClass",
-                    classes: "fl-text-bold"
-                }]
-            },
-            {
-                ID: "artifactAuthor",
-                valuebinding: "artifactAuthor"
-            },
-            {
-                ID: "artifactDate",
-                valuebinding: "artifactDate"
-            },
-            {
-                ID: "artifactAccessionNumber",
-                valuebinding: "artifactAccessionNumber"
-            },
-            {
-                ID: "artifactCollectLink"
-            }
-        ]};
-        if (model.artifactImage) {
-            tree.children.push({
-                ID: "artifactImage",
-                target: model.artifactImage
-            });
-        }
-        return tree;
     };
 
     var fetchAndNormalizeModel = function (params, config) {
@@ -156,7 +87,7 @@ fluid.artifactView = fluid.artifactView || {};
     };
     
     fluid.artifactView.initDataFeed = function (config, app) {
-        var artifactDataHandler = function (env) {  
+        var artifactDataHandler = function (env) {	
             var urlBase = "browse.html?",
                 params = env.urlState.params,
                 model = fetchAndNormalizeModel(params, config),
@@ -165,14 +96,10 @@ fluid.artifactView = fluid.artifactView || {};
             
             relatedParams.q = buildCategoryQuery(model.category);
             relatedArtifacts = urlBase + $.param(relatedParams); 
-    
+            
             return [200, {"Content-Type": "text/plain"}, JSON.stringify({
-                toRender: {
-                    model: model,
-                    cutpoints: artifactViewCutpoints,
-                    tree: buildComponentTree(model),
-                    relatedArtifacts: relatedArtifacts
-                },
+                artifact: model,
+                relatedArtifacts: relatedArtifacts,
                 museum: params.db,
                 artifactCollected: checkCollectStatus(config, params, model.id)
             })];
@@ -194,8 +121,5 @@ fluid.artifactView = fluid.artifactView || {};
         handler.registerProducer("view", function (context, env) {
             return {};
         });
-
-
     };
-    
 })(jQuery);

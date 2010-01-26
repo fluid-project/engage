@@ -1,5 +1,5 @@
 /*
-Copyright 2009 University of Toronto
+Copyright 2009-2010 University of Toronto
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -11,6 +11,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
 // Declare dependencies.
 /*global jQuery, fluid*/
+"use strict";
 
 fluid = fluid || {};
 fluid.browseDemo = fluid.browseDemo || {};
@@ -30,31 +31,30 @@ fluid.browseDemo = fluid.browseDemo || {};
         
 		var categoryText = (typeof data[0].category === "string") ? 
 				data[0].category : $.makeArray(data[0].category).toString();
-                
+             
 	    var model = {
-	        strings: {
-	            title: categoryText
-	        },
-	        useCabinet: false,
-	        lists: [{
-	            category: categoryText,
-	            listOptions: {}
-	        }]
+	        categories: [
+	            {
+	                name: categoryText,
+	                artifacts: []
+	            }
+	        ]
 	    };
 	    
-	    model.lists[0].listOptions.links = fluid.transform(data, function (artifact) {
+	    // TODO: Address the issue here that we're hard baking the data feed to a single category
+	    model.categories[0].artifacts = fluid.transform(data, function (artifact) {
 	        return {
-	            target: compileTargetURL(baseArtifactURL, {
+	            url: compileTargetURL(baseArtifactURL, {
                     q: artifact.linkTarget,
                     db: dbName
                 }),
-	            image: artifact.linkImage,
+	            imageUrl: artifact.linkImage,
 	            title: artifact.linkTitle,
 	            description: artifact.linkDescription
 	        };
 	    });
 	    
-	    return JSON.stringify(model);
+	    return model;
 	};
 	
 	var errorCallback = function (XMLHttpRequest, textStatus, errorThrown) {
@@ -105,13 +105,22 @@ fluid.browseDemo = fluid.browseDemo || {};
 	
 	fluid.browseDemo.initBrowseDataFeed = function (config, app) {
 	    var browseDataHandler = function (env) {
-	        return [200, {"Content-Type": "text/plain"}, getData(errorCallback, env.urlState.params, config)];
+	        return [200, {"Content-Type": "text/plain"}, JSON.stringify(getData(errorCallback, env.urlState.params, config))];
 	    };
 	
 	    var acceptor = fluid.engage.makeAcceptorForResource("browse", "json", browseDataHandler);
 	    fluid.engage.mountAcceptor(app, "artifacts", acceptor);
 	};
 	
+	var afterMap = function (data) {
+        data.categories = $.map(data.categories, function (value) {
+            return {
+                name: value.name,
+                items: value.artifacts
+            };
+        });
+        return data;
+    };
 	
 	fluid.browseDemo.initBrowseDemo = function (config, app) {
 	    var handler = fluid.engage.mountRenderHandler({
@@ -119,11 +128,25 @@ fluid.browseDemo = fluid.browseDemo || {};
 	        app: app,
 	        target: "artifacts/",
 	        source: "components/browse/html/",
-	        sourceMountRelative: "engage"
+	        sourceMountRelative: "engage",
+	        baseOptions: {
+                renderOptions: {
+                    cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
+                }
+            }
 	    });
 	        
         handler.registerProducer("browse", function (context, env) {
-            return {};
+            var data = getData(errorCallback, context.urlState.params, config);
+            var options = {
+                model: afterMap(data)
+            };
+
+            return {
+                ID: "initBlock", 
+                functionname: "fluid.browse", 
+                "arguments": [".flc-browse", options]
+            };
         });
 	        
     };
