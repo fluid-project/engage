@@ -121,11 +121,35 @@ https://source.fluidproject.org/svn/LICENSE.txt
             jqUnit.assertDeepEq("Proper uiBound with an attr decorator created, no value passed", {ID: id, decorators: [{attrs: attrObj}]}, fluid.engage.renderUtils.attrDecoratedUIBound(id, attrName, attrValue));
         });
         
-        tests.test("Renderer Utilities Test: selector mapper", function () {
-            jqUnit.assertDeepEq("Selector Map generation", [{id: "selector", selector: ".className"}], fluid.engage.renderUtils.selectorMapper({selector: ".className"}));
-            jqUnit.assertDeepEq("Selector Map generation, with repeating items", [{id: "selector1", selector: ".class1"}, {id: "selector2:", selector: ".class2"}], fluid.engage.renderUtils.selectorMapper({selector1: ".class1", selector2: ".class2"}, {repeatingSelectors: ["selector2"]}));
-            jqUnit.assertDeepEq("Selector Map generation, with ignored selectors", [{id: "selector1", selector: ".class1"}], fluid.engage.renderUtils.selectorMapper({selector1: ".class1", selector2: ".class2"}, {selectorsToIgnore: ["selector2"]}));
-            jqUnit.assertDeepEq("Selector Map generation, with repeating items and ignored selectors", [{id: "selector1:", selector: ".class1"}], fluid.engage.renderUtils.selectorMapper({selector1: ".class1", selector2: ".class2"}, {repeatingSelectors: ["selector1"], selectorsToIgnore: ["selector2"]}));
+        tests.test("Renderer Utilities Test: selectorsToCutpoints", function () {
+            // Single class name, simple cutpoints generation.
+            var selectors = {selector1: ".class1"};
+            var expected = [{id: "selector1", selector: ".class1"}];
+            jqUnit.assertDeepEq("Selector Map generation", expected, fluid.engage.renderUtils.selectorsToCutpoints(selectors));
+            
+            selectors.selector2 = ".class2";
+            
+            // Multiple selectors with one repeating.
+            expected = [{id: "selector1", selector: ".class1"}, {id: "selector2:", selector: ".class2"}];
+            var actual = fluid.engage.renderUtils.selectorsToCutpoints(selectors, {repeatingSelectors: ["selector2"]});
+            jqUnit.assertDeepEq("Selector Map generation, with repeating items", expected, actual);
+            
+            // Ignoring selectors.
+            expected = [{id: "selector1", selector: ".class1"}];
+            actual = fluid.engage.renderUtils.selectorsToCutpoints(selectors, {
+                selectorsToIgnore: ["selector2"]
+            });
+            jqUnit.assertDeepEq("Selector Map generation, with ignored selectors", expected, actual);
+            jqUnit.assertNotUndefined("selectorsToCutpoints should not eat other people's selectors", selectors.selector2);
+            
+            // Repeating and ignored selectors.
+            expected = [{id: "selector1:", selector: ".class1"}];
+            actual = fluid.engage.renderUtils.selectorsToCutpoints(selectors, {
+                repeatingSelectors: ["selector1"], 
+                selectorsToIgnore: ["selector2"]
+            });
+            jqUnit.assertDeepEq("Selector Map generation, with repeating items and ignored selectors", expected, actual);
+            jqUnit.assertNotUndefined("selectorsToCutpoints should not eat other people's selectors", selectors.selector2);
         });
         
         tests.test("Renderer Utilities Test: Renderer Init Helper", function () {
