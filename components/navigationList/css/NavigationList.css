@@ -1,16 +1,31 @@
-.fl-collapsable {
-	margin: 12px;
-}
-.fl-navigationList-hidden {
-	max-height:43px;
+.fl-list-thumbnails > li:not(:last-child) {
+	margin-bottom: 0px;
+	border-bottom: none;
 }
 
-.fl-navigationList-animation {
-    -webkit-transition: max-height 0.75s ease-in;
+.fl-theme-iphone .fl-list a {
+    color: rgb(0, 0, 0);
+    font-size: 0.7em;
 }
-.fl-collapsingPanel.fl-navigationList-hidden > *:first-child {
-	-webkit-border-radius:8px;
+
+.fl-theme-iphone [class*="fl-list"] > li .fl-link-summary {
+    color: rgb(0, 0, 0);
+    font-size: 1em;
 }
-.fl-collapsingPanel a {
-    -webkit-tap-highlight-color: rgba(255,0,0,1);	
+
+.fl-list-thumbnails.fl-thumbnails-expanded.fl-grid li {
+    margin: 4px;	
+}
+	
+.fl-table-cell .fl-navigationList-title {
+    display: none;
+}
+
+.fl-table-cell .fl-link-summary.fl-navigationList-description {
+    display: none;
+}
+
+.fl-list.fl-list-thumbnails > li a .fl-icon {
+    height: 48px;
+    width: 48px;
 }

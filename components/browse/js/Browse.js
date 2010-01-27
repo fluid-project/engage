@@ -75,7 +75,7 @@ fluid = fluid || {};
             children.push(utils.decoratedUIBound("listContents", [{
                 type: "fluid",
                 func: "fluid.navigationList",
-                options: fluid.merge("merge", fluid.copy(that.options.navigationList.options), {links: navListModel})
+                options: fluid.merge("merge", fluid.copy(that.options.navigationList.options), {model: navListModel})
             }]));
             return utils.uiContainer("lists:", children);
         });
@@ -86,7 +86,7 @@ fluid = fluid || {};
     /**
      * Initializes the Cabinet component which is used as a subcomponent
      * 
-     * @param {Object} that, the componet
+     * @param {Object} that, the component
      */
     var initCabinet = function (that) {
         that.cabinet = fluid.initSubcomponent(that, "cabinet", [that.locate("browseContents"), fluid.COMPONENT_OPTIONS]);

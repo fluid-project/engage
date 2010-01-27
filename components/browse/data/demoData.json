@@ -8,13 +8,13 @@
     strings: {
         title: "Local Browse Sample"
     },
-                
-    lists: [
+    
+    useCabinet: true,
+          
+    categories: [
         {
-            category: "Category 1",
-            description: "",
-            listOptions: {
-                links: [
+            name: "Category 1",
+            items: [
                     {
                         target: "../../navigationList/images/Artifacts-.jpg",
                         image: "../../navigationList/images/Artifacts-.jpg",
@@ -32,51 +32,13 @@
                         image: "../../navigationList/images/Snuffbox.jpg",
                         title: "Title 3",
                         description: "Description 3"
-                    },
-                    {
-                        target: "http://build.fluidproject.org",
-                        category: "Category",
-                        size: 100
-                      }
-                ]
-            }
-        },
-        {
-            category: "Category 2",
-            description: "Description 2",
-            listOptions: {
-                links: [
-                    {
-                        target: "../../navigationList/images/Artifacts-.jpg",
-                        image: "../../navigationList/images/Artifacts-.jpg",
-                        title: "Title 1",
-                        description: "Description 1"
-                    },
-                    {
-                        target: "../../navigationList/images/Snuffbox.jpg",
-                        image: "../../navigationList/images/Snuffbox.jpg",
-                        title: "Title 2",
-                        description: "Description 2"
-                    },
-                    {
-                        target: "../../navigationList/images/Snuffbox.jpg",
-                        image: "../../navigationList/images/Snuffbox.jpg",
-                        title: "Title 3",
-                        description: "Description 3"
-                    },
-                    {
-                        target: "http://build.fluidproject.org",
-                        category: "Category",
-                        size: 100
                     }
                 ]
-            }
+            
         },
         {
-            category: "Category 3",
-            description: "Description 3",
-            listOptions: {
-                links: [
+            name: "Category 2",
+            items: [
                     {
                         target: "../../navigationList/images/Artifacts-.jpg",
                         image: "../../navigationList/images/Artifacts-.jpg",
@@ -94,14 +56,31 @@
                         image: "../../navigationList/images/Snuffbox.jpg",
                         title: "Title 3",
                         description: "Description 3"
-                    },
-                    {
-                        target: "http://build.fluidproject.org",
-                        category: "Category",
-                        size: 100
                     }
                 ]
-            }
+        },
+        {
+            name: "Category 3",
+            items: [
+                    {
+                        target: "../../navigationList/images/Artifacts-.jpg",
+                        image: "../../navigationList/images/Artifacts-.jpg",
+                        title: "Title 1",
+                        description: "Description 1"
+                    },
+                    {
+                        target: "../../navigationList/images/Snuffbox.jpg",
+                        image: "../../navigationList/images/Snuffbox.jpg",
+                        title: "Title 2",
+                        description: "Description 2"
+                    },
+                    {
+                        target: "../../navigationList/images/Snuffbox.jpg",
+                        image: "../../navigationList/images/Snuffbox.jpg",
+                        title: "Title 3",
+                        description: "Description 3"
+                    }
+                ]
         }
     ]
 }

@@ -48,7 +48,7 @@ fluid = fluid || {};
                         decorators: {
                             type: "fluid",
                             func: "fluid.navigationList",
-                            options: {links: mapToNavListModel(theme.artifacts)}
+                            options: {model: mapToNavListModel(theme.artifacts)}
                         }
                     };
          })}};

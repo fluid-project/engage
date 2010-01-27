@@ -1,3 +1,7 @@
+.fl-theme-iphone {
+    background: rgb(255,255,255);
+}
+
 .fl-list-thumbnails.fl-grid li {
     overflow: hidden;
 }

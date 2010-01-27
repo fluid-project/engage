@@ -31,7 +31,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         }
         
         jqUnit.assertEquals("Correct Title text", component.title, $(selectors.title).text());
-        jqUnit.assertEquals("Correct Number of NavigationLists Rendered", component.model.categories.length, $(".flc-nagivationList-listGroup").length);
+        jqUnit.assertEquals("Correct Number of NavigationLists Rendered", component.model.categories.length, $(".flc-navigationList-listGroup").length);
     };
         
     var browseTests = function () {
