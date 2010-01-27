@@ -1,0 +1,61 @@
+{
+initFunction: "fluid.engage.initEngageApp",
+handlerFunction: "fluid.kettle.servlet.process",
+includes: "kettle/KettleIncludes.json",
+includesPrefix: "kettle/",
+workingDirDepth: 4,
+loaderFunction: "fluid.engage.initEngageApp",
+queryURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
+viewURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/%view",
+viewURLTemplateWithKey: "http://titan.atrc.utoronto.ca:5984/%dbName/%view?key=%key",
+initServices: [
+    "fluid.engage.initHomeService",
+    "fluid.artifactView.initMarkupFeed", 
+    "fluid.artifactView.initDataFeed", 
+    "fluid.browseDemo.initBrowseDemo",
+    "fluid.browseDemo.initBrowseDataFeed",
+    "fluid.engageDemo.initEngageDemo",
+    "fluid.kettleDemo.initCherryDemo",
+    "fluid.kettleDemo.initJSGIHandlerDemo",
+    "fluid.exhibitionService.initExhibitionsService",
+    "fluid.exhibitionService.initExhibitionsDataFeed",
+    "fluid.exhibitionService.initExhibitionViewService",
+    "fluid.exhibitionService.initExhibitionViewDataFeed",
+    "fluid.exhibitionService.initExhibitionAboutService",
+    "fluid.exhibitionService.initExhibitionAboutDataFeed",
+    "fluid.catalogueService.initCatalogueService",
+    "fluid.catalogueService.initCatalogueDataFeed",
+    "fluid.catalogueService.initBrowseCatalogueService",
+    "fluid.catalogueService.initBrowseCatalogueDataFeed",
+    "fluid.engage.initImportService"
+],
+views: {
+    all: "all",
+    byCollectionCategory: "by_collection_category",
+    exhibitionByTitle: "_design/exhibitions/_view/view",
+    catalogueByTitle: "_design/catalogue/_view/viewWithArtifacts",
+    catalogueArtifacts: "_design/catalogueArtefacts/_view/view",
+    exhibitions: "_design/exhibitions/_view/browse"
+},
+mount: {
+    infusion: {
+        target: "fluid-infusion/",
+        source: "../../../../fluid-infusion/src/webapp/"
+        },
+    engage: {
+        target: "fluid-engage-core/",
+        source: "../../../../fluid-engage-core/"
+        },
+    engageDemo: {
+        target: "engageDemo/",
+        source: "services/engageDemo/",
+        rewriteSource: "../../../services/engageDemo/"
+      },
+    kettleDemo: {
+        target: "kettleDemo/",
+        source: "services/kettleDemo/",
+        rewriteSource: "../../../services/kettleDemo/"
+      }
+    },
+debugMode: true
+}
