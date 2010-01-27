@@ -54,16 +54,18 @@ fluid = fluid || {};
             var description = category.description;
             var name = category.name;
             if (name) {
-                children.push(utils.uiBound("cabinetHandle"));
+                var cabinetHandle = utils.uiBound("cabinetHandle"); 
+                children.push(cabinetHandle);
                 children.push(utils.uiBound("listHeader", name));
                 if (description) {
-                    children.push(utils.decoratedUIBound("listHeaderDescription", [{
-                        type: "jQuery",
-                        func: "addClass",
-                        args: that.options.styles.listHeaderDescription
-                    }], description));
+                    children.push(utils.uiBound("listHeaderDescription", description));
+                    cabinetHandle.decorators = [{
+                        type: "addClass",
+                        classes: that.options.styles.listHeaderDescription
+                    }];
                 }
             }
+            
             var navListModel = fluid.transform(category.items, function (item) {
                 return {
                     target: item.url,
@@ -98,7 +100,7 @@ fluid = fluid || {};
      * @param {Object} that, the component
      */
     var initDescription = function (that) {
-        var descr = that.model.desription;
+        var descr = that.model.description;
         if (descr) {
             that.description = fluid.initSubcomponent(that, "description", 
             [that.locate("browseDescriptionContainer"), 

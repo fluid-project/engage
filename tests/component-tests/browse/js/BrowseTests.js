@@ -95,6 +95,9 @@ https://source.fluidproject.org/svn/LICENSE.txt
                     options: {
                         model: descriptionText
                     }
+                },
+                model: {
+                    description: "My description"
                 }
             };
             
