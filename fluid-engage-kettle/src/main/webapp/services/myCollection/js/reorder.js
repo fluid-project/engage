@@ -24,7 +24,7 @@ fluid.reorder = fluid.reorder || {};
      * @param {Object} config, the JSON config file for Engage.  
      */
     var updateCollection = function (params, config) {
-        var userCollection = fluid.myCollection.common.getCollection(params, config);
+        var userCollection = fluid.myCollection.common.getCollection(params.uuid, config);
         
         var parsedParams = JSON.parse(decodeURIComponent(params.orderData));
         

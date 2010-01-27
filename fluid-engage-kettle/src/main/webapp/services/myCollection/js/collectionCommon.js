@@ -64,11 +64,11 @@ fluid.myCollection.common = fluid.myCollection.common || {};
     /**
      * Returns the JSON object returned by CouchDB for a user collection.
      * 
-     * @param {Object} params, the HTTP parameters passed to a handler.
+     * @param {Object} uuid, the uuid for the collection.
      * @param {Object} config, the JSON config file for Engage. 
      */
-    fluid.myCollection.common.getCollection = function (params, config) {
-        var databaseUrl = fluid.myCollection.common.compileUserDocumentUrl(params.uuid, config);
+    fluid.myCollection.common.getCollection = function (uuid, config) {
+        var databaseUrl = fluid.myCollection.common.compileUserDocumentUrl(uuid, config);
         
         var data;
         

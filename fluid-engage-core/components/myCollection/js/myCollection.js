@@ -26,12 +26,10 @@ fluid = fluid || {};
     var treeNode = function (id, key, value, classes) {
         var obj = {ID: id};
         obj[key] = value;
-        if (classes) {
-            obj.decorators = {
-                type: "addClass",
-                classes: classes
-            };
-        }
+        obj.decorators = {
+            type: "addClass",
+            classes: classes
+        };
         
         return obj; 
     };
@@ -71,7 +69,7 @@ fluid = fluid || {};
             useDefaultImage: that.options.useDefaultImages
         };
         
-        fluid.merge("merge", componentOptions, that.options.data);
+        fluid.merge("merge", componentOptions, that.options.model.data);
 
         if (that.model) {
             fluid.transform(that.model, function (object) {
@@ -80,11 +78,11 @@ fluid = fluid || {};
                     
                     object.children.push(
                             treeNode("titleText", "value",
-                                    that.options.data.links[index].title,
+                                    componentOptions.links[index].title,
                                     styles.titleText));
                     object.children.push(
                             treeNode("periodText", "value",
-                                    that.options.data.links[index].dated,
+                            		componentOptions.links[index].dated,
                                     styles.periodText));
                 } else {
                     object.children.pop();
@@ -209,8 +207,13 @@ fluid = fluid || {};
      * 
      * @param {Object} that, the component.
      */
-    var initBackLink = function (that) {
+    var initBackLink = function (that) { 	
         var backUrl = document.referrer;
+        
+        if (backUrl === "") {
+        	return "#";
+        }
+        
         if (backUrl.indexOf("uuid") < 0) { // Workaround for the case when
                                            // we come from the artifact page
                                            // for the first time.
@@ -302,8 +305,8 @@ fluid = fluid || {};
         // Set the status message
         var status = fluid.stringTemplate(
             that.options.strings.statusMessageTemplate, {
-                artifactsNumber: that.options.data.links.length,
-                artifactsPlural: that.options.data.links.length === 1 ? "" : "s"
+                artifactsNumber: that.options.model.data.links.length,
+                artifactsPlural: that.options.model.data.links.length === 1 ? "" : "s"
             }
         );
         that.locate("collectionStatus").html(status);
@@ -395,6 +398,10 @@ fluid = fluid || {};
             return $(image).clone();
         };
         
+        that.getCollectionSize = function () {
+        	return that.options.model.data.links.length;
+        };
+        
         setup(that);
         
         return that;
@@ -451,8 +458,6 @@ fluid = fluid || {};
             events: {
                 afterRender: null
             },
-
-            data: {},
 
             useDefaultImage: true,
             

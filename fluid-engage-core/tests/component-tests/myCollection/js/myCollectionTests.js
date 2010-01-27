@@ -36,7 +36,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             });
             
             component = fluid.initMyCollection(".flc-myCollection",
-                    {data: data.data, updateDatabaseOrder: false});
+                    {model: data, updateDatabaseOrder: false});
         };
 
         tests = jqUnit.testCase("My Collection Tests", setup);

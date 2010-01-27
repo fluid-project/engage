@@ -68,7 +68,7 @@ fluid.collectOperations = fluid.collectOperations || {};
     var collectOperation = function (pathInfo, config, fn) {
         var artifactData = compileArtifactData(pathInfo);
         
-        var userCollection = fluid.myCollection.common.getCollection(artifactData, config);
+        var userCollection = fluid.myCollection.common.getCollection(artifactData.uuid, config);
         
         fn(userCollection, artifactData);
         

@@ -75,17 +75,6 @@ fluid.myCollection = fluid.myCollection || {};
     };
   
     /**
-     * Returns the CouchDB id for a collection.
-     * 
-     * @param rawData, the raw collection data, as returned by CouchDB.
-     */
-    var getCollectionId = function (rawData) {
-        if (rawData.rows && rawData.rows[0]) {
-            return rawData.rows[0].doc._id;
-        }
-    };
-    
-    /**
      * Returns an array of artifact ids.
      * 
      * @param rawData, the raw collection data, as returned by CouchDB.
@@ -178,13 +167,11 @@ fluid.myCollection = fluid.myCollection || {};
     /**
      * Packs up all other functions to create a data feed of artifacts contained in a user collection.
      * 
-     *  @param {Object} params, the HTTP parameters passed to this handler.
+     *  @param {Object} uuid, the UUID that identifies the collection.
      *  @param {Object} config, the JSON config file for Engage.
      */
-    var assembleData = function (params, config) {
-        var url = fluid.myCollection.common.compileUserDocumentUrl(params.uuid, config);
-        
-        var rawData = ajaxCall(url);
+    var assembleData = function (uuid, config) {
+        var rawData = fluid.myCollection.common.getCollection(uuid, config);
 
         var urls = compileDataURLs(config, rawData);
         var originalArtifactIds = getArtifactIds(rawData);
@@ -193,7 +180,7 @@ fluid.myCollection = fluid.myCollection || {};
             var rawArtifactData = ajaxCall(artifactURL.url);
             var artifactData = getArtifactData(rawArtifactData, artifactURL.database);
 
-            return compileData(artifactData, artifactURL.database, params.uuid);            
+            return compileData(artifactData, artifactURL.database, uuid);            
         });
 
         var model = {
@@ -217,9 +204,9 @@ fluid.myCollection = fluid.myCollection || {};
             model.data.links.push(links[$.inArray(originalArtifactIds[i], artifactIds)]);
         }
         
-        model.data.collectionId = params.uuid;
+        model.data.collectionId = uuid;
         
-        return JSON.stringify(model);
+        return model;
     };
 
     /**
@@ -231,9 +218,11 @@ fluid.myCollection = fluid.myCollection || {};
     fluid.myCollection.initDataFeed = function (config, app) {
         var dataHandler = function (env) {
             if (!env.urlState.params.uuid) {
-                return [500, {"Content-Type": "text/plain"}, "No uuid parameter specified, cannot retrieve collection."];
+                return [500, {"Content-Type": "text/plain"},
+                        "No uuid parameter specified, cannot retrieve collection."];
             } else {
-                return [200, {"Content-Type": "text/plain"}, assembleData(env.urlState.params, config)];
+            	return [200, {"Content-Type": "text/plain"},
+            	        JSON.stringify(assembleData(env.urlState.params.uuid, config))];
             }
         };
 
@@ -253,11 +242,24 @@ fluid.myCollection = fluid.myCollection || {};
             app: app,
             target: "users/",
             source: "components/myCollection/html/",
-            sourceMountRelative: "engage"
+            sourceMountRelative: "engage"/*,
+            baseOptions: {
+                renderOptions: {
+                    cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
+                }
+            }*/
         });
         
         handler.registerProducer("myCollection", function (context, env) {
-            return {};
+/*        	
+        	var uuid = env.QUERY_STRING.substring("uuid=".length);
+        	
+            return {
+            			ID: "initBlock", 
+            			functionname: "fluid.browse", 
+            			arguments: [".flc-browse", assembleData(uuid, config)]
+                    };
+*/
         });
     };
 
