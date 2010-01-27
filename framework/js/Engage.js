@@ -236,7 +236,10 @@ fluid = fluid || {};
         },
         mccord_exhibitions: {
 	        dataSpec: {
-                "isCurrent": "value.isCurrent",
+                "isCurrent": {
+                    "path": "value.isCurrent",
+                    "func": "makeBoolean"
+                },//"value.isCurrent",
                 "title": "key",
                 "displayDate": "value.displayDate",
                 "endDate": "value.endDate",
@@ -251,6 +254,12 @@ fluid = fluid || {};
                         return "http://www.mccord-museum.qc.ca" + $.makeArray(value.small)[0].nodetext;
                     };
                     return tryFunc(getImage, value);
+                },
+                makeBoolean: function (value) {
+                    var convert = function () {
+                        return value === "yes";
+                    };
+                    return tryFunc(convert, value);
                 }
             }
         },
