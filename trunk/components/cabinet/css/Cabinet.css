@@ -1,0 +1,42 @@
+.fl-cabinet-handle h2 {
+    margin:0;    
+}
+.fl-cabinet-handle.fl-cabinet-headerWithDescription {
+    padding:0 10px;
+}
+.fl-cabinet-handle.fl-cabinet-headerWithDescription h2 {
+    margin:0 0 -5px 0;
+    padding:5px 0 0 0;
+}
+
+.fl-collapsable {
+	margin: 12px;
+}
+.fl-cabinet-drawerClosed {
+	max-height:50px;
+}
+
+.fl-cabinet-animation {
+    -webkit-transition: max-height 0.75s ease-in;
+}
+
+.fl-collapsingPanel.fl-cabinet-drawerClosed > *:first-child {
+	-webkit-border-radius:8px;
+}
+
+.fl-theme-iphone .fl-container-autoHeading > :first-child {
+    background: -webkit-gradient(linear, left top, left bottom, from(#ECECEC), to(#F8F8F8));
+    color: #000;
+}
+[class*=fl-container]:not(.fl-navbar),
+[class*=fl-list] {
+	margin:0;
+}
+
+[class*=fl-container] [class*=fl-list] > li:last-child,
+[class*=fl-container] [class*=fl-list] > li:first-child,
+
+.fl-container-autoHeading > *:first-child,
+.fl-container-collapsable {
+	-webkit-border-radius:0;
+}
