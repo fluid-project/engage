@@ -66,7 +66,11 @@ fluid = fluid || {};
 
         that.refreshView();
         that.locate("gridToggle").click(that.toggleLayout);
-        that.options.defaultToGrid ? that.gridLayout() : that.listLayout();
+        if (that.options.defaultToGrid) {
+            that.gridLayout();
+        } else {
+            that.listLayout();
+        }
     };
     
     var styleAsGrid = function (listGroup, linkContainer, link, styles) {
@@ -93,7 +97,11 @@ fluid = fluid || {};
         that.isGrid = that.options.defaultToGrid;
         
         that.toggleLayout = function () {
-            that.isGrid ? that.listLayout() : that.gridLayout();
+            if (that.isGrid) {
+                that.listLayout();
+            } else {
+                that.gridLayout();
+            }
         };
         
         that.gridLayout = function () {

@@ -11,6 +11,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
 /*global jQuery*/
 /*global fluid*/
+"use strict";
 
 fluid = fluid || {};
 
@@ -51,7 +52,9 @@ fluid = fluid || {};
                             options: {model: mapToNavListModel(theme.artifacts)}
                         }
                     };
-         })}};
+                })
+            }
+        };
     }
 
     
