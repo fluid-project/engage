@@ -1,0 +1,74 @@
+.fl-exhibition-header {
+    background: -webkit-gradient(linear, left top, left bottom, from(#EEE9E9), to(#F5F5F5));
+    padding: 5px 0 5px 0;
+}
+
+.fl-exhibition-image {
+    padding: 0 ! important;
+}
+
+.fl-exhibition-title-date {
+    padding: 0 ! important;
+}
+
+.fl-exhibitionAbout-textBlock {
+	margin: 5px;
+}
+
+.fl-exhibitionNavBar-title {
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    width: auto;
+    height: 45px;
+}
+
+.fl-theme-iphone {
+	background: none;
+}
+
+.fl-list-menu li:last-child {
+    border-bottom-width: 0px;
+}
+
+[class*=fl-list] > li {
+    border-style: none;
+}
+
+.fl-exhibition-content {
+    padding: 4px;
+}
+
+[class*="fl-list"] > li {
+    font-weight: normal;
+}
+
+.fl-exhibition-shortDescription {
+    font-weight: bold;
+}
+
+.fl-navBar-left {
+    margin-left: 5px;
+    margin-right: 10px;
+}
+
+.fl-navBar-right {
+    margin-left: 10px;
+    margin-right: 5px;
+}
+
+.fl-container li {
+    background-color: white;
+}
+
+.fl-exhibition-linkContainer {
+    background-color: #EEEEEE;
+    -webkit-border-radius: 8px;
+    padding: 0px;
+    margin: 0px 10px 5px 0px;
+}
+
+.fl-exhibition-linkText {
+    padding-right: 20px;
+    text-decoration: underline;
+}
