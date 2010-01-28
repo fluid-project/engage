@@ -28,7 +28,7 @@ fluid = fluid || {};
         });
     }
     
-    function makeProtoComponents(model) {
+    function makeProtoComponents(model, navLists) {
         return { 
             exhibitionTitle: "%title",
             linkToArtifacts: {target: "%allArtifactsViewURL"},
@@ -36,6 +36,11 @@ fluid = fluid || {};
             catalogueThemes: { 
                 children: fluid.transform(model.themes || [], function (theme, index) {
                     var thisTheme = "%themes." + index + ".";
+                    navLists[index] = {
+                        type: "fluid",
+                        func: "fluid.navigationList",
+                        options: {model: mapToNavListModel(theme.artifacts)}
+                    };
                     return {
                         catalogueTheme: thisTheme + "title",
                         linkToThemeArtifacts: {target: thisTheme + "allArtifactsViewURL"},
@@ -46,11 +51,7 @@ fluid = fluid || {};
                                 size: thisTheme + "numArtifacts"
                             }
                         },
-                        decorators: {
-                            type: "fluid",
-                            func: "fluid.navigationList",
-                            options: {model: mapToNavListModel(theme.artifacts)}
-                        }
+                        decorators: navLists[index]
                     };
                 })
             }
@@ -58,8 +59,8 @@ fluid = fluid || {};
     }
 
     
-    function assembleTree(model, expander) {
-        var protoTree = makeProtoComponents(model);
+    function assembleTree(model, expander, navLists) {
+        var protoTree = makeProtoComponents(model, navLists);
         var fullTree = expander(protoTree);
         return fullTree;
     }
@@ -68,6 +69,7 @@ fluid = fluid || {};
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
         
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
+            selectorsToIgnore: ["catalogueThemeToggle"],
             repeatingSelectors: ["catalogueThemes"],
             rendererOptions: {
                 messageLocator: messageLocator,
@@ -78,6 +80,15 @@ fluid = fluid || {};
         that.refreshView();
     };
     
+    var activateToggler = function (that, navLists) {
+        that.locate("catalogueThemeToggle").click(function () {
+            fluid.transform(navLists || [], function (navList) {
+                navList.that.toggleLayout();
+            });
+            return false;
+        });
+    };
+    
     fluid.catalogue = function (container, options) {
         var that = fluid.initView("fluid.catalogue", container, options);        
         that.model = that.options.model;
@@ -85,7 +96,10 @@ fluid = fluid || {};
         var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
         
         that.refreshView = function () {
-            that.render(assembleTree(that.model, expander));
+            var navLists = [];
+            var tree = assembleTree(that.model, expander, navLists);
+            that.render(tree);
+            activateToggler(that, navLists);
         };
         
         setup(that);
@@ -100,7 +114,8 @@ fluid = fluid || {};
             catalogueThemes: ".flc-catalogue-themes",
             catalogueTheme: ".flc-catalogue-theme",
             linkToThemeArtifacts: ".flc-catalogue-linkToThemeArtifacts",
-            linkToThemeArtifactsText: ".flc-catalogue-linkToThemeArtifactsText"
+            linkToThemeArtifactsText: ".flc-catalogue-linkToThemeArtifactsText",
+            catalogueThemeToggle: ".flc-catalogue-navlist-toggle"
         },
         
         navigationList: {
