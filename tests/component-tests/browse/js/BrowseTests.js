@@ -52,14 +52,14 @@ https://source.fluidproject.org/svn/LICENSE.txt
         tests.test("Description on cabinet header", function () {
             var options = {
                 model: {
-	                categories: [
-	                    {
-	                        name: "category",
-	                        description: "description",
-	                        artifacts: [
-	                        ]
-	                    }
-	                ]
+                    categories: [
+                        {
+                            name: "category",
+                            description: "description",
+                            artifacts: [
+                            ]
+                        }
+                    ]
                 }
             };
             
@@ -77,8 +77,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
                     categories: [
                         {
                             name: "category"
-	                    }
-	                ]
+                        }
+                    ]
                 }
             };
             var browse = setup(CONTAINER, options);
