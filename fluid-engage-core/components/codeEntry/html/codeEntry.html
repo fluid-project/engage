@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></meta>
+		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"></meta>
+		<meta name="apple-mobile-web-app-capable" content="yes"></meta>
+		
+		<title>
+			Object code entry
+		</title>
+
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css"></link>
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css"></link>
+		<link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/codeEntry/css/codeEntry.css"></link>
+		
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
+
+   		<script type="text/javascript" src="../../../../fluid-engage-core/components/codeEntry/js/codeEntryView.js"></script>		
+	</head>
+	<body class="flc-codeEntry fl-theme-iphone">
+		
+		<div class="fl-navbar fl-table">
+			<div class="fl-table-row">
+				<a class="fl-table-cell fl-back-button flc-back-button">Back</a>
+				<h1 class="fl-table-cell">Object code entry</h1>
+				<div class="fl-table-cell"></div>
+			</div>
+		</div>
+		
+		<div class="flc-invalid-code-message">
+		</div>
+
+        <div class="flc-instruction-text">            
+        </div>
+
+        <div class="flc-entry-block">
+            <span class="flc-first-digit fl-digit-field"> </span>
+            <span class="flc-second-digit fl-digit-field"> </span>
+		</div>
+		
+		<div class="flc-numpad fl-table">
+			<div class="fl-table-row">
+				<img class="flc-button-one" src="../../../../fluid-engage-core/components/codeEntry/images/one.jpg" alt="One"/>
+				<img class="flc-button-two" src="../../../../fluid-engage-core/components/codeEntry/images/two.jpg" alt="Two"/>
+				<img class="flc-button-three" src="../../../../fluid-engage-core/components/codeEntry/images/three.jpg" alt="Three"/>
+			</div>
+			<div class="fl-table-row">
+				<img class="flc-button-four" src="../../../../fluid-engage-core/components/codeEntry/images/four.jpg" alt="Four"/>
+				<img class="flc-button-five" src="../../../../fluid-engage-core/components/codeEntry/images/five.jpg" alt="Five"/>
+				<img class="flc-button-six" src="../../../../fluid-engage-core/components/codeEntry/images/six.jpg" alt="Six"/>
+			</div>
+			<div class="fl-table-row">
+				<img class="flc-button-seven" src="../../../../fluid-engage-core/components/codeEntry/images/seven.jpg" alt="Seven"/>
+				<img class="flc-button-eight" src="../../../../fluid-engage-core/components/codeEntry/images/eight.jpg" alt="Eight"/>
+				<img class="flc-button-nine" src="../../../../fluid-engage-core/components/codeEntry/images/nine.jpg" alt="Nine"/>
+			</div>
+			<div class="fl-table-row">
+				<img src="../../../../fluid-engage-core/components/codeEntry/images/empty.jpg"/>
+				<img class="flc-button-zero" src="../../../../fluid-engage-core/components/codeEntry/images/zero.jpg" alt="Zero"/>
+				<img class="flc-button-del" src="../../../../fluid-engage-core/components/codeEntry/images/del.jpg" alt="Delete"/>
+			</div>
+		</div>
+		
+        <script type="text/javascript">
+            fluid.invokeGlobalFunction("fluid.codeEntry", [".flc-codeEntry", {}]);
+        </script>
+	</body>
+</html>
