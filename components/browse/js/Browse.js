@@ -52,7 +52,9 @@ fluid = fluid || {};
         var tree = fluid.transform(that.model.categories, function (category) {
             var children = [];
             var description = category.description;
-            var name = category.name;
+            var name = 
+               fluid.stringTemplate(that.options.strings[category.isCurrent ? "currentCategory" : "upcomingCategory"], {size: category.items.length});
+            
             if (name) {
                 var cabinetHandle = utils.uiBound("cabinetHandle"); 
                 children.push(cabinetHandle);
@@ -186,6 +188,12 @@ fluid = fluid || {};
             browseContents: "fl-browse-contents",
             browseDescription: "fl-browse-description",
             listHeaderDescription: "fl-cabinet-headerWithDescription"
+        },
+        
+        strings: {
+            upcomingCategory: "Upcoming (%size)",
+            currentCategory: "",
+            title: "Exhibitions"
         },
         
         events: {
