@@ -3,9 +3,10 @@
 }
 
 .flc-invalid-code-message {
-	width: 300px;
+	width: 320px;
 	height: 40px;
 	margin: auto;
+    text-align: center;
 }
 
 .flc-instruction-text {

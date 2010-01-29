@@ -15,67 +15,88 @@ fluid = fluid || {};
 fluid.codeEntry = fluid.codeEntry || {};
 
 (function ($) {
-	var compileTargetUrl = function (artifact, dbName) {
+    
+    /**
+     * Creates an url for the artifact view.
+     * 
+     * @param {Object} artifact, the artifact retrieved from CouchDB
+     * @param dbName, the name of the database the artifact comes from
+     */
+    var compileTargetUrl = function (artifact, dbName) {
         var baseArtifactUrl = "../artifacts/view.html";
         
         return baseArtifactUrl + "?" + $.param({q: artifact.linkTarget, db: dbName});        
-	};
-	
-	var getArtifactLink = function (config, params) {
-		var url = fluid.stringTemplate(config.codeEntryQueryURLTemplate, {
-			dbName: params.db,
-			view: config.views.byObjectCode,
-			query: params.code
-		});
-		
-		var artifact = {};
-		
-		var success = function (data) {
-			artifact = JSON.parse(data);
-		};
-		
+    };
+    
+    /**
+     * Queries the database for the given object code and returns an object with
+     * a field indicating whether the artifact was found and a link for the
+     * artifact page if it was found.
+     * 
+     * @param {Object} config, Engage parsed config file.
+     * @param {Object} params, URL parameters passed to this handler.
+     */
+    var getArtifactLink = function (config, params) {
+        var url = fluid.stringTemplate(config.codeEntryQueryURLTemplate, {
+            dbName: params.db,
+            view: config.views.byObjectCode,
+            query: params.code
+        });
+        
+        var artifact = {};
+        
+        var success = function (data) {
+            artifact = JSON.parse(data);
+        };
+        
         var error = function (XMLHttpRequest, textStatus, errorThrown) {
             fluid.log("Status: " + textStatus);
             fluid.log("Error: " + errorThrown);
         };
         
         $.ajax({
-        	url: url,
-        	async: false,
-        	success: success,
-        	error: error
+            url: url,
+            async: false,
+            success: success,
+            error: error
         });
         
         if (artifact.total_rows > 0) {
-        	var mappedArtifact =  fluid.engage.mapModel(artifact.rows[0].doc,
-        			params.db);
-        	
-        	return {
-        		artifactFound: true,
-        		artifactLink: compileTargetUrl(mappedArtifact, params.db)
-        	};
+            var mappedArtifact =  fluid.engage.mapModel(artifact.rows[0].doc,
+                    params.db);
+            
+            return {
+                artifactFound: true,
+                artifactLink: compileTargetUrl(mappedArtifact, params.db)
+            };
         } else {
-        	return {artifactFound: false};
+            return {artifactFound: false};
         }
-	};
-	
-	/**
+    };
+    
+    /**
      * Creates an acceptor for code entry.
      * 
      *  @param {Object} config, the JSON config file for Engage.
      *  @param {Object} app, the Engage application.
      */
     fluid.codeEntry.initCodeEntryDataFeed = function (config, app) {
-    	var dataHandler = function (env) {
-    		return ["200", {"Content-Type": "text/plain"},
-    		        JSON.stringify(getArtifactLink(config, env.urlState.params))];
-    	};
-    	
+        var dataHandler = function (env) {
+            return ["200", {"Content-Type": "text/plain"},
+                    JSON.stringify(getArtifactLink(config, env.urlState.params))];
+        };
+        
         var acceptor = fluid.engage.makeAcceptorForResource("codeEntryService", "js",
-       		dataHandler);
+            dataHandler);
         fluid.engage.mountAcceptor(app, "codeEntry", acceptor);
     };
     
+    /**
+     * Creates a producer for the code entry html.
+     * 
+     * @param {Object} config, the JSON config file for Engage.
+     * @param {Object} app, the Engage application.
+     */
     fluid.codeEntry.initCodeEntryService = function (config, app) {
         var handler = fluid.engage.mountRenderHandler({
             config: config,
