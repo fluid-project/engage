@@ -42,7 +42,7 @@
     </head>   
       <body class="fl-theme-iphone"> 
         <div class="fl-artifact">
-            <div class="artifact-container">
+            <div class="flc-artifact">
                 <div class="flc-artifact-renderscope">
                     <div class="flc-screenNavigator-navbar fl-navbar fl-table">
                         <div class="fl-table-row">              
@@ -80,8 +80,8 @@
                 </div>
             </div>
         </div>
-        <script type="text/javascript">
-            fluid.engage.initComponentWithDataURL("fluid.engage.artifactView", ".artifact-container");
+        <script id="flc-initBlock" type="text/javascript">
+            fluid.engage.initComponentWithLocalData("fluid.engage.artifactView", ".flc-artifact");
         </script>
     </body>
 </html>
