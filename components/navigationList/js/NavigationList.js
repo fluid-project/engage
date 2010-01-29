@@ -17,7 +17,7 @@ fluid = fluid || {};
 (function ($) {
     
 
-    var generateTree = function (model, useDefaultImage) {
+    var generateTree = function (model, options) {
         return {
             children: fluid.transform(model, function (navListItem) {
                 var itemSubtree = {
@@ -41,13 +41,20 @@ fluid = fluid || {};
                     });
                 }
                 
-                if (navListItem.image || useDefaultImage) {
+                if (navListItem.image || options.useDefaultImage) {
                     itemSubtree.children.push({
                         ID: "image",
                         target: navListItem.image
                     });
                 }
                 
+                if (navListItem.showBadge) {
+                    itemSubtree.children.push({
+                        ID: "badgeIcon",
+                        target: options.badgeIconUrl
+                    });
+                }
+
                 return itemSubtree;
             })
         };
@@ -66,7 +73,7 @@ fluid = fluid || {};
 
         that.refreshView();
         that.locate("gridToggle").click(that.toggleLayout);
-        if (that.options.defaultToGrid) {
+        if (that.isGrid) {
             that.gridLayout();
         } else {
             that.listLayout();
@@ -115,7 +122,7 @@ fluid = fluid || {};
         };
         
         that.refreshView = function () {
-            that.render(generateTree(that.model, that.options.useDefaultImage));
+            that.render(generateTree(that.model, that.options));
         };
         
         setup(that);
@@ -135,7 +142,8 @@ fluid = fluid || {};
             image: ".flc-navigationList-image",
             titleText: ".flc-navigationList-titleText",
             descriptionText: ".flc-navigationList-descriptionText",
-            gridToggle: ".flc-navigationList-gridToggle"
+            gridToggle: ".flc-navigationList-gridToggle",
+            badgeIcon: ".flc-navigationList-badge-icon"
         },
         
         styles: {
@@ -152,8 +160,8 @@ fluid = fluid || {};
         events: {},
         
         useDefaultImage: false,
-        
-        defaultToGridLayout: false,
+                
+        badgeIconUrl: undefined,
         
         model: [
             {

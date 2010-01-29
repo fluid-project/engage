@@ -1,0 +1,21 @@
+{
+    "title": "eSpace",
+    "isCurrent": "yes",
+    "displayDate": "July 22, 2009 to January 10, 2010",
+    "endDate": "2010-01-10",
+    "imageURL": "../../navigationList/images/Artifacts-.jpg",
+    "shortDescription": "This installation brings together two different yet intimately linked universes.",
+    "introduction": "This installation brings together two different yet intimately linked universes: the real and the imaginary. Objects that are reflections or sometimes symbols of these two &quot;spaces&quot; appear side by side, grouped according to the themes of exploration and the conquest of space.",
+    "content": "In 1969, an American astronaut took the first step on the Moon. On the 40th anniversary of this remarkable event, we invite you to enter eSpace. This exhibition brings together two different yet intimately linked universes: the real and the imaginary. A rarely before seen selection of objects, toys, cartoons and an original space suit from the Smithsonian National Air and Space Museum of Washington will spark the imagination of young and old alike. Interactive terminals and video excerpts also come together to make of eSpace. a truly unique experience.",
+    "catalogueSize": 172,
+    "cataloguePreview": [{
+        "media": true,
+        "title": "Thermometer",
+        "image": "../../navigationList/images/Snuffbox.jpg"
+    }, {
+        "title": "Barometer",
+        "image": "../../navigationList/images/Snuffbox.jpg"
+    }
+    ]
+}
+    
