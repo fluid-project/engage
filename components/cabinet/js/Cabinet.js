@@ -204,7 +204,7 @@ fluid = fluid || {};
         addAria(that);
         addCSS(that);
         moveDrawers(that, that.options.startOpen ? open : close, that.locate("drawer"), that.options.preventEventFireOnInit);
-        if (!that.options.startOpen) {
+        if (that.options.startOpen) {
             that.openDrawers(that.locate("openByDefault"));
         }
         addClickEvent(that);
@@ -273,8 +273,7 @@ fluid = fluid || {};
         
         styles: {
             drawerClosed: "fl-cabinet-drawerClosed",
-            drawerOpened: "fl-cabinet-drawerOpened",
-            
+            drawerOpened: "fl-cabinet-drawerOpened",            
             drawer: "fl-container fl-container-autoHeading fl-cabinet-animation fl-container-collapsable",
             shelf: "fl-container",
             contents: "fl-cabinet-contents",
