@@ -187,7 +187,7 @@ fluid.engage = fluid.engage || {};
             "instructionText": ".flc-instruction-text",
             "firstDigitField": ".flc-first-digit",
             "secondDigitField": ".flc-second-digit",
-            "entryButtons": ".flc-numpad img[class*=flc-button]"
+            "entryButtons": "img[class*=flc-button]"
         },
         strings : {
             instruction: "Enter code from the object's label to learn more about the object.",
