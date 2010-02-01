@@ -56,7 +56,7 @@ fluid = fluid || {};
     
     function makeProtoComponents(that, navLists) {
         return { 
-            title: {messagekey: "%title"},
+            title: that.model.title ? {messagekey: "%title"} : "",
             browseContents: that.options.useCabinet ? {
                 decorators: [{
                     type: "fluid",
