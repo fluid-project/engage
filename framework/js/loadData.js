@@ -48,20 +48,4 @@ https://source.fluidproject.org/svn/LICENSE.txt
         });
     };
     
-    // This function is now deprecated in favour of fluid.engage.initComponentWithLocalData()
-    fluid.engage.initComponentWithDataFeed = function (currentUrl, componentName, container) {
-
-        var initEngageComponent = function (options) {
-            fluid.invokeGlobalFunction(componentName, [container || "body", options]);
-        };
-        
-        var isFile = currentUrl.protocol === "file:";        
-        
-        $.ajax({
-            url: isFile ? localTestDataURL : getFeedURL(currentUrl),
-            success: initEngageComponent,
-            dataType: "json",
-            async: true
-        });
-    };    
 })(jQuery, fluid);
