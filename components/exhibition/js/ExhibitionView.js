@@ -18,7 +18,6 @@ fluid = fluid || {};
     
     function makeProtoComponents(model) {
         var proto = {
-            about: "About:",
             navBarTitle: "%title",
             displayDate: "%displayDate",
             shortDescription: "%shortDescription",
@@ -98,7 +97,6 @@ fluid = fluid || {};
     
     fluid.defaults("fluid.engage.exhibitionView", {
         selectors: {
-            about: ".flc-exhibition-about",
             aboutLink: ".flc-exhibition-aboutLink",
             aboutLinkText: ".flc-exhibition-aboutLinkText",
             navBarTitle: ".flc-exhibition-navBarTitle",
