@@ -42,17 +42,17 @@ fluid = fluid || {};
     }
     
     var setupSubcomponents = function (that) {
-        // Prepare model for NavList
-        var cataloguePreview = fluid.transform(that.model.cataloguePreview, function (artifact) {
-            return {
-                showBadge: artifact.media,
-                image: artifact.image,
-                title: artifact.title
-            };
-        });
-        
         // Render the Exhibition Preview component only if we have artifacts to preview.
-        if (that.model.catalogueSize > 0) {
+        if (that.model.catalogueSize > 0 && that.model.cataloguePreview) {
+            // Prepare model for NavList
+            var cataloguePreview = fluid.transform(that.model.cataloguePreview, function (artifact) {
+                return {
+                    showBadge: artifact.media,
+                    image: artifact.image,
+                    title: artifact.title
+                };
+            });
+            
             $.extend(that.options.exhibitionPreview.options, {model: cataloguePreview});
             that.exhibitionPreview = fluid.initSubcomponent(that, "exhibitionPreview", [
                 that.locate("catalogue"), 
