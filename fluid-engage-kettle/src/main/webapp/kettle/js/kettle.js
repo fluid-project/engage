@@ -63,9 +63,66 @@ fluid = fluid || {};
         
     
     fluid.kettle.parseUrlState = function (env) {
-        var togo = fluid.kettle.parsePathInfo(env.PATH_INFO);
+        var togo = fluid.kettle.parsePathInfo(env.SCRIPT_NAME);
         togo.params = fluid.kettle.paramsToMap(env.QUERY_STRING);
         return togo;
+    };
+    
+    /** Canonicalise IN PLACE the supplied segment array derived from parsing a
+     * pathInfo structure. Warning, this destructively modifies the argument.
+     */
+    fluid.kettle.cononocolosePath = function(pathInfo) {
+        var consume = 0;
+        for (var i = 0; i < pathInfo.length; ++ i) {
+           if (pathInfo[i] === "..") {
+               ++consume;
+           }
+           else if (consume !== 0) {
+               pathInfo.splice(i - consume*2, consume*2);
+               i -= consume * 2;
+               consume = 0;
+           }
+        }
+        return pathInfo;
+    };
+    
+    fluid.kettle.makeCanon = function(compound) {
+        var parsed = fluid.kettle.parsePathInfo(compound);
+        fluid.kettle.cononocolosePath(parsed.pathInfo);
+        return fluid.kettle.makeRelPath(parsed); 
+    }
+    
+    fluid.kettle.computeAbsMounts = function(mounts, baseDir) {
+        fluid.transform(mounts, function(mount) {
+            var absMount = baseDir + mount.source;
+            mount.absSource = fluid.kettle.makeCanon(absMount);
+        });
+    };
+    
+    fluid.kettle.absoluteHandlerBase = function(absMounts, renderHandlerConfig) {
+        var rhc = renderHandlerConfig;
+        return absMounts[rhc.sourceMountRelative].absSource + rhc.source;
+    }
+    
+    fluid.kettle.makeUrlRewriter = function (absMounts, renderHandlerConfig) {
+        var rhc = renderHandlerConfig;
+        var self = fluid.kettle.absoluteHandlerBase(absMounts, rhc);
+        var targetDepth = fluid.kettle.parsePathInfo(rhc.target).pathInfo.length;
+        var targetPrefix = fluid.kettle.generateDepth(targetDepth - 1);
+        return function(url) {
+            var canon = fluid.kettle.makeCanon(self + url);
+            for (var key in absMounts) {
+                var mount = absMounts[key];
+                var source = mount.absSource;
+                if (canon.indexOf(source) === 0) {
+                    var togo = targetPrefix + mount.target + canon.substring(source.length);
+                    fluid.log("Rewriting url " + url + " to " + togo)
+                    return togo;
+                }
+            }
+            fluid.log("url " + url + " failed to match any mount point");
+            return null;
+        };
     };
     
     fluid.kettle.countDepth = function(pathInfo) {
@@ -85,8 +142,19 @@ fluid = fluid || {};
         return fluid.generate(depth, "../").join("");
     };
     
+    fluid.kettle.slashiseUrl = function(url) {
+        return url.replace(/\\/g, "/");
+    }
+    
+    /** Collapse the array of segments into a URL path, starting at the specified
+     * segment index - this will not terminate with a slash, unless the final segment
+     * is the empty string
+     */
     fluid.kettle.collapseSegs = function(segs, from) {
         var togo = "";
+        if (from === undefined) { 
+            from = 0;
+        }
         for (var i = from; i < segs.length - 1; ++ i) {
             togo += segs[i] + "/";
         }
@@ -94,13 +162,13 @@ fluid = fluid || {};
         return togo;   
     };
 
-    function makeRelPath(parsed, index) {
+    fluid.kettle.makeRelPath = function(parsed, index) {
         var togo = fluid.kettle.collapseSegs(parsed.pathInfo, index);
         if (parsed.extension) {
             togo += "." + parsed.extension;
         }
         return togo;
-    }
+    };
 
     function routeSegment(segment, root, parsed, index) {
         if (!segment) {
@@ -110,7 +178,7 @@ fluid = fluid || {};
         if (exist) {
             return {route: exist};
         }
-        var relPath = makeRelPath(parsed, index);
+        var relPath = fluid.kettle.makeRelPath(parsed, index);
         var defs = fluid.makeArray(root["*"]);
         for (var i = 0; i < defs.length; ++ i) {
             var rule = defs[i];
@@ -187,6 +255,44 @@ fluid = fluid || {};
             togo.fetchError.href = href;
         }
         return togo;
+    };
+    
+    fluid.kettle.getData = function(url) {
+        var togo = {};
+        function success(responseText, textStatus) {
+            togo.data = JSON.parse(responseText);
+            togo.textStatus = textStatus;
+        }
+        function error(xhr, textStatus, errorThrown) {
+            fluid.log("Data fetch error - textStatus: " + textStatus);
+            fluid.log("ErrorThrown: " + errorThrown);
+            togo.textStatus = textStatus;
+            togo.errorThrown = errorThrown;
+        }
+        $.ajax({
+            url: url,
+            success: success,
+            error: error
+        });
+        return togo;
+    };
+    
+    fluid.kettle.getLocalData = function(renderHandlerConfig, localPath) {
+        var rhc = renderHandlerConfig;
+        var config = rhc.config; // IoC here
+        var absPath = fluid.kettle.absoluteHandlerBase(config.mount, rhc) + localPath;
+        var data = fluid.kettle.getData(fluid.kettle.pathToFileURL(absPath));
+        return data.data? data.data : null;
+    };
+    
+    fluid.kettle.getBundle = function(renderHandlerConfig, params) {
+        if (params.lang) {
+            return fluid.kettle.getLocalData(renderHandlerConfig, "../messages/messages_"+params.lang+".json");
+        }
+        else {
+            return null;
+        }
+ 
     };
     
     fluid.kettle.pathToFileURL = function (path) {
@@ -288,7 +394,7 @@ fluid = fluid || {};
         that.root = {"*": []};
         that.app = function (env) {
             var context = {env: env};
-            context.parsedUri = fluid.parseUri(env.REQUEST_URI);
+            context.parsedUri = fluid.parseUri(env.SCRIPT_NAME);
             context.urlState = fluid.kettle.parseUrlState(env);
             return fluid.kettle.routeApp(that, context, env);
         };

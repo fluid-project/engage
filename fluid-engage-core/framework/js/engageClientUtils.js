@@ -12,8 +12,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
 /*global jQuery, fluid*/
 
 (function ($, fluid) {
-	
-	fluid.engage = fluid.engage || {};
+    
+    fluid.engage = fluid.engage || {};
     
     /*******************************
      * Cookies                     *
@@ -309,63 +309,60 @@ https://source.fluidproject.org/svn/LICENSE.txt
     fluid.engage.renderUtils = fluid.engage.renderUtils || {};
     
     fluid.engage.renderUtils.createRendererFunction = function (container, selectors, options) {
-        var that = fluid.merge("merge", {container: container, selectors: selectors}, options);
-        that.container = $(that.container);
-        
-        var renderFunc = function (tree, options) {
-            if (that.template) {
-                fluid.reRender(that.template, that.container, tree, options);
-            } else {
-                that.template = fluid.selfRender(that.container, tree, options);
-            }
-        };
-        
-        var render = function (tree) {
-            var mapFunc = "fluid.engage.renderUtils.selectorMapper";
-            
-            that.selectorMap = that.selectorMap || fluid.invokeGlobalFunction(that.selectorMapper || mapFunc, [that.selectors, that]);
-            renderFunc(tree, fluid.merge("merge", {cutpoints: that.selectorMap}, that.rendererOptions));
-        };
+        options = options || {};
+        container = $(container);
+        var rendererOptions = options.rendererOptions || {};
+        var templates = null;
         
         return function (tree) {
-            render(tree);
+            var cutpointFn = options.cutpointGenerator || "fluid.engage.renderUtils.selectorsToCutpoints";
+            rendererOptions.cutpoints = rendererOptions.cutpoints || fluid.invokeGlobalFunction(cutpointFn, [selectors, options]);
+            
+            if (templates) {
+                fluid.reRender(templates, container, tree, rendererOptions);
+            } else {
+                templates = fluid.selfRender(container, tree, rendererOptions);
+            }
         };
     };
     
-    fluid.engage.renderUtils.removeSelectors = function (selectors, ignore) {
-        $.each(ignore || [], function (index, selectorToIgnore) {
-            delete selectors[selectorToIgnore];
-        });
+    fluid.engage.renderUtils.removeSelectors = function (selectors, selectorsToIgnore) {
+        if (selectorsToIgnore) {
+            $.each(selectorsToIgnore, function (index, selectorToIgnore) {
+                delete selectors[selectorToIgnore];
+            });
+        }
         return selectors;
     };
     
-    fluid.engage.renderUtils.markRepeated = function (selector, repeat) {
-        $.each(repeat || [], function (index, repeatingSelector) {
-            if (selector === repeatingSelector) {
-                selector = selector + ":";
-            }
-        });
+    fluid.engage.renderUtils.markRepeated = function (selector, repeatingSelectors) {
+        if (repeatingSelectors) {
+            $.each(repeatingSelectors, function (index, repeatingSelector) {
+                if (selector === repeatingSelector) {
+                    selector = selector + ":";
+                }
+            });
+        }
         return selector;
     };
     
-    fluid.engage.renderUtils.selectorMapper = function (selectors, options) {
-        var map = [];
+    fluid.engage.renderUtils.selectorsToCutpoints = function (selectors, options) {
+        var cutpoints = [];
         options = options || {};
+        selectors = fluid.copy(selectors); // Make a copy before potentially destructively changing someone's selectors.
         
         if (options.selectorsToIgnore) {
             selectors = fluid.engage.renderUtils.removeSelectors(selectors, options.selectorsToIgnore);
         }
         
-        for (var key in selectors) {
-            if (selectors.hasOwnProperty(key)) {
-                map.push({
-                    id: fluid.engage.renderUtils.markRepeated(key, options.repeatingSelectors),
-                    selector: selectors[key]
-                });
-            }
+        for (var selector in selectors) {
+            cutpoints.push({
+                id: fluid.engage.renderUtils.markRepeated(selector, options.repeatingSelectors),
+                selector: selectors[selector]
+            });
         }
         
-        return map;
+        return cutpoints;
     };
     
     /** A special "shallow copy" operation suitable for nondestructively

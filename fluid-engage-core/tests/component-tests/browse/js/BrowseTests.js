@@ -31,7 +31,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         }
         
         jqUnit.assertEquals("Correct Title text", component.title, $(selectors.title).text());
-        jqUnit.assertEquals("Correct Number of NavigationLists Rendered", component.model.categories.length, $(".flc-nagivationList-listGroup").length);
+        jqUnit.assertEquals("Correct Number of NavigationLists Rendered", component.model.categories.length, $(".flc-navigationList-listGroup").length);
     };
         
     var browseTests = function () {
@@ -52,14 +52,14 @@ https://source.fluidproject.org/svn/LICENSE.txt
         tests.test("Description on cabinet header", function () {
             var options = {
                 model: {
-	                categories: [
-	                    {
-	                        name: "category",
-	                        description: "description",
-	                        artifacts: [
-	                        ]
-	                    }
-	                ]
+                    categories: [
+                        {
+                            name: "category",
+                            description: "description",
+                            artifacts: [
+                            ]
+                        }
+                    ]
                 }
             };
             
@@ -77,8 +77,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
                     categories: [
                         {
                             name: "category"
-	                    }
-	                ]
+                        }
+                    ]
                 }
             };
             var browse = setup(CONTAINER, options);
@@ -95,6 +95,9 @@ https://source.fluidproject.org/svn/LICENSE.txt
                     options: {
                         model: descriptionText
                     }
+                },
+                model: {
+                    description: "My description"
                 }
             };
             

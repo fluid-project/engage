@@ -34,21 +34,21 @@ fluid = fluid || {};
     };
     
     var wrap = function (value, tag) {
-		return "<" + tag + ">" + value + "</" + tag + ">";
-	};
+        return "<" + tag + ">" + value + "</" + tag + ">";
+    };
 
-	var buildHTML = function (value) {
-		var node = value.strong ? (value.strong.em ? wrap(wrap(value.strong.em, "em"), "strong") : value.strong) : "";
-		var nodetext = value.nodetext ? value.nodetext : "";
-		for (var key in value) {
-			if (value.hasOwnProperty(key)) {
-				if (!(key === "nodetext" || key === "br" || key === "strong")) {
-					node = node + wrap(value[key] instanceof Object ? buildHTML(value[key]) : value[key], key);
-				}
-			}
-		}
-		return node + nodetext;
-	};
+    var buildHTML = function (value) {
+        var node = value.strong ? (value.strong.em ? wrap(wrap(value.strong.em, "em"), "strong") : value.strong) : "";
+        var nodetext = value.nodetext ? value.nodetext : "";
+        for (var key in value) {
+            if (value.hasOwnProperty(key)) {
+                if (!(key === "nodetext" || key === "br" || key === "strong")) {
+                    node = node + wrap(value[key] instanceof Object ? buildHTML(value[key]) : value[key], key);
+                }
+            }
+        }
+        return node + nodetext;
+    };
     
     fluid.engage.specs = {
         mmi: {
@@ -189,7 +189,7 @@ fluid = fluid || {};
                         else {
                             return $.makeArray(value)[0].nodetext || noTitle;
                         }
-                    };              
+                    };                
                     return tryFunc(getTitle, value, noTitle);
                 },
                 getThumbImageFromObjectArray: function (value) {
@@ -237,8 +237,11 @@ fluid = fluid || {};
             }
         },
         mccord_exhibitions: {
-	        dataSpec: {
-                "isCurrent": "value.isCurrent",
+            dataSpec: {
+                "isCurrent": {
+                    "path": "value.isCurrent",
+                    "func": "makeBoolean"
+                },//"value.isCurrent",
                 "title": "key",
                 "displayDate": "value.displayDate",
                 "endDate": "value.endDate",
@@ -253,6 +256,12 @@ fluid = fluid || {};
                         return "http://www.mccord-museum.qc.ca" + $.makeArray(value.small)[0].nodetext;
                     };
                     return tryFunc(getImage, value);
+                },
+                makeBoolean: function (value) {
+                    var convert = function () {
+                        return value === "yes";
+                    };
+                    return tryFunc(convert, value);
                 }
             }
         },
@@ -297,7 +306,7 @@ fluid = fluid || {};
                     return tryFunc(buildContent, value, "");
                 },
                 getIntroduction: function (value) {
-	                var buildIntro = function (value) {
+                    var buildIntro = function (value) {
                         var intro = "";
                         if (value.p) {
                             if (typeof(value.p) === "string") {
@@ -332,14 +341,14 @@ fluid = fluid || {};
         },
         mccord_exhibitions_catalogue: {
             dataSpec: {
-                "exhibitionTitle": "key",
-                "numberOfArtifactsInExhibition": "value.viewAll",
+                "title": "key",
+                "numArtifacts": "value.viewAll",
                 "themes": {
                     "path": "value.sections",
                     "func": "formatSections"
                 }
             },
-	        mappers: {
+            mappers: {
                 formatSections: function (value) {
                     var extractTitle = function (title, delim) {
                         var index = title.indexOf(delim);
@@ -353,9 +362,9 @@ fluid = fluid || {};
                         return fluid.transform(artifacts, function (artifact) {
                             return artifact ? {
                                 accessNumber: artifact.accessNumber,
-                                artifactImage: artifact.image,
-                                artifactTitle: extractTitle(artifact.title, ": "),
-                                artifactDescription: artifact.description
+                                imageURL: artifact.image,
+                                title: extractTitle(artifact.title, ": "),
+                                description: artifact.description
                             } : {};
                         });
                     };
@@ -363,8 +372,8 @@ fluid = fluid || {};
                         var sections = [];
                         fluid.transform(value, function (val) {
                             sections.push({
-                                themeTitle: val.sectionTitle,
-                                numberOfArtifactsInTheme: val.sectionSize,
+                                title: val.sectionTitle,
+                                numArtifacts: val.sectionSize,
                                 artifacts: getArtifactInfo(val.sectionArtefacts)
                             });
                         });
@@ -467,7 +476,7 @@ fluid = fluid || {};
                 }
             }
         }
-
+        
         return normalizedModel;
     };
     

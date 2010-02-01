@@ -1,9 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-		<title>Cabinet Demo</title>
+        <title>Cabinet Demo</title>
 
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-layout.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-text.css" />
@@ -22,12 +22,13 @@
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>  
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>
         <script type="text/javascript" src="../../navigationList/js/NavigationList.js"></script> 
         <script type="text/javascript" src="../js/Cabinet.js"></script>
-	</head>
+    </head>
     
-	<body class="fl-theme-iphone">
-	    <div class="cabinet">
+    <body class="fl-theme-iphone">
+        <div class="cabinet">
             <div class="flc-cabinet-drawer">
                 <div class="flc-cabinet-handle">
                     <h2 class="flc-cabinet-header">Header</h2>
@@ -50,13 +51,15 @@
                     <span class="fl-font-size-80">Description</span>
                 </div>
                 <div class="flc-navigationList flc-cabinet-contents">
-                    <ul class="flc-nagivationList-listGroup">
+                    <ul class="flc-navigationList-listGroup fl-list fl-list-menu fl-list-thumbnails">
                         <li class="flc-navigationList-items">
-                            <a class="flc-navigationList-link">
-                                <img class="flc-navigationList-image"/>
-                                <span class="flc-navigationList-titleText">title/category</span>
-                                <span class="flc-navigationList-descriptionText">description</span>
-                            </a>
+                            <div class="flc-navigationList-linkContainer">
+                                <a class="flc-navigationList-link">
+                                    <img class="flc-navigationList-image fl-icon"/>
+                                    <span class="flc-navigationList-titleText fl-navigationList-title">title/category</span>
+                                    <span class="flc-navigationList-descriptionText fl-link-summary fl-navigationList-description">description</span>
+                                </a>
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -66,7 +69,7 @@
         <script type="text/javascript">
             
             var navigationListOptions = {
-                links: [{
+                model: [{
                     target: "../../navigationList/images/Artifacts-.jpg",
                     image: "../../navigationList/images/Artifacts-.jpg",
                     title: "Title",
@@ -91,5 +94,5 @@
             fluid.navigationList($(".flc-navigationList"), navigationListOptions);
             fluid.cabinet(".cabinet");
         </script>
-	</body>
+    </body>
 </html>

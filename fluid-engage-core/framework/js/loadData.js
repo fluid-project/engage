@@ -23,7 +23,32 @@ https://source.fluidproject.org/svn/LICENSE.txt
         return String(currentUrl).replace(".html", ".json");
     };
         
-    // This function is now deprecated in favour of fluid.engage.initComponentWithDataURL()
+    /**
+     * Initializes the named component, automatically fetching data from the file system. 
+     * This function runs asynchronously and does not directly return the component.
+     * 
+     * @param componentName the name of the component to instantiate
+     * @param container the container for the component
+     * @param options options for the component; note that the model option will be replaced with data if any is returned from the feed
+     * @param feedURL an optional URL to a data feed
+     */
+    fluid.engage.initComponentWithLocalData = function (componentName, container, options, feedURL) {
+        options = options || {};
+        feedURL = feedURL || localTestDataURL;
+        
+        $.ajax({
+            url: feedURL,
+            dataType: "json",
+            success: function (data) {
+                if (data) {
+                    options.model = data;
+                }
+                fluid.invokeGlobalFunction(componentName, [container, options]);
+            }
+        });
+    };
+    
+    // This function is now deprecated in favour of fluid.engage.initComponentWithLocalData()
     fluid.engage.initComponentWithDataFeed = function (currentUrl, componentName, container) {
 
         var initEngageComponent = function (options) {
@@ -38,35 +63,5 @@ https://source.fluidproject.org/svn/LICENSE.txt
             dataType: "json",
             async: true
         });
-    };
-    
-    /**
-     * Initializes the named component, automatically fetching data from an associated data feed. 
-     * This function runs asynchronously and does not directly return the component.
-     * 
-     * @param componentName the name of the component to instantiate
-     * @param container the container for the component
-     * @param options options for the component; note that the model option will be replaced with data if any is returned from the feed
-     * @param feedURL an optional URL to a data feed; this will be automatically calculated from window.location if not specified
-     */
-    // TODO: refactor this so it's only used for the file system load
-    fluid.engage.initComponentWithDataURL = function (componentName, container, options, feedURL) {
-        options = options || {};
-        if (!feedURL) {
-            var loc = window.location;
-            feedURL = loc.protocol === "file:" ? localTestDataURL : getFeedURL(loc);
-        }
-        
-        $.ajax({
-            url: feedURL,
-            dataType: "json",
-            success: function (data) {
-                if (data) {
-                    options.model = data;
-                }
-                fluid.invokeGlobalFunction(componentName, [container, options]);
-            }
-        });
-    };
-    
+    };    
 })(jQuery, fluid);

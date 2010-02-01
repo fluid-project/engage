@@ -35,79 +35,79 @@ fluid = fluid || {};
     };
     
     /**
-     * Renderers out the pieces of the component
-     * 
-     * @param {Object} that,the component
-     */
-    var renderBrowse = function (that) {
-
-        var utils = fluid.engage.renderUtils;
-        var renderOpts = {
-            selectorsToIgnore: ["title", "browseDescription", "browseContents", "browseDescriptionContainer"],
-            repeatingSelectors: ["lists"]
-        };
-        
-        var renderer = utils.createRendererFunction(that.container, that.options.selectors, renderOpts);
-        
-        var tree = fluid.transform(that.model.categories, function (category) {
-            var children = [];
-            var description = category.description;
-            var name = category.name;
-            if (name) {
-                children.push(utils.uiBound("cabinetHandle"));
-                children.push(utils.uiBound("listHeader", name));
-                if (description) {
-                    children.push(utils.decoratedUIBound("listHeaderDescription", [{
-                        type: "jQuery",
-                        func: "addClass",
-                        args: that.options.styles.listHeaderDescription
-                    }], description));
-                }
-            }
-            var navListModel = fluid.transform(category.items, function (item) {
-                return {
-                    target: item.url,
-                    image: item.imageUrl,
-                    title: item.title,
-                    description: item.description
-                };
-            });
-            children.push(utils.decoratedUIBound("listContents", [{
-                type: "fluid",
-                func: "fluid.navigationList",
-                options: fluid.merge("merge", fluid.copy(that.options.navigationList.options), {links: navListModel})
-            }]));
-            return utils.uiContainer("lists:", children);
-        });
-        
-        renderer(tree);
-    };
-    
-    /**
      * Initializes the Cabinet component which is used as a subcomponent
      * 
-     * @param {Object} that, the componet
+     * @param {Object} that, the component
      */
     var initCabinet = function (that) {
         that.cabinet = fluid.initSubcomponent(that, "cabinet", [that.locate("browseContents"), fluid.COMPONENT_OPTIONS]);
     };
     
-    /**
-     * Initializes the Description component which is used as a subcomponent
-     * 
-     * @param {Object} that, the component
-     */
-    var initDescription = function (that) {
-        var descr = that.model.desription;
-        if (descr) {
-            that.description = fluid.initSubcomponent(that, "description", 
-            [that.locate("browseDescriptionContainer"), 
-            fluid.merge("merge", fluid.copy(that.options.description.options), {model: descr})]);
-        }
-        else {
-            that.locate("browseDescriptionContainer").remove();
-        }
-    };
+    function mapToNavListModel(items) {
+        return fluid.transform(items, function (item) {
+            return {
+                target: item.url,
+                image: item.imageUrl,
+                title: item.title,
+                description: item.description
+            };
+        });
+    }
+    
+    function makeProtoComponents(that, navLists) {
+        return { 
+            title: {messagekey: "%title"},
+            browseContents: that.options.useCabinet ? {
+                decorators: [{
+                    type: "fluid",
+                    func: "fluid.cabinet",
+                    options: fluid.copy(that.options.cabinet.options)
+                }]
+            } : {},
+            browseDescriptionContainer: that.model.description ? {
+                decorators: [{
+                    type: "fluid",
+                    func: "fluid.description",
+                    options: fluid.merge("merge", fluid.copy(that.options.description.options), {model: that.model.description})
+                }]
+            } : "",
+            lists: { 
+                children: fluid.transform(that.model.categories || [], function (category, index) {
+                    var description = category.description;
+                    var name = fluid.stringTemplate(that.options.strings[category.name], {size: category.items.length});
+                    navLists[index] = {
+                        type: "fluid",
+                        func: "fluid.navigationList",
+                        options: fluid.merge("merge", fluid.copy(that.options.navigationList.options), {model: mapToNavListModel(category.items)})
+                    };
+                    var child = {
+                        listContents: {
+                            decorators: navLists[index]
+                        }
+                    };
+                    if (name) {
+                        child.cabinetHandle = description ? {
+                            decorators: [{
+                                type: "addClass",
+                                classes: that.options.styles.listHeaderDescription
+                            }]
+                        } : {};
+                        child.listHeader = name;
+                        if (description) {
+                            child.listHeaderDescription = description;
+                        }
+                    }
+                    return child;
+                })
+            }
+        };
+    }
+    
+    function assembleTree(that, expander, navLists) {
+        var protoTree = makeProtoComponents(that, navLists);
+        var fullTree = expander(protoTree);
+        return fullTree;
+    }
     
     /**
      * Executes the various functions required to properly setup the component
@@ -116,14 +116,26 @@ fluid = fluid || {};
      */
     var setup = function (that) {
         bindEvents(that);
-        that.locate("title").text(that.title); // Set the page title
-        initDescription(that);
-        renderBrowse(that);
+        var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
+        that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
+            selectorsToIgnore: ["browseDescription", "toggle"],
+            repeatingSelectors: ["lists"],
+            rendererOptions: {
+                messageLocator: messageLocator,
+                model: that.model
+            }
+        });
+        that.refreshView();
         that.events.afterRender.fire(that);
-        //Initializing the cabinet must come after all of the rendering is complete and the markup is displayed
-        if (that.options.useCabinet) {
-            initCabinet(that);
-        }
+    };
+    
+    var activateToggler = function (that, navLists) {
+        that.locate("toggle").click(function () {
+            fluid.transform(navLists || [], function (navList) {
+                navList.that.toggleLayout();
+            });
+            return false;
+        });
     };
     
     /**
@@ -135,7 +147,15 @@ fluid = fluid || {};
     fluid.browse = function (container, options) {
         var that = fluid.initView("fluid.browse", container, options);
         that.model = that.options.model;
-        that.title = that.options.title || that.model.categories[0].name;
+        
+        var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
+        
+        that.refreshView = function () {
+            var navLists = [];
+            var tree = assembleTree(that, expander, navLists);
+            that.render(tree);
+            activateToggler(that, navLists);
+        };
         
         setup(that);
         return that;
@@ -176,7 +196,8 @@ fluid = fluid || {};
             listHeader: ".flc-cabinet-header",
             listHeaderDescription: ".flc-cabinet-headerDescription",
             listContents: ".flc-cabinet-contents",
-            lists: ".flc-cabinet-drawer"
+            lists: ".flc-cabinet-drawer",
+            toggle: ".flc-browse-navlist-toggle"
         },
         
         styles: {
@@ -184,6 +205,12 @@ fluid = fluid || {};
             browseContents: "fl-browse-contents",
             browseDescription: "fl-browse-description",
             listHeaderDescription: "fl-cabinet-headerWithDescription"
+        },
+        
+        strings: {
+            upcomingCategory: "Upcoming (%size)",
+            currentCategory: "",
+            title: "Exhibitions"
         },
         
         events: {

@@ -23,7 +23,7 @@ fluid = fluid || {};
             displayDate: "%displayDate",
             shortDescription: "%shortDescription",
             description: {markup: model.introduction ? model.introduction : model.content},
-            guestBook: {messagekey: "guestbook", args: {size: "%guestbookSize"}},
+            guestbook: {messagekey: "guestbook", args: {size: "%guestbookSize"}},
             guestbookLink: {target: "%guestbookLink"},
             guestbookLinkText: {messagekey: "guestbookLinkText"},
             image: {target: "%image"},
@@ -32,41 +32,44 @@ fluid = fluid || {};
             aboutLink: {target: "%aboutLink"},
             aboutLinkText: {messagekey: "aboutLink"},
             title: "%title",
-            guestbookInvitation: model.comments || {messagekey: "guestBookInvitationString"}
+            guestbookInvitation: model.comments || {messagekey: "guestbookInvitationString"}
         };
         if (model.catalogueSize > 0) {
             fluid.renderer.mergeComponents(proto, {
-                catalogue: null,
                 catalogueTitle: {messagekey: "catalogueTitle", args: {size: "%catalogueSize"}}
             });
         }
         return proto;
-    };
+    }
     
-    var setupSubcomponents = function (that) {        
+    var setupSubcomponents = function (that) {
+        // Prepare model for NavList
+        var cataloguePreview = fluid.transform(that.model.cataloguePreview, function (artifact) {
+            return {
+                showBadge: artifact.media,
+                image: artifact.image,
+                title: artifact.title
+            };
+        });
+        
         // Render the Exhibition Preview component only if we have artifacts to preview.
         if (that.model.catalogueSize > 0) {
+            $.extend(that.options.exhibitionPreview.options, {model: cataloguePreview});
             that.exhibitionPreview = fluid.initSubcomponent(that, "exhibitionPreview", [
-                that.locate("exhibitionPreview"), 
-                {
-                    model: that.model.cataloguePreview
-                }
+                that.locate("catalogue"), 
+                fluid.COMPONENT_OPTIONS
             ]);
         }
     };
     
-    var setup = function (that) {
-        // TODO: Temporary testing data. This should be replaced when Hugues gives us more data.
-        that.model.cataloguePreview = [{
-            title: "TITLE",
-            target: "#",
-            thumbnail: "http://helios.gsfc.nasa.gov/image_euv_press.jpg",
-            media: true
-        }];
-
+    var setup = function (that) {        
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
+        var selectorsToIgnore = [];
+        if (that.model.catalogueSize) {
+            selectorsToIgnore.push("catalogue");
+        }
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
-            selectorsToIgnore: ["exhibitionPreview"],
+            selectorsToIgnore: selectorsToIgnore,
             rendererOptions: {
                 messageLocator: messageLocator,
                 model: that.model
@@ -101,7 +104,7 @@ fluid = fluid || {};
             navBarTitle: ".flc-exhibition-navBarTitle",
             title: ".flc-exhibition-title",
             image: ".flc-exhibition-image",
-            shortDescription: ".flc-exhibtion-shortDescription",
+            shortDescription: ".flc-exhibition-shortDescription",
             description: ".flc-exhibition-description",
             displayDate: ".flc-exhibition-displayDate",
             catalogue: ".flc-exhibition-catalogue",
@@ -111,11 +114,10 @@ fluid = fluid || {};
             guestbook: ".flc-exhibition-guestbook",
             guestbookLink: ".flc-exhibition-guestbookLink",
             guestbookLinkText: ".flc-exhibition-guestbookLinkText",
-            guestbookInvitation: ".flc-exhibition-guestbookInvitation",
-            exhibitionPreview: ".flc-exhibition-preview"
+            guestbookInvitation: ".flc-exhibition-guestbookInvitation"
         },
         strings: {
-            guestBookInvitationString: "No comments yet. Create your own comment.",
+            guestbookInvitationString: "No comments yet. Create your own comment.",
             catalogueTitle: "Catalogue (%size)",
             guestbook: "Guestbook (%size)",
             guestbookLinkText: "Read all comments",
@@ -123,7 +125,10 @@ fluid = fluid || {};
             aboutLink: "Read more"
         },
         exhibitionPreview: {
-            type: "fluid.engage.preview"
+            type: "fluid.navigationList",
+            options: {
+                defaultToGrid: true
+            }
         }
     });
 }(jQuery));

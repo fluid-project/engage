@@ -25,9 +25,20 @@ a.fl-catalogue-linkToArtifacts {
     margin: 0px;
 }
 
-.fl-list-thumbnails.fl-thumbnails-expanded > li:last-child {
+.fl-list-thumbnails > li:last-child {
+    margin-bottom: 0px;
+}
+
+.fl-list-menu.fl-list-thumbnails.fl-thumbnails-expanded.fl-grid {
+    background-color: white;
+}
+
+.fl-list-thumbnails > li{
     border-left-width: 0;
     border-right-width: 0;
+}
+
+.fl-list-thumbnails > li:last-child {
     border-bottom-width: 0px;
 }
 
@@ -40,11 +51,18 @@ a.fl-catalogue-linkToArtifacts {
     background-color: #FBFBFB;
 }
 
+.fl-list-menu li a {
+    padding-bottom: 0px;
+}
+
+[class*=fl-list] li.fl-catalogue-linkToThemeArtifactsContainer a.fl-catalogue-linkToThemeArtifacts {
+    font-size: 0.7em;
+}
 [class*=fl-list] li a div {
     padding-right: 20px;
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
     width: auto;
-    height: 45px;
+    height: 42px;
 }

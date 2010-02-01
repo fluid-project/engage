@@ -16,8 +16,8 @@ initServices: [
     "fluid.browseDemo.initBrowseDemo",
     "fluid.browseDemo.initBrowseDataFeed",
     "fluid.engageDemo.initEngageDemo",
-    "fluid.exhibitionService.initExhibitionsService",
-    "fluid.exhibitionService.initExhibitionsDataFeed",
+    "fluid.exhibitionService.initExhibitionBrowseService",
+    "fluid.exhibitionService.initExhibitionBrowseDataFeed",
     "fluid.exhibitionService.initExhibitionViewService",
     "fluid.exhibitionService.initExhibitionViewDataFeed",
     "fluid.exhibitionService.initExhibitionAboutService",
@@ -46,18 +46,15 @@ views: {
 mount: {
     infusion: {
         target: "fluid-infusion/",
-        source: "fluid-infusion/",
-        rewriteSource: "../../../fluid-infusion/src/webapp/"
+        source: "fluid-infusion/"
         },
     engage: {
         target: "fluid-engage-core/",
-        source: "fluid-engage-core/", 
-        rewriteSource: "../../../fluid-engage-core/"
+        source: "fluid-engage-core/"
         },
     engageDemo: {
         target: "engageDemo/",
-        source: "services/engageDemo/",
-        rewriteSource: "../../services/engageDemo/"
+        source: "services/engageDemo/"
         }
     },
 debugMode: false

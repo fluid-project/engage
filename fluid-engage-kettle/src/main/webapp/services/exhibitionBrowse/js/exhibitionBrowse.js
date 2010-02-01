@@ -44,13 +44,6 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         return data;
     };
     
-    var buildCategory = function (categoryName, categoryList) {
-        return {
-            name: categoryName ? fluid.stringTemplate(categoryName + " (%num)", {num: categoryList.length}) : "",
-            exhibitions: categoryList
-        };
-    };
-    
     var compileDatabaseURL = function (db, config) {
         return fluid.stringTemplate(config.viewURLTemplate, 
             {dbName: db + "_exhibitions" || "", view: config.views.exhibitions});
@@ -70,38 +63,47 @@ fluid.exhibitionService = fluid.exhibitionService || {};
             return fluid.engage.mapModel(value, dbName);
         });
         
-        var currentExhibitions = $.map(data, function (value) {
-            return value.isCurrent === "yes" ? {
-                url: compileTargetURL(baseExhibitionURL, {
-                    db: dbName,
-                    title: value.title
-                }),
-                imageUrl: value.image,
-                title: value.title,
-                description: value.displayDate === "Permanent exhibition" ? "Permanent" : "Through " + value.endDate
-            } : null;
-        });
-        var upcomingExhibitions = $.map(data, function (value) {
-            return value.isCurrent === "no" ? {
-                url: compileTargetURL(baseUpcomingExhibitionURL, {
-                    db: dbName,
-                    title: value.title
-                }),
-                imageUrl: value.image,
-                title: value.title,
-                description: value.displayDate
-            } : null;
-        });
+        var sortExhibitions = function (exhibitions) {
+            var current = {
+                isCurrent: true,
+                exhibitions: []
+            };
+            
+            var upcoming = {
+                isCurrent: false,
+                exhibitions: []  
+            };
+            
+            $.each(exhibitions, function (i, exhibition) {
+                var exhibitionInfo = {
+                    image: exhibition.image,
+                    isCurrent: exhibition.isCurrent,
+                    title: exhibition.title,
+                    url: compileTargetURL(exhibition.isCurrent ? baseExhibitionURL : baseUpcomingExhibitionURL, {
+                        db: dbName,
+                        title: exhibition.title
+                    }),
+                    displayDate: exhibition.displayDate,
+                    endDate: exhibition.endDate
+                };
+                
+                if (exhibition.isCurrent) {
+                    current.exhibitions.push(exhibitionInfo);
+                } else {
+                    upcoming.exhibitions.push(exhibitionInfo);
+                }
+            });
+            
+            return [current, upcoming];
+        };
+        
         var model = {
-            categories: [
-                buildCategory("", currentExhibitions), 
-                buildCategory("Upcoming Exhibitions", upcomingExhibitions)
-            ]
+            categories: sortExhibitions(data)
         };        
         return model;
     };
     
-    fluid.exhibitionService.initExhibitionsDataFeed = function (config, app) {
+    fluid.exhibitionService.initExhibitionBrowseDataFeed = function (config, app) {
         var exhibitionsDataHandler = function (env) {
             var data = JSON.stringify(getData(errorCallback, env.urlState.params.db, config));
             return [200, {"Content-Type": "text/plain"}, data];
@@ -112,17 +114,26 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     };
     
     var afterMap = function (data) {
-        data.categories = $.map(data.categories, function (value) {
+        data.categories = fluid.transform(data.categories, function (category) {
             return {
-                name: value.name,
-                items: value.exhibitions
+                name: category.isCurrent ? "currentCategory" : "upcomingCategory",
+                items: fluid.transform(category.exhibitions, function (exhibition) {
+                    return {
+                        isCurrent: exhibition.isCurrent,
+                        url: exhibition.url,
+                        imageUrl: exhibition.image,
+                        title: exhibition.title,
+                        description: exhibition.displayDate
+                    };
+                })
             };
         });
+        data.title = "title";
         return data;
     };
-        
-    fluid.exhibitionService.initExhibitionsService = function (config, app) {
-        var handler = fluid.engage.mountRenderHandler({
+    
+    fluid.exhibitionService.initExhibitionBrowseService = function (config, app) {
+        var renderHandlerConfig = {
             config: config,
             app: app,
             target: "exhibitions/",
@@ -133,16 +144,20 @@ fluid.exhibitionService = fluid.exhibitionService || {};
                     cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
                 }
             }
-        });
+        };
+        var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
             
         handler.registerProducer("browse", function (context, env) {
-	        var data = getData(errorCallback, context.urlState.params.db, config);
+            var params = context.urlState.params;
+            var data = getData(errorCallback, params.db, config);
+            var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
             var options = {
                 model: afterMap(data),
-                useCabinet: true,
-                // TODO: This string needs to be internationalized
-                title: "Exhibitions"
+                useCabinet: true
             };
+            if (strings) {
+                options.strings = strings;
+            }
 
             return {
                 ID: "initBlock", 

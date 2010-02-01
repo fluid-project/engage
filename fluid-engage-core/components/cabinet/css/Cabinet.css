@@ -12,10 +12,6 @@
 .fl-collapsable {
 	margin: 12px;
 }
-.fl-cabinet-drawerClosed {
-	max-height:50px;
-}
-
 .fl-cabinet-animation {
     -webkit-transition: max-height 0.75s ease-in;
 }

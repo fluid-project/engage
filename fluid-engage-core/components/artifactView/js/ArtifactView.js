@@ -42,7 +42,7 @@ fluid = fluid || {};
                 {
                     ID: "artifactAccessionNumber",
                     valuebinding: "artifactAccessionNumber"
-                }                
+                }
             ]
         };
         
@@ -81,7 +81,7 @@ fluid = fluid || {};
             debug: true
         });
     };
-    
+
     /**
      * The component's creator function 
      * 
@@ -90,7 +90,7 @@ fluid = fluid || {};
      */
     fluid.engage.artifactView = function (container, options) {
         var that = fluid.initView("fluid.engage.artifactView", container, options);
-        that.model = that.options.model; // TODO: By the end of this refactoring, there should be no toRender property
+        that.model = that.options.model; 
         
         that.description = fluid.initSubcomponent(that, "description", [
             that.locate("descriptionScope"), 
@@ -98,30 +98,8 @@ fluid = fluid || {};
                 model: that.model.artifact.artifactDescription
             }
         ]);
-        
-        that.artifactTags = fluid.initSubcomponent(that, "artifactTags", [
-            that.locate("tagsScope"), 
-            {
-                tags: that.model.artifact.artifactTags
-            }
-        ]);
-        
+                
         that.artifactCabinet = fluid.initSubcomponent(that, "artifactCabinet", that.locate("cabinetScope"));
-        
-        that.relatedArtifacts = fluid.initSubcomponent(that, "artifactsLink", [
-            that.locate("relatedArtifacts"),
-            {
-                messageBundle: {
-                    linkToMoreMessage: "Go to Related artifacts"
-                }, 
-                links: [
-                    {
-                        category: "", 
-                        target: that.model.relatedArtifacts
-                    }
-                ]
-            }
-        ]);
         
         that.collectionOperations = fluid.initSubcomponent(that, "collectionOperations", [
             that.locate("collectArtifact"),
@@ -140,23 +118,14 @@ fluid = fluid || {};
     fluid.defaults("fluid.engage.artifactView", {
         selectors: {
             descriptionScope: ".flc-description",
-            tagsScope: ".fl-tags",
             renderScope: ".flc-artifact-renderscope",
-            cabinetScope: ".cabinet",
-            relatedArtifacts: ".relatedArtifacts"
+            cabinetScope: ".cabinet"  
         },
-        toRender: null,
         description: {
             type: "fluid.description"
         },
         artifactCabinet: {
             type: "fluid.cabinet"
-        },
-        artifactTags: {
-            type: "fluid.tags"
-        },
-        artifactsLink: {
-            type: "fluid.navigationList"
         },
         collectionOperations : {
             type: "fluid.collectionOperations"
