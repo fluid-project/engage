@@ -10,8 +10,10 @@ https://source.fluidproject.org/svn/LICENSE.txt
 */
 
 /*global jQuery, fluid, document, window*/
+"use strict";
 
 fluid = fluid || {};
+fluid.engage = fluid.engage || {};
 
 (function ($) {
     
@@ -19,11 +21,11 @@ fluid = fluid || {};
     var museum = "mccord";
     
     /**
-     * Resets the digit entry fields.
+     * Clears the digit entry fields and allows input.
      * 
      * @param {Object} that, the component.
      */
-    var clearEntry = function (that) {
+    var resetEntry = function (that) {
         that.locate("firstDigitField").html("");
         that.locate("secondDigitField").html("");
     };
@@ -36,14 +38,11 @@ fluid = fluid || {};
      */
     var redirectToArtifactPage = function (that, link) {
         // Do some cleanup before leaving the page
-        clearEntry(that);
+        resetEntry(that);
         that.code = "";
         that.atDigit = 0;
         
         window.location = link;
-        //location.href = link;
-        //top.location = link;
-        //document.location = link;
     };
     
     /**
@@ -56,7 +55,7 @@ fluid = fluid || {};
         invalidCodeBlock.html(that.options.strings.invalidCode);
         invalidCodeBlock.fadeTo(500, 1, function () {
             invalidCodeBlock.fadeTo(2000, 0, function () {
-                clearEntry(that);
+                resetEntry(that);
                 that.code = "";
                 that.atDigit = 0;
             });
@@ -81,9 +80,14 @@ fluid = fluid || {};
         };
         
         var success = function (returnedData) {
+            
             var data = JSON.parse(returnedData);
-            if (data.artifactFound) {
+            var redirectFunction = function () {
                 redirectToArtifactPage(that, data.artifactLink);
+            };
+            
+            if (data.artifactFound) {
+                setTimeout(redirectFunction, that.options.redirectDelay);
             } else {
                 wrongCodeSequence(that);
             }
@@ -91,7 +95,7 @@ fluid = fluid || {};
         
         $.ajax({
             url: url,
-            async: false,
+            async: true,
             error: error,
             success: success
         });
@@ -107,45 +111,37 @@ fluid = fluid || {};
     };
     
     /**
-     * Initialize a handler for a digit entry button.
-     * If the second digit is entered the whole code is checked and relevant
-     * actions are taken.
+     * Initialize a handler for a digit or delete entry button.
+     * For digit handlers if the second digit is entered the whole code is
+     * checked and relevant actions are taken.
      * 
      *  @param {Object} that, the component.
-     *  @param buttonSelector, from 0 to 9
+     *  @param button, the DOM element for buttons from 0 to 9 and delete
      *  @param number, the number that will be displayed if the user clicks
-     *      on the button, again from 0 to 9
+     *      on the button, from 1 to 10 for digits and 11 for delete
      */
-    var attachDigitHandler = function (that, buttonSelector, number) {
-        var button = that.locate(buttonSelector);
-
-        button.click(function () {
-            getCurrentDigitField(that).html(number);
-            if (that.atDigit === 0) {
-                that.code += number;
-                that.atDigit++;
-            } else {                
-                that.code += number;
-                checkCode(that);            
-            }
-        });
-    };
-    
-    /**
-     * Initialize a handler for the delete button.
-     * 
-     * @param {Object} that, the component.
-     */
-    var attachDelHandler = function (that) {
-        var button = that.locate("buttonDel");
-        
-        button.click(function () {
-            getCurrentDigitField(that).html("");
-            if (that.atDigit === 1) {
-                that.atDigit--;
-                that.code = "";
-            }
-        });
+    var attachButtonHandler = function (that, button, number) {
+        if (number < 11) {
+            var num = number % 10;
+            $(button).click(function () {
+                getCurrentDigitField(that).html(num);
+                if (that.atDigit === 0) {
+                    that.code += num;
+                    that.atDigit++;
+                } else {                
+                    that.code += num;
+                    checkCode(that);            
+                }
+            });
+        } else {
+            $(button).click(function () {
+                getCurrentDigitField(that).html("");
+                if (that.atDigit === 1) {
+                    that.atDigit--;
+                    that.code = "";
+                }
+            });         
+        }
     };
     
     /**
@@ -164,17 +160,12 @@ fluid = fluid || {};
         that.atDigit = 0;
         that.code = "";
         
-        attachDigitHandler(that, "buttonOne", 1);
-        attachDigitHandler(that, "buttonTwo", 2);
-        attachDigitHandler(that, "buttonThree", 3);
-        attachDigitHandler(that, "buttonFour", 4);
-        attachDigitHandler(that, "buttonFive", 5);
-        attachDigitHandler(that, "buttonSix", 6);
-        attachDigitHandler(that, "buttonSeven", 7);
-        attachDigitHandler(that, "buttonEight", 8);
-        attachDigitHandler(that, "buttonNine", 9);
-        attachDigitHandler(that, "buttonZero", 0);
-        attachDelHandler(that);
+        // Initialize entry buttons
+        var buttons = that.locate("entryButtons");
+        
+        for (var i = 0; i < buttons.length; i++) {
+            attachButtonHandler(that, buttons[i], i + 1);
+        }
     };
     
     /**
@@ -183,7 +174,7 @@ fluid = fluid || {};
      * @param {Object} container, DOM element that will correspond to the component.
      * @param {Object} options, the component's options.
      */
-    fluid.codeEntry = function (container, options) {
+    fluid.engage.codeEntry = function (container, options) {
         var that = fluid.initView("fluid.codeEntry", container, options);       
         
         setup(that);
@@ -196,21 +187,12 @@ fluid = fluid || {};
             "instructionText": ".flc-instruction-text",
             "firstDigitField": ".flc-first-digit",
             "secondDigitField": ".flc-second-digit",
-            "buttonOne": ".flc-button-one",
-            "buttonTwo": ".flc-button-two",
-            "buttonThree": ".flc-button-three",
-            "buttonFour": ".flc-button-four",
-            "buttonFive": ".flc-button-five",
-            "buttonSix": ".flc-button-six",
-            "buttonSeven": ".flc-button-seven",
-            "buttonEight": ".flc-button-eight",
-            "buttonNine": ".flc-button-nine",
-            "buttonZero": ".flc-button-zero",
-            "buttonDel": ".flc-button-del"
+            "entryButtons": ".flc-numpad img[class*=flc-button]"
         },
         strings : {
             instruction: "Enter code from the object's label to learn more about the object.",
             invalidCode: "You've entered an invalid code. Please try again"
-        }
+        },
+        redirectDelay: 1000
     });
 })(jQuery);
