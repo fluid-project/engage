@@ -115,10 +115,10 @@ fluid = fluid || {};
         },
         mccord: {
 	        dataSpec: {
-                "category": {
+/*                "category": {
                     "path": "artefacts.artefact.links.type.category",
                     "func": "getArtifactCategory"
-                },
+                },*/
                 "linkTarget": "artefacts.artefact.accessnumber",
                 "linkImage": {
                     "path": "artefacts.artefact.images.image",
