@@ -26,23 +26,42 @@ fluid.engage = fluid.engage || {};
      * @param {Object} that, the component.
      */
     var resetEntry = function (that) {
-        that.locate("firstDigitField").html("");
-        that.locate("secondDigitField").html("");
+        that.locate("firstDigitField").text("");
+        that.locate("secondDigitField").text("");
     };
     
     /**
      * Redirects the browser to the given URL.
      * 
      * @param {Object} that, the component.
-     * @param link, the url to redirect to.
+     * @param url, the URL to redirect to.
      */
-    var redirectToArtifactPage = function (that, link) {
+    var redirectToArtifactPage = function (that, url) {
         // Do some cleanup before leaving the page
         resetEntry(that);
         that.code = "";
         that.atDigit = 0;
         
-        window.location = link;
+        if (!that.options.testMode) {
+        	window.location = url;
+        }
+    };
+    
+    /**
+     * Display a message and redirect to artifact page after some delay.
+     * 
+     * @param {Object} that, the component
+     * @param url, the URL to redirect to.
+     */
+    var redirectSequence = function (that, url) {
+        var redirectFunction = function () {
+            redirectToArtifactPage(that, url);
+        };
+    	
+    	// Replace the invalid code message with something...
+    	that.locate("headMessage").text(that.options.strings.redirecting);
+    	
+        setTimeout(redirectFunction, that.options.redirectDelay);
     };
     
     /**
@@ -81,15 +100,9 @@ fluid.engage = fluid.engage || {};
         var success = function (returnedData) {
             
             var data = JSON.parse(returnedData);
-            var redirectFunction = function () {
-                redirectToArtifactPage(that, data.artifactLink);
-            };
             
             if (data.artifactFound) {
-            	// Replace the invalid code message with something...
-            	that.locate("headMessage").html(that.options.strings.redirecting);
-            	
-                setTimeout(redirectFunction, that.options.redirectDelay);
+            	redirectSequence(that, data.artifactLink);
             } else {
                 wrongCodeSequence(that);
             }
@@ -101,6 +114,19 @@ fluid.engage = fluid.engage || {};
             error: error,
             success: success
         });
+    };
+
+    /**
+     * For test purposes - only even numbers are valid codes.
+     * 
+     * @param {Object} that, the component.
+     */
+    var simulateCheck = function (that) {
+    	if (!(that.code[1] % 2)) {
+            redirectSequence(that);
+        } else {
+            wrongCodeSequence(that);
+        }
     };
     
     /**
@@ -126,22 +152,11 @@ fluid.engage = fluid.engage || {};
         if (number < 11) {
             var num = number % 10;
             $(button).click(function () {
-                getCurrentDigitField(that).html(num);
-                if (that.atDigit === 0) {
-                    that.code += num;
-                    that.atDigit++;
-                } else {                
-                    that.code += num;
-                    checkCode(that);            
-                }
+            	that.enterDigit(num);
             });
         } else {
             $(button).click(function () {
-                getCurrentDigitField(that).html("");
-                if (that.atDigit === 1) {
-                    that.atDigit--;
-                    that.code = "";
-                }
+            	that.deleteLastDigit();
             });         
         }
     };
@@ -156,7 +171,7 @@ fluid.engage = fluid.engage || {};
         that.locate("backButton").attr("href", document.referrer);
         
         // Init heading
-        that.locate("heading").html(that.options.strings.header);
+        that.locate("heading").text(that.options.strings.header);
         
         // Init instruction text        
         that.locate("headMessage").text(that.options.strings.instruction);
@@ -182,7 +197,32 @@ fluid.engage = fluid.engage || {};
     fluid.engage.codeEntry = function (container, options) {
         var that = fluid.initView("fluid.codeEntry", container, options);       
         
+        that.enterDigit = function (digit) {
+            getCurrentDigitField(that).text(digit);
+            if (that.atDigit === 0) {
+                that.code += digit;
+                that.atDigit++;
+            } else {                
+                that.code += digit;
+                if (!that.options.testMode) {
+                	checkCode(that);            
+                } else {
+                	simulateCheck(that);
+                }
+            }
+        };
+        
+        that.deleteLastDigit = function () {
+            if (that.atDigit === 1) {
+                that.atDigit--;
+                that.code = "";
+                getCurrentDigitField(that).text("");                
+            }
+        };
+        
         setup(that);
+        
+        return that;
     };
     
     fluid.defaults("fluid.codeEntry", {
@@ -199,6 +239,7 @@ fluid.engage = fluid.engage || {};
             instruction: "Enter code from the object's label to learn more about the object.",
             redirecting: "Opening artifact page."
         },
-        redirectDelay: 1000
+        redirectDelay: 1000,
+        testMode: false
     });
 })(jQuery);
