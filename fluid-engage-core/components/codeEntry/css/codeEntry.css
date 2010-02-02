@@ -2,16 +2,13 @@
 	cursor: pointer;
 }
 
-.flc-invalid-code-message {
-	width: 320px;
-	height: 20px;
-	margin: auto;
-    text-align: center;
-    font-size: 10px;
+.flc-back-button {
+    width: 200px;
 }
 
-.flc-instruction-text {
-    width: 300px;
+.flc-head-message {
+    width: 320px;
+    height: 80px;
     margin: auto;
     text-align: center;
 }

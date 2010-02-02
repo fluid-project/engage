@@ -51,14 +51,13 @@ fluid.engage = fluid.engage || {};
      * @param {Object} that, the component. 
      */
     var wrongCodeSequence = function (that) {
-        var invalidCodeBlock = that.locate("invalidCode");
-        invalidCodeBlock.html(that.options.strings.invalidCode);
-        invalidCodeBlock.fadeTo(500, 1, function () {
-            invalidCodeBlock.fadeTo(2000, 0, function () {
-                resetEntry(that);
-                that.code = "";
-                that.atDigit = 0;
-            });
+        var invalidCodeBlock = that.locate("headMessage");
+        invalidCodeBlock.html("<img src=\"../../../../fluid-engage-core/components/codeEntry/images/invalid-code.png\" alt=\"Invalid code.\"/>");
+        
+        invalidCodeBlock.show(250, function () {
+            resetEntry(that);
+            that.code = "";
+            that.atDigit = 0;        	
         });
     };
     
@@ -87,6 +86,9 @@ fluid.engage = fluid.engage || {};
             };
             
             if (data.artifactFound) {
+            	// Replace the invalid code message with something...
+            	that.locate("headMessage").html(that.options.strings.redirecting);
+            	
                 setTimeout(redirectFunction, that.options.redirectDelay);
             } else {
                 wrongCodeSequence(that);
@@ -153,8 +155,11 @@ fluid.engage = fluid.engage || {};
         // Init back button
         that.locate("backButton").attr("href", document.referrer);
         
+        // Init heading
+        that.locate("heading").html(that.options.strings.header);
+        
         // Init instruction text        
-        that.locate("instructionText").text(that.options.strings.instruction);
+        that.locate("headMessage").text(that.options.strings.instruction);
         
         // Initialize numpad
         that.atDigit = 0;
@@ -183,15 +188,16 @@ fluid.engage = fluid.engage || {};
     fluid.defaults("fluid.codeEntry", {
         selectors : {
             "backButton": ".flc-back-button",
-            "invalidCode": ".flc-invalid-code-message",
-            "instructionText": ".flc-instruction-text",
+            "heading": ".flc-heading",
+            "headMessage": ".flc-head-message",
             "firstDigitField": ".flc-first-digit",
             "secondDigitField": ".flc-second-digit",
             "entryButtons": "img[class*=flc-button]"
         },
         strings : {
+        	header: "Enter object code",
             instruction: "Enter code from the object's label to learn more about the object.",
-            invalidCode: "You've entered an invalid code. Please try again"
+            redirecting: "Opening artifact page."
         },
         redirectDelay: 1000
     });
