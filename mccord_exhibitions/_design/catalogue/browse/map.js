@@ -14,7 +14,7 @@ function (doc) {
         }
         emit({
             'exhibitTitle': doc.exhibit.title, 
-            'sectionTitle': '',
+            'sectionTitle': 'viewAll',
             'lang': doc.exhibit.lang
         }, {
             'sectionSize': doc.exhibit.artifacts ? doc.exhibit.artifacts.cnt : 0,
