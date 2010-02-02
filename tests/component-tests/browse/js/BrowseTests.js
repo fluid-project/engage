@@ -30,7 +30,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             jqUnit.assertFalse("Cabinet not Initialized", component.cabinet);
         }
         
-        jqUnit.assertEquals("Correct Title text", component.title, $(selectors.title).text());
+        jqUnit.assertEquals("Correct Title text", component.model.title, $(selectors.title).text());
         jqUnit.assertEquals("Correct Number of NavigationLists Rendered", component.model.categories.length, $(".flc-navigationList-listGroup").length);
     };
         
@@ -86,25 +86,6 @@ https://source.fluidproject.org/svn/LICENSE.txt
             
             jqUnit.assertEquals("The description is not rendered", 0, $(selectors.listHeaderDescription).length);
             jqUnit.assertFalse("Header Description styling is not applied", $(selectors.cabinetHandle).hasClass(browse.options.styles.listHeaderDescription));
-        });
-        
-        tests.test("Browse description", function () {
-            var descriptionText = "Description";
-            var options = {
-                description: {
-                    options: {
-                        model: descriptionText
-                    }
-                },
-                model: {
-                    description: "My description"
-                }
-            };
-            
-            var browse = setup(CONTAINER, options);
-            
-            jqUnit.assertTrue("The description subcomponent has been initialized", browse.description);
-            jqUnit.assertTrue("The correct description was added", descriptionText, browse.locate("browseDescription"));
         });
     };
     
