@@ -65,7 +65,7 @@ fluid.artifactView = fluid.artifactView || {};
             artifact: artifactModel,
             relatedArtifacts: urlBase + $.param(params),
             museum: params.db,
-            artifactCollected: checkCollectStatus(config, params, model.id)            
+            artifactCollected: checkCollectStatus(config, params, artifactModel.id)            
         };
     };
     

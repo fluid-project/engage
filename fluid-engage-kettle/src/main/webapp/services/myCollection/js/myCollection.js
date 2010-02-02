@@ -215,7 +215,7 @@ fluid.myCollection = fluid.myCollection || {};
      *  @param {Object} config, the JSON config file for Engage.
      *  @param {Object} app, the Engage application.
      */
-    fluid.myCollection.initDataFeed = function (config, app) {
+/*    fluid.myCollection.initDataFeed = function (config, app) {
         var dataHandler = function (env) {
             if (!env.urlState.params.uuid) {
                 return [500, {"Content-Type": "text/plain"},
@@ -229,37 +229,37 @@ fluid.myCollection = fluid.myCollection || {};
         var acceptor = fluid.engage.makeAcceptorForResource("myCollection", "json", dataHandler);
         fluid.engage.mountAcceptor(app, "users", acceptor);
     };
-
+*/
     /**
      * Creates a handler for My Collection.
      * 
      *  @param {Object} config, the JSON config file for Engage.
      *  @param {Object} app, the Engage application. 
      */
-    fluid.myCollection.initMarkupFeed = function (config, app) {
+    fluid.myCollection.initMyCollectionService = function (config, app) {
         var handler = fluid.engage.mountRenderHandler({
             config: config,
             app: app,
             target: "users/",
             source: "components/myCollection/html/",
-            sourceMountRelative: "engage"/*,
+            sourceMountRelative: "engage",
             baseOptions: {
                 renderOptions: {
                     cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
                 }
-            }*/
+            }
         });
         
         handler.registerProducer("myCollection", function (context, env) {
-/*        	
         	var uuid = env.QUERY_STRING.substring("uuid=".length);
         	
-            return {
-            			ID: "initBlock", 
-            			functionname: "fluid.browse", 
-            			arguments: [".flc-browse", assembleData(uuid, config)]
-                    };
-*/
+            var initBlock = {
+        		ID: "initBlock",
+        		functionname: "fluid.engage.myCollection",
+        		arguments: [".flc-myCollection", assembleData(uuid, config)]
+      		};
+            
+            return initBlock;
         });
     };
 

@@ -210,7 +210,8 @@ fluid = fluid || {};
         strings: {
             upcomingCategory: "Upcoming (%size)",
             currentCategory: "",
-            title: "Exhibitions"
+            title: "Exhibitions",
+            "Related Web Tours": ""           
         },
         
         events: {

@@ -31,7 +31,7 @@
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/components/reorderer/js/ImageReorderer.js"></script>
 		
 		<script type="text/javascript" src="../../../../fluid-engage-core/framework/js/loadData.js"></script>
-        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>        
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/components/user/js/user.js"></script>
 		<script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/plugins/cookie/js/jquery.cookie.js"></script>
    		<script type="text/javascript" src="../../../../fluid-engage-core/components/myCollection/js/myCollection.js"></script>
@@ -73,9 +73,9 @@
 			</form>
 		</div>
 
-		<script type="text/javascript">
+		<script id="flc-initBlock" type="text/javascript">
 		    fluid.setLogging(true);
-			fluid.engage.initComponentWithDataURL("fluid.initMyCollection", ".flc-myCollection");
+			fluid.engage.initComponentWithLocalData("fluid.engage.myCollection", ".flc-myCollection");
 		</script>
 	</body>
 </html>

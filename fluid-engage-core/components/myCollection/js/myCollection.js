@@ -57,6 +57,17 @@ fluid = fluid || {};
         return obj;
     };
 
+    function mapToNavListModel(model) {
+        return fluid.transform(model, function (artifact) {
+            return {
+                target: artifact.children.target,
+                image: artifact.children.image,
+                title: artifact.children.titleText,
+                description: artifact.children.periodText
+            };
+        });
+    };
+    
     /**
      * Generates the component tree used by the renderer.
      * 
@@ -69,7 +80,7 @@ fluid = fluid || {};
             useDefaultImage: that.options.useDefaultImages
         };
         
-        fluid.merge("merge", componentOptions, that.options.model.data);
+        fluid.merge("merge", componentOptions, that.options.data);
 
         if (that.model) {
             fluid.transform(that.model, function (object) {
@@ -94,7 +105,7 @@ fluid = fluid || {};
                 var tree = topTreeNode("listItems:", "children", [
                     treeNode("link", "target", object.target || "", styles.link)
                 ], styles.listItems, index, object.id, object.museum);
-        
+                
                 if (object.image || that.options.useDefaultImage) {
                     tree.children.push({
                         ID: "image",
@@ -112,7 +123,20 @@ fluid = fluid || {};
                 }
                 
                 return tree;
-            });        
+            });
+            
+            // Attach a navlist decorator to the collection
+            /*
+            that.model.decorators =
+            	[
+                   {
+                	   type: "fluid",
+                	   func: "fluid.navigationList",
+                	   options: fluid.merge("merge",
+                			   fluid.copy(that.options.navigationList.options),
+                					   {model: mapToNavListModel(that.model)})
+                   	};
+                ];*/
         }
         
         return that.model;
@@ -305,8 +329,8 @@ fluid = fluid || {};
         // Set the status message
         var status = fluid.stringTemplate(
             that.options.strings.statusMessageTemplate, {
-                artifactsNumber: that.options.model.data.links.length,
-                artifactsPlural: that.options.model.data.links.length === 1 ? "" : "s"
+                artifactsNumber: that.options.data.links.length,
+                artifactsPlural: that.options.data.links.length === 1 ? "" : "s"
             }
         );
         that.locate("collectionStatus").html(status);
@@ -347,8 +371,8 @@ fluid = fluid || {};
      * @param {Object} container, the container which will hold the component
      * @param {Object} options, options passed into the component
      */
-    fluid.initMyCollection = function (container, options) {
-        var that = fluid.initView("fluid.initMyCollection", container, options);
+    fluid.engage.myCollection = function (container, options) {
+        var that = fluid.initView("fluid.engage.myCollection", container, options);
 
         that.toggleView = function () {
             addLoadingStyling(that);
@@ -399,7 +423,7 @@ fluid = fluid || {};
         };
         
         that.getCollectionSize = function () {
-        	return that.options.model.data.links.length;
+        	return that.options.data.links.length;
         };
         
         setup(that);
@@ -407,8 +431,17 @@ fluid = fluid || {};
         return that;
     };
     
-    fluid.defaults("fluid.initMyCollection",
+    fluid.defaults("fluid.engage.myCollection",
         {
+    		navigationList: {
+        		type: "fluid.navigationList",
+                options: {
+                    styles: {
+                        titleText: "fl-browse-shortenText"
+                    },
+                    useDefaultImage: true
+                }
+    		},
             user: {
                 type: "fluid.user"
             },
@@ -459,6 +492,7 @@ fluid = fluid || {};
                 afterRender: null
             },
 
+            // TODO: do we need that after we switch to navigation list?
             useDefaultImage: true,
             
             defaultImage: "../../../../fluid-engage-core/components/myCollection/images/no_image_64x64.png",
