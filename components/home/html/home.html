@@ -17,17 +17,18 @@
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/home/css/Home.css" />
         
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/home/js/Home.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/iPhoneChromeless.js"></script>
     </head>   
     
     <body class="fl-theme-iphone fl-home-white-background">
-        <div class="fl-navbar fl-table">
-            <div class="fl-table-row">              
-                <h1 class="fl-table-cell artifact-name">McCord Museum</h1>                          
+        <div class="flc-engage-home fl-engage-home">
+            <div class="fl-navbar fl-table">
+                <div class="fl-table-row">              
+                    <h1 class="fl-table-cell artifact-name">McCord Museum</h1>                          
+                </div>
             </div>
-        </div>
-        
-        <div class="flc-engage-home">
             <ul class="fl-list-menu fl-list-thumbnails fl-thumbnails-expanded fl-grid">
                 <li>                
                     <div class="fl-table">
@@ -71,7 +72,7 @@
                 </li>
                 <li>                
                     <div class="fl-table">
-                        <a rsf:id="scr=null" class="fl-table-cell" href="#">
+                        <a rsf:id="scr=null" class="flc-engage-home-language fl-table-cell" href="#">
                             <img class="fl-icon" src="../../../../fluid-engage-core/components/home/images/ChangeLanguage.png" alt="Change language icon" />
                         </a>
                     </div>
@@ -81,5 +82,28 @@
                 </li>
             </ul>
         </div>
+        <div class="flc-engage-languageSelection fl-engage-languageSelection fl-hidden">
+            <div class="fl-navbar fl-table">
+                <div class="fl-table-row">  
+                    <img class="fl-table-cell" src="../../../../fluid-engage-core/components/languageSelection/images/flag.png" alt="Flag icon" />            
+                    <h1 class="fl-table-cell">Language Selection</h1>                          
+                </div>
+            </div>
+            <ul class="fl-list-menu">
+                <li>
+                    <a rsf:id="scr=null" href="./home.html?lang=en">
+                       English 
+                    </a>
+                </li>
+                <li>
+                    <a rsf:id="scr=null" href="./home.html?lang=fr">
+                        Fran&ccedil;ais
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <script type="text/javascript">
+            fluid.engage.home();
+        </script>
     </body>
 </html>
