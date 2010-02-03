@@ -25,6 +25,7 @@
         <script type="text/javascript" src="../../../../fluid-engage-core/components/exhibition/js/ExhibitionView.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/components/preview/js/Preview.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/loadData.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/iPhoneChromeless.js"></script>
     </head>   
     <body class="fl-theme-iphone">
         <div class="flc-exhibition-container">
@@ -32,11 +33,7 @@
                 <span class="fl-force-left fl-navBar-left">Home</span>
                 <span class="fl-force-right fl-navBar-right">toggle</span>
                 <h1 class="flc-exhibition-navBarTitle fl-exhibitionNavBar-title">
-                    <span class="flc-exhibition-about"></span>
-                    push the screen and
-                    <!-- <span class="flc-exhibition-about">About:</span> -->
-                    <!-- <div class="fl-exhibitionAbout-title">push the text off screen and replace with ellipsis</div> -->
-                    <!-- <span class="flc-exhibition-navBarTitle fl-exhibitionAbout-title">Exhibitions</span> -->
+                    Title
                 </h1>
                 
             </div> 
@@ -48,12 +45,12 @@
                         <span class="flc-exhibition-displayDate fl-exhibitionAbout-textBlock">From Date</span>
                     </div>
                 </div>
-                <p class="flc-exhibtion-shortDescription fl-exhibition-shortDescription">Short Discription</p>
+                <p class="flc-exhibition-shortDescription fl-exhibition-shortDescription">Short Description</p>
                 <div class="flc-exhibition-description">Exhibition Description</div> 
             </div>
         </div>
-        <script type="text/javascript">
-            fluid.engage.initComponentWithDataFeed(window.location, "fluid.engage.exhibitionView", ".flc-exhibition-container");
+        <script id="flc-initBlock" type="text/javascript">
+            fluid.engage.initComponentWithLocalData("fluid.engage.exhibitionView", ".flc-exhibition-container");
         </script>
     </body>
 </html>

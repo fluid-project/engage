@@ -12,8 +12,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
 /*global jQuery, fluid*/
 
 (function ($, fluid) {
-	
-	fluid.engage = fluid.engage || {};
+    
+    fluid.engage = fluid.engage || {};
     
     /*******************************
      * Cookies                     *

@@ -16,117 +16,49 @@ fluid = fluid || {};
 
 (function ($) {
     
-    /**
-     * Creates a render component for the component tree. The key can be any key that a componet tree would take and the value is what would be assigned to it.
-     * For example if you wanted to have node that just prints out "Hello World" you could set the key to "value" and the value to "Hello World"
-     * 
-     * @param {Object} id, the ID used by the component tree
-     * @param {Object} key, a key representing an entry in a renderer component
-     * @param {Object} value, the value assigned to the key
-     * @param {Object} classes, (optional) can add classes without having to specify the decorator key. 
-     */
-    var treeNode = function (id, key, value, classes) {
-        var obj = {ID: id};
-        obj[key] = value;
-        if (classes) {
-            obj.decorators = {
-                type: "addClass",
-                classes: classes
-            };
-        }
-        
-        return obj; 
-    };
-    
-    /**
-     * Creates a renderer component of type message
-     * 
-     * @param {Object} id, the ID used by the component tree
-     * @param {Object} messageKey, an EL path into the message bundle representing the template to be used
-     * @param {Object} messageArgs, the arguements to be merged into the message template
-     * @param {Object} classes, (optional) can be used to add classes 
-     */
-    var compileMessage = function (id, messageKey, messageArgs, classes) {
-        var obj = treeNode(id, "messagekey", messageKey, classes);
-        obj.args = messageArgs;
-        return obj;
-    };
-    
-    /**
-     * Will return the result of a function wich is run based on a condition.
-     * 
-     * @param {Object} condition, the test condition
-     * @param {Object} onTrue, the function to run if the condition passes
-     * @param {Object} onFalse, the function to run if the condition fails
-     */
-    var conditionalNode = function (condition, onTrue, onFalse) {
-        var func = condition === null || condition === undefined ? onFalse : onTrue;
-        
-        return func();
-    };
-    
-    /**
-     * Renders the copmonent based on values passed into the options
-     * 
-     * @param {Object} that, the component
-     */
-    var render = function (that) {
-        var selectorMap = [
-            {selector: that.options.selectors.listItems, id: "listItems:"},
-            {selector: that.options.selectors.link, id: "link"},
-            {selector: that.options.selectors.image, id: "image"},
-            {selector: that.options.selectors.titleText, id: "titleText"},
-            {selector: that.options.selectors.descriptionText, id: "descriptionText"}
-        ];
 
-        var generateTree = function () {
-            var styles = that.options.styles;
-            return fluid.transform(that.options.links, function (object) {
-                var title = object.title || "";
-                var tree = treeNode("listItems:", "children", [
-                    treeNode("link", "target", object.target || "", styles.link),
-                    treeNode("titleText", "value", title, styles.titleText)
-                ], styles.listItems);
+    var generateTree = function (model, options) {
+        return {
+            children: fluid.transform(model, function (navListItem) {
+                var itemSubtree = {
+                    ID: "listItems:", 
+                    children: [
+                        {
+                            ID: "link",
+                            target: navListItem.target || ""
+                        },
+                        {
+                            ID: "titleText",
+                            value: navListItem.title || ""
+                        }
+                    ]
+                };
                 
-                if (object.description) {
-                    tree.children.push(treeNode("descriptionText", "value", object.description || "", styles.descriptionText));
-                }
-                
-                if (object.image || that.options.useDefaultImage) {
-                    tree.children.push({
-                        ID: "image",
-                        target: object.image,
-                        decorators: [{
-                            type: "addClass",
-                            classes: styles.image
-                        }]
+                if (navListItem.description) {
+                    itemSubtree.children.push({
+                        ID: "descriptionText", 
+                        value: navListItem.description
                     });
                 }
                 
-                return tree;
-            });
+                if (navListItem.image || options.useDefaultImage) {
+                    itemSubtree.children.push({
+                        ID: "image",
+                        target: navListItem.image
+                    });
+                }
+                
+                if (navListItem.showBadge) {
+                    itemSubtree.children.push({
+                        ID: "badgeIcon",
+                        target: options.badgeIconUrl
+                    });
+                }
+
+                return itemSubtree;
+            })
         };
-        
-        var options = {
-            cutpoints: selectorMap,
-            messageSource: {
-                type: "data", 
-                messages: that.options.messageBundle
-            }
-        };
-        
-        fluid.selfRender(that.locate("listGroup"), generateTree(), options);
-         
-    };
-    
-    /**
-     * The styles to be set on the group containing the list of links
-     * 
-     * @param {Object} that, the component
-     */
-    var styleGroup = function (that) {
-        that.locate("listGroup").addClass(that.options.styles.listGroup);
-    };
+    }; 
     
     /**
      * The general setup function that calls the functions that need to be run on init
@@ -134,9 +66,30 @@ fluid = fluid || {};
      * @param {Object} that, the component
      */
     var setup = function (that) {
-        render(that);
-        styleGroup(that);
-        that.locate("gridToggle").click(that.toggleGrid);
+        that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
+            repeatingSelectors: ["listItems"],
+            selectorsToIgnore: ["listGroup", "linkContainer", "gridToggle"]
+        });
+
+        that.refreshView();
+        that.locate("gridToggle").click(that.toggleLayout);
+        if (that.isGrid) {
+            that.gridLayout();
+        } else {
+            that.listLayout();
+        }
+    };
+    
+    var styleAsGrid = function (listGroup, linkContainer, link, styles) {
+        listGroup.addClass(styles.grid).removeClass(styles.list);
+        linkContainer.addClass(styles.gridTable);
+        link.addClass(styles.gridCell);
+    };
+    
+    var styleAsList = function (listGroup, linkContainer, link, styles) {
+        listGroup.addClass(styles.list).removeClass(styles.grid);
+        linkContainer.removeClass(styles.gridTable);
+        link.removeClass(styles.gridCell);
     };
     
     /**
@@ -147,13 +100,29 @@ fluid = fluid || {};
      */
     fluid.navigationList = function (container, options) {
         var that = fluid.initView("fluid.navigationList", container, options);
+        that.model = that.options.model;
+        that.isGrid = that.options.defaultToGrid;
         
-        that.toggleGrid = function () {
-            that.locate("listGroup").toggleClass(that.options.styles.grid);
-            that.locate("linkContainer").toggleClass(that.options.styles.gridLinkContainer);
-            that.locate("link").toggleClass(that.options.styles.gridLink);
-            that.locate("titleText").toggle();
-            that.locate("descriptionText").toggle();
+        that.toggleLayout = function () {
+            if (that.isGrid) {
+                that.listLayout();
+            } else {
+                that.gridLayout();
+            }
+        };
+        
+        that.gridLayout = function () {
+            styleAsGrid(that.locate("listGroup"), that.locate("linkContainer"), that.locate("link"), that.options.styles);
+            that.isGrid = true;
+        };
+        
+        that.listLayout = function () {
+            styleAsList(that.locate("listGroup"), that.locate("linkContainer"), that.locate("link"), that.options.styles);
+            that.isGrid = false;
+        };
+        
+        that.refreshView = function () {
+            that.render(generateTree(that.model, that.options));
         };
         
         setup(that);
@@ -166,46 +135,42 @@ fluid = fluid || {};
      */
     fluid.defaults("fluid.navigationList", {
         selectors: {
-            listGroup: ".flc-nagivationList-listGroup",
+            listGroup: ".flc-navigationList-listGroup",
             listItems: ".flc-navigationList-items",
             linkContainer: ".flc-navigationList-linkContainer",
             link: ".flc-navigationList-link",
             image: ".flc-navigationList-image",
             titleText: ".flc-navigationList-titleText",
             descriptionText: ".flc-navigationList-descriptionText",
-            gridToggle: ".flc-navigationList-gridToggle"
+            gridToggle: ".flc-navigationList-gridToggle",
+            badgeIcon: ".flc-navigationList-badge-icon"
         },
         
         styles: {
-            listGroup: "fl-list-menu fl-list-thumbnails fl-thumbnails-expanded",
-            listItems: null,
-            linkContainer: "",
-            link: null,
-            image: "fl-icon",
-            titleText: null,
-            descriptionText: "fl-link-summary",
-            category: null,
-            
-            grid: "fl-grid",
-            gridLinkContainer: "fl-table",
-            gridLink: "fl-table-cell"
+            grid: "fl-thumbnails-expanded fl-grid",
+            gridTable: "fl-table",
+            gridCell: "fl-table-cell",
+            list: "fl-list"
         },
+        
+        defaultToGrid: false,
         
         strings: {},
         
         events: {},
         
         useDefaultImage: false,
+                
+        badgeIconUrl: undefined,
         
-        links: [
-                {
-                    target: "",
-                    image: "",
-                    title: "",
-                    description: null
-                }
-            ]
-        }
-    );
+        model: [
+            {
+                target: "",
+                image: "",
+                title: "",
+                description: null
+            }
+        ]
+    });
     
 })(jQuery);

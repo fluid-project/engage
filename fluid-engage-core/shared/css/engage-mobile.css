@@ -1,13 +1,3 @@
-.fl-list-thumbnails.fl-grid li {
-    overflow: hidden;
-}
-
-.fl-engage-badged-thumbnail {
-    position: relative;
-}
-
-.fl-engage-badge-icon {
-    position: absolute;
-    bottom: 7px;
-    left: 20px;
+.fl-theme-iphone {
+    background: rgb(255,255,255);
 }

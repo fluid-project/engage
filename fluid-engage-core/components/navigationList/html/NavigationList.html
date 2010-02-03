@@ -1,15 +1,14 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-		<title>Navigatin List Demo</title>
+        <title>Navigation List Demo</title>
 
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-layout.css" />
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-text.css" />
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-transitions.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/engage-mobile.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationList/css/NavigationList.css" />
 
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
@@ -17,21 +16,29 @@
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/DataBinding.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
-        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>   
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>  
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>
+         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/iPhoneChromeless.js"></script>
+         
         <script type="text/javascript" src="../js/NavigationList.js"></script>
-	</head>
+    </head>
     
-	<body class="fl-theme-iphone">
-	    <div class="fl-navbar"></div>
+    <body class="fl-theme-iphone">
+        <div class="fl-navbar"></div>
         
-        <div class="simpleList">
-            <ul class="flc-nagivationList-listGroup">
+        <div class="flc-navigationList">
+            <a class="flc-navigationList-gridToggle">grid</a>
+            
+            <ul class="flc-navigationList-listGroup fl-list fl-list-menu fl-list-thumbnails">
                 <li class="flc-navigationList-items">
                     <div class="flc-navigationList-linkContainer">
-                        <a class="flc-navigationList-link">
-                            <img class="flc-navigationList-image"/>
-                            <span class="flc-navigationList-titleText">title/category</span>
-                            <span class="flc-navigationList-descriptionText">description</span>
+                        <a class="flc-navigationList-link fl-engage-badged-thumbnail">
+                            <img class="flc-navigationList-image fl-icon"/>
+                            <span class="flc-navigationList-titleText fl-navigationList-title">title/category</span>
+                            <span class="flc-navigationList-descriptionText fl-link-summary fl-navigationList-description">description</span>
+                            <img class="flc-navigationList-badge-icon fl-engage-badge-icon"
+                                      src="../../../../fluid-engage-core/shared/images/media-badge.png" 
+                                         alt="This artifact includes media" />
                         </a>
                     </div>
                 </li>
@@ -39,29 +46,30 @@
         </div>
         
         <script type="text/javascript">
-            var links = [
-                            {
-                                target: "../images/Artifacts-.jpg",
-                                image: "../images/Artifacts-.jpg",
-                                title: "Title 1",
-                                description: "Description 1"
-                            },
-                            {
-                                target: "../images/Snuffbox.jpg",
-                                image: "../images/Snuffbox.jpg",
-                                title: "Title 2",
-                                description: "Description 2"
-                            },
-                            {
-                                target: "../images/Snuffbox.jpg",
-                                image: "../images/Snuffbox.jpg",
-                                title: "Title 3",
-                                description: "Description 3"
-                            }
-                        ];
-            
-            fluid.navigationList(".simpleList", {links: links});
+            fluid.navigationList(".flc-navigationList", {
+                model: [
+                    {
+                        target: "../images/Artifacts-.jpg",
+                        image: "../images/Artifacts-.jpg",
+                        title: "Title 1",
+                        description: "Description 1"
+                    },
+                    {
+                        target: "../images/Snuffbox.jpg",
+                        image: "../images/Snuffbox.jpg",
+                        title: "Title 2",
+                        description: "Description 2",
+                        showBadge: true
+                    },
+                    {
+                        target: "../images/Snuffbox.jpg",
+                        image: "../images/Snuffbox.jpg",
+                        title: "Title 3",
+                        description: "Description 3"
+                    }
+                ]
+            });
         </script>
 
-	</body>
+    </body>
 </html>

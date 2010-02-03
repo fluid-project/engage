@@ -13,9 +13,13 @@
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-transitions.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/engage-mobile.css" /> 
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/home/css/Home.css" />
-              
+        
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/iPhoneChromeless.js"></script>
     </head>   
+    
     <body class="fl-theme-iphone fl-home-white-background">
         <div class="fl-navbar fl-table">
             <div class="fl-table-row">              
@@ -24,20 +28,20 @@
         </div>
         
         <div class="flc-engage-home">
-	        <ul class="fl-list-menu fl-list-thumbnails fl-thumbnails-expanded fl-grid">
-	            <li>                
-	                <div class="fl-table">
-	                    <a class="fl-table-cell" href="../exhibitions/browse.html?db=mccord">
-	                        <img class="fl-icon" src="../../../../fluid-engage-core/components/home/images/Exhibitions.png" alt="Exhibitions icon" />
-	                    </a>
-	                </div>
-	                <div class="fl-grid-caption">
-	                    Exhibitions
-	                </div>
-	            </li>
+            <ul class="fl-list-menu fl-list-thumbnails fl-thumbnails-expanded fl-grid">
                 <li>                
                     <div class="fl-table">
-                        <a class="fl-table-cell" href="../artifacts/browse.html?db=mccord&amp;q=tours">
+                        <a rsf:id="scr=null" class="fl-table-cell" href="../exhibitions/browse.html?db=mccord">
+                            <img class="fl-icon" src="../../../../fluid-engage-core/components/home/images/Exhibitions.png" alt="Exhibitions icon" />
+                        </a>
+                    </div>
+                    <div class="fl-grid-caption">
+                        Exhibitions
+                    </div>
+                </li>
+                <li>                
+                    <div class="fl-table">
+                        <a rsf:id="scr=null" class="fl-table-cell" href="../artifacts/browse.html?db=mccord&amp;q=tours">
                             <img class="fl-icon" src="../../../../fluid-engage-core/components/home/images/Collections.png" alt="Collections icon" />
                         </a>
                     </div>
@@ -47,7 +51,7 @@
                 </li>
                 <li>                
                     <div class="fl-table">
-                        <a class="fl-table-cell" href="../users/myCollection.html">
+                        <a rsf:id="scr=null" class="fl-table-cell" href="../users/myCollection.html">
                             <img class="fl-icon" src="../../../../fluid-engage-core/components/home/images/MyCollection.png" alt="My collection icon" />
                         </a>
                     </div>
@@ -57,7 +61,7 @@
                 </li>
                 <li>                
                     <div class="fl-table">
-                        <a class="fl-table-cell" href="../codeEntry/codeEntry.html">
+                        <a rsf:id="scr=null" class="fl-table-cell" href="#">
                             <img class="fl-icon" src="../../../../fluid-engage-core/components/home/images/EnterObjectCode.png" alt="Enter object code icon" />
                         </a>
                     </div>
@@ -67,7 +71,7 @@
                 </li>
                 <li>                
                     <div class="fl-table">
-                        <a class="fl-table-cell" href="#">
+                        <a rsf:id="scr=null" class="fl-table-cell" href="#">
                             <img class="fl-icon" src="../../../../fluid-engage-core/components/home/images/ChangeLanguage.png" alt="Change language icon" />
                         </a>
                     </div>
@@ -75,7 +79,7 @@
                         Change language
                     </div>
                 </li>
-	        </ul>
+            </ul>
         </div>
     </body>
 </html>

@@ -9,6 +9,22 @@
     }
 }
 
+.fl-theme-iphone {
+    background: none;
+}
+
+[class*=fl-container] [class*=fl-list]:not(.fl-thumbnails-expanded) > li a .fl-icon,
+[class*=fl-container] .fl-list-thumbnails:not(.fl-thumbnails-expanded) > li,
+[class*=fl-container] .fl-list-thumbnails:not(.fl-thumbnails-expanded) > li a {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius:  0px;
+}
+
+.fl-list-thumbnails > li:last-child {
+    margin-bottom: 0px;
+}
 
 .fl-browse-shortenText {
     overflow:hidden;

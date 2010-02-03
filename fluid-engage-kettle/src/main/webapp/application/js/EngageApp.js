@@ -18,7 +18,7 @@ fluid = fluid || {};
 fluid.engage = fluid.engage || {};
 
 (function () {
-    
+    // TODO: This fragile utility must be deprecated
     fluid.engage.makeAcceptorForResource = function (atSegment, extension, handler) {
         return {
             accept: function (segment, relPath, pathInfo) {
@@ -97,50 +97,8 @@ fluid.engage = fluid.engage || {};
         }
     };
     
-    fluid.engage.renderHandlerConfig = function (options) {
-        var baseOptions = options.baseOptions || {};
-        var source = options.source;
-        var mounts = options.config.mount;
-        if (options.sourceMountRelative) {
-            var mount = mounts[options.sourceMountRelative];
-            source = mount.source + source;
-        }
-        var wdDepth = options.config.workingDirDepth;
-        var baseDir = options.config.baseDir + source;
-
-        // NB - current API can only support targt depth of 1
-        var targetDepth = fluid.kettle.parsePathInfo(options.target).pathInfo.length;
-        var targetPrefix = fluid.kettle.generateDepth(targetDepth - 1);
-        
-        var prefs = [];
-        for (var key in mounts) {
-            var mount = mounts[key];
-            var rewSource = mount.rewriteSource ? mount.rewriteSource: mount.source;
-            var parsedSource = fluid.kettle.parsePathInfo(rewSource);
-            var sourceDepth = fluid.kettle.countDepth(parsedSource.pathInfo);
-            var collapsedSource = fluid.kettle.collapseSegs(parsedSource.pathInfo, sourceDepth);
-            var sourcePrefix = fluid.kettle.generateDepth(wdDepth);
-            var pref = {
-                source: sourcePrefix + collapsedSource,
-                target: targetPrefix + mount.target
-            };
-            prefs[prefs.length] = pref;
-            fluid.log("Rewriting source " + pref.source + " to target " + pref.target);
-        }
-        
-        var handlerOptions = {
-            baseDir: baseDir,
-            renderOptions: {
-                rebaseURLs: false,
-                rewriteUrlPrefixes: prefs
-            }
-        };
-        handlerOptions = jQuery.extend(true, baseOptions, handlerOptions);
-        return handlerOptions;
-    };
-    
     fluid.engage.mountRenderHandler = function (options) {
-        var handlerOptions = fluid.engage.renderHandlerConfig(options);
+        var handlerOptions = fluid.kettle.renderHandlerConfig(options);
         var handler = fluid.kettle.renderHandler(handlerOptions);
         fluid.engage.mountAcceptor(options.app, options.target, handler);
         return handler;
@@ -148,11 +106,13 @@ fluid.engage = fluid.engage || {};
     
     fluid.engage.initEngageApp = function (config) {
         config = fluid.engage.endeaden(config);
-        var app = fluid.kettle.makeKettleApp(config.appName);
-        var serviceInits = config.initServices;
+        var app = fluid.kettle.makeKettleApp(config);
+        config.baseDir = fluid.kettle.slashiseUrl(config.baseDir);
         var baseDir = config.baseDir;
         var mounts = config.mount;
-        
+        fluid.kettle.computeAbsMounts(mounts, baseDir);
+
+        var serviceInits = fluid.makeArray(config.initServices);        
         // Initialize each of the Engage app services registered in the config file.
         fluid.setLogging(true);
         for (var i = 0; i < serviceInits.length; i++) {
@@ -160,6 +120,8 @@ fluid.engage = fluid.engage || {};
             fluid.log("Initializing service " + initFn);
             fluid.invokeGlobalFunction(initFn, [config, app]);
         }
+        fluid.kettle.dequeueInvocations("fluid.engage.initEngageApp", {
+          config: config, app: app});  
         
         // Mount shared directory points.
         fluid.engage.applyMountConfig(app, mounts, baseDir);

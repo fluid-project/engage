@@ -62,8 +62,7 @@ fluid.catalogueService = fluid.catalogueService || {};
         var data = fluid.engage.mapModel(rawData.rows[0], dbName);
         
         var model = {
-            exhibitionTitle: data.exhibitionTitle,
-            sectionSize: data.sectionSize,
+            title: data.exhibitionTitle,
             categories: [
                 {
                     name: data.sectionTitle,
@@ -86,17 +85,22 @@ fluid.catalogueService = fluid.catalogueService || {};
     var afterMap = function (data) {
         data.categories = $.map(data.categories, function (value) {
             return {
-                name: fluid.stringTemplate("Viewing " + (value.name === "viewAll" ? "all objects" : '"' + value.name + '"') + " (%num total)", {num: data.sectionSize}),
+                name: value.name, 
                 items: value.artifacts
             };
         });
-        delete data.exhibitionTitle;
-        delete data.sectionSize;
         return data;
     };
     
+    //This should be replaced with proper message bundles when they are ready
+    var addThemeTitles = function (strings, data) {
+        strings.category = "Viewing %category (%size total)";
+        strings.noCategory = "Viewing all objects (%size total)";
+        return strings;
+    };
+    
     fluid.catalogueService.initBrowseCatalogueService = function (config, app) {
-        var handler = fluid.engage.mountRenderHandler({
+        var renderHandlerConfig = {
             config: config,
             app: app,
             target: "catalogue/",
@@ -107,16 +111,27 @@ fluid.catalogueService = fluid.catalogueService || {};
                     cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
                 }
             }
-        });
+        };
+        var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
             
         handler.registerProducer("browse", function (context, env) {
-            var data = getData(errorCallback, context.urlState.params, config);
-            var title = data.exhibitionTitle;
-            var options = {
-                model: afterMap(data),
-                title: title
-            };
+            var params = context.urlState.params;
+            var data = getData(errorCallback, params, config);
             
+            // TODO: We're hand-altering the configuration for getBundle(), since by default it assumes that all language bundles
+            // are located relative to the HTML template. In this case, however, we've got feeds using the same template but
+            // applying a different set of strings to it.
+            var strings = fluid.kettle.getBundle({
+                config: renderHandlerConfig.config,
+                source: "components/browseCatalogue/html/",
+                sourceMountRelative: "engage"
+            }, params) || {};
+            
+            var options = {
+                strings: strings,
+                model: afterMap(data)
+            };
+
             return {
                 ID: "initBlock", 
                 functionname: "fluid.browse", 

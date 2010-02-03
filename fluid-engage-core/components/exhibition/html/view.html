@@ -13,6 +13,7 @@
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/engage-mobile.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/exhibition/css/Exhibition.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationList/css/NavigationList.css" />
         
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
@@ -24,9 +25,9 @@
         
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/loadData.js"></script>
-        <script type="text/javascript" src="../../../../fluid-engage-core/components/preview/js/Preview.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationList/js/NavigationList.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/components/exhibition/js/ExhibitionView.js"></script>
-        
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/iPhoneChromeless.js"></script>
     </head>   
     <body class="fl-theme-iphone">
         <div class="flc-exhibition-container fl-exhibition">
@@ -58,17 +59,18 @@
                     <div class="fl-exhibition-header">
                         <div class="flc-exhibition-catalogue-title fl-exhibitionAbout-textBlock">catalogue</div>
                     </div>
-                    <ul class="flc-exhibition-preview fl-list fl-list-thumbnails fl-thumbnails-expanded fl-grid">
-                        <li class="flc-preview-items">                
-                            <div class="fl-table">
-                                <a class="flc-preview-item-link fl-table-cell fl-engage-badged-thumbnail" href="#">
-                                    <img class="flc-preview-item-image fl-icon" src="19.png" alt="icon" />
-                                    <img class="flc-preview-badge-icon fl-engage-badge-icon"
+                    
+                    <ul class="flc-navigationList-listGroup fl-list fl-list-thumbnails fl-thumbnails-expanded fl-grid">
+                        <li class="flc-navigationList-items">                
+                            <div class="flc-navigationList-linkContainer fl-table">
+                                <a class="flc-navigationList-link fl-table-cell fl-engage-badged-thumbnail" href="#">
+                                    <img class="flc-navigationList-image fl-icon" src="19.png" alt="icon" />
+                                    <img class="flc-navigationList-badge-icon fl-engage-badge-icon"
                                          src="../../../../fluid-engage-core/shared/images/media-badge.png" 
                                          alt="This artifact includes media" />
                                 </a>
                             </div>
-                            <div class="flc-preview-item-caption fl-grid-caption">title</div>
+                            <div class="flc-navigationList-titleText fl-grid-caption">title</div>
                         </li>
                     </ul>
                     <div class="fl-force-right fl-exhibition-linkContainer">
@@ -93,7 +95,7 @@
             </ol>
         </div>
         <script id="flc-initBlock" type="text/javascript">
-            fluid.engage.initComponentWithDataFeed(window.location, "fluid.engage.exhibitionView", ".flc-exhibition-container");
+            fluid.engage.initComponentWithLocalData("fluid.engage.exhibitionView", ".flc-exhibition-container");
         </script>
     </body>
 </html>

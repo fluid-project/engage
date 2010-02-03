@@ -1,5 +1,5 @@
 /*
-Copyright 2009 University of Toronto
+Copyright 2009-2010 University of Toronto
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -9,10 +9,8 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://source.fluidproject.org/svn/LICENSE.txt
 */
 
-/*global jQuery*/
-/*global fluid*/
-/*global jqUnit*/
-
+/*global jQuery fluid jqUnit expect*/
+"use strict";
 
 (function ($) {
     var CONTAINER = ".navigationList";
@@ -22,35 +20,19 @@ https://source.fluidproject.org/svn/LICENSE.txt
     };
     
     var hasClasses = function (selector, classes) {
-        if (typeof classes === "string") {classes = [classes];}
+        if (typeof classes === "string") {
+            classes = [classes];
+        }
         
-        for(var i = 0; i < classes.length; i++) {
-            if (!selector.hasClass(classes[i])) {return false;}
+        for (var i = 0; i < classes.length; i++) {
+            if (!selector.hasClass(classes[i])) {
+                return false;
+            }
         }
         
         return true;
     };
-    
-    var hasAttribute = function (selector, attribute, value) {
-        selector = fluid.wrap(selector);
-        selector.each(function (index, element) {
-            var attrValue = $(element).attr(attribute);
-            if (attrValue !== (value || !null)) {return false;}
-        });
         
-        return true;
-    };
-    
-    var hasStyle = function (selector, style, value) {
-        selector = fluid.wrap(selector);
-        selector.each(function (index, element) {
-            var styleValue = $(element).css(style);
-            if (styleValue !== value) {return false;}
-        });
-        
-        return true;
-    };
-    
     var assertStyling = function (selector, styles, expected, message) {
         selector = fluid.wrap(selector);
         styles = styles.split(" ");
@@ -60,7 +42,9 @@ https://source.fluidproject.org/svn/LICENSE.txt
     };
     
     var conditionalAssert = function (condition, test) {
-        if (condition) {test();}
+        if (condition) {
+            test();
+        }
     };
     
     var isValidString = function (string) {
@@ -70,7 +54,9 @@ https://source.fluidproject.org/svn/LICENSE.txt
     var numKeys = function (set, key) {
         var count = 0;
         for (var i = 0; i < set.length; i++) {
-            if(set[i][key]) {count++;}
+            if (set[i][key]) {
+                count++;
+            }
         }
         
         return count;
@@ -80,7 +66,9 @@ https://source.fluidproject.org/svn/LICENSE.txt
         var vals = [];
         for (var i = 0; i < objects.length; i++) {
             var value = objects[i][key];
-            if(value) {vals.push(value);}
+            if (value) {
+                vals.push(value);
+            }
         }
         return vals;
     };
@@ -102,7 +90,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         });
     };
     
-    var generalData = {links: [
+    var generalData = {model: [
         {
             target: "../../../integration_demo/images/Artifacts-.jpg",
             image: "../../../integration_demo/images/Artifacts-.jpg",
@@ -129,7 +117,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         tests.test("Rendering of elements", function () {
             var navList = setup(CONTAINER, generalData);
             var selectors = navList.options.selectors;
-            var links = navList.options.links;
+            var links = navList.options.model;
             expect(5);
             
             renderingTests(navList, selectors, links);
@@ -163,7 +151,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         tests.test("Rendered values", function () {
             var navList = setup(CONTAINER, generalData);
             var selectors = navList.options.selectors;
-            var links = navList.options.links;
+            var links = navList.options.model;
             
             valueTests(links, "image", selectors.image, "Image has correct source", "attr", "src");
             valueTests(links, "description", selectors.descriptionText, "Description text is correct", "text");
