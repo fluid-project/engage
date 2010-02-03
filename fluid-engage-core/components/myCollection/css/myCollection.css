@@ -1,3 +1,8 @@
+.flc-navigationListLink {
+	display: none;
+}
+/* TODO: clean up the css */
+
 .flc-myCollection-image {
     background: #eee;
     margin-left: auto;

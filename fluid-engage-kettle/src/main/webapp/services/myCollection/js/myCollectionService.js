@@ -183,8 +183,8 @@ fluid.myCollection = fluid.myCollection || {};
             return compileData(artifactData, artifactURL.database, uuid);            
         });
 
-        var model = {
-            data: {}
+        var data = {
+            model: {}
         };
         
         var links = jQuery.map(dataSet, function (dataItem) {        
@@ -199,37 +199,16 @@ fluid.myCollection = fluid.myCollection || {};
             return link.id;
         });
         
-        model.data.links = [];
+        data.model.data = [];
         for (var i = 0; i < originalArtifactIds.length; i++) {
-            model.data.links.push(links[$.inArray(originalArtifactIds[i], artifactIds)]);
+            data.model.data.push(links[$.inArray(originalArtifactIds[i], artifactIds)]);
         }
         
-        model.data.collectionId = uuid;
+        data.model.collectionId = uuid;
         
-        return model;
+        return data;
     };
 
-    /**
-     * Creates an acceptor for My Collection.
-     * 
-     *  @param {Object} config, the JSON config file for Engage.
-     *  @param {Object} app, the Engage application.
-     */
-/*    fluid.myCollection.initDataFeed = function (config, app) {
-        var dataHandler = function (env) {
-            if (!env.urlState.params.uuid) {
-                return [500, {"Content-Type": "text/plain"},
-                        "No uuid parameter specified, cannot retrieve collection."];
-            } else {
-            	return [200, {"Content-Type": "text/plain"},
-            	        JSON.stringify(assembleData(env.urlState.params.uuid, config))];
-            }
-        };
-
-        var acceptor = fluid.engage.makeAcceptorForResource("myCollection", "json", dataHandler);
-        fluid.engage.mountAcceptor(app, "users", acceptor);
-    };
-*/
     /**
      * Creates a handler for My Collection.
      * 

@@ -17,7 +17,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 (function ($) {
     $(document).ready(function () {
         var tests = {};
-        var data = {};
+        var model = {};
         var component;
 
         var setup = function () {
@@ -30,13 +30,13 @@ https://source.fluidproject.org/svn/LICENSE.txt
             $.ajax({
                 url: url,
                 success: function (returnedData) {
-                        data = JSON.parse(returnedData);
+                        model = JSON.parse(returnedData);
                     },
                 async: false
             });
             
-            component = fluid.initMyCollection(".flc-myCollection",
-                    {model: data, updateDatabaseOrder: false});
+            component = fluid.engage.myCollection(".flc-myCollection",
+                    {model: model, updateDatabaseOrder: false});
         };
 
         tests = jqUnit.testCase("My Collection Tests", setup);
@@ -63,14 +63,14 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 expect(4);
                 
                 jqUnit.assertEquals("Model length matches data length.",
-                        data.data.links.length, component.model.length);
+                        model.data.length, component.model.length);
                 
                 jqUnit.assertEquals("Model node artifact ID matches passed ID.",
-                        data.data.links[0].id, component.model[0].artifactId);
+                        model.data[0].id, component.model[0].artifactId);
                 jqUnit.assertEquals("Model node index is correct.",
                         0, component.model[0].index);
                 jqUnit.assertEquals("Model node museum matches passed museum.",
-                        data.data.links[0].museum, component.model[0].museum);
+                        model.data[0].museum, component.model[0].museum);
             });
             
             tests.test("Strings test", function () {
@@ -78,8 +78,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 
                 var expectedStatus = fluid.stringTemplate(
                     component.options.strings.statusMessageTemplate, {
-                        artifactsNumber: data.data.links.length,
-                        artifactsPlural: data.data.links.length === 1 ? "" : "s"
+                        artifactsNumber: model.data.length,
+                        artifactsPlural: model.data.length === 1 ? "" : "s"
                     }
                 );
                 
@@ -87,23 +87,6 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 
                 jqUnit.assertEquals("Correct status message.",
                         expectedStatus, status);
-            });
-            
-            tests.test("View layout", function () {
-                expect(3);
-                
-                jqUnit.assertEquals("Initial layout is grid.",
-                        "grid", component.currentView);
-                
-                component.toggleView();
-                
-                jqUnit.assertEquals("Layout is list.",
-                        "list", component.currentView);
-                
-                component.toggleView();
-                
-                jqUnit.assertEquals("Layout is grid.",
-                        "grid", component.currentView);             
             });
             
             tests.test("Reorderer", function () {

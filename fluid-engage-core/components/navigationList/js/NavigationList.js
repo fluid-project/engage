@@ -157,7 +157,9 @@ fluid = fluid || {};
         
         strings: {},
         
-        events: {},
+        events: {
+        	afterRender: null
+        },
         
         useDefaultImage: false,
                 
