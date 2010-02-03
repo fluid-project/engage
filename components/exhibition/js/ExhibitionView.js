@@ -47,6 +47,7 @@ fluid = fluid || {};
             // Prepare model for NavList
             var cataloguePreview = fluid.transform(that.model.cataloguePreview, function (artifact) {
                 return {
+                    target: artifact.target,
                     showBadge: artifact.media,
                     image: artifact.image,
                     title: artifact.title

@@ -49,7 +49,8 @@ fluid = fluid || {};
                 target: item.url,
                 image: item.imageUrl,
                 title: item.title,
-                description: item.description
+                description: item.description,
+                showBadge: item.media
             };
         });
     }
