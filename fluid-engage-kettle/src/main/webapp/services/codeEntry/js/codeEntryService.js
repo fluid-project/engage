@@ -98,14 +98,37 @@ fluid.codeEntry = fluid.codeEntry || {};
      * @param {Object} app, the Engage application.
      */
     fluid.codeEntry.initCodeEntryService = function (config, app) {
-        var handler = fluid.engage.mountRenderHandler({
+        var renderHandlerConfig = {
             config: config,
             app: app,
             target: "codeEntry/",
             source: "components/codeEntry/html/",
-            sourceMountRelative: "engage"
-        });
+            sourceMountRelative: "engage",
+            baseOptions: {
+                renderOptions: {
+                    cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
+                }
+            }
+        };
+        
+        var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
+        
+        handler.registerProducer("codeEntry", function (context, env) {
+            var strings =
+            	fluid.kettle.getBundle(renderHandlerConfig, context.urlState.params);
+                
+            var options = {};
+            if (strings) {
+            	options.strings = strings;
+            }        	 
+        	
+            var initBlock = {
+            		ID: "initBlock",
+            		functionname: "fluid.engage.codeEntry",
+            		arguments: [".flc-codeEntry", options]
+          		};	
             
-        handler.registerProducer("codeEntry", function (context, env) {});            
+            return initBlock;
+        });            
     };    
 })(jQuery);

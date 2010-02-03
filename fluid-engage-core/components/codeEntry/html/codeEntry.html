@@ -15,9 +15,12 @@
 		
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
-        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/json/js/json2.js"></script>		
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/json/js/json2.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
+		<script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
 
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/Engage.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>		
    		<script type="text/javascript" src="../../../../fluid-engage-core/components/codeEntry/js/CodeEntryView.js"></script>
 	</head>
 	<body class="fl-theme-iphone">
@@ -58,15 +61,14 @@
 					<img class="flc-button-nine" src="../../../../fluid-engage-core/components/codeEntry/images/9.png" alt="Nine"/>
 				</div>
 				<div class="fl-table-row">
-					<img src="../../../../fluid-engage-core/components/codeEntry/images/blank.png" alt="Blank"/>
+					<img src="../../../../fluid-engage-core/components/codeEntry/images/blank.png"/>
 					<img class="flc-button-zero" src="../../../../fluid-engage-core/components/codeEntry/images/0.png" alt="Zero"/>
 					<img class="flc-button-del" src="../../../../fluid-engage-core/components/codeEntry/images/del.png" alt="Delete"/>
 				</div>
 			</div>
 		</div>
 				
-        <script type="text/javascript">
-            fluid.engage.codeEntry(".flc-codeEntry", {});
+        <script id="flc-initBlock" type="text/javascript">
         </script>
 	</body>
 </html>

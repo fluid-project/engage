@@ -17,7 +17,7 @@ fluid.engage = fluid.engage || {};
 
 (function ($) {
     
-    // TODO: get the relevant museum from the url or cookie
+    // TODO: get the relevant museum
     var museum = "mccord";
     
     /**
@@ -167,7 +167,7 @@ fluid.engage = fluid.engage || {};
      * @param that, the component.
      */
     var setup = function (that) {
-        // Init back button
+    	// Init back button
         that.locate("backButton").attr("href", document.referrer);
         
         // Init heading
@@ -227,14 +227,15 @@ fluid.engage = fluid.engage || {};
     
     fluid.defaults("fluid.codeEntry", {
         selectors : {
-            "backButton": ".flc-back-button",
-            "heading": ".flc-heading",
-            "headMessage": ".flc-head-message",
-            "firstDigitField": ".flc-first-digit",
-            "secondDigitField": ".flc-second-digit",
-            "entryButtons": "img[class*=flc-button]"
+            backButton: ".flc-back-button",
+            heading: ".flc-heading",
+            headMessage: ".flc-head-message",
+            firstDigitField: ".flc-first-digit",
+            secondDigitField: ".flc-second-digit",
+            entryButtons: "img[class*=flc-button]"
         },
         strings : {
+        	title: "Enter object code",
         	header: "Enter object code",
             instruction: "Enter code from the object's label to learn more about the object.",
             redirecting: "Opening artifact page."
