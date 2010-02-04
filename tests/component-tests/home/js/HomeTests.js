@@ -15,7 +15,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
 (function ($) {
     
-    var selector = ".flc-engage-homeAndLanguage";
+    var selector = ".flc-homeAndLanguage";
     var component;
     
     var homeTests = jqUnit.testCase("Home Screen Tests", function () {
@@ -35,11 +35,13 @@ https://source.fluidproject.org/svn/LICENSE.txt
         }
     }
     
+    //TODO: 
+    //fix testing to work properly with cookies
     function tests() {
-        homeTests.test("Page load styling", function () {
+        homeTests.test("Page load styling - no Cookie set", function () {
             var sel = component.options.selectors;
             
-            stylingTests(sel.languageSelectionContent, sel.homeContent, component.options.styles.hidden);
+            stylingTests(sel.homeContent, sel.languageSelectionContent, component.options.styles.hidden);
         });
         
         homeTests.test("Language Selection page stlying", function () {

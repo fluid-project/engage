@@ -3,39 +3,39 @@
 }
 
 /* For Home Screen */
-.fl-engage-home .fl-list-thumbnails.fl-grid {
+.fl-home .fl-list-thumbnails.fl-grid {
     padding-top: 20px;
     padding-left: 10px;
 }
 
-.fl-engage-home .fl-list-thumbnails.fl-grid li {
+.fl-home .fl-list-thumbnails.fl-grid li {
     width: 100px;
     height: 100px;
 }
 
-.fl-engage-home .fl-list-thumbnails.fl-grid li .fl-table {
+.fl-home .fl-list-thumbnails.fl-grid li .fl-table {
     width: 84px;
 }
 
-.fl-engage-home .fl-list-thumbnails.fl-grid li .fl-grid-caption {
+.fl-home .fl-list-thumbnails.fl-grid li .fl-grid-caption {
     width: 84px;    
 }
 
-.fl-engage-home .fl-list-thumbnails.fl-grid li a {
+.fl-home .fl-list-thumbnails.fl-grid li a {
     background-color: rgb(255,255,255);
 }
 
 /* For Language Selection */
-.fl-engage-languageSelection .fl-navbar.fl-table .fl-table-row img.fl-table-cell {
+.fl-languageSelection .fl-navbar.fl-table .fl-table-row img.fl-table-cell {
     height: 40px;
     width: 40px;
 }
 
-.fl-engage-languageSelection li {
+.fl-languageSelection li {
     text-align: center;
 }
 
-.fl-theme-iphone .fl-engage-languageSelection [class*=fl-list]:not(.fl-list):not(.fl-grid) a,
-.fl-theme-iphone .fl-engage-languageSelection [class*=fl-list]:not(.fl-list):not(.fl-grid) a:active {
+.fl-theme-iphone .fl-languageSelection [class*=fl-list]:not(.fl-list):not(.fl-grid) a,
+.fl-theme-iphone .fl-languageSelection [class*=fl-list]:not(.fl-list):not(.fl-grid) a:active {
     background: none;
 }

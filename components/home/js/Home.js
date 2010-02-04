@@ -28,13 +28,26 @@ fluid = fluid || {};
         };
     }
     
+    function setCookie(that) {
+        fluid.engage.setCookie(that.options.cookieName, {});
+    }
+    
+    function cookieCheck(that) {
+        var cookie = fluid.engage.getCookie(that.options.cookieName);
+        
+        if (!cookie) {
+            that.showLanguageSelection();
+        }
+    }
+    
     function bindEvents(that) {
-        that.locate("languageLink").click(that.showLanguageSelection);
+        that.locate("languageSelectionLink").click(that.showLanguageSelection);
+        that.locate("languageLinks").click(that.setCookie);
     }
     
     function setup(that) {
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
-        var selectorsToIgnore = ["homeContent", "languageSelectionContent", "languageLink"];
+        var selectorsToIgnore = ["homeContent", "languageSelectionContent", "languageSelectionLink", "languageLinks"];
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
             selectorsToIgnore: selectorsToIgnore,
             rendererOptions: {
@@ -54,11 +67,16 @@ fluid = fluid || {};
             that.locate("languageSelectionContent").removeClass(hidden);
         };
         
+        that.setCookie = function () {
+            setCookie(that);
+        };
+        
         that.refreshView = function () {
             var protoTree = makeProtoComponents();
             var tree = expander(protoTree);
             that.render(tree);
             bindEvents(that);
+            cookieCheck(that);
         };
         
         setup(that);
@@ -68,15 +86,16 @@ fluid = fluid || {};
     
     fluid.defaults("fluid.engage.home", {
         selectors: {
-            homeContent: ".flc-engage-home",
-            languageSelectionContent: ".flc-engage-languageSelection",
-            homeTitle: ".flc-engage-homeTitle",
-            languageSelectionTitle: ".flc-engage-languageSelectionTitle",
-            exhibitionsCaption: ".flc-engage-homeExhibitionsCaption",
-            myCollectionCaption: ".flc-engage-homeMyCollectionCaption",
-            objectCodeCaption: ".flc-engage-homeObjectCodeCaption",
-            languageCaption: ".flc-engage-homeLanguageCaption",
-            languageLink: ".flc-engage-home-language"
+            homeContent: ".flc-home",
+            languageSelectionContent: ".flc-languageSelection",
+            homeTitle: ".flc-home-title",
+            languageSelectionTitle: ".flc-languageSelection-title",
+            exhibitionsCaption: ".flc-home-exhibitionsCaption",
+            myCollectionCaption: ".flc-home-myCollectionCaption",
+            objectCodeCaption: ".flc-home-objectCodeCaption",
+            languageCaption: ".flc-home-languageCaption",
+            languageSelectionLink: ".flc-home-language",
+            languageLinks: ".flc-languageSelection-links"
         },
         
         styles: {
@@ -90,6 +109,8 @@ fluid = fluid || {};
             languageCaption: "Change language",
             homeTitle: "McCord Museum",
             languageSelectionTitle: "Language Selection"
-        }
+        },
+        
+        cookieName: "fluid-engage"
     });
 })(jQuery);
