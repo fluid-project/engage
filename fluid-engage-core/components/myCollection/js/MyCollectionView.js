@@ -43,36 +43,6 @@ fluid = fluid || {};
             return tree;
         });
     };
-
-    /**
-     * Adds the loading style from the component, so that the loading message is displayed
-     * 
-     * @param {Object} that, the component.
-     */
-    // TODO: use toggle class
-    var addLoadingStyling = function (that) {
-        that.container.addClass(that.options.styles.load);
-    };
-
-    /**
-     * Removes the loading style from the component, so that the rendered page is displayed
-     * 
-     * @param {Object} that, the component.
-     */
-    var removeLoadingStyling = function (that) {
-        that.container.removeClass(that.options.styles.load);
-    };
-
-    /**
-     * Refreshes the reorderer.
-     * 
-     * @param {Object} that, the component.
-     */
-    var refreshReorderer = function (that) {
-        if (that.imageReorderer) {
-            that.imageReorderer.refresh();
-        }
-    };
     
     /**
      * Assigns the href attribute to the back button to document.referrer.
@@ -178,6 +148,23 @@ fluid = fluid || {};
         });
     };
     
+    var initNavigationList = function (that) {
+    	var navListModel = mapToNavListModel(that.options.model.data);
+        fluid.merge("merge", that.options.navigationList.options, {model: navListModel});
+        
+        that.navigationList = fluid.initSubcomponent(that, "navigationList",
+        		[that.locate("navListContainer"),
+        		 that.options.navigationList.options]);
+    	
+        that.navigationList.events.afterRender.addListener(that.removeLoadingStyling);
+        that.navigationList.events.afterRender.addListener(that.refreshReorderer);
+        
+        // Setup toggler for navigation list
+        that.locate("toggler").click(function () {
+        	that.navigationList.toggleLayout();
+        });
+    };
+    
     /**
      * Initializes all elements of the collection view that have not been initialized.
      * 
@@ -185,28 +172,27 @@ fluid = fluid || {};
      */
     var setup = function (that) {
     	// Create the model
-    	// TODO: get this directly from the service
+    	// TODO: get the model directly from the service
     	that.model = generateTree(that);
-    	
+
     	// Fetch navigation list template as resources
     	var navListLink = that.locate("navListLink");
-    	var template = {};
+    	var navListContainer = that.locate("navListContainer");
+    	var resourceSpec = {};
     	fluid.fetchResources({
     		navlist: {
-    			href: navListLink.attr("href")
-    		}
+    			href: navListLink.attr("href")    			
+    		},
     	}, function (resourceSpecs) {
-    		template = resourceSpecs.resourceText;
+    		var navListGroup = $(resourceSpecs.navlist.resourceText).find(".flc-navigationList-groupContainer");
+    		navListContainer.html(navListGroup.html());
+
+    		// After we have fetched the template we can initialize the navigation
+    		// list subcomponent
+        	initNavigationList(that);
     	});
     	
-    	navListLink.html(template);    	
-    	
-        // Init subcomponents      
-        var navListModel = mapToNavListModel(that.options.model.data);
-        fluid.merge("merge", that.options.navigationList.options, {model: navListModel});
-        that.navigationList = fluid.initSubcomponent(that, "navigationList",
-        		[that.locate("navListContainer"),
-        		 that.options.navigationList.options]);
+        // Init other subcomponents      
         
         that.imageReorderer = fluid.initSubcomponent(that, "imageReorderer",
                 [that.locate("myCollectionContainer"),
@@ -230,10 +216,6 @@ fluid = fluid || {};
         initBackLink(that);
 
         // Bind events
-        that.navigationList.events.afterRender.addListener(removeLoadingStyling);
-        that.navigationList.events.afterRender.addListener(refreshReorderer);        
-        that.navigationList.events.afterRender.fire(that);
-        
         that.options.imageReorderer.options.listeners.afterMove = that.afterMoveListener;
         that.options.imageReorderer.options.listeners.onBeginMove = that.onBeginMoveListener;
         that.options.imageReorderer.options.avatarCreator = that.avatarCreator;
@@ -285,6 +267,21 @@ fluid = fluid || {};
         	return that.options.model.data.length;
         };
         
+        that.removeLoadingStyling = function () {
+            that.container.removeClass(that.options.styles.load);
+        };
+
+        /**
+         * Refreshes the reorderer.
+         * 
+         * @param {Object} that, the component.
+         */
+        that.refreshReorderer = function () {
+            if (that.imageReorderer) {
+                that.imageReorderer.refresh();
+            }
+        };
+        
         setup(that);
         
         return that;
@@ -328,9 +325,10 @@ fluid = fluid || {};
             selectors: {
                 myCollectionContainer: ".flc-myCollection-imageContainer",
                 navListContainer: ".flc-navigationList",
-                navListLink: ".flc-navigationListLink",
+                navListLink: ".flc-navigationList-link",
                 backButton: ".flc-myCollection-back",
-                collectionStatus: ".flc-myCollection-status"
+                collectionStatus: ".flc-myCollection-status",
+                toggler: ".flc-myCollection-toggler"
             },
 
             styles: {

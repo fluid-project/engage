@@ -60,15 +60,13 @@ https://source.fluidproject.org/svn/LICENSE.txt
             });
             
             tests.test("Component model test", function () {
-                expect(4);
+                expect(3);
                 
                 jqUnit.assertEquals("Model length matches data length.",
                         model.data.length, component.model.length);
                 
                 jqUnit.assertEquals("Model node artifact ID matches passed ID.",
                         model.data[0].id, component.model[0].artifactId);
-                jqUnit.assertEquals("Model node index is correct.",
-                        0, component.model[0].index);
                 jqUnit.assertEquals("Model node museum matches passed museum.",
                         model.data[0].museum, component.model[0].museum);
             });
