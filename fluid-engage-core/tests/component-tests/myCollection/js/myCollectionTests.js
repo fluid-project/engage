@@ -36,14 +36,14 @@ https://source.fluidproject.org/svn/LICENSE.txt
             });
             
             component = fluid.engage.myCollection(".flc-myCollection",
-                    {model: model, updateDatabaseOrder: false});
+                    {model: model, updateDatabaseOrder: false, useReorderer: true});
         };
 
         tests = jqUnit.testCase("My Collection Tests", setup);
         
         var myCollectionTests = function () {
             tests.test("Component construction test", function () {
-                expect(6);
+                expect(8);
                 
                 jqUnit.assertNotUndefined("Component defined.", component);
                 jqUnit.assertNotNull("Component not null.", component);
@@ -54,9 +54,14 @@ https://source.fluidproject.org/svn/LICENSE.txt
                         component.imageReorderer);
                 
                 jqUnit.assertNotUndefined("User subcomponent defined.",
-                        component);
+                        component.user);
                 jqUnit.assertNotNull("User subcomponent not null.",
-                        component);
+                        component.user);
+                
+                jqUnit.assertNotUndefined("Navigation List subcomponent defined.",
+                        component.navigationList);
+                jqUnit.assertNotNull("Navigation List subcomponent not null.",
+                        component.navigationList);                
             });
             
             tests.test("Component model test", function () {

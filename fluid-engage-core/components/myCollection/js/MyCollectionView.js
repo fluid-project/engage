@@ -123,7 +123,7 @@ fluid = fluid || {};
         var path = pathname.substring(0, pathname.lastIndexOf("/"));
         var url = "http://" + location.host + path + "/reorder.js";
         
-        var toSend = fluid.stringTemplate(that.options.updateDatabaseOrderDataTemplate, 
+        var toSend = fluid.stringTemplate("uuid=%uuid&orderData=%orderData", 
             {
                 uuid: that.uuid,
                 orderData: encodeURIComponent(JSON.stringify(data))
@@ -165,6 +165,21 @@ fluid = fluid || {};
         });
     };
     
+    var initImageReorderer = function (that) {
+    	if (!that.options.useReorderer) {
+    		return;
+    	}
+    	
+        that.imageReorderer = fluid.initSubcomponent(that, "imageReorderer",
+                [that.locate("myCollectionContainer"),
+                 that.options.imageReorderer.options]);
+        
+        // Bind events
+        that.imageReorderer.events.afterMove.addListener(that.afterMoveListener);
+        that.imageReorderer.events.onBeginMove.addListener(that.onBeginMoveListener);
+        that.imageReorderer.options.avatarCreator = that.avatarCreator;
+    };
+    
     /**
      * Initializes all elements of the collection view that have not been initialized.
      * 
@@ -188,37 +203,36 @@ fluid = fluid || {};
     		navListContainer.html(navListGroup.html());
 
     		// After we have fetched the template we can initialize the navigation
-    		// list subcomponent
+    		// list subcomponent and the image reorderer subcomponent
         	initNavigationList(that);
+        	initImageReorderer(that);
     	});
     	
         // Init other subcomponents      
-        
-        that.imageReorderer = fluid.initSubcomponent(that, "imageReorderer",
-                [that.locate("myCollectionContainer"),
-                 that.options.imageReorderer.options]);
-        
-        that.user = fluid.initSubcomponent(that, "user");
+
+    	that.user = fluid.initSubcomponent(that, "user");
         that.uuid = that.user.getUuid();
     	
-        // Set the status message
-        var status = fluid.stringTemplate(
-            that.options.strings.statusMessageTemplate, {
-                artifactsNumber: that.options.model.data.length,
-                artifactsPlural: that.options.model.data.length === 1 ? "" : "s"
-            }
-        );
+        // Set the status message        
+        var collectionSize = that.getCollectionSize();
+        var status = "";
+    	if (collectionSize > 0) {
+    		status = fluid.stringTemplate(
+	            that.options.strings.statusMessageTemplate, {
+	                artifactsNumber: collectionSize,
+	                artifactsPlural: collectionSize === 1 ? "" : "s"
+	            }
+            );
+    	} else {
+    		status = that.options.strings.emptyCollectionMessage;
+    	}
+  
         that.locate("collectionStatus").text(status);
         
         that.currentView = that.options.defaultView;
         
         // Set a link target for the back button
         initBackLink(that);
-
-        // Bind events
-        that.options.imageReorderer.options.listeners.afterMove = that.afterMoveListener;
-        that.options.imageReorderer.options.listeners.onBeginMove = that.onBeginMoveListener;
-        that.options.imageReorderer.options.avatarCreator = that.avatarCreator;
     };
 
     /**
@@ -255,7 +269,7 @@ fluid = fluid || {};
             
             fluid.dom.iterateDom(item, function (node) {
                 image = node;
-                if ($(node).hasClass(".flc-myCollection-image")) {
+                if ($(node).hasClass(".flc-navigationList-image")) {
                     return "stop";
                 }
             }, false);
@@ -305,7 +319,7 @@ fluid = fluid || {};
                 type: "fluid.reorderImages",
                 options: {
                     selectors: {
-                        movables: ".flc-myCollection-movable"
+                        movables: ".flc-navigationList-items"
                     },                    
                     styles: {
                         defaultStyle: null,
@@ -338,12 +352,15 @@ fluid = fluid || {};
             strings: {
                 statusMessageTemplate:
                     "Your collection contains %artifactsNumber artifact" +
-                    "%artifactsPlural. Touch and drag the thumbnails to reorganize."
+                    "%artifactsPlural. Touch and drag the thumbnails to reorganize.",
+                emptyCollectionMessage:
+                	"Your collection is empty. Start adding artifacts to your " +
+                	"collection by using the \"Collect\" button you find on artifact screens."
             },
             
             updateDatabaseOrder: true,
             
-            updateDatabaseOrderDataTemplate: "uuid=%uuid&orderData=%orderData"
+            useReorderer: false           
         }
     );
 })(jQuery);
