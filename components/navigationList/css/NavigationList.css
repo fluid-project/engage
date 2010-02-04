@@ -1,6 +1,6 @@
 .fl-list-thumbnails > li:not(:last-child) {
-	margin-bottom: 0px;
-	border-bottom: none;
+    margin-bottom: 0px;
+    border-bottom: none;
 }
 
 .fl-theme-iphone .fl-list a {
@@ -14,9 +14,9 @@
 }
 
 .fl-list-thumbnails.fl-thumbnails-expanded.fl-grid li {
-    margin: 4px;	
+    margin: 4px;    
 }
-	
+    
 .fl-table-cell .fl-navigationList-title {
     display: none;
 }
