@@ -27,7 +27,11 @@ fluid.engage.importer = fluid.engage.importer || {};
     
     function init(that) {
         var renderer = fluid.engage.renderUtils.createRendererFunction(that.container,
-            that.options.selectors, {rendererOptions: {model: that.model, debugMode: true}});
+            that.options.selectors, {
+                rendererOptions: {
+                     autoBind:true,
+                     model: that.model, 
+                     debugMode: true}});
             
         var tree = fluid.renderer.makeProtoExpander({ELstyle: "ALL"})(that.options.protoComponents);
         tree.children.push({ID: "submit", decorators: {"jQuery": ["click", function() {
@@ -67,7 +71,7 @@ fluid.engage.importer = fluid.engage.importer || {};
             idPath: "idPath",
             dataSource: "dataSource"
         },
-        appServerUrl: "http://localhost:8080/import/import",
+        appServerUrl: "http://localhost:8080/import/import.json?db=testDatabase",
         model: {
             databaseUrl: "http://titan.atrc.utoronto.ca:5984",
             databaseName: "testDatabase",
