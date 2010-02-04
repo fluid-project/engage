@@ -205,7 +205,7 @@ fluid = fluid || {};
         },
         
         strings: {
-            categoryHeader: "Viewing %category (%size total)",
+            categoryHeader: "%category (%size total)",
             allObjects: "all objects",
             title: "%title"
         },

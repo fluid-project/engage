@@ -1,5 +1,5 @@
 {
-"upcomingCategory": "à venir (%size)",
-"currentCategory": "",
-"title": "Expositions"
+	"categoryHeader": "%category (%size total)",
+	"allObjects": "tous les objets",
+	"title": "%title"
 }
