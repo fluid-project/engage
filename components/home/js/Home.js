@@ -28,7 +28,7 @@ fluid = fluid || {};
         };
     }
     
-    function setCookie(that) {
+    function addCookie(that) {
         fluid.engage.setCookie(that.options.cookieName, {});
     }
     
@@ -42,7 +42,7 @@ fluid = fluid || {};
     
     function bindEvents(that) {
         that.locate("languageSelectionLink").click(that.showLanguageSelection);
-        that.locate("languageLinks").click(that.setCookie);
+        that.locate("languageLinks").click(that.addCookie);
     }
     
     function setup(that) {
@@ -67,8 +67,8 @@ fluid = fluid || {};
             that.locate("languageSelectionContent").removeClass(hidden);
         };
         
-        that.setCookie = function () {
-            setCookie(that);
+        that.addCookie = function () {
+            addCookie(that);
         };
         
         that.refreshView = function () {
