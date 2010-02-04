@@ -22,7 +22,6 @@ fluid = fluid || {};
             homeTitle: {messagekey: "homeTitle"},
             languageSelectionTitle: {messagekey: "languageSelectionTitle"},
             exhibitionsCaption: {messagekey: "exhibitionsCaption"},
-            collectionsCaption: {messagekey: "collectionsCaption"},
             myCollectionCaption: {messagekey: "myCollectionCaption"},
             objectCodeCaption: {messagekey: "objectCodeCaption"},
             languageCaption: {messagekey: "languageCaption"}
@@ -74,7 +73,6 @@ fluid = fluid || {};
             homeTitle: ".flc-engage-homeTitle",
             languageSelectionTitle: ".flc-engage-languageSelectionTitle",
             exhibitionsCaption: ".flc-engage-homeExhibitionsCaption",
-            collectionsCaption: ".flc-engage-homeCollectionsCaption",
             myCollectionCaption: ".flc-engage-homeMyCollectionCaption",
             objectCodeCaption: ".flc-engage-homeObjectCodeCaption",
             languageCaption: ".flc-engage-homeLanguageCaption",
@@ -87,7 +85,6 @@ fluid = fluid || {};
         
         strings: {
             exhibitionsCaption: "Exhibitions",
-            collectionsCaption: "Collections",
             myCollectionCaption: "My collection",
             objectCodeCaption: "Enter object code",
             languageCaption: "Change language",
