@@ -16,16 +16,23 @@ https://source.fluidproject.org/svn/LICENSE.txt
 (function ($) {
     
     var selector = ".flc-homeAndLanguage";
+    var cookieName = "fluid.engage.home-unitTest";
     var component;
     
-    var homeTests = jqUnit.testCase("Home Screen Tests", function () {
-        homeTests.fetchTemplate("../../../../components/home/html/home.html", selector);
-        component = fluid.engage.home(selector);
-    });
+    function deleteCookie() {
+        fluid.engage.deleteCookie(cookieName);
+    }   
     
-    function stylingTests(styled, unStyled, className) {
-        jqUnit.assertTrue("Has class: " + className, $(styled).hasClass(className));
-        jqUnit.assertFalse("Does not have class: " + className, $(unStyled).hasClass(className));
+    function stylingTests(component, styled, unStyled, className, funcName) {
+        var sel = component.options.selectors;
+        var cName = component.options.styles[className];
+        
+        if (funcName) {
+            component[funcName]();
+        }
+        
+        jqUnit.assertTrue(styled + " has class: " + cName, $(sel[styled]).hasClass(cName));
+        jqUnit.assertFalse(unStyled + " does not have class: " + cName, $(sel[unStyled]).hasClass(cName));
     }
     
     function testStringApplication(strings, selectors) {
@@ -35,28 +42,40 @@ https://source.fluidproject.org/svn/LICENSE.txt
         }
     }
     
-    //TODO: 
-    //fix testing to work properly with cookies
-    function tests() {
-        homeTests.test("Page load styling - no Cookie set", function () {
-            var sel = component.options.selectors;
-            
-            stylingTests(sel.homeContent, sel.languageSelectionContent, component.options.styles.hidden);
-        });
+    $(document).ready(function () {
         
-        homeTests.test("Language Selection page stlying", function () {
-            var sel = component.options.selectors;
-            
-            component.showLanguageSelection();
-            stylingTests(sel.homeContent, sel.languageSelectionContent, component.options.styles.hidden);
+        //Tests for page load without cookie
+        var homeTests = jqUnit.testCase("Home Screen Tests", function () {
+            homeTests.fetchTemplate("../../../../components/home/html/home.html", selector);
+            component = fluid.engage.home(selector, {cookieName: cookieName});
+        }, deleteCookie);
+        
+        homeTests.test("Page load styling", function () {
+            stylingTests(component, "homeContent", "languageSelectionContent", "hidden");
         });
         
         homeTests.test("Strings applied", function () {
             testStringApplication(component.options.strings, component.options.selectors);
         });
-    }
-    
-    $(document).ready(function () {
-        tests();
+        
+        homeTests.test("Adding the cookie", function () {
+            component.addCookie();
+            jqUnit.assertTrue("Cookie added properly", fluid.engage.getCookie(cookieName));
+        });
+        
+        //Tests for page load with cookie. 
+        var homeTestsWithCookie = jqUnit.testCase("Home Screen Tests With Cookie Pre-set", function () {
+            homeTests.fetchTemplate("../../../../components/home/html/home.html", selector);
+            fluid.engage.setCookie(cookieName, {});
+            component = fluid.engage.home(selector, {cookieName: cookieName});
+        }, deleteCookie); 
+        
+        homeTestsWithCookie.test("Page load styling - with Cookie already set", function () {
+            stylingTests(component, "languageSelectionContent", "homeContent", "hidden");
+        });
+        
+        homeTestsWithCookie.test("Language Selection page stlying", function () {
+            stylingTests(component, "homeContent", "languageSelectionContent", "hidden", "showLanguageSelection");
+        });
     });
 })(jQuery);
