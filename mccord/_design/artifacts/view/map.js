@@ -4,7 +4,7 @@ function (doc) {
         'accessNumber': artifact.label.accessnumber,
         'lang': artifact.lang 
     }, {
-        'title': artifact.label.title,
+        'title': artifact.label.title || artifact.label.object,
         'artist': artifact.label.artist,
         'dated': artifact.label.dated,
         'medium': artifact.label.medium,
