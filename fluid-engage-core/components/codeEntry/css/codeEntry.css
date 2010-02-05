@@ -10,7 +10,14 @@
     width: 320px;
     height: 80px;
     margin: auto;
+    margin-top: 10px;
+    margin-bottom: 0px;
     text-align: center;
+}
+
+.fl-invalid-code {
+	color: white;
+	background-color: 464646;
 }
 
 .flc-entry-block {

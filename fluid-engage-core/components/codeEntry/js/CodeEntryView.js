@@ -61,6 +61,8 @@ fluid.engage = fluid.engage || {};
     	// Replace the invalid code message with something...
     	that.locate("headMessage").text(that.options.strings.redirecting);
     	
+        toggleHeadMessageStyle(that);
+    	
         setTimeout(redirectFunction, that.options.redirectDelay);
     };
     
@@ -71,7 +73,8 @@ fluid.engage = fluid.engage || {};
      */
     var wrongCodeSequence = function (that) {
         var invalidCodeBlock = that.locate("headMessage");
-        invalidCodeBlock.html("<img src=\"../../../../fluid-engage-core/components/codeEntry/images/invalid-code.png\" alt=\"Invalid code.\"/>");
+        invalidCodeBlock.text(that.options.strings.invalidCode);
+        toggleHeadMessageStyle(that);
         
         invalidCodeBlock.show(250, function () {
             resetEntry(that);
@@ -160,6 +163,15 @@ fluid.engage = fluid.engage || {};
             });         
         }
     };
+
+    /**
+     * Toggles the style of the head div to invalid code message style and off
+     * 
+     * @param {Object} that, the component.
+     */
+    var toggleHeadMessageStyle = function (that) {
+    	that.locate("headMessage").toggleClass(that.options.styles.invalidCode);
+    };
     
     /**
      * Initializes the component view.
@@ -186,7 +198,7 @@ fluid.engage = fluid.engage || {};
         for (var i = 0; i < buttons.length; i++) {
             attachButtonHandler(that, buttons[i], i + 1);
         }
-    };
+    };  
     
     /**
      * Component's creator function.
@@ -234,10 +246,14 @@ fluid.engage = fluid.engage || {};
             secondDigitField: ".flc-second-digit",
             entryButtons: "img[class*=flc-button]"
         },
+        styles : {
+        	invalidCode: "fl-invalid-code"
+        },
         strings : {
         	title: "Enter object code",
         	header: "Enter object code",
             instruction: "Enter code from the object's label to learn more about the object.",
+            invalidCode: "Invalid code. Please try again",
             redirecting: "Opening artifact page."
         },
         redirectDelay: 1000,
