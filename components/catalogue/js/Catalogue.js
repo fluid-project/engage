@@ -17,15 +17,26 @@ fluid = fluid || {};
 
 (function ($) {
     
-    function makeProtoComponents(model, navLists) {
-        return { 
+    var bindNavListToggle = function (that) {
+        that.locate("catalogueThemeToggle").click(function (evt) {
+            $.each(that.navLists, function (idx, navList) {
+                navList.that.toggleLayout();
+            });
+
+            evt.preventDefault();
+        });
+    };
+    
+    var assembleTree = function (that) {
+        that.navLists = [];
+        var protoTree = { 
             exhibitionTitle: "%title",
             linkToArtifacts: {target: "%allArtifactsViewURL"},
             linkToArtifactsText: {messagekey: "linkToArtifacts", args: {size: "%numArtifacts"}},
             catalogueThemes: { 
-                children: fluid.transform(model.themes || [], function (theme, index) {
+                children: fluid.transform(that.model.themes || [], function (theme, index) {
                     var thisTheme = "%themes." + index + ".";
-                    navLists[index] = {
+                    that.navLists[index] = {
                         type: "fluid",
                         func: "fluid.navigationList",
                         options: {model: theme.artifacts}
@@ -40,19 +51,15 @@ fluid = fluid || {};
                                 size: thisTheme + "numArtifacts"
                             }
                         },
-                        decorators: navLists[index]
+                        decorators: that.navLists[index]
                     };
                 })
             }
         };
-    }
-
-    
-    function assembleTree(model, expander, navLists) {
-        var protoTree = makeProtoComponents(model, navLists);
-        var fullTree = expander(protoTree);
-        return fullTree;
-    }
+        
+        var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
+        return expander(protoTree);
+    };
     
     var setup = function (that) {
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
@@ -69,26 +76,13 @@ fluid = fluid || {};
         that.refreshView();
     };
     
-    var activateToggler = function (that, navLists) {
-        that.locate("catalogueThemeToggle").click(function () {
-            fluid.transform(navLists || [], function (navList) {
-                navList.that.toggleLayout();
-            });
-            return false;
-        });
-    };
-    
     fluid.catalogue = function (container, options) {
         var that = fluid.initView("fluid.catalogue", container, options);        
         that.model = that.options.model;
         
-        var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
-        
         that.refreshView = function () {
-            var navLists = [];
-            var tree = assembleTree(that.model, expander, navLists);
-            that.render(tree);
-            activateToggler(that, navLists);
+            that.render(assembleTree(that));
+            bindNavListToggle(that);
             that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
         };
         
