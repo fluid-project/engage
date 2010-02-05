@@ -11,6 +11,7 @@
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-transitions.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationBar/css/NavigationBar.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/description/css/Description.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/cabinet/css/Cabinet.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationList/css/NavigationList.css" />
@@ -29,6 +30,7 @@
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script> 
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/iPhoneChromeless.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationBar/js/NavigationBar.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/components/description/js/Description.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/components/cabinet/js/Cabinet.js"></script> 
         <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationList/js/NavigationList.js"></script>
@@ -37,9 +39,25 @@
         
     </head>
     <body class="flc-browse fl-theme-iphone fl-browse-loading">
-        <div class="fl-navbar fl-table">
-            <h1 class="flc-browse-title fl-table-cell"></h1>
-            <a class="flc-browse-navlist-toggle" href="#">TOGGLE</a>
+        <!-- Navigation Bar and Header -->
+        <div class="flc-navigationBar fl-navbar fl-table">
+            <div class="fl-table-row">
+                
+                <!-- Back button -->
+                <div class="fl-table-cell">
+                    <a rsf:id="scr=null" class="flc-navigationBar-back fl-button fl-backButton" href="#">
+                        <span class="fl-button-inner">Back</span>
+                    </a>
+                </div>
+                <!-- Home button -->
+                <div class="fl-table-cell">
+                    <a rsf:id="scr=null" class="flc-navigationBar-home fl-button" href="#">
+                        <span class="fl-button-inner">Home</span>
+                    </a>
+                </div>
+                <!-- Page header -->
+                <h1 class="flc-browse-title fl-table-cell">Browse</h1>
+            </div>
         </div>
         
         <!-- loading message -->
