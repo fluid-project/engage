@@ -25,6 +25,10 @@ fluid = fluid || {};
         };
     }
 
+    var setupSubcomponents = function (that) {
+        that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
+    };
+
     fluid.engage.guestbook = function (container, options) {
         var that = fluid.initView("fluid.engage.guestbook", container, options);        
         that.model = that.options.model;
@@ -42,6 +46,10 @@ fluid = fluid || {};
     };
     
     fluid.defaults("fluid.engage.guestbook", {
+        navigationBar: {
+            type: "fluid.engage.navigationBar"
+        },
+        
         navigationList: {
             type: "fluid.navigationList",
             options: {

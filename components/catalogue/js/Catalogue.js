@@ -89,6 +89,7 @@ fluid = fluid || {};
             var tree = assembleTree(that.model, expander, navLists);
             that.render(tree);
             activateToggler(that, navLists);
+            that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
         };
         
         setup(that);
@@ -96,6 +97,14 @@ fluid = fluid || {};
     };
     
     fluid.defaults("fluid.catalogue", {
+        navigationBar: {
+            type: "fluid.engage.navigationBar"
+        },
+        
+        navigationList: {
+            type: "fluid.navigationList"
+        },
+        
         selectors: {
             exhibitionTitle: ".flc-catalogue-title",
             linkToArtifacts: ".flc-catalogue-linkToArtifacts",
@@ -105,10 +114,6 @@ fluid = fluid || {};
             linkToThemeArtifacts: ".flc-catalogue-linkToThemeArtifacts",
             linkToThemeArtifactsText: ".flc-catalogue-linkToThemeArtifactsText",
             catalogueThemeToggle: ".flc-catalogue-navlist-toggle"
-        },
-        
-        navigationList: {
-            type: "fluid.navigationList"
         },
         
         strings: {
