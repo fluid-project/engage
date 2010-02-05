@@ -47,7 +47,10 @@ fluid.catalogueService = fluid.catalogueService || {};
         return fluid.stringTemplate(config.viewURLTemplateWithKey, {
             dbName: params.db || "", 
             view: config.views.catalogueByTitle, 
-            key: '"' + params.title + '"'
+            key: JSON.stringify({
+                title: params.title,
+                lang: params.lang
+            })
         });
     };
     
@@ -57,20 +60,19 @@ fluid.catalogueService = fluid.catalogueService || {};
     
     var compileArtifacts = function (artifacts, params) {
         var baseArtifactURL = "../artifacts/view.html";
-        var artifactsArray = [];
-        for (var i = 0; i < artifacts.length && i < 4; i++) {
-            var artifact = artifacts[i];
-            artifactsArray.push({
-                artifactViewURL: compileTargetURL(baseArtifactURL, {
-                    db: params.db.substring(0, params.db.indexOf("_")),
-                    q: artifact.accessNumber
-                }),
-                imageURL: artifact.imageURL,
+        return fluid.transform(artifacts, function (artifact) {
+            return {
+                description: artifact.description,
+                showBadge: artifact.media,
                 title: artifact.title,
-                description: artifact.description
-            });
-        }
-        return artifactsArray;
+                image: artifact.image,
+                target: compileTargetURL(baseArtifactURL, {
+                    db: params.db.slice(0, params.db.indexOf('_')),
+                    accessNumber: artifact.accessionNumber,
+                    lang: params.lang
+                })
+            }
+        });
     };
     
     var compileTheme = function (themes, exhibitionTitle, params, baseURL) {
@@ -81,7 +83,8 @@ fluid.catalogueService = fluid.catalogueService || {};
                 allArtifactsViewURL: compileTargetURL(baseURL, {
                     db: params.db,
                     exhibition: exhibitionTitle,
-                    title: theme.title
+                    title: theme.title,
+                    lang: params.lang
                 }),
                 numArtifacts: theme.numArtifacts,
                 artifacts: compileArtifacts(theme.artifacts, params)
@@ -97,7 +100,8 @@ fluid.catalogueService = fluid.catalogueService || {};
             allArtifactsViewURL: compileTargetURL(baseCatalogueURL, {
                 db: params.db,
                 exhibition: data.title,
-                title: "viewAll"
+                title: "viewAll",
+                lang: params.lang
             }),
             numArtifacts: data.numArtifacts,
             themes: compileTheme(data.themes, data.title, params, baseCatalogueURL)
@@ -122,7 +126,7 @@ fluid.catalogueService = fluid.catalogueService || {};
     };
     
     fluid.catalogueService.initCatalogueService = function (config, app) {
-        var handler = fluid.engage.mountRenderHandler({
+        var renderHandlerConfig = {
             config: config,
             app: app,
             target: "catalogue/",
@@ -133,14 +137,19 @@ fluid.catalogueService = fluid.catalogueService || {};
                     cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
                 }
             }
-        });
+        };
+        var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
             
         handler.registerProducer("view", function (context, env) {
             var params = context.urlState.params;
             var data = getData(errorCallback, params, config);
+            var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
             var options = {
                 model: afterMap(data, params)
             };
+            if (strings) {
+                strings.options = strings;
+            }
             
             return {
                 ID: "initBlock",

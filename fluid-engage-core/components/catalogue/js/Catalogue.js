@@ -16,17 +16,6 @@ https://source.fluidproject.org/svn/LICENSE.txt
 fluid = fluid || {};
 
 (function ($) {
-
-    function mapToNavListModel(artifacts) {
-        return fluid.transform(artifacts, function (artifact) {
-            return {
-                target: artifact.artifactViewURL,
-                image: artifact.imageURL,
-                title: artifact.title,
-                description: artifact.description
-            };
-        });
-    }
     
     function makeProtoComponents(model, navLists) {
         return { 
@@ -39,7 +28,7 @@ fluid = fluid || {};
                     navLists[index] = {
                         type: "fluid",
                         func: "fluid.navigationList",
-                        options: {model: mapToNavListModel(theme.artifacts)}
+                        options: {model: theme.artifacts}
                     };
                     return {
                         catalogueTheme: thisTheme + "title",

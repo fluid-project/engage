@@ -49,32 +49,18 @@ fluid = fluid || {};
                 target: item.url,
                 image: item.imageUrl,
                 title: item.title,
-                description: item.description
+                description: item.description,
+                showBadge: item.media
             };
         });
     }
     
     function makeProtoComponents(that, navLists) {
         return { 
-            title: {messagekey: "%title"},
-            browseContents: that.options.useCabinet ? {
-                decorators: [{
-                    type: "fluid",
-                    func: "fluid.cabinet",
-                    options: fluid.copy(that.options.cabinet.options)
-                }]
-            } : {},
-            browseDescriptionContainer: that.model.description ? {
-                decorators: [{
-                    type: "fluid",
-                    func: "fluid.description",
-                    options: fluid.merge("merge", fluid.copy(that.options.description.options), {model: that.model.description})
-                }]
-            } : "",
+            title: that.model.title ? {messagekey: "title", args: {title: "%title"}} : "",
             lists: { 
                 children: fluid.transform(that.model.categories || [], function (category, index) {
                     var description = category.description;
-                    var name = fluid.stringTemplate(that.options.strings[category.name], {size: category.items.length});
                     navLists[index] = {
                         type: "fluid",
                         func: "fluid.navigationList",
@@ -85,14 +71,22 @@ fluid = fluid || {};
                             decorators: navLists[index]
                         }
                     };
-                    if (name) {
+                    
+                    // TODO: This whole issue of whether or not to render headers speaks to the fact that we actually
+                    // need to do some refactoring to Cabinet and Browse. In the meantime, this is ugly.
+                    if (index > 0 || that.options.showHeaderForFirstCategory) {
+                        var headerValues = {
+                            category: category.name === "viewAll" ? that.options.strings.allObjects : category.name, 
+                            size: category.items.length
+                        };
+                        var localizedName = fluid.stringTemplate(that.options.strings.categoryHeader, headerValues);
                         child.cabinetHandle = description ? {
                             decorators: [{
                                 type: "addClass",
                                 classes: that.options.styles.listHeaderDescription
                             }]
                         } : {};
-                        child.listHeader = name;
+                        child.listHeader = localizedName;
                         if (description) {
                             child.listHeaderDescription = description;
                         }
@@ -118,7 +112,7 @@ fluid = fluid || {};
         bindEvents(that);
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
-            selectorsToIgnore: ["browseDescription", "toggle"],
+            selectorsToIgnore: ["browseDescription", "toggle", "browseContents"],
             repeatingSelectors: ["lists"],
             rendererOptions: {
                 messageLocator: messageLocator,
@@ -155,6 +149,9 @@ fluid = fluid || {};
             var tree = assembleTree(that, expander, navLists);
             that.render(tree);
             activateToggler(that, navLists);
+            if (that.options.useCabinet) {
+                initCabinet(that);
+            }
         };
         
         setup(that);
@@ -208,10 +205,9 @@ fluid = fluid || {};
         },
         
         strings: {
-            upcomingCategory: "Upcoming (%size)",
-            currentCategory: "",
-            title: "Exhibitions",
-            "Related Web Tours": ""           
+            categoryHeader: "%category (%size total)",
+            allObjects: "all objects",
+            title: "%title"
         },
         
         events: {
@@ -220,9 +216,10 @@ fluid = fluid || {};
         
         useCabinet: false,
         
-        title: null,
+        showHeaderForFirstCategory: true,
         
         model: {
+            title: "",
             categories: [
                 {
                     name: "",

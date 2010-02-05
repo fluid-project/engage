@@ -4,9 +4,9 @@ handlerFunction: "fluid.kettle.servlet.process",
 includes: "kettle/KettleIncludes.json",
 includesPrefix: "kettle/",
 loaderFunction: "fluid.engage.initEngageApp",
-queryURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
-viewURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/%view",
-viewURLTemplateWithKey: "http://titan.atrc.utoronto.ca:5984/%dbName/%view?key=%key",
+queryURLTemplate: "http://142.150.154.59:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
+viewURLTemplate: "http://142.150.154.59:5984/%dbName/%view",
+viewURLTemplateWithKey: "http://142.150.154.59:5984/%dbName/%view?key=%key",
 myCollectionQueryURLTemplate: "http://unistud.asteasolutions.net:11929/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
 myCollectionDocumentURLTemplate: "http://unistud.asteasolutions.net:11929/%dbName/%id",
 initServices: [
@@ -18,8 +18,6 @@ initServices: [
     "fluid.engageDemo.initEngageDemo",
     "fluid.kettleDemo.initCherryDemo",
     "fluid.kettleDemo.initJSGIHandlerDemo",
-    "fluid.exhibitionService.initExhibitionBrowseService",
-    "fluid.exhibitionService.initExhibitionBrowseDataFeed",
     "fluid.exhibitionService.initExhibitionViewService",
     "fluid.exhibitionService.initExhibitionViewDataFeed",
     "fluid.exhibitionService.initExhibitionAboutService",
@@ -38,9 +36,10 @@ views: {
     all: "all",
     byCollectionCategory: "by_collection_category",
     exhibitionByTitle: "_design/exhibitions/_view/view",
-    catalogueByTitle: "_design/catalogue/_view/viewWithArtifacts",
-    catalogueArtifacts: "_design/catalogueArtefacts/_view/view",
+    catalogueByTitle: "_design/catalogue/_view/view",
+    catalogueArtifacts: "_design/catalogue/_view/browse",
     exhibitions: "_design/exhibitions/_view/browse",
+    artifactByAccession: "_design/artifacts/_view/view"
     byUserCollection: "by_user_collection",
     byUserArtifact: "by_user_artifact",
 	byId: "by_id"
@@ -63,5 +62,5 @@ mount: {
         source: "services/kettleDemo/"
       }
     },
-debugMode: false
+debugMode: true
 }

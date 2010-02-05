@@ -17,49 +17,86 @@ fluid = fluid || {};
 fluid.exhibitionService = fluid.exhibitionService || {};
 
 (function ($) {
+
+    fluid.engage.exhibitionDataSource = fluid.kettle.dataSource({
+        source: {
+            type: "fluid.kettle.couchDBSource",
+            urlBuilder: {
+                funcName: "fluid.stringTemplate",
+                args: ["{config}.viewURLTemplateWithKey", 
+                {
+                    dbName: "${db}_exhibitions",
+                    view: "{config}.views.exhibitions",
+                    key: '"${lang}"'
+                }]
+            }
+        },
+        outputMapper: "fluid.engage.exhibitionMapper"
+    });
     
-    var errorCallback = function (XMLHttpRequest, textStatus, errorThrown) {
-        fluid.log("XMLHttpRequest: " + XMLHttpRequest);
-        fluid.log("Status: " + textStatus);
-        fluid.log("Error: " + errorThrown);
-        return [500, {"Content-Type": "text/plain"}, errorThrown];
-    };
+        
+    fluid.kettle.dataSpout({
+        url: "exhibitions/browse",
+        contentType: "JSON",
+        source: {name: "fluid.engage.exhibitionDataSource",
+            args: [{db: "{params}.db", lang: "{params}.lang"}]
+        }
+    });
+        
+    fluid.kettle.markupSpout({
+        renderHandlerConfig: {
+            target: "exhibitions/",
+            source: "components/browse/html/",
+            sourceMountRelative: "engage",
+            baseOptions: {
+                renderOptions: {
+                    cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
+                }
+            }
+        },
+        producers: {
+            "browse": function (context, renderHandlerConfig) {
+                var params = context.urlState.params;
+                var data = fluid.engage.exhibitionDataSource.get({db: params.db, lang: params.lang});
+                if (!data.isError) {
+                    // TODO: We're hand-altering the configuration for getBundle(), since by default it assumes that all language bundles
+                    // are located relative to the HTML template. In this case, however, we've got feeds using the same template but
+                    // applying a different set of strings to it.
+                    var strings = fluid.kettle.getBundle({
+                        config: renderHandlerConfig.config,
+                        source: "components/exhibitionBrowse/html/",
+                        sourceMountRelative: "engage"
+                    }, params);
+                    var options = {
+                        showHeaderForFirstCategory: false,
+                        model: data.data,
+                        useCabinet: true
+                    };
+                    if (strings) {
+                        options.strings = strings;
+                    }
+                    
+                    return {tree: {
+                        ID: "initBlock", 
+                        functionname: "fluid.browse", 
+                        "arguments": [".flc-browse", options]
+                    }};
+                }
+                return data;
+            }
+        }
+    });
     
-    var ajaxCall = function (url, success, error) {
-        $.ajax({
-            url: url,
-            dataType: "json",
-            asyn: false,
-            success: success,
-            error: error
-        });
-    };
-    
-    var getAjax = function (url, error) {
-        var data;
-        var success = function (returnedData, status) {
-            data = JSON.parse(returnedData.substring(0, returnedData.length - 1)); //BUG - Doesn't parse with last \n.
-        };        
-        ajaxCall(url, success, error);        
-        return data;
-    };
-    
-    var compileDatabaseURL = function (db, config) {
-        return fluid.stringTemplate(config.viewURLTemplate, 
-            {dbName: db + "_exhibitions" || "", view: config.views.exhibitions});
-    };
     
     var compileTargetURL = function (URLBase, params) {
         return URLBase + "?" + $.param(params);
     };
     
-    var getData = function (errorCallback, db, config) {
-        var url = compileDatabaseURL(db, config);
-        var rawData = getAjax(url, errorCallback);
-        var dbName = db + "_exhibitions";
+    fluid.engage.exhibitionMapper = function (model, options) {
+        var dbName = options.db + "_exhibitions";
         var baseExhibitionURL = "view.html";
         var baseUpcomingExhibitionURL = "about.html";
-        var data = fluid.transform(rawData.rows, function (value) {
+        var data = fluid.transform(model.rows, function (value) {
             return fluid.engage.mapModel(value, dbName);
         });
         
@@ -81,7 +118,8 @@ fluid.exhibitionService = fluid.exhibitionService || {};
                     title: exhibition.title,
                     url: compileTargetURL(exhibition.isCurrent ? baseExhibitionURL : baseUpcomingExhibitionURL, {
                         db: dbName,
-                        title: exhibition.title
+                        title: exhibition.title,
+                        lang: options.lang
                     }),
                     displayDate: exhibition.displayDate,
                     endDate: exhibition.endDate
@@ -97,24 +135,11 @@ fluid.exhibitionService = fluid.exhibitionService || {};
             return [current, upcoming];
         };
         
-        var model = {
+        var togo = {
             categories: sortExhibitions(data)
-        };        
-        return model;
-    };
-    
-    fluid.exhibitionService.initExhibitionBrowseDataFeed = function (config, app) {
-        var exhibitionsDataHandler = function (env) {
-            var data = JSON.stringify(getData(errorCallback, env.urlState.params.db, config));
-            return [200, {"Content-Type": "text/plain"}, data];
         };
-    
-        var acceptor = fluid.engage.makeAcceptorForResource("browse", "json", exhibitionsDataHandler);
-        fluid.engage.mountAcceptor(app, "exhibitions", acceptor);
-    };
-    
-    var afterMap = function (data) {
-        data.categories = fluid.transform(data.categories, function (category) {
+        
+        togo.categories = fluid.transform(togo.categories, function (category) {
             return {
                 name: category.isCurrent ? "currentCategory" : "upcomingCategory",
                 items: fluid.transform(category.exhibitions, function (exhibition) {
@@ -128,44 +153,8 @@ fluid.exhibitionService = fluid.exhibitionService || {};
                 })
             };
         });
-        data.title = "title";
-        return data;
-    };
-    
-    fluid.exhibitionService.initExhibitionBrowseService = function (config, app) {
-        var renderHandlerConfig = {
-            config: config,
-            app: app,
-            target: "exhibitions/",
-            source: "components/browse/html/",
-            sourceMountRelative: "engage",
-            baseOptions: {
-                renderOptions: {
-                    cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
-                }
-            }
-        };
-        var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
-            
-        handler.registerProducer("browse", function (context, env) {
-            var params = context.urlState.params;
-            var data = getData(errorCallback, params.db, config);
-            var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
-            var options = {
-                model: afterMap(data),
-                useCabinet: true
-            };
-            if (strings) {
-                options.strings = strings;
-            }
-
-            return {
-                ID: "initBlock", 
-                functionname: "fluid.browse", 
-                "arguments": [".flc-browse", options]
-            };
-        });
-            
+        togo.title = "title";        
+        return togo;
     };
     
 })(jQuery);

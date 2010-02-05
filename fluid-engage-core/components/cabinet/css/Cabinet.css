@@ -10,14 +10,14 @@
 }
 
 .fl-collapsable {
-	margin: 12px;
+    margin: 12px;
 }
 .fl-cabinet-animation {
     -webkit-transition: max-height 0.75s ease-in;
 }
 
 .fl-collapsingPanel.fl-cabinet-drawerClosed > *:first-child {
-	-webkit-border-radius:8px;
+    -webkit-border-radius:8px;
 }
 
 .fl-theme-iphone .fl-container-autoHeading > :first-child {
@@ -26,7 +26,7 @@
 }
 [class*=fl-container]:not(.fl-navbar),
 [class*=fl-list] {
-	margin:0;
+    margin:0;
 }
 
 [class*=fl-container] [class*=fl-list] > li:last-child,
@@ -34,5 +34,5 @@
 
 .fl-container-autoHeading > *:first-child,
 .fl-container-collapsable {
-	-webkit-border-radius:0;
+    -webkit-border-radius:0;
 }

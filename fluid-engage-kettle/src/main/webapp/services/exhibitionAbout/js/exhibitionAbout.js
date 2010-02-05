@@ -28,7 +28,10 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         return fluid.stringTemplate(config.viewURLTemplateWithKey, {
             dbName: params.db || "", 
             view: config.views.exhibitionByTitle, 
-            key: '"' + params.title + '"'
+            key: JSON.stringify({
+                title: params.title,
+                lang: params.lang
+            })
         });
     };
     
@@ -58,10 +61,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     var getData = function (errorCallback, params, config) {
         var url = compileDatabaseURL(params, config);
         var rawData = getAjax(url, errorCallback);
-        var baseCatalogueURL = "../catalogue/view.html";
         var exhibitionData = fluid.engage.mapModel(rawData.rows[0], params.db + "_view");
-        exhibitionData.displayDate = exhibitionData.displayDate === "Permanent exhibition" ? 
-            "Permanent" : "Through " + exhibitionData.endDate;
         return exhibitionData;
     };
     
@@ -75,7 +75,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     };
     
     fluid.exhibitionService.initExhibitionAboutService = function (config, app) {
-        var handler = fluid.engage.mountRenderHandler({
+        var renderHandlerConfig = {
             config: config,
             app: app,
             target: "exhibitions/",
@@ -86,12 +86,18 @@ fluid.exhibitionService = fluid.exhibitionService || {};
                     cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
                 }
             }
-        });
+        };
+        var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
             
         handler.registerProducer("about", function (context, env) {
+            var params = context.urlState.params;
+            var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
             var options = {
                 model: getData(errorCallback, context.urlState.params, config)
             };
+            if (strings) {
+                options.strings = strings;
+            }
 
             return {
                 ID: "initBlock",
