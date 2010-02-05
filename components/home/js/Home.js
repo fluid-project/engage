@@ -9,7 +9,7 @@
  https://source.fluidproject.org/svn/LICENSE.txt
  
  */
-/*global jQuery, fluid*/
+/*global window, jQuery, fluid*/
 
 fluid = fluid || {};
 
@@ -41,8 +41,18 @@ fluid = fluid || {};
     }
     
     function bindEvents(that) {
+        function setLanguage(evt) {
+            var node = $(this);
+            var currentHREF = node.attr("href");
+            var param = window.location.search;
+            var idxQ = currentHREF.indexOf("?");
+            
+            node.attr("href", currentHREF + (idxQ < 0 ? param : "&" + param.substr(1)));
+        }
+        
         that.locate("languageSelectionLink").click(that.showLanguageSelection);
         that.locate("languageLinks").click(that.addCookie);
+        that.locate("links").click(setLanguage);
     }
     
     function setup(that) {
@@ -95,7 +105,8 @@ fluid = fluid || {};
             objectCodeCaption: ".flc-home-objectCodeCaption",
             languageCaption: ".flc-home-languageCaption",
             languageSelectionLink: ".flc-home-language",
-            languageLinks: ".flc-languageSelection-links"
+            languageLinks: ".flc-languageSelection-links",
+            links: ".flc-home-links"
         },
         
         styles: {
