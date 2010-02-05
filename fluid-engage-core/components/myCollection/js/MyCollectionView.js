@@ -137,7 +137,15 @@ fluid = fluid || {};
         });
     };            
 
+    /**
+     * Make a model for the navigation list subcomponent
+     * 
+     * @param model, the My Collection model
+     */
     var mapToNavListModel = function (model) {
+    	if (model.length == 0) {
+    		return [];
+    	}
         return fluid.transform(model, function (artifact) {
             return {
                 target: artifact.target,
@@ -147,7 +155,11 @@ fluid = fluid || {};
             };
         });
     };
-    
+
+    /**
+     * Isolate the initialization of the navigation list here
+     * @param that, the component
+     */
     var initNavigationList = function (that) {
     	var navListModel = mapToNavListModel(that.options.model.data);
         fluid.merge("merge", that.options.navigationList.options, {model: navListModel});
@@ -163,7 +175,11 @@ fluid = fluid || {};
         	that.navigationList.toggleLayout();
         });
     };
-    
+
+    /**
+     * Isolate the initialization of the image reorderer here
+     * @param that, the component
+     */
     var initImageReorderer = function (that) {
     	if (that.options.useReorderer) {
 	        that.imageReorderer = fluid.initSubcomponent(that, "imageReorderer",
@@ -190,6 +206,7 @@ fluid = fluid || {};
     	var navListLink = that.locate("navListLink");
     	var navListContainer = that.locate("navListContainer");
     	var resourceSpec = {};
+
     	fluid.fetchResources({
     		navlist: {
     			href: navListLink.attr("href"),
@@ -207,13 +224,14 @@ fluid = fluid || {};
         	initImageReorderer(that);
     	});
 
-        // User
+    	// User
     	that.user = fluid.initSubcomponent(that, "user");
         that.uuid = that.user.getUuid();
     	
         // Set the status message        
         var collectionSize = that.getCollectionSize();
         var status = "";
+        
     	if (collectionSize > 0) {
     		status = fluid.stringTemplate(
 	            that.options.strings.statusMessageTemplate, {

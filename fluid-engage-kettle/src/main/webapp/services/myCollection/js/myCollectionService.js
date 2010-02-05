@@ -25,7 +25,7 @@ fluid.myCollection = fluid.myCollection || {};
      * @param query, the query to perform.
      */
     var compileArtifactQueryURL = function (config, database, query) {
-        return fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
+        return fluid.stringTemplate(config.queryURLTemplate, 
                 {dbName: database || "", view: config.views.byId, query: query || ""});
     };
     
@@ -171,6 +171,9 @@ fluid.myCollection = fluid.myCollection || {};
      *  @param {Object} config, the JSON config file for Engage.
      */
     var assembleData = function (uuid, config) {
+    	if (!uuid) {
+            return {model: {data: []}};
+    	}
         var rawData = fluid.myCollection.common.getCollection(uuid, config);
 
         var urls = compileDataURLs(config, rawData);
@@ -230,7 +233,13 @@ fluid.myCollection = fluid.myCollection || {};
         });
         
         handler.registerProducer("myCollection", function (context, env) {
-        	var uuid = env.QUERY_STRING.substring("uuid=".length);
+        	var query = env.QUERY_STRING;
+        	var uuid;
+        	var idx = query.indexOf("uuid=");
+        	if (idx > 0) {
+        		var endIdx = query.indexOf("&", idx);
+        		uuid = env.QUERY_STRING.substring(idx + "uuid=".length, endIdx);
+        	}
         	
             var initBlock = {
         		ID: "initBlock",

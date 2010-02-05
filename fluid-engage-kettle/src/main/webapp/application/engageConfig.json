@@ -7,8 +7,7 @@ loaderFunction: "fluid.engage.initEngageApp",
 queryURLTemplate: "http://142.150.154.59:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
 viewURLTemplate: "http://142.150.154.59:5984/%dbName/%view",
 viewURLTemplateWithKey: "http://142.150.154.59:5984/%dbName/%view?key=%key",
-myCollectionQueryURLTemplate: "http://unistud.asteasolutions.net:11929/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
-myCollectionDocumentURLTemplate: "http://unistud.asteasolutions.net:11929/%dbName/%id",
+querySingleDocumentURLTemplate: "http://142.150.154.59:5984/%dbName/%id",
 initServices: [
     "fluid.engage.initHomeService",
     "fluid.artifactView.initMarkupFeed", 
@@ -26,7 +25,6 @@ initServices: [
     "fluid.catalogueService.initCatalogueDataFeed",
     "fluid.catalogueService.initBrowseCatalogueService",
     "fluid.catalogueService.initBrowseCatalogueDataFeed"       
-    "fluid.engage.initImportService"    
     "fluid.myCollection.initMyCollectionService",
     "fluid.collectOperations.initAcceptor",
 	"fluid.reorder.initAcceptor",

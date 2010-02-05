@@ -36,7 +36,7 @@ fluid.myCollection.common = fluid.myCollection.common || {};
      * @param {Object} config, the JSON config file for Engage.
      */
     fluid.myCollection.common.compileUserDocumentUrl = function (id, config) {
-        return fluid.stringTemplate(config.myCollectionDocumentURLTemplate, 
+        return fluid.stringTemplate(config.querySingleDocumentURLTemplate, 
             {dbName: "users", id: id ? id : ""});
     };
 

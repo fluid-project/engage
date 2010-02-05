@@ -21,7 +21,7 @@ public class JettyLauncher {
         Server server = new Server();
 
         Connector connector = new SelectChannelConnector();
-        connector.setPort(Integer.getInteger("jetty.port", 8090).intValue());
+        connector.setPort(Integer.getInteger("jetty.port", 8080).intValue());
         server.setConnectors(new Connector[] { connector });
 
         WebAppContext webapp = new WebAppContext("src/main/webapp", "/");
