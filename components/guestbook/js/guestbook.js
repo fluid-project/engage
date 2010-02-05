@@ -18,8 +18,11 @@ fluid = fluid || {};
 
     makeProtoComponents = function(model) {
         return {
-        
-        }
+          cells:
+            fluid.transform(model.comments, function(comment) {
+              
+            })
+        };
     }
 
     fluid.engage.guestbook = function (container, options) {
@@ -39,7 +42,6 @@ fluid = fluid || {};
     };
     
     fluid.defaults("fluid.engage.guestbook", {
-        
         navigationList: {
             type: "fluid.navigationList",
             options: {
@@ -48,6 +50,14 @@ fluid = fluid || {};
                 },
                 useDefaultImage: true
             }
+        },
+        selectors: {
+            commentCell: ".flc-guestbook-comment",
+            author: ".flc-guestbook-author",
+            location: ".flc-guestbook-location",
+            date: ".flc-guestbook-date",
+            commentText: ".flc-guestbook-text",
+            action: ".flc-guestbook-action" 
         },
         strings: {
             addNote: "Add Note"
