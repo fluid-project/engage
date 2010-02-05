@@ -25,6 +25,16 @@ https://source.fluidproject.org/svn/LICENSE.txt
                     "../../../../components/myCollection/html/myCollection.html",
                     ".flc-myCollection");
             
+            // Workaround to the different relative path when running tests.
+            // We retrieve the navigation list link and rewrite it with a
+            // correct value.
+            for (var templateKey in tests.fetchedTemplates) {
+            	var navListLink =
+            		tests.fetchedTemplates[templateKey].find(".flc-navigationList-link");
+            	navListLink.attr("href",
+            			"../../../../components/navigationList/html/NavigationList.html");
+            }
+            
             var url = "../../../../components/myCollection/data/demoData.json";
             
             $.ajax({
@@ -36,7 +46,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             });
             
             component = fluid.engage.myCollection(".flc-myCollection",
-                    {model: model, updateDatabaseOrder: false, useReorderer: true});
+                    {model: model, updateDatabaseOrder: false, useReorderer: true});     
         };
 
         tests = jqUnit.testCase("My Collection Tests", setup);
@@ -92,7 +102,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
                         expectedStatus, status);
             });
             
-            tests.test("Reorderer", function () {
+            tests.test("Reorderer tests", function () {
                 expect(9);
 
                 var movables =

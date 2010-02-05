@@ -159,25 +159,21 @@ fluid = fluid || {};
         that.navigationList.events.afterRender.addListener(that.removeLoadingStyling);
         that.navigationList.events.afterRender.addListener(that.refreshReorderer);
         
-        // Setup toggler for navigation list
         that.locate("toggler").click(function () {
         	that.navigationList.toggleLayout();
         });
     };
     
     var initImageReorderer = function (that) {
-    	if (!that.options.useReorderer) {
-    		return;
-    	}
-    	
-        that.imageReorderer = fluid.initSubcomponent(that, "imageReorderer",
-                [that.locate("myCollectionContainer"),
-                 that.options.imageReorderer.options]);
-        
-        // Bind events
-        that.imageReorderer.events.afterMove.addListener(that.afterMoveListener);
-        that.imageReorderer.events.onBeginMove.addListener(that.onBeginMoveListener);
-        that.imageReorderer.options.avatarCreator = that.avatarCreator;
+    	if (that.options.useReorderer) {
+	        that.imageReorderer = fluid.initSubcomponent(that, "imageReorderer",
+	                [that.locate("myCollectionContainer"),
+	                 that.options.imageReorderer.options]);
+	        
+	        that.imageReorderer.events.afterMove.addListener(that.afterMoveListener);
+	        that.imageReorderer.events.onBeginMove.addListener(that.onBeginMoveListener);
+	        that.imageReorderer.options.avatarCreator = that.avatarCreator;
+    	}        
     };
     
     /**
@@ -196,20 +192,22 @@ fluid = fluid || {};
     	var resourceSpec = {};
     	fluid.fetchResources({
     		navlist: {
-    			href: navListLink.attr("href")    			
+    			href: navListLink.attr("href"),
+    			async: false
     		},
     	}, function (resourceSpecs) {
     		var navListGroup = $(resourceSpecs.navlist.resourceText).find(".flc-navigationList-groupContainer");
     		navListContainer.html(navListGroup.html());
-
+    		
     		// After we have fetched the template we can initialize the navigation
-    		// list subcomponent and the image reorderer subcomponent
+    		// list subcomponent and the image reorderer subcomponent.
+    		// An side effect is that the component is not fully constructed after
+    		// it returns from its initialization function.
         	initNavigationList(that);
         	initImageReorderer(that);
     	});
-    	
-        // Init other subcomponents      
 
+        // User
     	that.user = fluid.initSubcomponent(that, "user");
         that.uuid = that.user.getUuid();
     	
@@ -350,6 +348,7 @@ fluid = fluid || {};
             },
 
             strings: {
+            	header: "My Collection",
                 statusMessageTemplate:
                     "Your collection contains %artifactsNumber artifact" +
                     "%artifactsPlural. Touch and drag the thumbnails to reorganize.",
