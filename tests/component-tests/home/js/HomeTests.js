@@ -63,18 +63,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             jqUnit.assertTrue("Cookie added properly", fluid.engage.getCookie(cookieName));
         });
         
-        //Tests for page load with cookie. 
-        var homeTestsWithCookie = jqUnit.testCase("Home Screen Tests With Cookie Pre-set", function () {
-            homeTests.fetchTemplate("../../../../components/home/html/home.html", selector);
-            fluid.engage.setCookie(cookieName, {});
-            component = fluid.engage.home(selector, {cookieName: cookieName});
-        }, deleteCookie); 
-        
-        homeTestsWithCookie.test("Page load styling - with Cookie already set", function () {
-            stylingTests(component, "languageSelectionContent", "homeContent", "hidden");
-        });
-        
-        homeTestsWithCookie.test("Language Selection page stlying", function () {
+        homeTests.test("Language Selection page stlying", function () {
             stylingTests(component, "homeContent", "languageSelectionContent", "hidden", "showLanguageSelection");
         });
     });
