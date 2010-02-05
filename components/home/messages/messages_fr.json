@@ -4,5 +4,6 @@
 	"objectCodeCaption": "Entrez le code objet",
 	"languageCaption": "Changer de langue",
 	"homeTitle": "Musée McCord",
-	"languageSelectionTitle": "Sélection de la langue"
+	"languageSelectionTitle": "Sélection de la langue",
+	"iconAltText": "%iconName icon"
 }

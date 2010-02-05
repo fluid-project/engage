@@ -20,14 +20,29 @@ fluid = fluid || {};
     //In the future it would make more sense to render the languages out.
     fluid.engage = fluid.engage || {};
     
-    function makeProtoComponents() {
+    function makeProtoComponents(str) {
+        function altTextNode(text) {
+            return {
+                decorators: [{
+                    type: "attrs",
+                    attributes: {
+                        alt: fluid.stringTemplate(str.iconAltText, {iconName: text})
+                    }
+                }]
+            };
+        }
+        
         return {
             homeTitle: {messagekey: "homeTitle"},
             languageSelectionTitle: {messagekey: "languageSelectionTitle"},
             exhibitionsCaption: {messagekey: "exhibitionsCaption"},
             myCollectionCaption: {messagekey: "myCollectionCaption"},
             objectCodeCaption: {messagekey: "objectCodeCaption"},
-            languageCaption: {messagekey: "languageCaption"}
+            languageCaption: {messagekey: "languageCaption"},
+            exhibitionsIcon: altTextNode(str.exhibitionsCaption),
+            myCollectionIcon: altTextNode(str.myCollectionCaption),
+            objectCodeIcon: altTextNode(str.objectCodeCaption),
+            languageIcon: altTextNode(str.languageCaption)
         };
     }
     
@@ -108,7 +123,7 @@ fluid = fluid || {};
          * Loads/refreshes the view
          */
         that.refreshView = function () {
-            var protoTree = makeProtoComponents();
+            var protoTree = makeProtoComponents(that.options.strings);
             var tree = expander(protoTree);
             that.render(tree);
             bindEvents(that);
@@ -126,6 +141,10 @@ fluid = fluid || {};
             languageSelectionContent: ".flc-languageSelection",
             homeTitle: ".flc-home-title",
             languageSelectionTitle: ".flc-languageSelection-title",
+            exhibitionsIcon: ".flc-home-exhibitionsIcon",
+            myCollectionIcon: ".flc-home-myCollectionIcon",
+            objectCodeIcon: ".flc-home-objectCodeIcon",
+            languageIcon: ".flc-home-languageIcon",
             exhibitionsCaption: ".flc-home-exhibitionsCaption",
             myCollectionCaption: ".flc-home-myCollectionCaption",
             objectCodeCaption: ".flc-home-objectCodeCaption",
@@ -146,7 +165,8 @@ fluid = fluid || {};
             objectCodeCaption: "Enter object code",
             languageCaption: "Change language",
             homeTitle: "McCord Museum",
-            languageSelectionTitle: "Language Selection"
+            languageSelectionTitle: "Language Selection",
+            iconAltText: "%iconName icon"
         },
         
         cookieName: "fluid-engage"
