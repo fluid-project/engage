@@ -1,7 +1,6 @@
 {
-    "title": "TODO Enter object code",
-    "header": "TODO Enter object code",
-    "instruction": "TODO Enter code from the object's label to learn more about the object.",
-    "invalidCode": "TODO Invalid code. Please try again",
-    "redirecting": "TODO Opening artifact page."
+   "title": "Entrez le code d'objet",
+   "header": "Entrez le code d'objet",
+   "instruction": "Entrez le code numérique affiché sur l'étiquette pour en apprendre plus sur cet objet.",
+   "redirecting": "Ouverture de la page de l'objet"
 }
