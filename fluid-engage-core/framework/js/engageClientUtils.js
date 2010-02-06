@@ -34,12 +34,22 @@ https://source.fluidproject.org/svn/LICENSE.txt
     };
     
     /**
+     * Used to delete a cookie
+     * 
+     * @param {Object} name, the name of the cookie
+     */
+    fluid.engage.deleteCookie = function (name) {
+        $.cookie(name, null);
+    };
+    
+    /**
      * Returns the value of a cookie as an object
      * 
      * @param {Object} name, the name of the 
      */
     fluid.engage.getCookie = function (name) {
-        return JSON.parse($.cookie(name));
+        var cookie = $.cookie(name);
+        return cookie ? JSON.parse(cookie) : null;
     };
     
     /**********

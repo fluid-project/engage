@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <title>Catalogue</title>
@@ -11,6 +11,7 @@
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-transitions.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationBar/css/NavigationBar.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationList/css/NavigationList.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/cabinet/css/Cabinet.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/catalogue/css/Catalogue.css" />
@@ -29,18 +30,42 @@
         
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/iPhoneChromeless.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationBar/js/NavigationBar.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/components/catalogue/js/Catalogue.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationList/js/NavigationList.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/loadData.js"></script>
     </head>   
     <body class="fl-theme-iphone">
         <div class="flc-catalogue-container fl-catalogue">
-            <div class="fl-navbar fl-table">
+            
+            <!-- Navigation Bar and Header -->
+            <div class="flc-navigationBar fl-navbar fl-table">
                 <div class="fl-table-row">
-                    <h1 class="flc-catalogue-title fl-table-cell">Exhibitions</h1>
-                    <a class="flc-catalogue-navlist-toggle" href="#">TOGGLE</a>
+                    <!-- Back button -->
+                    <div class="fl-table-cell">
+                        <a rsf:id="scr=null" class="flc-navigationBar-back fl-button" href="#">
+                            <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/back.png" alt="Go back"/>
+                        </a>
+                    </div>
+                    <!-- Home button -->
+                    <div class="fl-table-cell">
+                        <a rsf:id="scr=null" class="flc-navigationBar-home fl-button" href="#">
+                            <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/home.png" alt="Go home"/>
+                        </a>
+                    </div>
+                    <!-- Page header -->
+                    <h1 class="flc-catalogue-title fl-table-cell">Catalogue for This Exhibition</h1>
+                    
+                    <!-- Toggle button -->
+                    <div class="fl-table-cell">
+                        <a rsf:id="scr=null" class="flc-navigationBar-toggle fl-button" href="#">
+                            <img class="flc-navigationBar-toggle-grid fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/toggle-grid.png" alt="Switch to grid layout"/>
+                            <img class="flc-navigationBar-toggle-list fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/toggle-list.png" alt="Switch to list layout"/>
+                        </a>
+                    </div>
                 </div>
             </div>
+ 
             <div class="fl-catalogue-linkToArtifactsHeader fl-list-menu">
                 <a href="#" class="flc-catalogue-linkToArtifacts fl-catalogue-linkToArtifacts">
                     <h2 class="flc-catalogue-linkToArtifactsText">View All</h2>

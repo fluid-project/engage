@@ -7,8 +7,8 @@
  
  You may obtain a copy of the ECL 2.0 License and BSD License at
  https://source.fluidproject.org/svn/LICENSE.txt
- 
  */
+ 
 /*global jQuery, fluid*/
 "use strict";
 
@@ -34,73 +34,75 @@ fluid = fluid || {};
         that.events.afterRender.addListener(removeLoadStyling);
     };
     
-    /**
-     * Initializes the Cabinet component which is used as a subcomponent
-     * 
-     * @param {Object} that, the component
-     */
-    var initCabinet = function (that) {
-        that.cabinet = fluid.initSubcomponent(that, "cabinet", [that.locate("browseContents"), fluid.COMPONENT_OPTIONS]);
+    var initSubcomponents = function (that) {
+        if (that.options.useCabinet) {
+            that.cabinet = fluid.initSubcomponent(that, "cabinet", [that.locate("browseContents"), fluid.COMPONENT_OPTIONS]);
+        }
+        that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
     };
     
-    function mapToNavListModel(items) {
+    var mapToNavListModel = function (items) {
         return fluid.transform(items, function (item) {
             return {
                 target: item.url,
                 image: item.imageUrl,
                 title: item.title,
-                description: item.description
+                description: item.description,
+                showBadge: item.media
             };
         });
     }
     
-    function makeProtoComponents(that, navLists) {
-        return { 
+    var generateHeaderForCategory = function (category, component, strings, styles) {
+        var description = category.description;
+        var headerValues = {
+            category: category.name === "viewAll" ? strings.allObjects : category.name, 
+            size: category.items.length
+        };
+        
+        var localizedName = fluid.stringTemplate(strings.categoryHeader, headerValues);
+        component.cabinetHandle = description ? {
+            decorators: [{
+                type: "addClass",
+                classes: styles.listHeaderDescription
+            }]
+        } : {};
+        component.listHeader = localizedName;
+        if (description) {
+            component.listHeaderDescription = description;
+        }
+    };
+    
+    var assembleTree = function (that) {
+        that.navLists = [];
+        var protoTree = { 
             title: that.model.title ? {messagekey: "title", args: {title: "%title"}} : "",
             lists: { 
                 children: fluid.transform(that.model.categories || [], function (category, index) {
-                    var description = category.description;
-                    navLists[index] = {
+                    that.navLists[index] = {
                         type: "fluid",
                         func: "fluid.navigationList",
                         options: fluid.merge("merge", fluid.copy(that.options.navigationList.options), {model: mapToNavListModel(category.items)})
                     };
                     var child = {
                         listContents: {
-                            decorators: navLists[index]
+                            decorators: that.navLists[index]
                         }
                     };
                     
                     // TODO: This whole issue of whether or not to render headers speaks to the fact that we actually
                     // need to do some refactoring to Cabinet and Browse. In the meantime, this is ugly.
                     if (index > 0 || that.options.showHeaderForFirstCategory) {
-                        var headerValues = {
-                            category: category.name === "viewAll" ? that.options.strings.allObjects : category.name, 
-                            size: category.items.length
-                        };
-                        var localizedName = fluid.stringTemplate(that.options.strings.categoryHeader, headerValues);
-                        child.cabinetHandle = description ? {
-                            decorators: [{
-                                type: "addClass",
-                                classes: that.options.styles.listHeaderDescription
-                            }]
-                        } : {};
-                        child.listHeader = localizedName;
-                        if (description) {
-                            child.listHeaderDescription = description;
-                        }
+                        generateHeaderForCategory(category, child, that.options.strings, that.options.styles);
                     }
                     return child;
                 })
             }
         };
-    }
-    
-    function assembleTree(that, expander, navLists) {
-        var protoTree = makeProtoComponents(that, navLists);
-        var fullTree = expander(protoTree);
-        return fullTree;
-    }
+        
+        var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
+        return expander(protoTree);
+    };
     
     /**
      * Executes the various functions required to properly setup the component
@@ -122,15 +124,6 @@ fluid = fluid || {};
         that.events.afterRender.fire(that);
     };
     
-    var activateToggler = function (that, navLists) {
-        that.locate("toggle").click(function () {
-            fluid.transform(navLists || [], function (navList) {
-                navList.that.toggleLayout();
-            });
-            return false;
-        });
-    };
-    
     /**
      * The component's creator function 
      * 
@@ -140,17 +133,10 @@ fluid = fluid || {};
     fluid.browse = function (container, options) {
         var that = fluid.initView("fluid.browse", container, options);
         that.model = that.options.model;
-        
-        var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
-        
+                
         that.refreshView = function () {
-            var navLists = [];
-            var tree = assembleTree(that, expander, navLists);
-            that.render(tree);
-            activateToggler(that, navLists);
-            if (that.options.useCabinet) {
-                initCabinet(that);
-            }
+            that.render(assembleTree(that));
+            initSubcomponents(that);
         };
         
         setup(that);
@@ -158,9 +144,12 @@ fluid = fluid || {};
     };
     
     fluid.defaults("fluid.browse", {
+        navigationBar: {
+            type: "fluid.engage.navigationBar"
+        },
+        
         cabinet: {
-            type: "fluid.cabinet",
-            options: {}
+            type: "fluid.cabinet"
         },
         
         description: {
@@ -204,7 +193,7 @@ fluid = fluid || {};
         },
         
         strings: {
-            categoryHeader: "Viewing %category (%size total)",
+            categoryHeader: "%category (%size total)",
             allObjects: "all objects",
             title: "%title"
         },

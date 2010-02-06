@@ -47,6 +47,7 @@ fluid = fluid || {};
             // Prepare model for NavList
             var cataloguePreview = fluid.transform(that.model.cataloguePreview, function (artifact) {
                 return {
+                    target: artifact.target,
                     showBadge: artifact.media,
                     image: artifact.image,
                     title: artifact.title
@@ -59,6 +60,8 @@ fluid = fluid || {};
                 fluid.COMPONENT_OPTIONS
             ]);
         }
+        
+        that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
     };
     
     var setup = function (that) {        
@@ -96,6 +99,17 @@ fluid = fluid || {};
     };
     
     fluid.defaults("fluid.engage.exhibitionView", {
+        exhibitionPreview: {
+            type: "fluid.navigationList",
+            options: {
+                defaultToGrid: true
+            }
+        },
+        
+        navigationBar: {
+            type: "fluid.engage.navigationBar"
+        },
+        
         selectors: {
             aboutLink: ".flc-exhibition-aboutLink",
             aboutLinkText: ".flc-exhibition-aboutLinkText",
@@ -114,6 +128,7 @@ fluid = fluid || {};
             guestbookLinkText: ".flc-exhibition-guestbookLinkText",
             guestbookInvitation: ".flc-exhibition-guestbookInvitation"
         },
+        
         strings: {
             guestbookInvitationString: "No comments yet. Create your own comment.",
             catalogueTitle: "Catalogue (%size)",
@@ -121,12 +136,6 @@ fluid = fluid || {};
             guestbookLinkText: "Read all comments",
             catalogueLinkText: "View the full catalogue",
             aboutLink: "Read more"
-        },
-        exhibitionPreview: {
-            type: "fluid.navigationList",
-            options: {
-                defaultToGrid: true
-            }
         }
     });
 }(jQuery));

@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <title>Home</title>
@@ -17,69 +17,94 @@
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/home/css/Home.css" />
         
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/json/js/json2.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/FluidDOMUtilities.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/DataBinding.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>
+        
+        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/plugins/cookie/js/jquery.cookie.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/home/js/Home.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/iPhoneChromeless.js"></script>
     </head>   
     
     <body class="fl-theme-iphone fl-home-white-background">
-        <div class="fl-navbar fl-table">
-            <div class="fl-table-row">              
-                <h1 class="fl-table-cell artifact-name">McCord Museum</h1>                          
+        <div class="flc-homeAndLanguage">
+            <div class="flc-home fl-home">
+                <div class="fl-navbar fl-table">
+                    <div class="fl-table-row">              
+                        <h1 class="flc-home-title fl-table-cell artifact-name">McCord Museum</h1>                          
+                    </div>
+                </div>
+                <ul class="fl-list-menu fl-list-thumbnails fl-thumbnails-expanded fl-grid">
+                    <li>                
+                        <div class="fl-table">
+                            <a rsf:id="scr=null" class="flc-home-links fl-table-cell" href="../exhibitions/browse.html?db=mccord">
+                                <img class="flc-home-exhibitionsIcon fl-icon" src="../../../../fluid-engage-core/components/home/images/Exhibitions.png" alt="Exhibitions icon" />
+                            </a>
+                        </div>
+                        <div class="flc-home-exhibitionsCaption fl-grid-caption">
+                            Exhibitions
+                        </div>
+                    </li>
+                    <li>                
+                        <div class="fl-table">
+                            <a rsf:id="scr=null" class="flc-home-links fl-table-cell" href="../users/myCollection.html">
+                                <img class="flc-home-myCollectionIcon fl-icon" src="../../../../fluid-engage-core/components/home/images/MyCollection.png" alt="My collection icon" />
+                            </a>
+                        </div>
+                        <div class="flc-home-myCollectionCaption fl-grid-caption">
+                            My collection
+                        </div>
+                    </li>
+                    <li>                
+                        <div class="fl-table">
+                            <a rsf:id="scr=null" class="flc-home-links fl-table-cell" href="#">
+                                <img class="flc-home-objectCodeIcon fl-icon" src="../../../../fluid-engage-core/components/home/images/EnterObjectCode.png" alt="Enter object code icon" />
+                            </a>
+                        </div>
+                        <div class="flc-home-objectCodeCaption fl-grid-caption">
+                            Enter object code
+                        </div>
+                    </li>
+                    <li>                
+                        <div class="fl-table">
+                            <a rsf:id="scr=null" class="flc-home-language fl-table-cell" href="#">
+                                <img class="flc-home-languageIcon fl-icon" src="../../../../fluid-engage-core/components/home/images/ChangeLanguage.png" alt="Change language icon" />
+                            </a>
+                        </div>
+                        <div class="flc-home-languageCaption fl-grid-caption">
+                            Change language
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="flc-languageSelection fl-languageSelection fl-hidden">
+                <div class="fl-navbar fl-table">
+                    <div class="fl-table-row">  
+                        <img class="fl-table-cell" src="../../../../fluid-engage-core/components/home/images/flag.png" alt="Flag icon" />            
+                        <h1 class="flc-languageSelection-title fl-table-cell">Language Selection</h1>                          
+                    </div>
+                </div>
+                <ul class="fl-list-menu">
+                    <li>
+                        <a rsf:id="scr=null" class="flc-languageSelection-englishLink" href="./home.html?lang=en">
+                           English 
+                        </a>
+                    </li>
+                    <li>
+                        <a rsf:id="scr=null" class="flc-languageSelection-frenchLink" href="./home.html?lang=fr">
+                            Fran&ccedil;ais
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
-        
-        <div class="flc-engage-home">
-            <ul class="fl-list-menu fl-list-thumbnails fl-thumbnails-expanded fl-grid">
-                <li>                
-                    <div class="fl-table">
-                        <a rsf:id="scr=null" class="fl-table-cell" href="../exhibitions/browse.html?db=mccord">
-                            <img class="fl-icon" src="../../../../fluid-engage-core/components/home/images/Exhibitions.png" alt="Exhibitions icon" />
-                        </a>
-                    </div>
-                    <div class="fl-grid-caption">
-                        Exhibitions
-                    </div>
-                </li>
-                <li>                
-                    <div class="fl-table">
-                        <a rsf:id="scr=null" class="fl-table-cell" href="../artifacts/browse.html?db=mccord&amp;q=tours">
-                            <img class="fl-icon" src="../../../../fluid-engage-core/components/home/images/Collections.png" alt="Collections icon" />
-                        </a>
-                    </div>
-                    <div class="fl-grid-caption">
-                        Collections
-                    </div>
-                </li>
-                <li>                
-                    <div class="fl-table">
-                        <a rsf:id="scr=null" class="fl-table-cell" href="../users/myCollection.html">
-                            <img class="fl-icon" src="../../../../fluid-engage-core/components/home/images/MyCollection.png" alt="My collection icon" />
-                        </a>
-                    </div>
-                    <div class="fl-grid-caption">
-                        My collection
-                    </div>
-                </li>
-                <li>                
-                    <div class="fl-table">
-                        <a rsf:id="scr=null" class="fl-table-cell" href="#">
-                            <img class="fl-icon" src="../../../../fluid-engage-core/components/home/images/EnterObjectCode.png" alt="Enter object code icon" />
-                        </a>
-                    </div>
-                    <div class="fl-grid-caption">
-                        Enter object code
-                    </div>
-                </li>
-                <li>                
-                    <div class="fl-table">
-                        <a rsf:id="scr=null" class="fl-table-cell" href="#">
-                            <img class="fl-icon" src="../../../../fluid-engage-core/components/home/images/ChangeLanguage.png" alt="Change language icon" />
-                        </a>
-                    </div>
-                    <div class="fl-grid-caption">
-                        Change language
-                    </div>
-                </li>
-            </ul>
-        </div>
+        <script id="flc-initBlock" type="text/javascript">
+            fluid.engage.home(".flc-homeAndLanguage");
+        </script>
     </body>
 </html>

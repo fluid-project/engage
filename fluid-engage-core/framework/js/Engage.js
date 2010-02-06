@@ -33,21 +33,13 @@ fluid = fluid || {};
         return typeof value === "string";
     };
     
-    var wrap = function (value, tag) {
-        return "<" + tag + ">" + value + "</" + tag + ">";
-    };
-
-    var buildHTML = function (value) {
-        var node = value.strong ? (value.strong.em ? wrap(wrap(value.strong.em, "em"), "strong") : value.strong) : "";
-        var nodetext = value.nodetext ? value.nodetext : "";
-        for (var key in value) {
-            if (value.hasOwnProperty(key)) {
-                if (!(key === "nodetext" || key === "br" || key === "strong")) {
-                    node = node + wrap(value[key] instanceof Object ? buildHTML(value[key]) : value[key], key);
-                }
-            }
+    var getImage = function (value) {
+        if (value.thumbnail) {
+            return $.makeArray(value.thumbnail)[0].nodetext;
         }
-        return node + nodetext;
+        else {
+            return $.makeArray(value.small)[0].nodetext;
+        }
     };
     
     fluid.engage.specs = {
@@ -115,122 +107,41 @@ fluid = fluid || {};
         },
         mccord: {
             dataSpec: {
-                "category": {
-                    "path": "artefacts.artefact.links.type.category",
-                    "func": "getArtifactCategory"
-                },
-                "linkTarget": "artefacts.artefact.accessnumber",
-                "linkImage": {
-                    "path": "artefacts.artefact.images.image",
-                    "func": "getThumbImageFromObjectArray"
-                },
-                "linkTitle": {
-                    "path": "artefacts.artefact.title",
-                    "func": "getTitleFromObject"
-                },
-                "linkDescription": "artefacts.artefact.dated",
-                "artifactTitle": {
-                    "path": "artefacts.artefact.title",
-                    "func": "getTitleFromObject"
-                },
+                "artifactAccessionNumber": "value.accessnumber",                
+                "artifactTitle": "value.title",
                 "artifactImage": {
-                    "path": "artefacts.artefact.images.image",
-                    "func": "getImageFromObjectArray"
+                    "path": "value.image",
+                    "func": "getImage"
                 }, 
-                "artifactAuthor": {
-                    "path": "artefacts.artefact.artist",
-                    "func": "getArtifactArtist"
-                },
-                "artifactDate": "artefacts.artefact.dated",
-                "artifactAccessionNumber": "artefacts.artefact.accessnumber",
-                "artifactTags": {
-                    "path": "artefacts.artefact.tags.tag",
-                    "func": "getArtifactTags"
-                },
-                "artifactDescription": {
-                    "path": "artefacts.artefact.descriptions.description_museum",
-                    "func": "getArtifactDescription"
-                }
+                "artifactAuthor": "value.artist",
+                "artifactDate": "value.dated",
+                "artifactDescription": "value.description",
+                "artifactComments": "value.comments",
+                "artifactCommentsCount": "value.commentsCount",
+                "artifactDimensions": "value.dimensions",
+                "artifactMedia": "value.media",
+                "artifactMediaCount": "value.mediaCount",
+                "artifactMedium": "value.medium",
+                "artifactMention": "value.mention",
+                "artifactRelated": "value.relatedArtifacts",
+                "artifactRelatedCount": "value.relatedArtifactsCount"
             },
             mappers: {
-                getArtifactDescription: function (value) {
-                    var getDescription = function (value) {
-                        if (isString(value)) {
-                            return value;
-                        }
-                    };
-                    return tryFunc(getDescription, value);
-                },
-                getArtifactCategory: function (value) {
-                    var getCategory = function (value) {
-                        return fluid.transform($.makeArray(value), function (val) {
-                            return val.label;
-                        });
-                    };
-                    return tryFunc(getCategory, value);
-                },
-                getArtifactTags: function (value) {
-                    var getTags = function (value) {
-                        if (!isString(value)) {
-                            return fluid.transform($.makeArray(value), function (val) {
-                                return val.label;
-                            });
-                        }
-                    };
-                    return tryFunc(getTags, value);
-                },
-                getTitleFromObject: function (value) {
-                    var getTitle = function (value) {
-                        if (isString(value)) {
-                            return value || noTitle;
-                        }
-                        else {
-                            return $.makeArray(value)[0].nodetext || noTitle;
-                        }
-                    };                
-                    return tryFunc(getTitle, value, noTitle);
-                },
-                getThumbImageFromObjectArray: function (value) {
-                    var getImage = function (value) {
-                        if (isString(value)) {
-                            return value || undefined;
-                        }
-                        else {
-                            value = $.makeArray(value)[0].imagesfiles.imagefile;
-                            return value[0].nodetext || undefined;
-                        }
-                    };
-                    return tryFunc(getImage, value);
-                },
-                getImageFromObjectArray: function (value) {
-                    var getImage = function (value) {
-                        if (isString(value)) {
-                            return value;
-                        }
-                        else {
-                            value = $.makeArray(value)[0].imagesfiles.imagefile;
-                            var link;
-                            $.each($.makeArray(value).reverse(), function (index, val) {
-                                if (val.sizeunit !== "") {
-                                    link = val.nodetext;
-                                    return false;
+                getImage: function (value) {
+                    var getArtifactImage = function (value) {
+                        var images = {};
+                        if (value) {
+                            $.each($.makeArray(value), function (index, image) {
+                                if (image.primarydisplay === "yes" && image.imagesfiles) {
+                                     $.each(image.imagesfiles.imagefile, function (index, imagefile) {
+                                         images[imagefile.format] = imagefile.nodetext;
+                                     });
                                 }
                             });
-                            return link;
                         }
+                        return images.large || images.medium || images.small || images.thumbnail || "";
                     };
-                    return tryFunc(getImage, value);
-                },
-                getArtifactArtist: function (value) {
-                    var getArtist = function (value) {
-                        if (isString(value)) {
-                            return value;
-                        }
-                        else {
-                            return $.makeArray(value)[0].nodetext;
-                        }
-                    };
-                    return tryFunc(getArtist, value);
+                    return tryFunc(getArtifactImage, value);
                 }
             }
         },
@@ -239,8 +150,8 @@ fluid = fluid || {};
                 "isCurrent": {
                     "path": "value.isCurrent",
                     "func": "makeBoolean"
-                },//"value.isCurrent",
-                "title": "key",
+                },
+                "title": "value.title",
                 "displayDate": "value.displayDate",
                 "endDate": "value.endDate",
                 "image": {
@@ -250,9 +161,6 @@ fluid = fluid || {};
             },
             mappers: {
                 getExhibitionImage: function (value) {
-                    var getImage = function () {
-                        return "http://www.mccord-museum.qc.ca" + $.makeArray(value.small)[0].nodetext;
-                    };
                     return tryFunc(getImage, value);
                 },
                 makeBoolean: function (value) {
@@ -265,82 +173,55 @@ fluid = fluid || {};
         },
         mccord_exhibitions_view: {
             dataSpec: {
-                "isCurrent": "value.isCurrent",
-                "title": "key",
+                "isCurrent": {
+                    "path": "value.isCurrent",
+                    "func": "makeBoolean"
+                },
+                "title": "key.title",
                 "displayDate": "value.displayDate",
                 "endDate": "value.endDate",
                 "image": {
                     "path": "value.image",
                     "func": "getExhibitionImage"
                 },
-                "introduction": {
-                    "path": "value.introduction",
-                    "func": "getIntroduction"
-                },
-                "content": {
-                    "path": "value.content",
-                    "func": "getContent"
-                },
-                "catalogueSize": "value.catalogueSize"
+                "introduction": "value.introduction",
+                "content": "value.content",
+                "catalogueSize": "value.catalogueSize",
+                "shortDescription": "value.shortDescription",
+                "cataloguePreview": {
+                    "path": "value.cataloguePreview",
+                    "func": "getCataloguePreview"
+                }
             },
             mappers: {
-                getContent: function (value) {
-                    var buildContent = function (value) {
-                        var content = value.h2 ? value.h2 : "";
-                        if (value.p) {
-                            if (typeof(value.p) === "string") {
-                                content = content + wrap(value.p, "p");
-                            }
-                            else {
-                                for (var i in value.p) {
-                                    if (value.p.hasOwnProperty(i)) {
-                                        content = content + wrap(buildHTML(value.p[i]), "p");
-                                    } 
-                                }
-                            }
-                        }
-                        return content ? content : undefined; 
+                getCataloguePreview: function (value) {
+                    var getPreview = function (value) {
+                        return fluid.transform(value, function (artifact) {
+                            return {
+                                "media": artifact.hasMedia === "yes",
+                                "title": artifact.title,
+                                "image": $.makeArray(artifact.thumbnail)[0].nodetext,
+                                "accessionNumber": artifact.accessnumber
+                            };
+                        });
                     };
-                    return tryFunc(buildContent, value, "");
+                    return tryFunc(getPreview, value, []);
                 },
-                getIntroduction: function (value) {
-                    var buildIntro = function (value) {
-                        var intro = "";
-                        if (value.p) {
-                            if (typeof(value.p) === "string") {
-                                intro = intro + wrap(value.p, "p");
-                            }
-                            else {
-                                for (var i in value.p) {
-                                    if (value.p.hasOwnProperty(i)) {
-                                        intro = intro + wrap(buildHTML(value.p[i]), "p");
-                                    }
-                                }
-                            }
-                            return intro;
-                        }
-                        return intro ? intro : undefined;
+                makeBoolean: function (value) {
+                    var convert = function () {
+                        return value === "yes";
                     };
-                    return tryFunc(buildIntro, value, "");
+                    return tryFunc(convert, value);
                 },
                 getExhibitionImage: function (value) {
-                    var getImage = function () {
-                        if ($.makeArray(value.large)[0].height) {
-                            return "http://www.mccord-museum.qc.ca" + $.makeArray(value.large)[0].nodetext;
-                        }
-                        else if ($.makeArray(value.medium)[0].height) {
-                            return "http://www.mccord-museum.qc.ca" + $.makeArray(value.medium)[0].nodetext;
-                        }
-                        return "http://www.mccord-museum.qc.ca" + $.makeArray(value.small)[0].nodetext;
-                    };
                     return tryFunc(getImage, value);
                 }
             }
         },
         mccord_exhibitions_catalogue: {
             dataSpec: {
-                "title": "key",
-                "numArtifacts": "value.viewAll",
+                "title": "key.title",
+                "numArtifacts": "value.catalogueSize",
                 "themes": {
                     "path": "value.sections",
                     "func": "formatSections"
@@ -348,22 +229,15 @@ fluid = fluid || {};
             },
             mappers: {
                 formatSections: function (value) {
-                    var extractTitle = function (title, delim) {
-                        var index = title.indexOf(delim);
-                        if (index < 0) {
-                            return title;
-                        }
-                        var start = index + delim.length;
-                        return title.substring(start);
-                    };
                     var getArtifactInfo = function  (artifacts) {
                         return fluid.transform(artifacts, function (artifact) {
-                            return artifact ? {
-                                accessNumber: artifact.accessNumber,
-                                imageURL: artifact.image,
-                                title: extractTitle(artifact.title, ": "),
-                                description: artifact.description
-                            } : {};
+                            return {
+                                "media": artifact.hasMedia === "yes",
+                                "title": artifact.title,
+                                "image": $.makeArray(artifact.thumbnail)[0].nodetext,
+                                "accessionNumber": artifact.accessnumber,
+                                "description": artifact.subtitle
+                            };
                         });
                     };
                     var format = function (value) {
@@ -372,7 +246,7 @@ fluid = fluid || {};
                             sections.push({
                                 title: val.sectionTitle,
                                 numArtifacts: val.sectionSize,
-                                artifacts: getArtifactInfo(val.sectionArtefacts)
+                                artifacts: getArtifactInfo(val.sectionHighlights)
                             });
                         });
                         return sections;
@@ -386,51 +260,25 @@ fluid = fluid || {};
                 "exhibitionTitle": "key.exhibitTitle",
                 "sectionTitle": "key.sectionTitle",
                 "sectionSize": "value.sectionSize",
-                "sectionIntroduction": {
-                    "path": "value.sectionIntroduction",
-                    "func": "getSectionIntroduction"
-                },
                 "sectionArtifacts": {
                     "path": "value.sectionArtifacts",
                     "func": "formatSectionArtifacts"
                 }
             },
             mappers: {
-                getSectionIntroduction: function (value) {
-                    var getIntroduction = function (value) {
-                        var intro = "";
-                        var p = value.p;
-                        if (p) {
-                            if (typeof(p) === "string") {
-                                intro = intro + wrap(p, "p");
-                            }
-                            else {
-                                for (var i in value.p) {
-                                    if (value.p.hasOwnProperty(i)) {
-                                        intro = intro + wrap(buildHTML(p[i]), "p");
-                                    }
-                                }
-                            }
-                            return intro;
-                        }
-                        return intro;
-                    };
-                    return tryFunc(getIntroduction, value);
-                },
                 formatSectionArtifacts: function (value) {
-                    var getImage = function (thumbnail) {
-                        return $.makeArray(thumbnail)[0].nodetext;
-                    };
-                    var format = function (data) {
-                        var t = $.map(data, function (value) {
-                            return {
-                                url: "../artifacts/view.html?db=mccord&q=" + value.accessnumber,
-                                imageUrl: getImage(value.thumbnail),
-                                title: value.title.substring(value.title.indexOf(':') + 2),
-                                description: "Descr"
-                            };
+                    var format = function (value) {
+                        var artifacts = [];
+                        fluid.transform(value, function (val) {
+                            artifacts.push({
+                                "title": val.title,
+                                "imageUrl": $.makeArray(val.thumbnail)[0].nodetext,
+                                "accessionNumber": val.accessnumber,
+                                "media": val.hasMedia === "yes",
+                                "description": val.subtitle
+                            });
                         });
-                        return t;
+                        return artifacts;
                     };
                     return tryFunc(format, value);
                 }
