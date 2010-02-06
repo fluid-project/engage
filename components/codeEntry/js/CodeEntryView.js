@@ -178,10 +178,10 @@ fluid.engage = fluid.engage || {};
      * 
      * @param that, the component.
      */
-    var setup = function (that) {
-    	// Init back button
-        that.locate("backButton").attr("href", document.referrer);
-        
+    var setup = function (that) {  
+        // Initialize the navigation bar.
+        that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
+              
         // Init heading
         that.locate("heading").text(that.options.strings.header);
         
@@ -238,8 +238,10 @@ fluid.engage = fluid.engage || {};
     };
     
     fluid.defaults("fluid.codeEntry", {
+        navigationBar: {
+            type: "fluid.engage.navigationBar"
+        },
         selectors : {
-            backButton: ".flc-back-button",
             heading: ".flc-heading",
             headMessage: ".flc-head-message",
             firstDigitField: ".flc-first-digit",

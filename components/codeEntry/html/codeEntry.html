@@ -11,7 +11,8 @@
 
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css"></link>
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css"></link>
-		<link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/codeEntry/css/codeEntry.css"></link>
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationBar/css/NavigationBar.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/codeEntry/css/codeEntry.css"></link>
 		
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
@@ -20,21 +21,27 @@
 		<script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
 
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/Engage.js"></script>
-        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>		
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>	
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationBar/js/NavigationBar.js"></script>	
    		<script type="text/javascript" src="../../../../fluid-engage-core/components/codeEntry/js/CodeEntryView.js"></script>
 	</head>
 	<body class="fl-theme-iphone">
 		
 		<div class="flc-codeEntry">
-			<div class="fl-navbar fl-table">
-				<div class="fl-table-row">
-					<a class="fl-table-cell fl-back-button flc-back-button">
-						<img src="../../../../fluid-engage-core/components/codeEntry/images/back.png" alt="Back"/>
-					</a>
-					<h1 class="flc-heading fl-table-cell"></h1>
-					<div class="fl-table-cell"></div>
-				</div>
-			</div>
+		    
+		    <!-- Navigation Bar and Header -->
+            <div class="flc-navigationBar fl-navbar fl-table">
+                <div class="fl-table-row">
+                    <!-- Back button -->
+                    <div class="fl-table-cell">
+                        <a rsf:id="scr=null" class="flc-navigationBar-back fl-button" href="#">
+                            <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/back.png" alt="Go back"/>
+                        </a>
+                    </div>
+                    <!-- Page header -->
+                    <h1 class="flc-heading fl-table-cell">Enter an Object Code</h1>
+                </div>
+            </div>
 			
         	<div class="flc-head-message"></div>            
 	
