@@ -24,9 +24,32 @@ fluid.engage = fluid.engage || {};
         };
     };
     
+    var setupToggle = function (that) {
+        that.defaultIcon = that.locate("toggleDefaultIcon").show();
+        that.alternateIcon = that.locate("toggleAlternateIcon").hide();
+    };
+    
+    var localizeButtons = function (that) {
+        // Localize the back and home button icon alt text. A bit of DOM fascism here.
+        $("img", that.backButton).attr("alt", that.options.strings.goBack);
+        $("img", that.homeButton).attr("alt", that.options.strings.goHome);
+    
+        // Locaize the toggle icons.
+        that.defaultIcon.attr("alt", that.options.strings.defaultToggle);
+        that.alternateIcon.attr("alt", that.options.strings.alternateToggle);
+    }
     var setupNavigationBar = function (that) {
-        that.locate("backButton").click(preventingHandler(that.back));
-        that.locate("homeButton").click(preventingHandler(that.home));
+        that.backButton = that.locate("backButton").click(preventingHandler(that.back));
+        that.homeButton = that.locate("homeButton").click(preventingHandler(that.home));
+        that.locate("toggleButton").click(preventingHandler(that.toggle));
+        
+        setupToggle(that);
+        localizeButtons(that);
+    };
+    
+    var toggleIcons = function (that) {
+        that.defaultIcon.toggle();
+        that.alternateIcon.toggle();
     };
     
     fluid.engage.navigationBar = function (container, options) {
@@ -42,7 +65,8 @@ fluid.engage = fluid.engage || {};
         };
         
         that.toggle = function () {
-            
+            toggleIcons(that);
+            that.events.onToggle.fire();
         };
         
         setupNavigationBar(that);
@@ -53,8 +77,16 @@ fluid.engage = fluid.engage || {};
         selectors: {
             backButton: ".flc-navigationBar-back",
             homeButton: ".flc-navigationBar-home",
-            toggleDefault: ".flc-navigationBar-toggle-default",
-            toggleAlternate: ".flc-navigationBar-toggle-alternate"
+            toggleButton: ".flc-navigationBar-toggle",
+            toggleDefaultIcon: ".flc-navigationBar-toggle-grid",
+            toggleAlternateIcon: ".flc-navigationBar-toggle-list"
+        },
+        
+        strings: {
+            goBack: "Go back",
+            goHome: "Go home",
+            defaultToggle: "Switch to grid layout",
+            alternateToggle: "Switch to list layout"
         },
         
         events: {

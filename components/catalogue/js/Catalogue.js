@@ -17,16 +17,6 @@ fluid = fluid || {};
 
 (function ($) {
     
-    var bindNavListToggle = function (that) {
-        that.locate("catalogueThemeToggle").click(function (evt) {
-            $.each(that.navLists, function (idx, navList) {
-                navList.that.toggleLayout();
-            });
-
-            evt.preventDefault();
-        });
-    };
-    
     var assembleTree = function (that) {
         that.navLists = [];
         var protoTree = { 
@@ -76,14 +66,22 @@ fluid = fluid || {};
         that.refreshView();
     };
     
+    var setupNavBar = function (that) {
+        that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
+        that.navBar.events.onToggle.addListener(function () {
+            $.each(that.navLists, function (idx, navList) {
+                navList.that.toggleLayout();
+            });            
+        });   
+    };
+    
     fluid.catalogue = function (container, options) {
         var that = fluid.initView("fluid.catalogue", container, options);        
         that.model = that.options.model;
         
         that.refreshView = function () {
             that.render(assembleTree(that));
-            bindNavListToggle(that);
-            that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
+            setupNavBar(that);
         };
         
         setup(that);
@@ -107,7 +105,6 @@ fluid = fluid || {};
             catalogueTheme: ".flc-catalogue-theme",
             linkToThemeArtifacts: ".flc-catalogue-linkToThemeArtifacts",
             linkToThemeArtifactsText: ".flc-catalogue-linkToThemeArtifactsText",
-            catalogueThemeToggle: ".flc-catalogue-navlist-toggle"
         },
         
         strings: {
