@@ -7,6 +7,7 @@ loaderFunction: "fluid.engage.initEngageApp",
 queryURLTemplate: "http://142.150.154.59:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
 viewURLTemplate: "http://142.150.154.59:5984/%dbName/%view",
 viewURLTemplateWithKey: "http://142.150.154.59:5984/%dbName/%view?key=%key",
+codeEntryQueryURLTemplate: "http://142.150.154.59:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
 querySingleDocumentURLTemplate: "http://142.150.154.59:5984/%dbName/%id",
 initServices: [
     "fluid.engage.initHomeService",
@@ -22,11 +23,13 @@ initServices: [
     "fluid.catalogueService.initCatalogueService",
     "fluid.catalogueService.initCatalogueDataFeed",
     "fluid.catalogueService.initBrowseCatalogueService",
-    "fluid.catalogueService.initBrowseCatalogueDataFeed"     
-    "fluid.myCollection.initMyCollectionService",	
+    "fluid.catalogueService.initBrowseCatalogueDataFeed",
+    "fluid.codeEntry.initCodeEntryDataFeed",
+    "fluid.codeEntry.initCodeEntryService",
+    "fluid.myCollection.initMyCollectionService",
     "fluid.collectOperations.initAcceptor",
-	"fluid.reorder.initAcceptor",
-    "fluid.userService.initAcceptor"    
+    "fluid.reorder.initAcceptor",
+    "fluid.userService.initAcceptor"
 ],
 views: {
     all: "all",
@@ -35,10 +38,11 @@ views: {
     catalogueByTitle: "_design/catalogue/_view/view",
     catalogueArtifacts: "_design/catalogue/_view/browse",
     exhibitions: "_design/exhibitions/_view/browse",
-    artifactByAccession: "_design/artifacts/_view/view"
+    artifactByAccession: "_design/artifacts/_view/view",
+    byObjectCode: "by_object_code",
     byUserCollection: "by_user_collection",
     byUserArtifact: "by_user_artifact",
-	byId: "by_id"
+    byId: "by_id"
 },
 mount: {
     infusion: {
