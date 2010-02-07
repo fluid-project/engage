@@ -17,6 +17,7 @@
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/home/css/Home.css" />
         
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/json/js/json2.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/FluidDOMUtilities.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/DataBinding.js"></script>
@@ -42,7 +43,7 @@
                     <li>                
                         <div class="fl-table">
                             <a rsf:id="scr=null" class="flc-home-links fl-table-cell" href="../exhibitions/browse.html?db=mccord">
-                                <img class="fl-icon" src="../../../../fluid-engage-core/components/home/images/Exhibitions.png" alt="Exhibitions icon" />
+                                <img class="flc-home-exhibitionsIcon fl-icon" src="../../../../fluid-engage-core/components/home/images/Exhibitions.png" alt="Exhibitions icon" />
                             </a>
                         </div>
                         <div class="flc-home-exhibitionsCaption fl-grid-caption">
@@ -52,7 +53,7 @@
                     <li>                
                         <div class="fl-table">
                             <a rsf:id="scr=null" class="flc-home-links fl-table-cell" href="../users/myCollection.html">
-                                <img class="fl-icon" src="../../../../fluid-engage-core/components/home/images/MyCollection.png" alt="My collection icon" />
+                                <img class="flc-home-myCollectionIcon fl-icon" src="../../../../fluid-engage-core/components/home/images/MyCollection.png" alt="My collection icon" />
                             </a>
                         </div>
                         <div class="flc-home-myCollectionCaption fl-grid-caption">
@@ -61,8 +62,8 @@
                     </li>
                     <li>                
                         <div class="fl-table">
-                            <a rsf:id="scr=null" class="flc-home-links fl-table-cell" href="#">
-                                <img class="fl-icon" src="../../../../fluid-engage-core/components/home/images/EnterObjectCode.png" alt="Enter object code icon" />
+                            <a rsf:id="scr=null" class="flc-home-links fl-table-cell" href="../artifacts/codeEntry.html?db=mccord">
+                                <img class="flc-home-objectCodeIcon fl-icon" src="../../../../fluid-engage-core/components/home/images/EnterObjectCode.png" alt="Enter object code icon" />
                             </a>
                         </div>
                         <div class="flc-home-objectCodeCaption fl-grid-caption">
@@ -72,7 +73,7 @@
                     <li>                
                         <div class="fl-table">
                             <a rsf:id="scr=null" class="flc-home-language fl-table-cell" href="#">
-                                <img class="fl-icon" src="../../../../fluid-engage-core/components/home/images/ChangeLanguage.png" alt="Change language icon" />
+                                <img class="flc-home-languageIcon fl-icon" src="../../../../fluid-engage-core/components/home/images/ChangeLanguage.png" alt="Change language icon" />
                             </a>
                         </div>
                         <div class="flc-home-languageCaption fl-grid-caption">
@@ -90,12 +91,12 @@
                 </div>
                 <ul class="fl-list-menu">
                     <li>
-                        <a rsf:id="scr=null" class="flc-languageSelection-links" href="./home.html?lang=en">
+                        <a rsf:id="scr=null" class="flc-languageSelection-englishLink" href="./home.html?lang=en">
                            English 
                         </a>
                     </li>
                     <li>
-                        <a rsf:id="scr=null" class="flc-languageSelection-links" href="./home.html?lang=fr">
+                        <a rsf:id="scr=null" class="flc-languageSelection-frenchLink" href="./home.html?lang=fr">
                             Fran&ccedil;ais
                         </a>
                     </li>

@@ -1,0 +1,43 @@
+.flc-head-message {
+    width: 320px;
+    height: 80px;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
+.fl-invalid-code {
+	color: white;
+	background-color: 464646;
+}
+
+.flc-entry-block {
+    width: 300px;	
+    margin: auto;
+    text-align: center;
+}
+
+.fl-digit-field {
+	width: 64px;
+	height: 64px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-size: 43px;
+	line-height: 64px;
+	text-align: center;
+	vertical-align: middle;
+	background-color: white;
+	display: inline-block;
+}
+
+.flc-numpad {
+	width: 320px;
+	margin: auto; 
+}
+
+.flc-numpad img {
+    margin: -10px;
+    outline: none;
+    cursor: pointer;
+}

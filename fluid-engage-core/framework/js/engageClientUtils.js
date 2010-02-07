@@ -48,10 +48,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
      * @param {Object} name, the name of the 
      */
     fluid.engage.getCookie = function (name) {
-    	var cookie = $.cookie(name);
-    	if (cookie) {
-    		return JSON.parse(cookie);
-    	}
+        var cookie = $.cookie(name);
+        return cookie ? JSON.parse(cookie) : null;
     };
     
     /**********

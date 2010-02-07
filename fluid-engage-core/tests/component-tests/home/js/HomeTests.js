@@ -38,7 +38,21 @@ https://source.fluidproject.org/svn/LICENSE.txt
     function testStringApplication(strings, selectors) {
         for (var key in strings) {
             var string = strings[key];
-            jqUnit.assertEquals("Ensure correct text applied", string, $(selectors[key]).text());
+            
+            //Can't test strings that are used more than once, nor ones that are templates.
+            if (string.indexOf("%") === -1) {
+                jqUnit.assertEquals("Ensure correct text applied", string, $(selectors[key]).text());
+            }
+        }
+    }
+    
+    function testAltTextApplication(strings, selectors) {
+        for (var key in selectors) {
+            if (key.indexOf("Icon") >= 0) {
+                var strEL = key.replace("Icon", "Caption");
+                var expected = fluid.stringTemplate(strings.iconAltText, {iconName: strings[strEL]});
+                jqUnit.assertEquals("Alt text for " + key + " applied", expected, $(selectors[key]).attr("alt"));
+            }
         }
     }
     
@@ -58,23 +72,16 @@ https://source.fluidproject.org/svn/LICENSE.txt
             testStringApplication(component.options.strings, component.options.selectors);
         });
         
+        homeTests.test("Alt Text applied", function () {
+            testAltTextApplication(component.options.strings, component.options.selectors);
+        });
+        
         homeTests.test("Adding the cookie", function () {
             component.addCookie();
             jqUnit.assertTrue("Cookie added properly", fluid.engage.getCookie(cookieName));
         });
         
-        //Tests for page load with cookie. 
-        var homeTestsWithCookie = jqUnit.testCase("Home Screen Tests With Cookie Pre-set", function () {
-            homeTests.fetchTemplate("../../../../components/home/html/home.html", selector);
-            fluid.engage.setCookie(cookieName, {});
-            component = fluid.engage.home(selector, {cookieName: cookieName});
-        }, deleteCookie); 
-        
-        homeTestsWithCookie.test("Page load styling - with Cookie already set", function () {
-            stylingTests(component, "languageSelectionContent", "homeContent", "hidden");
-        });
-        
-        homeTestsWithCookie.test("Language Selection page stlying", function () {
+        homeTests.test("Language Selection page stlying", function () {
             stylingTests(component, "homeContent", "languageSelectionContent", "hidden", "showLanguageSelection");
         });
     });

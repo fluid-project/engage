@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></meta>
+		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"></meta>
+		<meta name="apple-mobile-web-app-capable" content="yes"></meta>
+		
+		<title>
+			Code entry
+		</title>
+
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css"></link>
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css"></link>
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationBar/css/NavigationBar.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/codeEntry/css/codeEntry.css"></link>
+		
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/json/js/json2.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
+		<script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
+
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/Engage.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>	
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationBar/js/NavigationBar.js"></script>	
+   		<script type="text/javascript" src="../../../../fluid-engage-core/components/codeEntry/js/CodeEntryView.js"></script>
+	</head>
+	<body class="fl-theme-iphone">
+		
+		<div class="flc-codeEntry">
+		    
+		    <!-- Navigation Bar and Header -->
+            <div class="flc-navigationBar fl-navbar fl-table">
+                <div class="fl-table-row">
+                    <!-- Back button -->
+                    <div class="fl-table-cell">
+                        <a rsf:id="scr=null" class="flc-navigationBar-back fl-button" href="#">
+                            <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/back.png" alt="Go back"/>
+                        </a>
+                    </div>
+                    <!-- Page header -->
+                    <h1 class="flc-heading fl-table-cell">Enter an Object Code</h1>
+                </div>
+            </div>
+			
+        	<div class="flc-head-message"></div>            
+	
+	        <div class="flc-entry-block">
+	            <span class="flc-first-digit fl-digit-field"></span>
+	            <span class="flc-second-digit fl-digit-field"></span>
+			</div>
+			
+			<div class="flc-numpad fl-table">
+				<div class="fl-table-row">
+					<img class="flc-button-one" src="../../../../fluid-engage-core/components/codeEntry/images/1.png" alt="One"/>
+					<img class="flc-button-two" src="../../../../fluid-engage-core/components/codeEntry/images/2.png" alt="Two"/>
+					<img class="flc-button-three" src="../../../../fluid-engage-core/components/codeEntry/images/3.png" alt="Three"/>
+				</div>
+				<div class="fl-table-row">
+					<img class="flc-button-four" src="../../../../fluid-engage-core/components/codeEntry/images/4.png" alt="Four"/>
+					<img class="flc-button-five" src="../../../../fluid-engage-core/components/codeEntry/images/5.png" alt="Five"/>
+					<img class="flc-button-six" src="../../../../fluid-engage-core/components/codeEntry/images/6.png" alt="Six"/>
+				</div>
+				<div class="fl-table-row">
+					<img class="flc-button-seven" src="../../../../fluid-engage-core/components/codeEntry/images/7.png" alt="Seven"/>
+					<img class="flc-button-eight" src="../../../../fluid-engage-core/components/codeEntry/images/8.png" alt="Eight"/>
+					<img class="flc-button-nine" src="../../../../fluid-engage-core/components/codeEntry/images/9.png" alt="Nine"/>
+				</div>
+				<div class="fl-table-row">
+					<img src="../../../../fluid-engage-core/components/codeEntry/images/blank.png"/>
+					<img class="flc-button-zero" src="../../../../fluid-engage-core/components/codeEntry/images/0.png" alt="Zero"/>
+					<img class="flc-button-del" src="../../../../fluid-engage-core/components/codeEntry/images/del.png" alt="Delete"/>
+				</div>
+			</div>
+		</div>
+				
+        <script id="flc-initBlock" type="text/javascript">
+        </script>
+	</body>
+</html>
