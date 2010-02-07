@@ -698,7 +698,7 @@ var window = this;
 					connection.connect();
 					
           // PATCH: Sveto/AMB               
-          text = new java.lang.String( data || "" )                   
+          text = new java.lang.String( data || "" );
           if (text.length() > 0) {
               // Write content to the connection's stream
               var out = connection.getOutputStream();
