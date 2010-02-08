@@ -24,8 +24,7 @@ fluid.engage = fluid.engage || {};
         var tester = new RegExp(protoExp);
         return {
             accept: function (segment, relPath, pathInfo, context) {
-                if (pathInfo.pathInfo.join("/").match(atSegment) ||
-                		(segment === atSegment && pathInfo.extension === extension)) {
+                if (segment === atSegment && pathInfo.extension === extension) {
                     return tester.test(context.method)? {
                         handle: handler
                     } : fluid.kettle.METHOD_NOT_ALLOWED;

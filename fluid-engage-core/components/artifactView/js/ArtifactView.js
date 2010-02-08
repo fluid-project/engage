@@ -71,7 +71,7 @@ fluid = fluid || {};
         	decorators: [{
                 type: "jQuery",
                 func: "click",
-                args: that.collectionOperations.collectHandler
+                args: that.collectView.collectHandler
             }]
         });
 
@@ -101,7 +101,7 @@ fluid = fluid || {};
                 
         that.artifactCabinet = fluid.initSubcomponent(that, "artifactCabinet", that.locate("cabinetScope"));
         
-        that.collectionOperations = fluid.initSubcomponent(that, "collectionOperations", [
+        that.collectView = fluid.initSubcomponent(that, "collectView", [
             that.locate("collectArtifact"),
         	{
             	artifactCollected: options.artifactCollected,
@@ -127,8 +127,8 @@ fluid = fluid || {};
         artifactCabinet: {
             type: "fluid.cabinet"
         },
-        collectionOperations : {
-            type: "fluid.collectionOperations"
+        collectView : {
+            type: "fluid.engage.artifactCollectView"
         },
         cutpoints: [
             {

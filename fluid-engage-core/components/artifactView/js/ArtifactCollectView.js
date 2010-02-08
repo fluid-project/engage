@@ -16,7 +16,6 @@ fluid = fluid || {};
 
 (function ($) {
 
-    
     /**
      * Creates an URL for the users namespace.
      */
@@ -101,8 +100,8 @@ fluid = fluid || {};
      * @param {Object} container, the container which will hold the component
      * @param {Object} options, options passed into the component
      */
-    fluid.collectionOperations = function (container, options) {
-        var that = fluid.initView("fluid.collectionOperations", container, options);
+    fluid.engage.artifactCollectView = function (container, options) {
+        var that = fluid.initView("fluid.engage.artifactCollectView", container, options);
         
         that.user = fluid.initSubcomponent(that, "user");
 
@@ -131,7 +130,7 @@ fluid = fluid || {};
         return that;
     };
     
-    fluid.defaults("fluid.collectionOperations", {
+    fluid.defaults("fluid.engage.artifactCollectView", {
         user: {
             type: "fluid.user"
         },
