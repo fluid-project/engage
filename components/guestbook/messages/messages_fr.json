@@ -1,3 +1,5 @@
 {
-addNote: "Ajouter une note",
+	"addNote": "Ajouter un commentaire",
+	"delete": "Effacer",
+	"reportAbuse": "Signaler un abus"
 }

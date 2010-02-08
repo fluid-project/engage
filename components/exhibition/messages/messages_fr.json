@@ -1,8 +1,8 @@
 {
-"guestbookInvitationString": "Pas encore de commentaires. Créer votre propre commentaire.",
-"catalogueTitle": "Catalogue (%size)",
-"guestbook": "Livre d'or (%size)",
-"guestbookLinkText": "Lire tous les commentaires",
-"catalogueLinkText": "Voir le catalogue complet",
-"aboutLink": "Lire la suite"
+	"guestbookInvitationString": "Pas encore de commentaires. Soyez le premier à commenter.",
+	"catalogueTitle": "Catalogue (%size)",
+	"guestbook": "Livre d'or (%size)",
+	"guestbookLinkText": "Lire tous les commentaires",
+	"catalogueLinkText": "Voir le catalogue complet",
+	"aboutLink": "Lire la suite"
 }
