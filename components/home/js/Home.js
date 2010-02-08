@@ -75,7 +75,10 @@ fluid = fluid || {};
             node.attr("href", currentHREF + (idxQ < 0 ? param : "&" + param.substr(1)));
         }
         
-        that.locate("languageSelectionLink").click(that.showLanguageSelection);
+        that.locate("languageSelectionLink").click(function (evt) {
+            that.showLanguageSelection();
+            evt.preventDefault();
+        });
         that.locate("links").click(setLanguage);
         that.locate("englishLink").click(function () {
             that.addCookie("en");
