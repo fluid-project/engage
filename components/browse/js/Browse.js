@@ -51,7 +51,7 @@ fluid = fluid || {};
                 showBadge: item.media
             };
         });
-    }
+    };
     
     var generateHeaderForCategory = function (category, component, strings, styles) {
         var description = category.description;

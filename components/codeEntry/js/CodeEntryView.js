@@ -31,6 +31,15 @@ fluid.engage = fluid.engage || {};
     };
     
     /**
+     * Toggles the style of the head div to invalid code message style and off
+     * 
+     * @param {Object} that, the component.
+     */
+    var toggleHeadMessageStyle = function (that) {
+        that.locate("headMessage").toggleClass(that.options.styles.invalidCode);
+    };
+    
+    /**
      * Redirects the browser to the given URL.
      * 
      * @param {Object} that, the component.
@@ -43,7 +52,7 @@ fluid.engage = fluid.engage || {};
         that.atDigit = 0;
         
         if (!that.options.testMode) {
-        	window.location = url;
+            window.location = url;
         }
     };
     
@@ -57,12 +66,12 @@ fluid.engage = fluid.engage || {};
         var redirectFunction = function () {
             redirectToArtifactPage(that, url);
         };
-    	
-    	// Replace the invalid code message with something...
-    	that.locate("headMessage").text(that.options.strings.redirecting);
-    	
+
+        // Replace the invalid code message with something...
+        that.locate("headMessage").text(that.options.strings.redirecting);
+
         toggleHeadMessageStyle(that);
-    	
+
         setTimeout(redirectFunction, that.options.redirectDelay);
     };
     
@@ -79,7 +88,7 @@ fluid.engage = fluid.engage || {};
         invalidCodeBlock.show(250, function () {
             resetEntry(that);
             that.code = "";
-            that.atDigit = 0;        	
+            that.atDigit = 0;
         });
     };
     
@@ -105,7 +114,7 @@ fluid.engage = fluid.engage || {};
             var data = JSON.parse(returnedData);
             
             if (data.artifactFound) {
-            	redirectSequence(that, data.artifactLink);
+                redirectSequence(that, data.artifactLink);
             } else {
                 wrongCodeSequence(that);
             }
@@ -125,7 +134,7 @@ fluid.engage = fluid.engage || {};
      * @param {Object} that, the component.
      */
     var simulateCheck = function (that) {
-    	if (!(that.code[1] % 2)) {
+        if (!(that.code[1] % 2)) {
             redirectSequence(that);
         } else {
             wrongCodeSequence(that);
@@ -155,22 +164,13 @@ fluid.engage = fluid.engage || {};
         if (number < 11) {
             var num = number % 10;
             $(button).click(function () {
-            	that.enterDigit(num);
+                that.enterDigit(num);
             });
         } else {
             $(button).click(function () {
-            	that.deleteLastDigit();
-            });         
+                that.deleteLastDigit();
+            });
         }
-    };
-
-    /**
-     * Toggles the style of the head div to invalid code message style and off
-     * 
-     * @param {Object} that, the component.
-     */
-    var toggleHeadMessageStyle = function (that) {
-    	that.locate("headMessage").toggleClass(that.options.styles.invalidCode);
     };
     
     /**
@@ -214,12 +214,12 @@ fluid.engage = fluid.engage || {};
             if (that.atDigit === 0) {
                 that.code += digit;
                 that.atDigit++;
-            } else {                
+            } else {
                 that.code += digit;
                 if (!that.options.testMode) {
-                	checkCode(that);            
+                    checkCode(that);
                 } else {
-                	simulateCheck(that);
+                    simulateCheck(that);
                 }
             }
         };
@@ -228,7 +228,7 @@ fluid.engage = fluid.engage || {};
             if (that.atDigit === 1) {
                 that.atDigit--;
                 that.code = "";
-                getCurrentDigitField(that).text("");                
+                getCurrentDigitField(that).text("");
             }
         };
         
@@ -249,11 +249,11 @@ fluid.engage = fluid.engage || {};
             entryButtons: "img[class*=flc-button]"
         },
         styles : {
-        	invalidCode: "fl-invalid-code"
+            invalidCode: "fl-invalid-code"
         },
         strings : {
-        	title: "Enter object code",
-        	header: "Enter object code",
+            title: "Enter object code",
+            header: "Enter object code",
             instruction: "Enter code from the object's label to learn more about the object.",
             invalidCode: "Invalid code. Please try again",
             redirecting: "Opening artifact page."
