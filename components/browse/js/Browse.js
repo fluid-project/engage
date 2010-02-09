@@ -119,6 +119,10 @@ fluid = fluid || {};
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
         var selectorsToIgnore = ["browseDescription", "browseContents"];
         
+        //Checks the showToggle option.
+        //A selector "toggle" is expressed in the selectors object, and the renderer is only told to ignore it, if we want to display it.
+        //This takes advantage of the renderer's feature that will strip out markup that has a selector mapped but no associated node in the component tree.
+        //Since the toggle button is just markup, and no component tree node ever added, not ignoring it will trigger the renderer to not display it.
         if (that.options.showToggle) {
             selectorsToIgnore.push("toggle");
         }
