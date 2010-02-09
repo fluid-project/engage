@@ -94,6 +94,20 @@ fluid = fluid || {};
         });
     };
     
+    var setupArtifactCollectionView = function (that) {
+        // TODO: The user subcomponent should be refactored into a handful of stateless functions.
+        that.user = fluid.initSubcomponent(that, "user");
+
+        // Check the cookie to see if we've already met the user. If not, create a new document for them.
+        // Note that, despite its name, generateUuid() actually creates a user document in Couch.
+        var cookieId = that.user.getUuid();
+        that.uuid = cookieId ? cookieId : that.user.generateUuid();
+
+        // Setup the collect/uncollect link and status.
+        switchCollectLink(that, !that.options.artifactCollected);
+        that.collectStatus = that.locate("status");
+    };
+    
     /**
      * The component's creator function 
      * 
@@ -103,18 +117,8 @@ fluid = fluid || {};
     fluid.engage.artifactCollectView = function (container, options) {
         var that = fluid.initView("fluid.engage.artifactCollectView", container, options);
         
-        that.user = fluid.initSubcomponent(that, "user");
-
-        that.uuid = that.user.getUuid();
-        
-        if (!that.uuid) {
-            that.uuid = that.user.generateUuid();
-        } 
-
-        switchCollectLink(that, !options.artifactCollected);
-        
         that.collectHandler = function () {
-            var url = "http://" + location.host + compileArtifactPath(that.uuid, options.museum, options.artifactId);
+            var url = "http://" + location.host + compileArtifactPath(that.uuid, that.options.museum, that.options.artifactId);
             
             $.ajax({
                 url: url,
@@ -122,11 +126,10 @@ fluid = fluid || {};
                 type: that.options.operation
             });
 
+            setupArtifactCollectionView(that);
             confirmCollect(that);
         };        
-        
-        that.collectStatus = that.locate("status");
-        
+                
         return that;
     };
     

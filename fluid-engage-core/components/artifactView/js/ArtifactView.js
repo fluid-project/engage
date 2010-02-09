@@ -104,8 +104,8 @@ fluid = fluid || {};
         that.collectView = fluid.initSubcomponent(that, "collectView", [
             that.locate("collectArtifact"),
         	{
-            	artifactCollected: options.artifactCollected,
-        		museum: options.museum,
+            	artifactCollected: that.options.artifactCollected,
+        		museum: that.options.museum,
         		artifactId: that.options.model.id
         	}
         ]);
