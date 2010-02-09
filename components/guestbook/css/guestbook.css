@@ -1,3 +1,26 @@
 .fl-guestbook-addNote {
     height: 48px;
 }
+
+.fl-guestbook-header {
+    color: #666;
+    }
+    
+.fl-guestbook-author {
+    color: #000;
+    }
+    
+.fl-guestbook-slash-after:after {
+    color: #666;
+    content: " / ";
+    }
+    
+.fl-guestbook-comment-cell {
+    padding: 2px;
+    border-bottom: 1px solid #aaa
+}
+
+.flc-guestbook-container a {
+    text-decoration: underline;
+    cursor: Pointer
+    }

@@ -458,8 +458,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
                if (key.charAt(0) === IDescape) {
                    key = key.substring(1);
                }
-               if (entry.children) {
-                   if (key.indexOf(":" === -1)) {
+               if (entry && entry.children) {
+                   if (key.indexOf(":") === -1) {
                        key = key + ":";
                    }
                    var children = entry.children;

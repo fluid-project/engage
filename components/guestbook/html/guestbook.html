@@ -21,7 +21,11 @@
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>
-        
+
+        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/datepicker/ui.datepicker-stub.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/datepicker/i18n/jquery.ui.datepicker-en-GB.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/datepicker/i18n/jquery.ui.datepicker-fr.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/dateUtils.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationBar/js/NavigationBar.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/components/guestbook/js/guestbook.js"></script>
@@ -50,17 +54,25 @@
                 </div>
             </div>
             
-            <div class="flc-guestbook-addNote fl-guestbook-addNote fl-centered">
-               <label for="fl-addNote" class="flc-guestbook-addNoteText fl-guestbook-title">Add a note</label>
-               <a href="#"><img id="fl-addNote" src="../images/addnote.png" class="flc-addnote-control" /></a>
+            <div class="flc-guestbook-addNote fl-guestbook-addNote">
+               <div class="fl-centered">
+                   <label for="fl-addNote" class="flc-guestbook-addNoteText fl-guestbook-title">Add a note</label>
+                   <a href="#"><img id="fl-addNote" src="../images/addnote.png" class="flc-addnote-control" /></a>
+               </div>
             </div>
-            <div class="flc-guestbook-comment-cell">
-                <span class="flc-guestbook-author fl-guestbook-author">Robert Brown</span>
-                <span class="flc-guestbook-location fl-guestbook-location">Washington, DC,</span>
+            <div class="flc-guestbook-comment-cell fl-guestbook-comment-cell">
+              <div class="fl-guestbook-header fl-push">
+                <span class="flc-guestbook-author fl-guestbook-author fl-guestbook-slash-after">Robert Brown</span>
+                <span class="flc-guestbook-location fl-guestbook-location fl-guestbook-slash-after">Washington, DC</span>
                 <span class="flc-guestbook-date fl-guestbook-date">July 16, 2009</span>
-                <span class="flc-guestbook-text fl-guestbook-text">I had such an amazing time at this
+              </div>
+                <span class="flc-guestbook-text fl-guestbook-text fl-push">I had such an amazing time at this
                 exhibit! Really loved the red sleigh especially. I had one just like it growing up</span>
+              <div class="fl-push"/>
+              <div class="fl-guestbook-actions fl-force-right">
                 <a class="flc-guestbook-action fl-guestbook-action">REPORT ABUSE</a>
+              </div>
+              <div class="fl-push"/>
             </div>
         </div>
         <script id="flc-initBlock" type="text/javascript">
