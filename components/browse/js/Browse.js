@@ -39,6 +39,11 @@ fluid = fluid || {};
             that.cabinet = fluid.initSubcomponent(that, "cabinet", [that.locate("browseContents"), fluid.COMPONENT_OPTIONS]);
         }
         that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
+        that.navBar.events.onToggle.addListener(function () {
+            $.each(that.navLists, function (idx, navList) {
+                navList.that.toggleLayout();
+            });            
+        });   
     };
     
     var mapToNavListModel = function (items) {
@@ -112,8 +117,14 @@ fluid = fluid || {};
     var setup = function (that) {
         bindEvents(that);
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
+        var selectorsToIgnore = ["browseDescription", "browseContents"];
+        
+        if (that.options.showToggle) {
+            selectorsToIgnore.push("toggle");
+        }
+        
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
-            selectorsToIgnore: ["browseDescription", "toggle", "browseContents"],
+            selectorsToIgnore: selectorsToIgnore,
             repeatingSelectors: ["lists"],
             rendererOptions: {
                 messageLocator: messageLocator,
@@ -203,6 +214,7 @@ fluid = fluid || {};
         },
         
         useCabinet: false,
+        showToggle: true,
         
         showHeaderForFirstCategory: true,
         
