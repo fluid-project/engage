@@ -61,36 +61,15 @@ fluid = fluid || {};
      * @param {Object} that,the component
      */    
     var renderArtifactPage = function (that) {
-        var artifact = that.model.artifact;
-        
-        var tree = buildComponentTree(artifact);
-        
-        // Attach collect handler
-        tree.children.push({
-        	ID: "artifactCollectLink",
-        	decorators: [{
-                type: "jQuery",
-                func: "click",
-                args: that.collectView.collectHandler
-            }]
-        });
-
+        var tree = buildComponentTree(that.model.artifact);
         fluid.selfRender(that.locate("renderScope"), tree, {
             cutpoints: that.options.cutpoints, 
-            model: artifact, 
-            debug: true
+            model: that.model.artifact
         });
     };
 
-    /**
-     * The component's creator function 
-     * 
-     * @param {Object} container, the container which will hold the component
-     * @param {Object} options, options passed into the component
-     */
-    fluid.engage.artifactView = function (container, options) {
-        var that = fluid.initView("fluid.engage.artifactView", container, options);
-        that.model = that.options.model; 
+    var setupArtifactView = function (that) {
+        renderArtifactPage(that);
         
         that.description = fluid.initSubcomponent(that, "description", [
             that.locate("descriptionScope"), 
@@ -105,12 +84,23 @@ fluid = fluid || {};
             that.locate("collectArtifact"),
         	{
             	artifactCollected: that.options.artifactCollected,
-        		museum: that.options.museum,
-        		artifactId: that.options.model.id
+        		museum: that.model.museum,
+        		artifactId: that.model.artifact.id
         	}
         ]);
+    };
+    
+    /**
+     * The component's creator function 
+     * 
+     * @param {Object} container, the container which will hold the component
+     * @param {Object} options, options passed into the component
+     */
+    fluid.engage.artifactView = function (container, options) {
+        var that = fluid.initView("fluid.engage.artifactView", container, options);
+        that.model = that.options.model; 
 
-        renderArtifactPage(that);
+        setupArtifactView(that);
         return that; 
     };
     
@@ -119,7 +109,8 @@ fluid = fluid || {};
         selectors: {
             descriptionScope: ".flc-description",
             renderScope: ".flc-artifact-renderscope",
-            cabinetScope: ".cabinet"  
+            cabinetScope: ".cabinet",
+            collectArtifact: ".flc-collect-artifact"
         },
         description: {
             type: "fluid.description"
@@ -154,12 +145,7 @@ fluid = fluid || {};
             {
                 id: "artifactAccessionNumber",
                 selector: ".artifact-accession-number"
-            },
-            {
-            	id: "artifactCollectLink",
-            	selector: ".flc-collect-link"
             }
         ]
     });
-    
 }(jQuery));

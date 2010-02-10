@@ -49,17 +49,11 @@ fluid = fluid || {};
      * "uncollect"
      */
     var switchCollectLink = function (that, collect) {
-        // TODO: that.locate won't work on a rendered DOM, we need to make it work
-        var collectLink = fluid.jById(that.options.collectId);
-        if (collectLink.length === 0) {
-            collectLink = that.locate("collect");
-        }
-        
         if (collect) {
-            collectLink.text(that.options.strings.collect);
+            that.collectLink.text(that.options.strings.collect);
             that.options.operation = "POST";
         } else {
-            collectLink.text(that.options.strings.uncollect);
+            that.collectLink.text(that.options.strings.uncollect);
             that.options.operation = "DELETE";          
         }
     };
@@ -70,31 +64,33 @@ fluid = fluid || {};
      * 
      * @param {Object} that, the component.
      */
-    var confirmCollect = function (that) {
-        // TODO: that.locate won't work on a rendered DOM, we need to make it work
-        var collectLink = fluid.jById(that.options.collectId);
-        var collectStatus = collectLink.next().children();
-        
-        collectStatus.attr("href", "http://" + location.host + compileUsersPath() + 
+    var confirmCollect = function (that) {        
+        that.collectStatus.attr("href", "http://" + location.host + compileUsersPath() + 
                 "/myCollection.html" + "?uuid=" + that.uuid);
-        collectStatus.addClass("active");
+        that.collectStatus.addClass("active");
         
         if (that.options.operation === "POST") {
-            collectStatus.text(that.options.strings.collectedMessage);
+            that.collectStatus.text(that.options.strings.collectedMessage);
         } else {
-            collectStatus.text(that.options.strings.uncollectedMessage);
+            that.collectStatus.text(that.options.strings.uncollectedMessage);
         }
         
-        collectStatus.fadeTo(1000, 1, function () {
-            collectStatus.fadeTo(4000, 0, function () {
+        that.collectStatus.fadeTo(1000, 1, function () {
+            that.collectStatus.fadeTo(4000, 0, function () {
                 switchCollectLink(that, that.options.operation === "DELETE");
-                collectStatus.removeClass("active");
-                collectStatus.removeAttr("href");
+                that.collectStatus.removeClass("active").removeAttr("href");
             });
         });
     };
     
     var setupArtifactCollectionView = function (that) {
+        // Grab the collect/uncollect link from the DOM and bind the collection toggle handler to it.
+        that.collectLink = that.locate("collectLink");
+        that.collectLink.click(function (evt) {
+            that.toggleCollectedArtifact();
+            evt.preventDefault();
+        });
+        
         // TODO: The user subcomponent should be refactored into a handful of stateless functions.
         that.user = fluid.initSubcomponent(that, "user");
 
@@ -117,7 +113,10 @@ fluid = fluid || {};
     fluid.engage.artifactCollectView = function (container, options) {
         var that = fluid.initView("fluid.engage.artifactCollectView", container, options);
         
-        that.collectHandler = function () {
+        /**
+         * Collects or uncollects the current artifact.
+         */
+        that.toggleCollectedArtifact = function () {
             var url = "http://" + location.host + compileArtifactPath(that.uuid, that.options.museum, that.options.artifactId);
             
             $.ajax({
@@ -126,10 +125,10 @@ fluid = fluid || {};
                 type: that.options.operation
             });
 
-            setupArtifactCollectionView(that);
             confirmCollect(that);
         };        
                 
+        setupArtifactCollectionView(that);
         return that;
     };
     
@@ -139,7 +138,7 @@ fluid = fluid || {};
         },
         operation: null,
         selectors : {
-            collect: ".flc-collect-link",
+            collectLink: ".flc-collect-link",
             status: ".flc-collection-link"
         },
         collectId: "artifactCollectLink",

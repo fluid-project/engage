@@ -14,35 +14,6 @@
 fluid = fluid || {};
 
 (function ($) {
-    /**
-     * Creates a model node.
-     * 
-     * @param {Object} id, the ID used by the component tree
-     * @param {Object} key, a key representing an entry in a renderer component
-     * @param {Object} value, the value assigned to the key
-     * @param artifactId, the artifact CouchDB id.
-     * @param museum, the museum for the artifact.
-     */
-    var treeNode = function (artifactId, museum) {
-        var obj = {};
-        
-        obj.artifactId = artifactId;
-        obj.museum = museum;
-        
-        return obj;
-    };
-    
-    /**
-     * Generates the component tree used by the renderer.
-     * 
-     * @param {Object} that, the component.
-     */
-    var generateTree = function (that) {
-        return fluid.transform(that.options.model.data, function (object) {
-            var tree = treeNode(object.id, object.museum);
-            return tree;
-        });
-    };
     
     /**
      * Assigns the href attribute to the back button to document.referrer.
@@ -62,80 +33,7 @@ fluid = fluid || {};
             backUrl += "&" + $.param({uuid: that.uuid});
         }
         that.locate("backButton").attr("href", backUrl);
-    };
-    
-    /**
-     * Reorders the model by manipulating the array.
-     * 
-     * @param {Object} model, the underlying data model.
-     * @param index, the new index of a moved element.
-     * @param oldIndex, the old index of a moved element.
-     */
-    // TODO: use splice
-    var reorderModel = function (model, index, oldIndex) {
-        var result = [];
-        var start = [];
-        var middle = [];
-        var end = [];
-
-        if (index > oldIndex) {
-            start = model.slice(0, oldIndex);
-            middle = model.slice(oldIndex + 1, index + 1);
-            end = model.slice(index + 1);
-            
-            result = start.concat(middle);
-            result.push(model[oldIndex]);               
-            result = result.concat(end);                
-        } else {
-            start = model.slice(0, index);
-            middle = model.slice(index, oldIndex);
-            end = model.slice(oldIndex + 1);
-            
-            result = start;
-            result.push(model[oldIndex]);
-            result = result.concat(middle).concat(end);
-        }
-        
-        return result;
-    };
-
-    /**
-     * Invokes an update on CouchDB with the new order of artifacts in the collection.
-     * 
-     * @param {Object} model, the underlying data model.
-     * @param uuid, the id of the user and collection.
-     */
-    var updateDatabaseOrder = function (that) {
-        var error = function (XMLHttpRequest, textStatus, errorThrown) {
-            fluid.log("Status: " + textStatus);
-            fluid.log("Error: " + errorThrown);
-        };
-        
-        var data = {};
-        data.collection = {};
-        data.collection.artifacts = [];
-        
-        fluid.transform(that.model, function (object) {
-            data.collection.artifacts.push({museum: object.museum, id: object.artifactId});
-        });
-
-        var pathname = location.pathname;
-        var path = pathname.substring(0, pathname.lastIndexOf("/"));
-        var url = "http://" + location.host + path + "/reorder.js";
-        
-        var toSend = fluid.stringTemplate("uuid=%uuid&orderData=%orderData", 
-            {
-                uuid: that.uuid,
-                orderData: encodeURIComponent(JSON.stringify(data))
-            });
-        
-        $.ajax({
-            url: url,
-            async: false,
-            data: toSend,
-            error: error
-        });
-    };            
+    };           
 
     /**
      * Make a model for the navigation list subcomponent
@@ -161,49 +59,24 @@ fluid = fluid || {};
      * @param that, the component
      */
     var initNavigationList = function (that) {
-    	var navListModel = mapToNavListModel(that.options.model.data);
+    	var navListModel = mapToNavListModel(that.model.data);
         fluid.merge("merge", that.options.navigationList.options, {model: navListModel});
         
         that.navigationList = fluid.initSubcomponent(that, "navigationList",
         		[that.locate("navListContainer"),
         		 that.options.navigationList.options]);
     	
-        that.navigationList.events.afterRender.addListener(that.removeLoadingStyling);
-        that.navigationList.events.afterRender.addListener(that.refreshReorderer);
+        that.navigationList.events.afterRender.addListener(function () {
+            that.container.removeClass(that.options.styles.load);
+        });
         
         that.locate("toggler").click(function () {
         	that.navigationList.toggleLayout();
         });
     };
-
-    /**
-     * Isolate the initialization of the image reorderer here
-     * @param that, the component
-     */
-    var initImageReorderer = function (that) {
-    	if (that.options.useReorderer) {
-	        that.imageReorderer = fluid.initSubcomponent(that, "imageReorderer",
-	                [that.locate("myCollectionContainer"),
-	                 that.options.imageReorderer.options]);
-	        
-	        that.imageReorderer.events.afterMove.addListener(that.afterMoveListener);
-	        that.imageReorderer.events.onBeginMove.addListener(that.onBeginMoveListener);
-	        that.imageReorderer.options.avatarCreator = that.avatarCreator;
-    	}        
-    };
     
-    /**
-     * Initializes all elements of the collection view that have not been initialized.
-     * 
-     * @param {Object} that, the component
-     */
-    var setup = function (that) {
-    	// Create the model
-    	// TODO: get the model directly from the service
-    	that.model = generateTree(that);
-
-    	// Fetch navigation list template as resources
-    	var navListLink = that.locate("navListLink");
+    var setupNavList = function (that) {
+        var navListLink = that.locate("navListLink");
     	var navListContainer = that.locate("navListContainer");
     	var resourceSpec = {};
 
@@ -213,6 +86,7 @@ fluid = fluid || {};
     			async: false
     		},
     	}, function (resourceSpecs) {
+    	    // TODO: Need to fix DOM-specific selectors here.
     		var navListGroup = $(resourceSpecs.navlist.resourceText).find(".flc-navigationList-groupContainer");
     		navListContainer.html(navListGroup.html());
     		
@@ -221,33 +95,40 @@ fluid = fluid || {};
     		// An side effect is that the component is not fully constructed after
     		// it returns from its initialization function.
         	initNavigationList(that);
-        	initImageReorderer(that);
     	});
-
-    	// User
-    	that.user = fluid.initSubcomponent(that, "user");
-        that.uuid = that.user.getUuid();
-    	
-        // Set the status message        
-        var collectionSize = that.getCollectionSize();
-        var status = "";
+    };
+    
+    var setupStatusMessage = function (statusEl, strings, model) {
+        var collectionSize = model.data.length;
+        var status = strings.emptyCollectionMessage;
         
+        // TODO: This needs to be internationalized.
     	if (collectionSize > 0) {
     		status = fluid.stringTemplate(
-	            that.options.strings.statusMessageTemplate, {
+	            strings.statusMessageTemplate, {
 	                artifactsNumber: collectionSize,
 	                artifactsPlural: collectionSize === 1 ? "" : "s"
 	            }
             );
-    	} else {
-    		status = that.options.strings.emptyCollectionMessage;
     	}
-  
-        that.locate("collectionStatus").text(status);
-        
-        that.currentView = that.options.defaultView;
-        
-        // Set a link target for the back button
+        statusEl.text(status);
+    };
+    
+    /**
+     * Initializes all elements of the collection view that have not been initialized.
+     * 
+     * @param {Object} that, the component
+     */
+    var setupMyCollection = function (that) {
+    	setupNavList(that);
+    	
+    	// Instantiate the user subcomponent and grab the current user's ID.
+    	that.user = fluid.initSubcomponent(that, "user");
+        that.uuid = that.user.getUuid();
+    	
+        setupStatusMessage(that.locate("collectionStatus"), that.options.strings, that.model);
+                
+        // TODO: This should be replaced by the Navigation Bar component.
         initBackLink(that);
     };
 
@@ -259,61 +140,9 @@ fluid = fluid || {};
      */
     fluid.engage.myCollection = function (container, options) {
         var that = fluid.initView("fluid.engage.myCollection", container, options);
-
-        that.afterMoveListener = function (object, requestedPosition, allObjects) {
-            var index = allObjects.index(object);
-            var oldIndex = that.reordererModel.index(object);
-
-            if (index === oldIndex) {
-                return;
-            }
-            
-            that.model = reorderModel(that.model, index, oldIndex);
-            
-            if (that.options.updateDatabaseOrder) {
-                updateDatabaseOrder(that);
-            }
-        };
+        that.model = that.options.model;
         
-        that.onBeginMoveListener = function (item) {
-            that.reordererModel = that.imageReorderer.dom.fastLocate("movables");
-        };
-        
-        // TODO: see if we need that
-        that.avatarCreator = function (item) {
-            var image = {};
-            
-            fluid.dom.iterateDom(item, function (node) {
-                image = node;
-                if ($(node).hasClass(".flc-navigationList-image")) {
-                    return "stop";
-                }
-            }, false);
-            
-            return $(image).clone();
-        };
-        
-        that.getCollectionSize = function () {
-        	return that.options.model.data.length;
-        };
-        
-        that.removeLoadingStyling = function () {
-            that.container.removeClass(that.options.styles.load);
-        };
-
-        /**
-         * Refreshes the reorderer.
-         * 
-         * @param {Object} that, the component.
-         */
-        that.refreshReorderer = function () {
-            if (that.imageReorderer) {
-                that.imageReorderer.refresh();
-            }
-        };
-        
-        setup(that);
-        
+        setupMyCollection(that);
         return that;
     };
     
@@ -329,27 +158,6 @@ fluid = fluid || {};
     		
             user: {
                 type: "fluid.user"
-            },
-            
-            imageReorderer: {
-                type: "fluid.reorderImages",
-                options: {
-                    selectors: {
-                        movables: ".flc-navigationList-items"
-                    },                    
-                    styles: {
-                        defaultStyle: null,
-                        selected: null,
-                        dragging: null,
-                        mouseDrag: "fl-invisible",
-                        dropMarker: "fl-myCollection-dropMarker"
-                    },                            
-                    listeners: {
-                        afterMove: null,
-                        onBeginMove: null
-                    },                    
-                    avatarCreator: null
-                }
             },
                 
             selectors: {
@@ -373,11 +181,7 @@ fluid = fluid || {};
                 emptyCollectionMessage:
                 	"Your collection is empty. Start adding artifacts to your " +
                 	"collection by using the \"Collect\" button you find on artifact screens."
-            },
-            
-            updateDatabaseOrder: true,
-            
-            useReorderer: false           
+            }
         }
     );
 })(jQuery);

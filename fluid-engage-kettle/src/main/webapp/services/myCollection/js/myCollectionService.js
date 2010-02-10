@@ -32,11 +32,11 @@ fluid.myCollection = fluid.myCollection || {};
     /**
      * Returns a associative array of museums to arrays of artifact ids.
      * 
-     * @param {Object} rawData, the collection data as it is returned by CouchDB.
+     *  @param user, the user document from Couch
      */
-    var getArtifactsByMuseum = function (rawData) {
+    var getArtifactsByMuseum = function (user) {
         var result = []; 
-        var collection = rawData.collection;
+        var collection = user.collection;
         fluid.transform(collection.artifacts, function (artifact) {
             if (!result[artifact.museum]) {
                 result.push(artifact.museum);
@@ -52,10 +52,10 @@ fluid.myCollection = fluid.myCollection || {};
      * Returns an array of objects containing the database and the URL to query artifact data by.
      * 
      *  @param {Object} config, the JSON config file for Engage.
-     *  @param rawData, the raw collection data, as returned by CouchDB.
+     *  @param user, the user document from Couch
      */
-    var compileDataURLs = function (config, rawData) {
-        var artifactsByMuseum = getArtifactsByMuseum(rawData);
+    var compileDataURLs = function (config, user) {
+        var artifactsByMuseum = getArtifactsByMuseum(user);
         
         return fluid.transform(artifactsByMuseum, function (artifact, index) {
             var database = artifactsByMuseum[index];
@@ -77,19 +77,12 @@ fluid.myCollection = fluid.myCollection || {};
     /**
      * Returns an array of artifact ids.
      * 
-     * @param rawData, the raw collection data, as returned by CouchDB.
+     *  @param user, the user document from Couch
      */
-    var getArtifactIds = function (rawData) {
-        // External to the transforms, because we need a flat array
-        var result = [];
-        
-        var collection = rawData.collection;
-
-        fluid.transform(collection.artifacts, function (artifact) {
-            result.push(artifact.id);
+    var getArtifactIds = function (user) {
+        return fluid.transform(user.collection.artifacts, function (artifact) {
+            return artifact.id;
         });
-        
-        return result;
     };
     
     /**
@@ -174,12 +167,15 @@ fluid.myCollection = fluid.myCollection || {};
     	if (!uuid) {
             return {model: {data: []}};
     	}
-        var rawData = fluid.myCollection.common.getCollection(uuid, config);
+    	
+    	// TODO: Despite being called getCollection(), this function actually returns user documents. We should rename this.
+        var user = fluid.myCollection.common.getCollection(uuid, config);
 
-        var urls = compileDataURLs(config, rawData);
-        var originalArtifactIds = getArtifactIds(rawData);
+        var urls = compileDataURLs(config, user);
+        var originalArtifactIds = getArtifactIds(user);
 
         var dataSet = fluid.transform(urls, function (artifactURL) {
+            // TODO: We're getting weird and apparently incorrect artifact data here. This is where we need to fix the service!
             var rawArtifactData = ajaxCall(artifactURL.url);
             var artifactData = getArtifactData(rawArtifactData, artifactURL.database);
 
@@ -236,8 +232,9 @@ fluid.myCollection = fluid.myCollection || {};
         	var query = env.QUERY_STRING;
         	var uuid;
         	var idx = query.indexOf("uuid=");
-        	if (idx > 0) {
+        	if (idx >= 0) {
         		var endIdx = query.indexOf("&", idx);
+        		endIdx = (endIdx < 0) ? query.length : endIdx;
         		uuid = env.QUERY_STRING.substring(idx + "uuid=".length, endIdx);
         	}
         	

@@ -65,9 +65,10 @@ fluid.artifactView = fluid.artifactView || {};
             return false;
         }
         
-        var url = fluid.stringTemplate(config.myCollectionQueryURLTemplate, 
-                {dbName: "users", view: config.views.byUserArtifact,
-                    query: encodeURIComponent("user AND " + params.uuid + " AND " + artifactId)});
+        var url = fluid.stringTemplate(config.queryURLTemplate, {
+            dbName: "users", view: config.views.byUserArtifact,
+            query: encodeURIComponent("user AND " + params.uuid + " AND " + artifactId)
+        });
         
         var collected = false;
         
