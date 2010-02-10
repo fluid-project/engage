@@ -318,6 +318,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
     fluid.engage.renderUtils.createRendererFunction = function (container, selectors, options) {
         options = options || {};
         container = $(container);
+        var source = options.templateSource? options.templateSource: {node: container};
         var rendererOptions = options.rendererOptions || {};
         var templates = null;
         
@@ -328,7 +329,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             if (templates) {
                 fluid.reRender(templates, container, tree, rendererOptions);
             } else {
-                templates = fluid.selfRender(container, tree, rendererOptions);
+                templates = fluid.render(source, container, tree, rendererOptions);
             }
         };
     };
@@ -488,8 +489,6 @@ https://source.fluidproject.org/svn/LICENSE.txt
         };
         return expandChildren;
     };
-    
-        
     
     fluid.engage.renderUtils.uiContainer = function (id, children) {
         return {

@@ -121,7 +121,7 @@ fluid.dateUtils.getLocalisedDateElement = function(locale, element, index) {
     if (locale === "en") {
         locale = "en-GB";
     }
-    return $.datepicker.regional[locale][element][index];
+    return window.jQuery.datepicker.regional[locale][element][index];
 };
 
 // This method adapted from DateJS code hosted at http://code.google.com/p/datejs/

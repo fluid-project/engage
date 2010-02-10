@@ -46,6 +46,7 @@ fluid = fluid || {};
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
             repeatingSelectors: ["commentCell"],
+            templateSource: that.options.templateSource? that.options.templateSource : {node: that.container},
             rendererOptions: {
                 messageLocator: messageLocator,
                 model: that.model,

@@ -54,6 +54,10 @@ fluid.engage = fluid.engage || {};
     
     fluid.engage.navigationBar = function (container, options) {
         var that = fluid.initView("fluid.engage.navigationBar", container, options);
+        if (that.options.disabled) {
+            that.locate("bar").hide();
+            return null;
+        }
         
         that.home = function () {
             // TODO: This is grossly hardcoded and needs to be improved
@@ -75,6 +79,7 @@ fluid.engage = fluid.engage || {};
     
     fluid.defaults("fluid.engage.navigationBar", {
         selectors: {
+            bar: ".flc-navigationBar",
             backButton: ".flc-navigationBar-back",
             homeButton: ".flc-navigationBar-home",
             toggleButton: ".flc-navigationBar-toggle",
@@ -88,7 +93,7 @@ fluid.engage = fluid.engage || {};
             defaultToggle: "Switch to grid layout",
             alternateToggle: "Switch to list layout"
         },
-        
+        disabled: false,
         events: {
             onToggle: null
         }

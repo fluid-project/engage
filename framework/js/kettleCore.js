@@ -109,6 +109,53 @@ fluid = fluid || {};
         }
         return togo;
     };
+    
+    fluid.kettle.operateUrl = function(url, responseParser, writeDispose) {
+        var togo = {};
+        responseParser = responseParser || fluid.identity;
+        function success(responseText, textStatus) {
+            togo.data = responseParser(responseText); 
+            togo.textStatus = textStatus;
+        }
+        function error(xhr, textStatus, errorThrown) {
+            fluid.log("Data fetch error - textStatus: " + textStatus);
+            fluid.log("ErrorThrown: " + errorThrown);
+            togo.textStatus = textStatus;
+            togo.errorThrown = errorThrown;
+            togo.isError = true;
+        }
+        var ajaxOpts = {
+            url: url,
+            success: success,
+            error: error
+        };
+        if (writeDispose) {
+          $.extend(ajaxOpts, writeDispose);
+        }
+        fluid.log("Issuing request for " + ajaxOpts.type + " of URL " + ajaxOpts.url);
+        $.ajax(ajaxOpts);
+        fluid.log("Request returned");
+        return togo;
+    };
+    
+    // Temporary definitions to quickly extract template segment from file
+    // will be replaced by more mature system which will also deal with head matter
+    // collection and rewriting
+    var BEGIN_KEY = "<--DISREPUTABLE TEMPLATE BOUNDARY-->";
+    
+    fluid.kettle.stripTemplateQuickly = function(text) {
+        var bl = BEGIN_KEY.length;
+        var i1 = text.indexOf(BEGIN_KEY);
+        var i2 = text.indexOf(BEGIN_KEY, i1 + bl);
+        if (i1 === -1 || i2 === -1) {
+            fluid.fail("Template boundary not found within file");
+        } 
+        return text.substring(i1 + bl, i2);
+    };
+    
+    fluid.kettle.fetchTemplateSection = function(url) {
+        return fluid.kettle.operateUrl(url, fluid.kettle.stripTemplateQuickly, {async: false});
+    }
   
 })(jQuery, fluid);
     

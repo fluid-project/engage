@@ -62,6 +62,7 @@ fluid = fluid || {};
         }
         
         that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
+        that.guestbook = fluid.initSubcomponent(that, "guestbook", [that.locate("guestbook"), fluid.COMPONENT_OPTIONS]);
     };
     
     var setup = function (that) {        
@@ -106,6 +107,17 @@ fluid = fluid || {};
             }
         },
         
+        guestbook: {
+            type: "fluid.engage.guestbook",
+            options: {
+                navigationBar: {
+                    options: {
+                        disabled: true
+                    }
+                }
+            }
+        },
+                
         navigationBar: {
             type: "fluid.engage.navigationBar"
         },
