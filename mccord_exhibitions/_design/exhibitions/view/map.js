@@ -10,7 +10,7 @@ function (doc) {
         'image': doc.exhibit.images.image, 
         'content': doc.exhibit.content, 
         'introduction': doc.exhibit.introduction, 
-        'catalogueSize': doc.exhibit.artifacts ? doc.exhibit.artifacts.cnt : 0,
+        'catalogueSize': doc.exhibit.artifacts ? doc.exhibit.artifacts.cnt : "0",
         'cataloguePreview': doc.exhibit.highlights ? doc.exhibit.highlights.artifact : [] 
     });
 }

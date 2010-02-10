@@ -4,7 +4,7 @@ function(doc) {
         for (var index in value) {
             var section = value[index];
             sections.push({
-                'sectionSize': section.artifacts ? section.artifacts.cnt : 0,
+                'sectionSize': section.artifacts ? section.artifacts.cnt : "0",
                 'sectionTitle': section.title,
                 'sectionHighlights': section.highlights ? (section.highlights.artifact || []) : [] 
             });
@@ -15,7 +15,7 @@ function(doc) {
         'title': doc.exhibit.title,
         'lang': doc.exhibit.lang
     }, {
-        'catalogueSize': doc.exhibit.artifacts ? doc.exhibit.artifacts.cnt : 0, 
+        'catalogueSize': doc.exhibit.artifacts ? doc.exhibit.artifacts.cnt : "0", 
         'sections': doc.exhibit.sections ? buildSections(doc.exhibit.sections.section) : []
     });
 }

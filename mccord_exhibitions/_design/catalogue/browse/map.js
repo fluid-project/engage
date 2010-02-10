@@ -8,7 +8,7 @@ function (doc) {
                 'sectionTitle': section.title,
                 'lang': doc.exhibit.lang
             }, {
-                'sectionSize': section.artifacts ? section.artifacts.cnt : 0,
+                'sectionSize': section.artifacts ? section.artifacts.cnt : "0",
                 'sectionArtifacts': section.artifacts ? section.artifacts.artifact : []
             });
         }
@@ -17,7 +17,7 @@ function (doc) {
             'sectionTitle': 'viewAll',
             'lang': doc.exhibit.lang
         }, {
-            'sectionSize': doc.exhibit.artifacts ? doc.exhibit.artifacts.cnt : 0,
+            'sectionSize': doc.exhibit.artifacts ? doc.exhibit.artifacts.cnt : "0",
             'sectionArtifacts': doc.exhibit.artifacts ? doc.exhibit.artifacts.artifact : []
         });
     }
@@ -27,7 +27,7 @@ function (doc) {
             'sectionTitle': '',
             'lang': doc.exhibit.lang
         }, {
-            'sectionSize': 0,
+            'sectionSize': "0",
             'sectionIntroduction': '',
             'sectionArtifacts': []
         });
