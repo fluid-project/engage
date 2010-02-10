@@ -126,7 +126,7 @@ fluid = fluid || {};
                 "artifactMention": "value.mention",
                 "artifactRelated": "value.relatedArtifacts",
                 "artifactRelatedCount": "value.relatedArtifactsCount",
-                "id": "id"
+                "id": "value.id"
             },
             mappers: {
                 getImage: function (value) {

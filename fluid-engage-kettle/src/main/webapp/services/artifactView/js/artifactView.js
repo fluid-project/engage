@@ -49,16 +49,6 @@ fluid.artifactView = fluid.artifactView || {};
             })
         }); 
     };
-
-    var fetchAndNormalizeModel = function (params, config) {
-        var urlBase = "browse.html?";
-        var artifactModel = fluid.engage.mapModel(getData(buildDataURL(params, config)), params.db);
-        return {
-            artifact: artifactModel,
-            museum: params.db,
-            artifactCollected: checkCollectStatus(config, params, artifactModel.id)            
-        };
-    };
     
     var checkCollectStatus = function (config, params, artifactId) {
         if (!params.uuid) {
@@ -66,7 +56,8 @@ fluid.artifactView = fluid.artifactView || {};
         }
         
         var url = fluid.stringTemplate(config.queryURLTemplate, {
-            dbName: "users", view: config.views.byUserArtifact,
+            dbName: "users",
+            view: config.views.byUserArtifact,
             query: encodeURIComponent("user AND " + params.uuid + " AND " + artifactId)
         });
         
@@ -84,6 +75,18 @@ fluid.artifactView = fluid.artifactView || {};
         $.ajax({url: url, async: false, success: successCallback, error: errorCallback});
         
         return collected;
+    };
+    
+    var fetchAndNormalizeModel = function (params, config) {
+        var urlBase = "browse.html?";
+        var data = getData(buildDataURL(params, config));
+        var artifactModel = fluid.engage.mapModel(data, params.db);
+        return {
+            artifact: artifactModel,
+            artifactId: data.id,
+            museum: params.db,
+            artifactCollected: checkCollectStatus(config, params, data.id)            
+        };
     };
     
     fluid.artifactView.initDataFeed = function (config, app) {

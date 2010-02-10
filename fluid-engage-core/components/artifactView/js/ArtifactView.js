@@ -82,11 +82,11 @@ fluid = fluid || {};
         
         that.collectView = fluid.initSubcomponent(that, "collectView", [
             that.locate("collectArtifact"),
-        	{
-            	artifactCollected: that.options.artifactCollected,
-        		museum: that.model.museum,
-        		artifactId: that.model.artifact.id
-        	}
+            {
+                artifactCollected: that.model.artifactCollected,
+                museum: that.model.museum,
+                artifactId: that.model.artifactId
+            }
         ]);
     };
     

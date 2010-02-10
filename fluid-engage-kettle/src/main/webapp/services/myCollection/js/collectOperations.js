@@ -102,7 +102,9 @@ fluid.collectOperations = fluid.collectOperations || {};
                 var collectFn;
                 var acceptor = {
                     handle: function (env) {
-                        collectFn(env.urlState.pathInfo, config)
+                        collectFn(env.urlState.pathInfo, config);
+                        
+                        return [200, {"Content-Type": "text/plain"}];
                     }
                 };
                 

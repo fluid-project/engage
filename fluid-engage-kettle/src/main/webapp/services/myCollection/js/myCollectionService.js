@@ -110,12 +110,12 @@ fluid.myCollection = fluid.myCollection || {};
                 id: artifact.id,
                 museum: dbName,
                 target: compileTargetURL(baseArtifactURL, {
-                    q: artifact.linkTarget,
+                    q: artifact.artifactAccessionNumber,
                     db: dbName,
                     uuid: uuid
                 }),
-                image: artifact.linkImage,
-                title: artifact.linkTitle,
+                image: artifact.artifactImage,
+                title: artifact.artifactTitle,
                 dated: artifact.artifactDate
             };
         });
@@ -142,6 +142,37 @@ fluid.myCollection = fluid.myCollection || {};
         }
     };
     
+    // This function does a mapping from a document returned by Lucene to
+    // the standard document returned by the native couchdb view
+    var preMap = function (document, database) {
+        var artifact = document.artifact;
+        var mappedModel = {value: {}};
+        if (database === "mccord") {
+            mappedModel.value = {
+                'title': artifact.label.title || artifact.label.object,
+                'artist': artifact.label.artist,
+                'dated': artifact.label.dated,
+                'medium': artifact.label.medium,
+                'dimensions': artifact.label.dimensions,
+                'mention': artifact.label.mention,
+                'accessnumber': artifact.label.accessnumber,
+                'description': artifact.description || "",
+                'mediaCount': artifact.mediafiles ? artifact.mediafiles.mediafile.length.toString() || "0" : "0",
+                'media': artifact.mediafiles ? artifact.mediafiles.mediafile || [] : [],
+                'commentsCount': artifact.comments ? artifact.comments.cnt || "0" : "0",
+                'comments': artifact.comments ? artifact.comments.comment || [] : [],
+                'relatedArtifactsCount': artifact.related_artifacts ? artifact.related_artifacts.cnt || "0" : "0",
+                'relatedArtifacts': artifact.related_artifacts ? artifact.related_artifacts.artifact || [] : [],
+                'image': artifact.images ? artifact.images.image : [],
+                'id': document._id                                                                  
+            };
+        }
+
+        // TODO: Mapping for other databases
+
+        return mappedModel;
+    };
+    
     /**
      * Maps the model to standard JSON ids that will be passed to the client.
      * 
@@ -152,7 +183,7 @@ fluid.myCollection = fluid.myCollection || {};
         var dataRows = rawArtifactData.rows || [];
         
         return fluid.transform(dataRows, function (row) {
-            var artifact = row.doc;
+            var artifact = preMap(row.doc, database);
             return fluid.engage.mapModel(artifact, database);
         });
     };
@@ -164,21 +195,19 @@ fluid.myCollection = fluid.myCollection || {};
      *  @param {Object} config, the JSON config file for Engage.
      */
     var assembleData = function (uuid, config) {
-    	if (!uuid) {
+        if (!uuid) {
             return {model: {data: []}};
-    	}
-    	
-    	// TODO: Despite being called getCollection(), this function actually returns user documents. We should rename this.
+        }
+        
+        // TODO: Despite being called getCollection(), this function actually returns user documents. We should rename this.
         var user = fluid.myCollection.common.getCollection(uuid, config);
 
         var urls = compileDataURLs(config, user);
         var originalArtifactIds = getArtifactIds(user);
 
         var dataSet = fluid.transform(urls, function (artifactURL) {
-            // TODO: We're getting weird and apparently incorrect artifact data here. This is where we need to fix the service!
             var rawArtifactData = ajaxCall(artifactURL.url);
             var artifactData = getArtifactData(rawArtifactData, artifactURL.database);
-
             return compileData(artifactData, artifactURL.database, uuid);            
         });
 
@@ -202,7 +231,7 @@ fluid.myCollection = fluid.myCollection || {};
         for (var i = 0; i < originalArtifactIds.length; i++) {
             data.model.data.push(links[$.inArray(originalArtifactIds[i], artifactIds)]);
         }
-        
+
         data.model.collectionId = uuid;
         
         return data;
@@ -229,20 +258,20 @@ fluid.myCollection = fluid.myCollection || {};
         });
         
         handler.registerProducer("myCollection", function (context, env) {
-        	var query = env.QUERY_STRING;
-        	var uuid;
-        	var idx = query.indexOf("uuid=");
-        	if (idx >= 0) {
-        		var endIdx = query.indexOf("&", idx);
-        		endIdx = (endIdx < 0) ? query.length : endIdx;
-        		uuid = env.QUERY_STRING.substring(idx + "uuid=".length, endIdx);
-        	}
-        	
+            var query = env.QUERY_STRING;
+            var uuid;
+            var idx = query.indexOf("uuid=");
+            if (idx >= 0) {
+                var endIdx = query.indexOf("&", idx);
+                endIdx = (endIdx < 0) ? query.length : endIdx;
+                uuid = env.QUERY_STRING.substring(idx + "uuid=".length, endIdx);
+            }
+            
             var initBlock = {
-        		ID: "initBlock",
-        		functionname: "fluid.engage.myCollection",
-        		arguments: [".flc-myCollection", assembleData(uuid, config)]
-      		};
+                ID: "initBlock",
+                functionname: "fluid.engage.myCollection",
+                arguments: [".flc-myCollection", assembleData(uuid, config)]
+            };
             
             return initBlock;
         });
