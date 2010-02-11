@@ -57,6 +57,17 @@ fluid = fluid || {};
             }
         };
         
+        if (that.model.artifactDescription) {
+            proto.descriptionContent = {markup: "%artifactDescription"};
+            proto.description = {
+                decorators: {
+                    type: "fluid",
+                    func: "fluid.engage.moreLess",
+                    options: that.options.descriptionMoreLess.options
+                }
+            };
+        }
+        
         // Trim out any components for model values that are not present, so that the renderer will remove associated template markup.
         removeEmptyComponents(proto, that.model);
         return proto;
@@ -122,27 +133,22 @@ fluid = fluid || {};
     };
 
     var setup = function (that) {
-        that.sections = makeNavListModels(that.model, that.options);        
+        that.sections = makeNavListModels(that.model, that.options);
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
-            selectorsToIgnore: ["description", "sectionContainer"],
+            selectorsToIgnore: ["sectionContainer"],
             repeatingSelectors: ["sections"],
             rendererOptions: {
                 messageLocator: messageLocator,
                 model: that.model
             }
-        });
-        
+        });        
         that.refreshView();
     };
     
     var setupSubcomponents = function (that) {
-        that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
-        if (that.model.artifactDescription) {
-            that.descriptionMoreLess = fluid.initSubcomponent(that, "descriptionMoreLess", 
-                [that.locate("description"), fluid.COMPONENT_OPTIONS]);
-        }
-        if (that.options.useCabinet) {
+        that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);;
+        if (that.sections.length > 0 && that.options.useCabinet) {
             that.cabinet = fluid.initSubcomponent(that, "cabinet", [that.locate("sectionContainer"), fluid.COMPONENT_OPTIONS]);
         }
     };
@@ -150,7 +156,6 @@ fluid = fluid || {};
     fluid.engage.artifactView = function (container, options) {
         var that = fluid.initView("fluid.engage.artifactView", container, options);
         that.model = that.options.model;
-        
         
         that.refreshView = function () {
             var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});            
@@ -164,11 +169,10 @@ fluid = fluid || {};
     };
     
     fluid.defaults("fluid.engage.artifactView", {
+        
         descriptionMoreLess: {
             type: "fluid.engage.moreLess",
-            options: {
-                model: null
-            }
+            options: {}
         },
         
         section: {
@@ -197,6 +201,7 @@ fluid = fluid || {};
             dimensions: ".flc-artifact-dimensions",
             mention: ".flc-artifact-mention",
             description: ".flc-artifact-description",
+            descriptionContent: ".flc-moreLess-content",
             image: ".flc-artifact-image",
             sectionContainer: ".flc-artifact-sections",
             sections: ".flc-cabinet-drawer",

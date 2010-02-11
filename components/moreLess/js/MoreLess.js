@@ -59,26 +59,6 @@ fluid.engage = fluid.engage || {};
         }
     };
     
-    var makeProtoComponents = function (text) {
-        return text ? {
-            content: {markup: "text"}
-        } : {};
-    };
-    
-    var setup = function (that) {
-        var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
-        var selectorsToIgnore = ["toggler"];
-        that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
-            selectorsToIgnore: selectorsToIgnore,
-            rendererOptions: {
-                messageLocator: messageLocator,
-                model: that.model
-            }
-        });
-        that.refreshView();
-        setupToggler(that);
-    };
-    
     /**
      * The component's creator function 
      * 
@@ -86,16 +66,7 @@ fluid.engage = fluid.engage || {};
      * @param {Object} options, options passed into the component
      */
     fluid.engage.moreLess = function (container, options) {
-        
         var that = fluid.initView("fluid.engage.moreLess", container, options);
-        that.model = that.options.model;
-        
-        that.refreshView = function () {
-            var expander = fluid.renderer.makeProtoExpander({ELstyle: "ALL"});
-            var protoTree = makeProtoComponents(that.model.text);
-            var tree = expander(protoTree);
-            that.render(tree);
-        };
 
         that.isExpanded = that.options.expandByDefault;
         
@@ -109,7 +80,7 @@ fluid.engage = fluid.engage || {};
             that.isExpanded = !that.isExpanded;
         };        
         
-        setup(that);
+        setupToggler(that);
         return that;
     };
     
@@ -127,9 +98,6 @@ fluid.engage = fluid.engage || {};
             less: "LESS..."
         },
         collapsedHeight: 60, //this also has to be specified in the css file in the .fl-moreLess-hide class
-        expandByDefault: false,
-        model: {
-            text: null
-        }
+        expandByDefault: false
     });
 })(jQuery);
