@@ -64,9 +64,10 @@ fluid = fluid || {};
      * 
      * @param {Object} that, the component.
      */
-    var confirmCollect = function (that) {        
+    var confirmCollect = function (that) {
+    	var lang = fluid.engage.getCookie("fluid-engage", {path: "/"}).lang;
         that.collectStatus.attr("href", "http://" + location.host + compileUsersPath() + 
-                "/myCollection.html" + "?uuid=" + that.uuid);
+                "/myCollection.html" + "?uuid=" + that.uuid + "&lang=" + lang);
         that.collectStatus.addClass("active");
         
         if (that.options.operation === "POST") {
@@ -141,12 +142,6 @@ fluid = fluid || {};
             collectLink: ".flc-collect-link",
             status: ".flc-collection-link"
         },
-        collectId: "artifactCollectLink",
-        strings: {
-            collect: "Collect Artifact",
-            uncollect: "Uncollect Artifact",
-            collectedMessage: "This artifact has been added to your personal collection; tap here to go there now.",
-            uncollectedMessage: "This artifact has been removed from your personal collection; tap here to go there now."               
-        }
+        collectId: "artifactCollectLink"
     });
 })(jQuery);

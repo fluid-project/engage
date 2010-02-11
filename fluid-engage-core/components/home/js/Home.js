@@ -47,11 +47,11 @@ fluid = fluid || {};
     }
     
     function addCookie(that, value) {
-        fluid.engage.setCookie(that.options.cookieName, value || {});
+        fluid.engage.setCookie(that.options.cookieName, value || {}, {path: "/"});
     }
     
     function cookieCheck(that) {
-        var cookie = fluid.engage.getCookie(that.options.cookieName);
+        var cookie = fluid.engage.getCookie(that.options.cookieName, {path: "/"});
         
         if (!cookie || !cookie.lang) {
             that.showLanguageSelection();

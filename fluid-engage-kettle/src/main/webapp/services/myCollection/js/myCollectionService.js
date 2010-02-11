@@ -101,8 +101,9 @@ fluid.myCollection = fluid.myCollection || {};
      * @param {Object} data, the normalized artifact data.
      * @param dbName, the name of the museum database that contains the set of artifacts.
      * @param uuid, the unique user id for the owner of the collection.
+     * @param lang, the language selection.
      */
-    var compileData = function (data, dbName, uuid) {
+    var compileData = function (data, dbName, uuid, lang) {
         var baseArtifactURL = "../artifacts/view.html";
         
         return fluid.transform(data, function (artifact) {
@@ -110,9 +111,10 @@ fluid.myCollection = fluid.myCollection || {};
                 id: artifact.id,
                 museum: dbName,
                 target: compileTargetURL(baseArtifactURL, {
-                    q: artifact.artifactAccessionNumber,
+                    accessNumber: artifact.artifactAccessionNumber,
                     db: dbName,
-                    uuid: uuid
+                    uuid: uuid,
+                    lang: lang
                 }),
                 image: artifact.artifactImage,
                 title: artifact.artifactTitle,
@@ -191,16 +193,16 @@ fluid.myCollection = fluid.myCollection || {};
     /**
      * Packs up all other functions to create a data feed of artifacts contained in a user collection.
      * 
-     *  @param {Object} uuid, the UUID that identifies the collection.
+     *  @param {Object} params, the parameters passed to the service.
      *  @param {Object} config, the JSON config file for Engage.
      */
-    var assembleData = function (uuid, config) {
+    var assembleData = function (params, config) {
         if (!uuid) {
             return {model: {data: []}};
         }
         
         // TODO: Despite being called getCollection(), this function actually returns user documents. We should rename this.
-        var user = fluid.myCollection.common.getCollection(uuid, config);
+        var user = fluid.myCollection.common.getCollection(params.uuid, config);
 
         var urls = compileDataURLs(config, user);
         var originalArtifactIds = getArtifactIds(user);
@@ -208,7 +210,7 @@ fluid.myCollection = fluid.myCollection || {};
         var dataSet = fluid.transform(urls, function (artifactURL) {
             var rawArtifactData = ajaxCall(artifactURL.url);
             var artifactData = getArtifactData(rawArtifactData, artifactURL.database);
-            return compileData(artifactData, artifactURL.database, uuid);            
+            return compileData(artifactData, artifactURL.database, params.uuid, params.lang);            
         });
 
         var data = {
@@ -232,7 +234,7 @@ fluid.myCollection = fluid.myCollection || {};
             data.model.data.push(links[$.inArray(originalArtifactIds[i], artifactIds)]);
         }
 
-        data.model.collectionId = uuid;
+        data.model.collectionId = params.uuid;
         
         return data;
     };
@@ -244,7 +246,7 @@ fluid.myCollection = fluid.myCollection || {};
      *  @param {Object} app, the Engage application. 
      */
     fluid.myCollection.initMyCollectionService = function (config, app) {
-        var handler = fluid.engage.mountRenderHandler({
+    	var renderHandlerConfig = {
             config: config,
             app: app,
             target: "users/",
@@ -255,22 +257,24 @@ fluid.myCollection = fluid.myCollection || {};
                     cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
                 }
             }
-        });
+        };
+    	
+        var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
         
         handler.registerProducer("myCollection", function (context, env) {
-            var query = env.QUERY_STRING;
-            var uuid;
-            var idx = query.indexOf("uuid=");
-            if (idx >= 0) {
-                var endIdx = query.indexOf("&", idx);
-                endIdx = (endIdx < 0) ? query.length : endIdx;
-                uuid = env.QUERY_STRING.substring(idx + "uuid=".length, endIdx);
-            }
+            var params = context.urlState.params;
+            
+            var options = assembleData(params, config);
+            
+            var strings =
+            	fluid.kettle.getBundle(renderHandlerConfig, context.urlState.params);
+            
+            options.strings = strings;
             
             var initBlock = {
                 ID: "initBlock",
                 functionname: "fluid.engage.myCollection",
-                arguments: [".flc-myCollection", assembleData(uuid, config)]
+                arguments: [".flc-myCollection", options]
             };
             
             return initBlock;

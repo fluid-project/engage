@@ -85,7 +85,8 @@ fluid = fluid || {};
             {
                 artifactCollected: that.model.artifactCollected,
                 museum: that.model.museum,
-                artifactId: that.model.artifactId
+                artifactId: that.model.artifactId,
+                strings: that.options.strings
             }
         ]);
     };
@@ -146,6 +147,12 @@ fluid = fluid || {};
                 id: "artifactAccessionNumber",
                 selector: ".artifact-accession-number"
             }
-        ]
+        ],
+        strings : {
+            collect: "Collect Artifact",
+            uncollect: "Uncollect Artifact",
+            collectedMessage: "This artifact has been added to your personal collection; tap here to go there now.",
+            uncollectedMessage: "This artifact has been removed from your personal collection; tap here to go there now."
+        }
     });
 }(jQuery));

@@ -99,7 +99,7 @@ fluid.artifactView = fluid.artifactView || {};
     };
     
     fluid.artifactView.initMarkupFeed = function (config, app) {
-        var handler = fluid.engage.mountRenderHandler({
+    	var renderHandlerConfig = {
             config: config,
             app: app,
             target: "artifacts/",
@@ -110,12 +110,19 @@ fluid.artifactView = fluid.artifactView || {};
                     cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
                 }
             }
-        });
+        };
+    	
+        var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
         
         handler.registerProducer("view", function (context, env) {
             var options = {
                 model: fetchAndNormalizeModel(context.urlState.params, config)
             };
+            
+            var strings =
+            	fluid.kettle.getBundle(renderHandlerConfig, context.urlState.params);
+            
+            options.strings = strings;
 
             return {
                 ID: "initBlock", 

@@ -1,0 +1,6 @@
+{
+    "collect": "TODO Collect Artifact",
+    "uncollect": "TODO Uncollect Artifact",
+    "collectedMessage": "TODO This artifact has been added to your personal collection; tap here to go there now.",
+    "uncollectedMessage": "TODO This artifact has been removed from your personal collection; tap here to go there now."
+}

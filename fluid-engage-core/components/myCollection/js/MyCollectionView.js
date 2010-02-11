@@ -122,6 +122,9 @@ fluid = fluid || {};
     var setupMyCollection = function (that) {
     	setupNavList(that);
     	
+    	// Setup navigation bar title, this will be replaced by the navigation bar component
+    	that.locate("navbarTitle").text(that.options.strings.header);
+    	
     	// Instantiate the user subcomponent and grab the current user's ID.
     	that.user = fluid.initSubcomponent(that, "user");
         that.uuid = that.user.getUuid();
@@ -162,6 +165,7 @@ fluid = fluid || {};
                 
             selectors: {
                 myCollectionContainer: ".flc-myCollection-imageContainer",
+                navbarTitle: ".flc-navbar-title", 
                 navListContainer: ".flc-navigationList",
                 navListLink: ".flc-navigationList-link",
                 backButton: ".flc-myCollection-back",
