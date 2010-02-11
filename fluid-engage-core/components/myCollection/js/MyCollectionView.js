@@ -20,11 +20,11 @@ fluid = fluid || {};
      * 
      * @param {Object} that, the component.
      */
-    var initBackLink = function (that) { 	
+    var initBackLink = function (that) {    
         var backUrl = document.referrer;
         
         if (backUrl === "") {
-        	return "#";
+            return "#";
         }
         
         if (backUrl.indexOf("uuid") < 0) { // Workaround for the case when
@@ -41,9 +41,9 @@ fluid = fluid || {};
      * @param model, the My Collection model
      */
     var mapToNavListModel = function (model) {
-    	if (model.length == 0) {
-    		return [];
-    	}
+        if (model.length === 0) {
+            return [];
+        }
         return fluid.transform(model, function (artifact) {
             return {
                 target: artifact.target,
@@ -59,43 +59,44 @@ fluid = fluid || {};
      * @param that, the component
      */
     var initNavigationList = function (that) {
-    	var navListModel = mapToNavListModel(that.model.data);
+        var navListModel = mapToNavListModel(that.model.data);
         fluid.merge("merge", that.options.navigationList.options, {model: navListModel});
         
         that.navigationList = fluid.initSubcomponent(that, "navigationList",
-        		[that.locate("navListContainer"),
-        		 that.options.navigationList.options]);
-    	
+                [that.locate("navListContainer"),
+                 that.options.navigationList.options]);
+        
         that.navigationList.events.afterRender.addListener(function () {
             that.container.removeClass(that.options.styles.load);
         });
         
         that.locate("toggler").click(function () {
-        	that.navigationList.toggleLayout();
+            that.navigationList.toggleLayout();
         });
     };
     
     var setupNavList = function (that) {
         var navListLink = that.locate("navListLink");
-    	var navListContainer = that.locate("navListContainer");
-    	var resourceSpec = {};
+        var navListContainer = that.locate("navListContainer");
 
-    	fluid.fetchResources({
-    		navlist: {
-    			href: navListLink.attr("href"),
-    			async: false
-    		},
-    	}, function (resourceSpecs) {
-    	    // TODO: Need to fix DOM-specific selectors here.
-    		var navListGroup = $(resourceSpecs.navlist.resourceText).find(".flc-navigationList-groupContainer");
-    		navListContainer.html(navListGroup.html());
-    		
-    		// After we have fetched the template we can initialize the navigation
-    		// list subcomponent and the image reorderer subcomponent.
-    		// An side effect is that the component is not fully constructed after
-    		// it returns from its initialization function.
-        	initNavigationList(that);
-    	});
+        fluid.fetchResources({
+            navlist: {
+                href: navListLink.attr("href"),
+                options: {
+                    async: false
+                }
+            }
+        }, function (resourceSpecs) {
+            // TODO: Need to fix DOM-specific selectors here.
+            var navListGroup = $(resourceSpecs.navlist.resourceText).find(".flc-navigationList-groupContainer");
+            navListContainer.html(navListGroup.html());
+            
+            // After we have fetched the template we can initialize the navigation
+            // list subcomponent and the image reorderer subcomponent.
+            // An side effect is that the component is not fully constructed after
+            // it returns from its initialization function.
+            initNavigationList(that);
+        });
     };
     
     var setupStatusMessage = function (statusEl, strings, model) {
@@ -103,14 +104,14 @@ fluid = fluid || {};
         var status = strings.emptyCollectionMessage;
         
         // TODO: This needs to be internationalized.
-    	if (collectionSize > 0) {
-    		status = fluid.stringTemplate(
-	            strings.statusMessageTemplate, {
-	                artifactsNumber: collectionSize,
-	                artifactsPlural: collectionSize === 1 ? "" : "s"
-	            }
+        if (collectionSize > 0) {
+            status = fluid.stringTemplate(
+                strings.statusMessageTemplate, {
+                    artifactsNumber: collectionSize,
+                    artifactsPlural: collectionSize === 1 ? "" : "s"
+                }
             );
-    	}
+        }
         statusEl.text(status);
     };
     
@@ -120,15 +121,15 @@ fluid = fluid || {};
      * @param {Object} that, the component
      */
     var setupMyCollection = function (that) {
-    	setupNavList(that);
-    	
-    	// Setup navigation bar title, this will be replaced by the navigation bar component
-    	that.locate("navbarTitle").text(that.options.strings.header);
-    	
-    	// Instantiate the user subcomponent and grab the current user's ID.
-    	that.user = fluid.initSubcomponent(that, "user");
+        setupNavList(that);
+        
+        // Setup navigation bar title, this will be replaced by the navigation bar component
+        that.locate("navbarTitle").text(that.options.strings.header);
+        
+        // Instantiate the user subcomponent and grab the current user's ID.
+        that.user = fluid.initSubcomponent(that, "user");
         that.uuid = that.user.getUuid();
-    	
+        
         setupStatusMessage(that.locate("collectionStatus"), that.options.strings, that.model);
                 
         // TODO: This should be replaced by the Navigation Bar component.
@@ -151,14 +152,14 @@ fluid = fluid || {};
     
     fluid.defaults("fluid.engage.myCollection",
         {
-    		navigationList: {
-        		type: "fluid.navigationList",
+            navigationList: {
+                type: "fluid.navigationList",
                 options: {
                     useDefaultImage: true,
                     defaultToGrid: true
                 }
-    		},
-    		
+            },
+            
             user: {
                 type: "fluid.user"
             },
@@ -178,13 +179,13 @@ fluid = fluid || {};
             },
 
             strings: {
-            	header: "My Collection",
+                header: "My Collection",
                 statusMessageTemplate:
                     "Your collection contains %artifactsNumber artifact" +
                     "%artifactsPlural. Touch and drag the thumbnails to reorganize.",
                 emptyCollectionMessage:
-                	"Your collection is empty. Start adding artifacts to your " +
-                	"collection by using the \"Collect\" button you find on artifact screens."
+                    "Your collection is empty. Start adding artifacts to your " +
+                    "collection by using the \"Collect\" button you find on artifact screens."
             }
         }
     );
