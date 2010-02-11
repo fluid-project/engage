@@ -3,6 +3,7 @@ function (doc) {
         'id': doc.exhibit.id,
         'lang': doc.exhibit.lang
     }, {
+        'title': doc.exhibit.title,
         'shortDescription': doc.exhibit.blurb || "",
         'endDate': doc.exhibit.enddate, 
         'isCurrent': doc.exhibit.iscurrent, 

@@ -15,6 +15,7 @@ function(doc) {
         'id': doc.exhibit.id,
         'lang': doc.exhibit.lang
     }, {
+        'title': doc.exhibit.title,
         'catalogueSize': doc.exhibit.artifacts ? doc.exhibit.artifacts.cnt : "0", 
         'sections': doc.exhibit.sections ? buildSections(doc.exhibit.sections.section) : []
     });
