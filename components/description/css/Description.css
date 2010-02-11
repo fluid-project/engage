@@ -1,0 +1,8 @@
+a.fl-moreLess-toggler {
+    text-decoration:underline;
+    font-weight:bold;
+}
+
+.fl-moreLess-content {
+    overflow: hidden;
+}
