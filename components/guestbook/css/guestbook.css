@@ -1,5 +1,14 @@
-.fl-guestbook-addNote {
+.fl-guestbook-addnote {
     height: 48px;
+}
+
+/* Image must be specified in background like this since URLs are not 
+ * yet rewritten in dependent templates */
+.fl-guestbook-addnote-control {
+    height: 24px;
+    width: 28px;
+    background-image: url("../images/addnote.png");
+    display: inline-block
 }
 
 .fl-guestbook-header {

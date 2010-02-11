@@ -125,6 +125,7 @@ fluid = fluid || {};
             togo.isError = true;
         }
         var ajaxOpts = {
+            type: "GET",
             url: url,
             success: success,
             error: error
@@ -141,7 +142,7 @@ fluid = fluid || {};
     // Temporary definitions to quickly extract template segment from file
     // will be replaced by more mature system which will also deal with head matter
     // collection and rewriting
-    var BEGIN_KEY = "<--DISREPUTABLE TEMPLATE BOUNDARY-->";
+    var BEGIN_KEY = "<!--DISREPUTABLE TEMPLATE BOUNDARY-->";
     
     fluid.kettle.stripTemplateQuickly = function(text) {
         var bl = BEGIN_KEY.length;
