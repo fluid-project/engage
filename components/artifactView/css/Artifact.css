@@ -1,8 +1,31 @@
-.fl-artifact-thumbnail {
-    width:50%;
-    margin: 0 10px 10px 0;
+.fl-artifact-image-content {
+    width: 100%;
 }
 
-.fl-demo-image {
-    padding: 1px 0;
+.fl-artifact-image-cell {
+    background-color: #000000;
+    height: 240px;
+    witdth: 100%;
+    text-align: center;
+}
+
+.fl-artifact-description {
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 30px;
+}
+
+.fl-artifact-title {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.fl-artifact-info {
+    padding-left: 10px;
+}
+
+.fl-artifact-image {
+    max-height: 240px;
+    max-width: 100%;
 }

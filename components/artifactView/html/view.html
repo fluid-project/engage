@@ -4,19 +4,18 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <title>Artifact demo</title>
+        <title>Artifact</title>
 
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-layout.css" />
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-text.css" />
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-transitions.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/engage-mobile.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationBar/css/NavigationBar.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/artifactView/css/Artifact.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/description/css/Description.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/cabinet/css/Cabinet.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationList/css/NavigationList.css" />
-        <link rel="stylesheet" type="text/css" href="../../../../fluid-engage-core/components/tags/css/Tags.css" />
-        <link rel="stylesheet" type="text/css" href="../../../../fluid-engage-core/components/description/css/Description.css" />
-   
+        
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/ui/js/ui.core.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/plugins/delegate/js/jquery.delegate.js"></script>
@@ -27,59 +26,75 @@
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/DataBinding.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
-        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>   
-        
-        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/Engage.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/iPhoneChromeless.js"></script>   
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationBar/js/NavigationBar.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/components/artifactView/js/ArtifactView.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/loadData.js"></script>
-        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/iPhoneChromeless.js"></script>
-        <script type="text/javascript" src="../../../../fluid-engage-core/components/tags/js/Tags.js"></script>
+        
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/description/js/Description.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationList/js/NavigationList.js"></script>  
         <script type="text/javascript" src="../../../../fluid-engage-core/components/cabinet/js/Cabinet.js"></script>
-        <script type="text/javascript" src="../../../../fluid-engage-core/components/description/js/Description.js"></script>
-        
               
     </head>   
-      <body class="fl-theme-iphone"> 
-        <div class="fl-artifact">
-            <div class="flc-artifact">
-                <div class="flc-artifact-renderscope">
-                    <div class="flc-screenNavigator-navbar fl-navbar fl-table">
-                        <div class="fl-table-row">              
-                            <h1 class="fl-table-cell artifact-name">Artifact name</h1>                          
-                        </div>
-                    </div>            
-                    <div class="fl-container-auto">
-                        <img src="../images/Snuffbox.jpg" alt="" class="fl-force-left fl-artifact-thumbnail artifact-picture" />
-                        <p class="artifact-descr-name">Here goes a longer artifact name!</p>
-                        <p class="artifact-provenance">Here goes a longer artifact provenance!</p>
-                        <p class="artifact-date">Here goes a longer artifact date!</p>
-                        <p class="artifact-accession-number">Here goes a longer artifact accession number!</p>
-                    </div>
-                </div>
-                <div class="flc-description">
-                    <div class="flc-description-content"></div>
-                </div>
-                <div class="cabinet">
-                    <div class="flc-cabinet-drawer">
-                        <div class="flc-cabinet-handle">
-                            <h2 class="flc-cabinet-header">Show Audio and Video</h2>
-                        </div>
-                        <div class="flc-cabinet-contents">
-                            <img class="fl-demo-image" src="../../../../fluid-engage-core/components/artifactView/images/media_panel.png" alt="Audio and Video" />
-                        </div>
-                    </div>
-                    <div class="flc-cabinet-drawer">
-                        <div class="flc-cabinet-handle">
-                            <h2 class="flc-cabinet-header">Show Comments</h2>
-                        </div>
-                        <div class="flc-cabinet-contents">
-                            <img class="fl-demo-image" src="../../../../fluid-engage-core/components/artifactView/images/comment_panel.png" alt="Audio and Video" />
-                        </div>
-                    </div>
-                </div>
+    <body class="fl-theme-iphone"> 
+        <div class="flc-artifact fl-artifact">
+            <!-- Navigation Bar and Header -->
+	        <div class="flc-navigationBar fl-navbar fl-col-mixed">
+	            <!-- Back button -->
+	            <div class="fl-col-fixed fl-force-left">
+	                <a rsf:id="scr=null" class="flc-navigationBar-back fl-button fl-backButton" href="#">
+	                    <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/back.png" alt="Go back"/>
+	                </a>
+	            </div>
+	            <!-- Home button -->
+	            <div class="fl-col-fixed fl-force-left">
+	                <a rsf:id="scr=null" class="flc-navigationBar-home fl-button" href="#">
+	                    <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/home.png" alt="Go home"/>
+	                </a>
+	            </div>
+	            <!-- Page header -->
+	            <h1 class="flc-artifact-navBarTitle fl-navbar-title fl-col-flex">Catalogue for This Exhibition</h1>
+	        </div>
+            <div class="fl-table fl-artifact-image-content">
+	            <div class="fl-artifact-image-cell fl-table-cell">
+	                <img src="../images/a.jpg" alt="Artifact Image" class="flc-artifact-image fl-artifact-image" />
+	            </div>
             </div>
+            <h2 class="flc-artifact-title fl-bold fl-artifact-title" />
+            <div class="fl-artifact-info">
+	            <div class="flc-artifact-author">Artifact Author</div> 
+	            <div class="flc-artifact-dated">Artifact Dated</div>
+	            <div class="flc-artifact-medium">Artifact Medium</div>
+	            <div class="flc-artifact-dimensions">Artifact Dimensions</div>
+	            <div class="flc-artifact-mention">Artifact Mention</div>
+	            <div class="flc-artifact-accessionNumber">Artifact AccessionNumber</div>
+	        </div>
+	        <div class="flc-artifact-description fl-artifact-description">
+                <div class="flc-moreLess-content fl-moreLess-content"></div>
+                <a href="#" class="flc-moreLess-toggler fl-moreLess-toggler">More/less toggle</a>
+            </div>
+            <div class="flc-artifact-sections">
+	            <div class="flc-cabinet-drawer">
+	                <div class="flc-cabinet-handle">
+	                    <h2 class="flc-cabinet-header">Header</h2>
+	                </div>
+	                <div class="flc-navigationList flc-cabinet-contents">
+	                    <ul class="flc-navigationList-listGroup fl-list fl-list-menu fl-list-thumbnails">
+	                        <li class="flc-navigationList-items">
+	                            <div class="flc-navigationList-linkContainer">
+	                                <a class="flc-navigationList-link">
+	                                    <img class="flc-navigationList-image fl-icon" src="../images/fe_mobile_icon_video.png"/>
+	                                    <span class="flc-navigationList-titleText fl-navigationList-title">title/category</span>
+	                                    <span class="flc-navigationList-descriptionText fl-link-summary fl-navigationList-description">description</span>
+	                                </a>
+	                            </div>
+	                       </li>
+	                   </ul>
+	               </div>
+	            </div>
+	        </div>
         </div>
         <script id="flc-initBlock" type="text/javascript">
             fluid.engage.initComponentWithLocalData("fluid.engage.artifactView", ".flc-artifact");

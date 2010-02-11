@@ -10,55 +10,13 @@ https://source.fluidproject.org/svn/LICENSE.txt
  
 */
 
-/*global jQuery*/
-/*global fluid*/
+/*global jQuery, fluid*/
+"use strict";
 
 fluid = fluid || {};
+fluid.engage = fluid.engage || {};
 
 (function ($) {
-    
-    /**
-     * Removes "." from the selector name
-     * This is used by addToggler to add in a selector from the defaults into the injected  markup
-     * 
-     * @param {Object} selector, a selector from the component's defaults
-     */
-    var cleanseSelector = function (selector) {
-        return selector.replace(/\./gi, "");
-    };
-    
-    /**
-     * Injects a hidden toggler into the markup
-     * 
-     * @param {Object} that, the component
-     */
-    var addToggler = function (that) {
-        var styles = that.options.styles;
-        var markup = "<div class='" + cleanseSelector(that.options.selectors.toggler) + " " + styles.descriptionToggle + " " + styles.descriptionToggleExpand + "' alt='Expand Description' title='Expand Description'>Expand</div>";
-        var markupNode = $(markup);
-        markupNode.hide();
-        that.container.append(markupNode);
-        return markupNode;
-    };    
-    
-    /**
-     * Programmatically adds the styles used by the component and specified in the styles section of the defaults
-     * 
-     * @param {Object} that, the component
-     */
-    var addStyleClasses = function (that) {
-        that.locate("content").addClass(that.options.styles.content);
-        that.container.addClass(that.options.styles.container);
-    };
-
-    /**
-     * Binds a click handler to the toggler to call that.toggleDescription on click
-     * 
-     * @param {Object} that, the component 
-     */
-    var addClickEvent = function (that) {
-        that.locate("toggler").click(that.toggleDescription);
-    };
     
     /**
      * Determines if the toggler needs to be added to the page, 
@@ -70,44 +28,55 @@ fluid = fluid || {};
         return that.locate("content").height() > that.options.collapsedHeight;
     };
     
-    /**
-     * Displayes the toggler and adds a click event to it.
-     * 
-     * @param {Object} that, the component
-     */
-    var setUpToggler = function (that) {
-        that.locate("toggler").show();
-        addClickEvent(that);
+    var hideText = function (that) {
+        that.locate("toggler").html(that.options.strings.more);
+        that.locate("content").css("max-height", that.options.collapsedHeight);
     };
     
-    /**
-     * Executes the necessary functions to setup the description
-     * 
-     * @param {Object} that, the component
-     */
-    var setUpDescription = function (that) {
-        addStyleClasses(that);
-        that.options.model = that.options.model.replace(/(<([^>]+)>)/gi, "");
-        
-        var renderOpts = {
-            selectorsToIgnore: ["toggler"]
-        };
-        var utils = fluid.engage.renderUtils;
-        var renderer = utils.createRendererFunction(that.container, that.options.selectors, renderOpts);
-        
-        var tree = {
-            children: [
-                utils.uiBound("content", that.options.model)
-            ]    
-        };
-        
-        renderer(tree);
-        
-        if (needToggle(that)) {
-            that.locate("content").addClass(that.options.styles.descriptionCollapsed);
-            addToggler(that);
-            setUpToggler(that);
+    var showText = function (that) {
+        that.locate("toggler").html(that.options.strings.less);
+        that.locate("content").css("max-height", "");
+    };
+    
+    var toggleText = function (that, isExpanded) {
+        if (isExpanded) {
+            hideText(that);
         }
+        else {
+            showText(that);
+        }
+    };
+    
+    var setupToggler = function (that) {
+        if (needToggle(that)) {
+            var toggler = that.locate("toggler");
+            toggleText(that, !that.options.expandByDefault);
+            toggler.addClass(that.options.styles.toggler);
+            toggler.click(function (evt) {
+                that.toggleText();
+                evt.preventDefault();
+            });
+        }
+    };
+    
+    var makeProtoComponents = function (text) {
+        return text ? {
+            content: {markup: "text"}
+        } : {};
+    };
+    
+    var setup = function (that) {
+        var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
+        var selectorsToIgnore = ["toggler"];
+        that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
+            selectorsToIgnore: selectorsToIgnore,
+            rendererOptions: {
+                messageLocator: messageLocator,
+                model: that.model
+            }
+        });
+        that.refreshView();
+        setupToggler(that);
     };
     
     /**
@@ -116,53 +85,51 @@ fluid = fluid || {};
      * @param {Object} container, the container which will hold the component
      * @param {Object} options, options passed into the component
      */
-    fluid.description = function (container, options) {
+    fluid.engage.moreLess = function (container, options) {
         
-        var that = fluid.initView("fluid.description", container, options);
+        var that = fluid.initView("fluid.engage.moreLess", container, options);
+        that.model = that.options.model;
+        
+        that.refreshView = function () {
+            var expander = fluid.renderer.makeProtoExpander({ELstyle: "ALL"});
+            var protoTree = makeProtoComponents(that.model.text);
+            var tree = expander(protoTree);
+            that.render(tree);
+        };
+
+        that.isExpanded = that.options.expandByDefault;
         
         /**
-         * Toggles the expansion/collapse of the description. 
+         * Toggles the expansion/collapse of the text. 
          * Also changes the appearance of the toggler to indicate if
          * clicking will result in an expansion or a collapse.
          */
-        that.toggleDescription = function () {
-            var selector = that.locate("content");
-            var toggle = that.locate("toggler");
-            var styles = that.options.styles;
-            
-            if (toggle.hasClass(styles.descriptionToggleCollapse)) {
-                selector.addClass(styles.descriptionCollapsed);
-                selector.removeClass(styles.descriptionExpanded);
-            }
-            else {
-                selector.removeClass(styles.descriptionCollapsed);
-                selector.addClass(styles.descriptionExpanded);
-            }
-            
-            toggle.toggleClass(styles.descriptionToggleCollapse);
-            toggle.toggleClass(styles.descriptionToggleExpand);
+        that.toggleText = function () {           
+            toggleText(that, that.isExpanded);
+            that.isExpanded = !that.isExpanded;
         };        
         
-        setUpDescription(that);
-        
+        setup(that);
         return that;
     };
     
-    fluid.defaults("fluid.description", {
+    fluid.defaults("fluid.engage.moreLess", {
         styles: {
-            descriptionCollapsed: "fl-description-hide",
-            descriptionExpanded: "fl-description-show",
-            descriptionToggle: "fl-icon",
-            descriptionToggleCollapse: "fl-description-togglerCollapse",
-            descriptionToggleExpand: "fl-description-togglerExpand",
-            content: "fl-description-content",
-            container: "fl-description"
+            content: "fl-moreLess-content",
+            toggler: "fl-moreLes-toggler"
         },
         selectors: {
-            content: ".flc-description-content",
-            toggler: ".flc-description-toggler"
+            content: ".flc-moreLess-content",
+            toggler: ".flc-moreLess-toggler"
         },
-        collapsedHeight: 60, //this also has to be specified in the css file in the .fl-description-hide class
-        model: "Description Information"
+        strings: {
+            more: "MORE...",
+            less: "LESS..."
+        },
+        collapsedHeight: 60, //this also has to be specified in the css file in the .fl-moreLess-hide class
+        expandByDefault: false,
+        model: {
+            text: null
+        }
     });
 })(jQuery);
