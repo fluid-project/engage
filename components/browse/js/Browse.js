@@ -61,7 +61,7 @@ fluid = fluid || {};
     var generateHeaderForCategory = function (category, component, strings, styles) {
         var description = category.description;
         var headerValues = {
-            category: category.name === "viewAll" ? strings.allObjects : category.name, 
+            category: !category.name ? strings.allObjects : category.name, 
             size: category.items.length
         };
         
