@@ -4,7 +4,6 @@ function (doc) {
         'objectCode': artifact.objectcode,
         'lang': artifact.lang 
     }, {
-        'accessNumber': artifact.label.accessnumber,
         'title': artifact.label.title || artifact.label.object,
         'artist': artifact.label.artist,
         'dated': artifact.label.dated,
@@ -18,6 +17,7 @@ function (doc) {
         'commentsCount': artifact.comments ? artifact.comments.cnt || "0" : "0",
         'comments': artifact.comments ? artifact.comments.comment || [] : [],
         'relatedArtifactsCount': artifact.related_artifacts ? artifact.related_artifacts.cnt || "0" : "0",
-        'relatedArtifacts': artifact.related_artifacts ? artifact.related_artifacts.artifact || [] : []
+        'relatedArtifacts': artifact.related_artifacts ? artifact.related_artifacts.artifact || [] : [],
+        'image': artifact.images ? artifact.images.image : []
     });
 }
