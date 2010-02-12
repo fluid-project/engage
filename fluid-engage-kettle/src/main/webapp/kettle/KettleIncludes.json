@@ -31,6 +31,5 @@
    "../services/myCollection/js/myCollectionService.js",
    "../services/myCollection/js/collectOperations.js",
    "../services/myCollection/js/collectionCommon.js",
-   "../services/myCollection/js/reorder.js",
    "../services/user/js/userService.js"
   ]
