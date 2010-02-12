@@ -31,13 +31,8 @@ fluid = fluid || {};
      * @param that, the component
      */
     var initNavigationList = function (that) {
-        var collectedArtifacts = that.model.collectedArtifacts;
-        if (collectedArtifacts.length === 0) {
-            return;
-        }
-        
         fluid.merge("merge", that.options.navigationList.options, {
-            model: mapToNavListModel(collectedArtifacts)
+            model: mapToNavListModel(that.model.collectedArtifacts)
         });
         
         that.navigationList = fluid.initSubcomponent(that, "navigationList", [
@@ -55,6 +50,11 @@ fluid = fluid || {};
     };
     
     var setupNavList = function (that) {
+        // Don't bother fetching or rendering the nav list if we have no artifacts collected.
+        if (that.model.collectedArtifacts.length === 0) {
+            return;
+        }
+
         var navListLink = that.locate("navListLink");
         var navListContainer = that.locate("navListContainer");
 
