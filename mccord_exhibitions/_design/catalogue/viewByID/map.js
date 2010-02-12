@@ -6,6 +6,7 @@ function(doc) {
             sections.push({
                 'sectionSize': section.artifacts ? section.artifacts.cnt : "0",
                 'sectionTitle': section.title,
+                'sectionID': section.id,
                 'sectionHighlights': section.highlights ? (section.highlights.artifact || []) : [] 
             });
         }
