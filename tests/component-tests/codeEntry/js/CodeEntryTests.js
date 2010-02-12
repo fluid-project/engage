@@ -18,26 +18,26 @@ https://source.fluidproject.org/svn/LICENSE.txt
     var tests = {};
     var component;
 
+
+    /**
+     * For test purposes - only even numbers are valid codes.
+     */
+    var simulateCheck = function () {
+        if (component.code[1] % 2 === 0) {
+            return "#";
+        }
+    };
+    
     var setup = function () {
         tests.fetchTemplate(
                 "../../../../components/codeEntry/html/codeEntry.html",
                 ".flc-codeEntry");
         
-        component = fluid.engage.codeEntry(".flc-codeEntry", {testMode: true});
+        component = fluid.engage.codeEntry(".flc-codeEntry",
+            {getArtifactUrlFn: simulateCheck});
     };
     
     tests = jqUnit.testCase("Code Entry Tests", setup);
-    
-    // Code taken from www.sean.co.uk
-    var pausecomp = function (millis)
-    {
-    	var date = new Date();
-    	var curDate = null;
-
-    	do {
-    		curDate = new Date();
-    	} while(curDate-date < millis);
-    }
     
     var codeEntryTests = function () {
         tests.test("Component construction test", function () {
@@ -48,57 +48,56 @@ https://source.fluidproject.org/svn/LICENSE.txt
         });
         
         tests.test("Buttons test", function () {
-        	expect(11);
-        	
-        	var firstDigitField = component.locate("firstDigitField");
-        	
-        	var buttons = component.locate("entryButtons");
-        	var del = $(buttons[10]);
-        	
-        	$(buttons[0]).click();
-        	del.click();
-        	
-        	jqUnit.assertEquals("Delete button working.", "", firstDigitField.text());
-        	
-        	for (var i = 0; i < buttons.length - 1; i++) {
-        		var buttonNumber = (i + 1) % 10;
-        		$(buttons[i]).click();
-        		jqUnit.assertEquals("Button number " + buttonNumber + " working.", buttonNumber + "", firstDigitField.text());
-        		// Delete
-        		del.click();
-        	}
+            expect(11);
+            
+            var firstDigitField = component.locate("firstDigitField");
+            
+            var buttons = component.locate("numButtons");
+            var del = component.locate("delButton");
+            
+            $(buttons[0]).click();
+            del.click();
+            
+            jqUnit.assertEquals("Delete button working.", "", firstDigitField.text());
+            
+            for (var i = 0; i < buttons.length; i++) {
+                var buttonNumber = (i + 1) % 10;
+                $(buttons[i]).click();
+                jqUnit.assertEquals("Button number " + buttonNumber + " working.", buttonNumber + "", firstDigitField.text());
+                // Delete
+                del.click();
+            }
         });
         
         tests.test("Code entry test", function () {
-        	expect(15);
-        	
-        	var firstDigitField = component.locate("firstDigitField");
-        	var secondDigitField = component.locate("secondDigitField");
+            expect(15);
+            
+            var firstDigitField = component.locate("firstDigitField");
+            var secondDigitField = component.locate("secondDigitField");
             var headBlock = component.locate("headMessage");
             
             // First the two code fields are blank
-        	jqUnit.assertEquals("First Digit blank.", "", firstDigitField.text());
-        	jqUnit.assertEquals("Second digit blank.", "", secondDigitField.text());
-        	
-        	// We enter a digit
-        	component.enterDigit(3);
-        	jqUnit.assertEquals("First digit is 3.", "3", firstDigitField.text());
-        	jqUnit.assertEquals("Second digit blank.", "", secondDigitField.text());
-        	
-        	// Then delete it
-        	component.deleteLastDigit();
-        	jqUnit.assertEquals("First Digit blank.", "", firstDigitField.text());
-        	jqUnit.assertEquals("Second digit blank.", "", secondDigitField.text());
-        	
-        	// Enter two digits to make a invalid code - the code fields should
-        	// be blanked and an error message shown
-        	component.enterDigit(3);
-        	component.enterDigit(7);
+            jqUnit.assertEquals("First Digit blank.", "", firstDigitField.text());
+            jqUnit.assertEquals("Second digit blank.", "", secondDigitField.text());
+            
+            // We enter a digit
+            component.enterDigit(3);
+            jqUnit.assertEquals("First digit is 3.", "3", firstDigitField.text());
+            jqUnit.assertEquals("Second digit blank.", "", secondDigitField.text());
+            
+            // Then delete it
+            component.deleteLastDigit();
+            jqUnit.assertEquals("First Digit blank.", "", firstDigitField.text());
+            jqUnit.assertEquals("Second digit blank.", "", secondDigitField.text());
+            
+            // Enter two digits to make a invalid code - the code fields should
+            // be blanked and an error message shown
+            component.enterDigit(3);
+            component.enterDigit(7);
             jqUnit.assertEquals("First digit blank.", "", firstDigitField.text());
             jqUnit.assertEquals("Second digit blank.", "", secondDigitField.text());
             jqUnit.assertEquals("Invalid code message shown.",
-            		"<img src=\"../../../../fluid-engage-core/components/codeEntry/images/invalid-code.png\" alt=\"Invalid code.\">",
-            		headBlock.html());
+                    component.options.strings.invalidCode, headBlock.text());
             
 
             // Enter one digit - the error message persists
@@ -106,8 +105,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             jqUnit.assertEquals("First digit is 2.", "2", firstDigitField.text());
             jqUnit.assertEquals("Second digit blank.", "", secondDigitField.text());
             jqUnit.assertEquals("Invalid code message shown.",
-            		"<img src=\"../../../../fluid-engage-core/components/codeEntry/images/invalid-code.png\" alt=\"Invalid code.\">",
-            		headBlock.html());
+                    component.options.strings.invalidCode, headBlock.text());
             
             // Enter second digit - the code fields are shown until redirection
             // happens

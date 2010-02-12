@@ -9,7 +9,7 @@
 
 .fl-codeEntry-invalidCode {
 	color: white;
-	background-color: 464646;
+	background-color: #464646;
 }
 
 .fl-codeEntry-block {
@@ -37,7 +37,17 @@
 }
 
 .fl-codeEntry-numpad img {
-    margin: -10px;
-    outline: none;
+	position: relative;
+    margin: 0px;
+    margin-bottom: 1px;
+    outline: 0 none;
     cursor: pointer;
+    border: 0px none;
+    padding: 0px;
+    float: left;
+}
+
+.fl-codeEntry-middleButton {
+    margin-left: 1px;
+    margin-right: 1px;
 }

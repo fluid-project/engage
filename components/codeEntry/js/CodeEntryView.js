@@ -70,9 +70,10 @@ fluid.engage = fluid.engage || {};
      */
     var wrongCodeSequence = function (that) {
         var msg = that.locate("headMessage");
+        var opts = that.options;
         
-        msg.text(that.options.strings.invalidCode);
-        msg.addClass(that.options.styles.invalidCode);
+        msg.text(opts.strings.invalidCode);
+        msg.addClass(opts.styles.invalidCode);
         
         msg.show(250, function () {
             reset(that);
@@ -86,34 +87,24 @@ fluid.engage = fluid.engage || {};
      * 
      * @param {Object} that, the component.
      */
-    var checkCode = function (that) {
+    var getArtifactUrl = function (that) {
         var url = fluid.stringTemplate(
             decodeURIComponent(that.options.codeCheckUrlTemplate), {
             objectCode : that.code
         });
         
-        var error = function (XHR, textStatus, errorThrown) {
-            fluid.log("XHR: " + XHR);
-            fluid.log("Status: " + textStatus);
-            fluid.log("Error: " + errorThrown);
-        };
-        
-        var success = function (returnedData) {
-        
-            var data = JSON.parse(returnedData);
-            
-            if (data.artifactFound) {
-                redirectSequence(that, data.artifactLink);
-            } else {
-                wrongCodeSequence(that);
-            }
+        var artifactLink;
+        var success = function (data) {
+            artifactLink = data;
         };
         
         $.ajax({
             url : url,
-            error : error,
-            success : success
+            success : success,
+            async: false
         });
+        
+        return artifactLink;
     };
 
     /**
@@ -179,7 +170,12 @@ fluid.engage = fluid.engage || {};
             } else {
                 that.code += digit;
                 that.deleteEnabled = false;
-                checkCode(that);
+                var artifactLink = that.options.getArtifactUrlFn(that);
+                if (artifactLink) {
+                    redirectSequence(that, artifactLink);
+                } else {
+                    wrongCodeSequence(that);
+                }                        
             }
         };
         
@@ -224,6 +220,7 @@ fluid.engage = fluid.engage || {};
             deleteLabel: "Delete"
         },
         codeCheckUrlTemplate: "",
-        redirectDelay : 1000
+        redirectDelay : 1000,
+        getArtifactUrlFn: getArtifactUrl
     });
 })(jQuery);
