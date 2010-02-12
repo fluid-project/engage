@@ -16,11 +16,9 @@ function (doc) {
         }
         emit({
             'exhibitID': doc.exhibit.id, 
-            'sectionID': "0",
             'lang': doc.exhibit.lang
         }, {
             'exhibitTitle': doc.exhibit.title,
-            'sectionTitle': 'viewAll',
             'sectionSize': doc.exhibit.artifacts ? doc.exhibit.artifacts.cnt : "0",
             'sectionArtifacts': doc.exhibit.artifacts ? doc.exhibit.artifacts.artifact : []
         });
@@ -28,11 +26,9 @@ function (doc) {
     else {
         emit({
             'exhibitID': doc.exhibit.id, 
-            'sectionID': "-1",
             'lang': doc.exhibit.lang
         }, {
             'exhibitTitle': doc.exhibit.title,
-            'sectionTitle': '',
             'sectionSize': "0",
             'sectionArtifacts': []
         });
