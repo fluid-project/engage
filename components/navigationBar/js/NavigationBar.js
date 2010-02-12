@@ -34,10 +34,11 @@ fluid.engage = fluid.engage || {};
         $("img", that.backButton).attr("alt", that.options.strings.goBack);
         $("img", that.homeButton).attr("alt", that.options.strings.goHome);
     
-        // Locaize the toggle icons.
+        // Localize the toggle icons.
         that.defaultIcon.attr("alt", that.options.strings.defaultToggle);
         that.alternateIcon.attr("alt", that.options.strings.alternateToggle);
-    }
+    };
+    
     var setupNavigationBar = function (that) {
         that.backButton = that.locate("backButton").click(preventingHandler(that.back));
         that.homeButton = that.locate("homeButton").click(preventingHandler(that.home));
