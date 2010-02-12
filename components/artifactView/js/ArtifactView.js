@@ -140,15 +140,16 @@ fluid = fluid || {};
 
     var rendererIdMap = {};
 
-    var getMediaIconURLsFromDOM = function (that) {
+    var getMediaIconURLsFromDOM = function (dom) {
         return {
-            audio: that.locate("audioIcon").attr("src"),
-            video: that.locate("videoIcon").attr("src")
+            audio: dom.locate("audioIcon").attr("src"),
+            video: dom.locate("videoIcon").attr("src")
         };
     };
     
     var setup = function (that) {
-        that.sections = makeCabinetSections(that.model, that.options, getMediaIconURLsFromDOM(that));
+        var mediaIconURLs = getMediaIconURLsFromDOM(that.dom);
+        that.sections = makeCabinetSections(that.model, that.options, mediaIconURLs);
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
             selectorsToIgnore: ["sectionContainer", "audioIcon", "videoIcon"],
