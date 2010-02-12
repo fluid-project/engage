@@ -44,7 +44,7 @@ fluid = fluid || {};
             image: {target: "%artifactImage"},
             sections: {
                 children: fluid.transform(that.sections, function (section) {
-                    var decorator = section.sectionContents === COMMENT_SECTION? {
+                    var decorator = section.sectionContents === COMMENT_SECTION ? {
                         type: "identify",
                         key: "comments"
                     } : {
@@ -86,10 +86,10 @@ fluid = fluid || {};
         };
     };
     
-    var artifactMediaToSection = function (model, options) {
+    var artifactMediaToSection = function (model, options, mediaIconURLs) {
         var sectionContents = fluid.transform($.makeArray(model.artifactMedia), function (mediaItem) {
             return {
-                //image: mediaItem.type === "video" ? options.defaultVideoThumbnail : options.defaultAudioThumbnail,
+                image: mediaIconURLs[mediaItem.type],
                 target: mediaItem.uri,
                 title: mediaItem.title
             };
@@ -124,11 +124,11 @@ fluid = fluid || {};
         return makeSection("artifactRelated", model.artifactRelatedCount, sectionContents);
     };
     
-    var makeCabinetSections = function (model, options) {
+    var makeCabinetSections = function (model, options, mediaIconURLs) {
         var sections = [];
         
         if (model.artifactMediaCount > 0) {
-            sections.push(artifactMediaToSection(model, options));
+            sections.push(artifactMediaToSection(model, options, mediaIconURLs));
         }        
         sections.push(commentsToSection(model, options));
         if (model.artifactRelatedCount > 0) {
@@ -140,11 +140,18 @@ fluid = fluid || {};
 
     var rendererIdMap = {};
 
+    var getMediaIconURLsFromDOM = function (that) {
+        return {
+            audio: that.locate("audioIcon").attr("src"),
+            video: that.locate("videoIcon").attr("src")
+        };
+    };
+    
     var setup = function (that) {
-        that.sections = makeCabinetSections(that.model, that.options);
+        that.sections = makeCabinetSections(that.model, that.options, getMediaIconURLsFromDOM(that));
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
-            selectorsToIgnore: ["sectionContainer"],
+            selectorsToIgnore: ["sectionContainer", "audioIcon", "videoIcon"],
             repeatingSelectors: ["sections"],
             rendererOptions: {
                 messageLocator: messageLocator,
@@ -229,7 +236,9 @@ fluid = fluid || {};
             sectionContainer: ".flc-artifact-sections",
             sections: ".flc-cabinet-drawer",
             sectionContents: ".flc-cabinet-contents",
-            sectionHeader: ".flc-cabinet-header"
+            sectionHeader: ".flc-cabinet-header",
+            audioIcon: ".flc-artifactView-audio-icon",
+            videoIcon: ".flc-artifactView-video-icon"
         },
         
         useCabinet: true,
@@ -239,10 +248,7 @@ fluid = fluid || {};
             artifactComments: "Show Comments (%size)",
             artifactRelated: "Show Related Artifacts (%size)"
             
-        },
-        
-        defaultVideoThumbnail: "../images/fe_mobile_icon_video.png",
-        defaultAudioThumbnail: "../images/fe_mobile_icon_audio.png"
+        }
     });
     
 }(jQuery));
