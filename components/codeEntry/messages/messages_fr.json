@@ -3,5 +3,6 @@
    "header": "Entrez le code d'objet",
    "instruction": "Entrez le code numérique affiché sur l'étiquette pour en apprendre plus sur cet objet.",
    "redirecting": "Ouverture de la page de l'objet",
-   "invalidCode": "Numéro inconnu. Veuillez réessayer"
+   "invalidCode": "Numéro inconnu. Veuillez réessayer",
+   "deleteLabel": "Effacer"
 }

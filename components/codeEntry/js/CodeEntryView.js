@@ -7,7 +7,7 @@ Licenses.
 
 You may obtain a copy of the ECL 2.0 License and BSD License at
 https://source.fluidproject.org/svn/LICENSE.txt
-*/
+ */
 
 /*global jQuery, fluid, document, window*/
 "use strict";
@@ -16,29 +16,21 @@ fluid = fluid || {};
 fluid.engage = fluid.engage || {};
 
 (function ($) {
-    
-    // TODO: get the relevant museum
-    var museum = "mccord";
-    
+
     /**
-     * Clears the digit entry fields and allows input.
-     * 
-     * @param {Object} that, the component.
-     */
-    var resetEntry = function (that) {
+    * Clears the digit entry fields and allows input.
+    * Also resets the code and atDigit values.
+    * 
+    * @param {Object} that, the component.
+    */
+    var reset = function (that) {
         that.locate("firstDigitField").text("");
         that.locate("secondDigitField").text("");
+        that.code = "";
+        that.atDigit = 0;
+        that.deleteEnabled = true;
     };
-    
-    /**
-     * Toggles the style of the head div to invalid code message style and off
-     * 
-     * @param {Object} that, the component.
-     */
-    var toggleHeadMessageStyle = function (that) {
-        that.locate("headMessage").toggleClass(that.options.styles.invalidCode);
-    };
-    
+
     /**
      * Redirects the browser to the given URL.
      * 
@@ -47,15 +39,10 @@ fluid.engage = fluid.engage || {};
      */
     var redirectToArtifactPage = function (that, url) {
         // Do some cleanup before leaving the page
-        resetEntry(that);
-        that.code = "";
-        that.atDigit = 0;
-        
-        if (!that.options.testMode) {
-            window.location = url;
-        }
+        reset(that);
+        window.location = url;
     };
-    
+
     /**
      * Display a message and redirect to artifact page after some delay.
      * 
@@ -63,54 +50,56 @@ fluid.engage = fluid.engage || {};
      * @param url, the URL to redirect to.
      */
     var redirectSequence = function (that, url) {
-        var redirectFunction = function () {
-            redirectToArtifactPage(that, url);
-        };
-
+        var msg = that.locate("headMessage");
+        var opts = that.options;
+        
         // Replace the invalid code message with something...
-        that.locate("headMessage").text(that.options.strings.redirecting);
-
-        toggleHeadMessageStyle(that);
-
-        setTimeout(redirectFunction, that.options.redirectDelay);
+        msg.text(opts.strings.redirecting);
+        
+        msg.removeClass(opts.styles.invalidCode);
+        
+        setTimeout(function () {
+            redirectToArtifactPage(that, url);
+        }, opts.redirectDelay);
     };
-    
+
     /**
-     * Displays an warning message for invalid code and resets the entry fields.
+     * Displays a warning message for invalid code and resets the entry fields.
      * 
-     * @param {Object} that, the component. 
+     * @param {Object} that, the component.
      */
     var wrongCodeSequence = function (that) {
-        var invalidCodeBlock = that.locate("headMessage");
-        invalidCodeBlock.text(that.options.strings.invalidCode);
-        toggleHeadMessageStyle(that);
+        var msg = that.locate("headMessage");
         
-        invalidCodeBlock.show(250, function () {
-            resetEntry(that);
-            that.code = "";
-            that.atDigit = 0;
+        msg.text(that.options.strings.invalidCode);
+        msg.addClass(that.options.styles.invalidCode);
+        
+        msg.show(250, function () {
+            reset(that);
         });
     };
-    
+
     /**
      * Issues a Ajax call to verify if the entered code corresponds to an
-     * artifact and depending on that either redirects to the artifact page
-     * or displays a warning.
+     * artifact and depending on that either redirects to the artifact page or
+     * displays a warning.
      * 
      * @param {Object} that, the component.
      */
     var checkCode = function (that) {
-        var url = location.pathname;
-        url = "http://" + location.host + url.substring(0, url.lastIndexOf("/"));
-        url += "/codeEntryService.js?code=" + that.code + "&db=" + museum;
+        var url = fluid.stringTemplate(
+            decodeURIComponent(that.options.codeCheckUrlTemplate), {
+            objectCode : that.code
+        });
         
-        var error = function (XMLHttpRequest, textStatus, errorThrown) {
+        var error = function (XHR, textStatus, errorThrown) {
+            fluid.log("XHR: " + XHR);
             fluid.log("Status: " + textStatus);
             fluid.log("Error: " + errorThrown);
         };
         
         var success = function (returnedData) {
-            
+        
             var data = JSON.parse(returnedData);
             
             if (data.artifactFound) {
@@ -121,85 +110,56 @@ fluid.engage = fluid.engage || {};
         };
         
         $.ajax({
-            url: url,
-            async: true,
-            error: error,
-            success: success
+            url : url,
+            error : error,
+            success : success
         });
     };
 
     /**
-     * For test purposes - only even numbers are valid codes.
-     * 
-     * @param {Object} that, the component.
-     */
-    var simulateCheck = function (that) {
-        if (!(that.code[1] % 2)) {
-            redirectSequence(that);
-        } else {
-            wrongCodeSequence(that);
-        }
-    };
-    
-    /**
-     * Return the current digit dom element - if no digit has been entered
-     * this is the first one, otherwise it is the second one.
+     * Return the current digit dom element - if no digit has been entered this
+     * is the first one, otherwise it is the second one.
      */
     var getCurrentDigitField = function (that) {
-        return that.atDigit === 0 ?
-                that.locate("firstDigitField") : that.locate("secondDigitField");
+        return that.atDigit === 0 ? that.locate("firstDigitField") : that.locate("secondDigitField");
     };
     
-    /**
-     * Initialize a handler for a digit or delete entry button.
-     * For digit handlers if the second digit is entered the whole code is
-     * checked and relevant actions are taken.
-     * 
-     *  @param {Object} that, the component.
-     *  @param button, the DOM element for buttons from 0 to 9 and delete
-     *  @param number, the number that will be displayed if the user clicks
-     *      on the button, from 1 to 10 for digits and 11 for delete
-     */
-    var attachButtonHandler = function (that, button, number) {
-        if (number < 11) {
-            var num = number % 10;
-            $(button).click(function () {
-                that.enterDigit(num);
-            });
-        } else {
-            $(button).click(function () {
-                that.deleteLastDigit();
-            });
-        }
+    var setupDelete = function (that, button) {
+        button.attr("alt", that.options.strings.deleteLabel);
+        button.click(that.deleteLastDigit);
     };
-    
+
     /**
      * Initializes the component view.
      * 
      * @param that, the component.
      */
-    var setup = function (that) {  
+    var setup = function (that) {
+        var strings = that.options.strings;
         // Initialize the navigation bar.
         that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
-              
-        // Init heading
-        that.locate("heading").text(that.options.strings.header);
         
-        // Init instruction text        
-        that.locate("headMessage").text(that.options.strings.instruction);
+        // Init title
+        that.locate("title").text(strings.header);
+        
+        // Init instruction text
+        that.locate("headMessage").text(strings.instruction);
         
         // Initialize numpad
-        that.atDigit = 0;
-        that.code = "";
+        reset(that);
         
-        // Initialize entry buttons
-        var buttons = that.locate("entryButtons");
+        //Initialize number buttons
+        that.locate("numButtons").each(function () {
+            var btn = $(this);
+            btn.click(function () {
+                that.enterDigit(parseInt(btn.attr("alt"), 10));
+            });
+        });
         
-        for (var i = 0; i < buttons.length; i++) {
-            attachButtonHandler(that, buttons[i], i + 1);
-        }
-    };  
-    
+        //Initialize delete button
+        setupDelete(that, that.locate("delButton"));
+    };
+
     /**
      * Component's creator function.
      * 
@@ -207,24 +167,27 @@ fluid.engage = fluid.engage || {};
      * @param {Object} options, the component's options.
      */
     fluid.engage.codeEntry = function (container, options) {
-        var that = fluid.initView("fluid.codeEntry", container, options);       
+        var that = fluid.initView("fluid.engage.codeEntry", container, options);
         
         that.enterDigit = function (digit) {
             getCurrentDigitField(that).text(digit);
             if (that.atDigit === 0) {
-                that.code += digit;
+                if (digit !== 0) {
+                    that.code += digit;
+                }
                 that.atDigit++;
             } else {
                 that.code += digit;
-                if (!that.options.testMode) {
-                    checkCode(that);
-                } else {
-                    simulateCheck(that);
-                }
+                that.deleteEnabled = false;
+                checkCode(that);
             }
         };
         
         that.deleteLastDigit = function () {
+            if (!that.deleteEnabled) {
+                return;
+            }
+            
             if (that.atDigit === 1) {
                 that.atDigit--;
                 that.code = "";
@@ -236,29 +199,31 @@ fluid.engage = fluid.engage || {};
         
         return that;
     };
-    
-    fluid.defaults("fluid.codeEntry", {
-        navigationBar: {
-            type: "fluid.engage.navigationBar"
+
+    fluid.defaults("fluid.engage.codeEntry", {
+        navigationBar : {
+            type : "fluid.engage.navigationBar"
         },
         selectors : {
-            heading: ".flc-heading",
-            headMessage: ".flc-head-message",
-            firstDigitField: ".flc-first-digit",
-            secondDigitField: ".flc-second-digit",
-            entryButtons: "img[class*=flc-button]"
+            title : ".flc-codeEntry-title",
+            headMessage : ".flc-codeEntry-headMessage",
+            firstDigitField : ".flc-codeEntry-firstDigit",
+            secondDigitField : ".flc-codeEntry-secondDigit",
+            numButtons: ".flc-codeEntry-numButton",
+            delButton: ".flc-codeEntry-delButton"
         },
         styles : {
-            invalidCode: "fl-invalid-code"
+            invalidCode : "fl-codeEntry-invalidCode"
         },
         strings : {
-            title: "Enter object code",
-            header: "Enter object code",
-            instruction: "Enter code from the object's label to learn more about the object.",
-            invalidCode: "Invalid code. Please try again",
-            redirecting: "Opening artifact page."
+            title : "Enter object code",
+            header : "Enter object code",
+            instruction : "Enter code from the object's label to learn more about the object.",
+            invalidCode : "Invalid code. Please try again",
+            redirecting : "Opening artifact page.",
+            deleteLabel: "Delete"
         },
-        redirectDelay: 1000,
-        testMode: false
+        codeCheckUrlTemplate: "",
+        redirectDelay : 1000
     });
 })(jQuery);
