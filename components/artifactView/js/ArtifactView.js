@@ -29,6 +29,8 @@ fluid = fluid || {};
         }
     };
 
+    var COMMENT_SECTION = {};
+
     var makeProtoComponents = function (that) {
         var proto = {
             navBarTitle: "%artifactTitle",
@@ -42,16 +44,19 @@ fluid = fluid || {};
             image: {target: "%artifactImage"},
             sections: {
                 children: fluid.transform(that.sections, function (section) {
-                    var navList = {
+                    var decorator = section.sectionContents === COMMENT_SECTION? {
+                        type: "identify",
+                        key: "comments"
+                    } : {
                         type: "fluid",
                         func: "fluid.navigationList",
-                        options: fluid.merge("merge", fluid.copy(that.options.section.options), {model: section.sectionContents})
+                        options: $.extend(fluid.copy(that.options.section.options), {model: section.sectionContents})
                     };
                     return {
                         sectionContents: {
-                            decorators: navList
+                            decorators: decorator
                         },
-                        sectionHeader: {messagekey: section.sectionTitle, args: {size: section.sectionSize}}
+                        sectionHeader: {messagekey: section.sectionTitleKey, args: {size: section.sectionSize}}
                     };
                 })
             }
@@ -73,15 +78,15 @@ fluid = fluid || {};
         return proto;
     };
     
-    var makeSection = function (title, count, sectionContents) {
+    var makeSection = function (titleKey, count, sectionContents) {
         return {
-            sectionTitle: title,
+            sectionTitleKey: titleKey,
             sectionSize: count,
             sectionContents: sectionContents 
         };
     };
     
-    var transformMediaModelForNavList = function (model, options) {
+    var artifactMediaToSection = function (model, options) {
         var sectionContents = fluid.transform($.makeArray(model.artifactMedia), function (mediaItem) {
             return {
                 image: mediaItem.type === "video" ? options.defaultVideoThumbnail : options.defaultAudioThumbnail,
@@ -92,18 +97,21 @@ fluid = fluid || {};
         return makeSection("artifactMedia", model.artifactMediaCount, sectionContents);
     };
     
-    var transformCommentsModelForNavList = function (model, options) {
-        var sectionContents = fluid.transform($.makeArray(model.artifactComments), function (val) {
-            return {
-                image: val.author ? val.author.avatar : "",
-                title: val.author ? val.author.username : "",
-                description: val.text
-            };
-        });
-        return makeSection("artifactComments", model.artifactCommentsCount, sectionContents);              
+    var commentsToSection = function (model, options) {
+        var sectionContents = COMMENT_SECTION;
+        
+ //       fluid.transform($.makeArray(model.artifactComments), function (val) {
+ //           return {
+ //               image: val.author ? val.author.avatar : "",
+ //               title: val.author ? val.author.username : "",
+ //               description: val.text
+ //           };
+ //       });
+        var commentCount = options.comments.options.model.comments.length;
+        return makeSection("artifactComments", commentCount, sectionContents);              
     };
     
-    var transformRelatedModelForNavList = function (model, options) {
+    var relatedArtifactsToSection = function (model, options) {
         var sectionContents = fluid.transform($.makeArray(model.artifactRelated), function (val) {
             return {
                 image: val.thumbnail ? val.thumbnail[0].nodetext : "",  
@@ -116,41 +124,45 @@ fluid = fluid || {};
         return makeSection("artifactRelated", model.artifactRelatedCount, sectionContents);
     };
     
-    var makeNavListModels = function (model, options) {
+    var makeCabinetSections = function (model, options) {
         var sections = [];
         
         if (model.artifactMediaCount > 0) {
-            sections.push(transformMediaModelForNavList(model, options));
+            sections.push(artifactMediaToSection(model, options));
         }        
-        if (model.artifactCommentsCount > 0) {
-            sections.push(transformCommentsModelForNavList(model, options));
-        }
+        sections.push(commentsToSection(model, options));
         if (model.artifactRelatedCount > 0) {
-            sections.push(transformRelatedModelForNavList(model, model));                
+            sections.push(relatedArtifactsToSection(model, model));                
         }
         
         return sections;
     };
 
+    var rendererIdMap = {};
+
     var setup = function (that) {
-        that.sections = makeNavListModels(that.model, that.options);
+        that.sections = makeCabinetSections(that.model, that.options);
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
             selectorsToIgnore: ["sectionContainer"],
             repeatingSelectors: ["sections"],
             rendererOptions: {
                 messageLocator: messageLocator,
-                model: that.model
+                model: that.model,
+                idMap: rendererIdMap
             }
         });        
         that.refreshView();
     };
     
     var setupSubcomponents = function (that) {
-        that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);;
+        that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
         if (that.sections.length > 0 && that.options.useCabinet) {
             that.cabinet = fluid.initSubcomponent(that, "cabinet", [that.locate("sectionContainer"), fluid.COMPONENT_OPTIONS]);
         }
+        // Note current deficient, time-dependent and awkward strategy based on rebuilding components on re-render, awaiting
+        // RENDEROUR ANTIGENS
+        that.comments = fluid.initSubcomponent(that, "comments", [fluid.jById(rendererIdMap.comments), fluid.COMPONENT_OPTIONS]);
     };
 
     fluid.engage.artifactView = function (container, options) {
@@ -173,6 +185,17 @@ fluid = fluid || {};
         descriptionMoreLess: {
             type: "fluid.engage.moreLess",
             options: {}
+        },
+        
+        comments: {
+            type: "fluid.engage.guestbook",
+            options: {
+                navigationBar: {
+                    options: {
+                        disabled: true
+                    }
+                }
+            }
         },
         
         section: {

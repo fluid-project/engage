@@ -51,7 +51,6 @@ https://source.fluidproject.org/svn/LICENSE.txt
         }
     }
     
-    function engageClientUtilsTests() {
         var tests = jqUnit.testCase("EngageClientUtils Tests");
         
         tests.test("Cookies Test:", function () {
@@ -91,7 +90,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             }, pagingNextTests, {dataSetSize: "size", useCaching: false});
         });
         
-        tests.test("Renderer Utilities Test: Componet Tree Building Functions", function () {
+        tests.test("Renderer Utilities Test: Component Tree Building Functions", function () {
             var id = "id";
             var value = "value";
             var attrName = "src";
@@ -170,9 +169,26 @@ https://source.fluidproject.org/svn/LICENSE.txt
             renderHelper(componentTree("node", "reRender"));
             jqUnit.assertEquals("Rerendering", "reRender", $(".flc-renderUtils-test").text());
         });
-    }
+        
+       tests.test("MakeProtoComponents Tests", function() {
+            var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
+            var protoTree = {
+                thingery: {messagekey: "myKey", args: ["thing", 3, false, "%binding"]},
+                boundValue: "%model.path"
+            };
+            var expanded = expander(protoTree);
+            var expected = {
+                children: [
+                    {ID: "thingery",
+                     messagekey: {value: "myKey"},
+                     args: [{value: "thing"}, 3, false, {valuebinding: "binding"}]
+                    },
+                    {ID: "boundValue", 
+                     valuebinding: "model.path"
+                    }
+                ]
+            };
+            jqUnit.assertDeepEq("Simple expansion", expected, expanded);
+       });
     
-    $(document).ready(function () {
-        engageClientUtilsTests();
-    });
 })(jQuery);

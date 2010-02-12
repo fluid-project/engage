@@ -443,9 +443,9 @@ https://source.fluidproject.org/svn/LICENSE.txt
            }
            else {
                function memberPusher(component, key) {
-               comp[key] = component;
+                   comp[key] = component;
                }
-           expandMembers(entry, comp, memberPusher);
+               expandMembers(entry, comp, memberPusher);
            }
         }
         
@@ -470,9 +470,14 @@ https://source.fluidproject.org/svn/LICENSE.txt
                    }
                }
                else {
-                   var comp = {};
-                   expandComponent(comp, entry);
-                   pusher(comp, key);
+                   if (typeof(entry) === "string" || !fluid.isPrimitive(entry) ) {
+                       var comp = fluid.freshContainer(entry);
+                       expandComponent(comp, entry);
+                       pusher(comp, key);
+                   }
+                   else if (entry !== undefined) {
+                       pusher(entry, key);
+                   }
                }
             }
         }

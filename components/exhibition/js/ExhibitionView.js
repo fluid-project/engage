@@ -62,7 +62,10 @@ fluid = fluid || {};
         }
         
         that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
-        that.guestbook = fluid.initSubcomponent(that, "guestbook", [that.locate("guestbook"), fluid.COMPONENT_OPTIONS]);
+        // Avoid for view where guestbook is not configured triggering an error since most likely code is not loaded (about view)
+        if (that.options.guestbook.options.model) {
+            that.guestbook = fluid.initSubcomponent(that, "guestbook", [that.locate("guestbook"), fluid.COMPONENT_OPTIONS]);
+        }
     };
     
     var setup = function (that) {        
