@@ -89,7 +89,7 @@ fluid = fluid || {};
     var artifactMediaToSection = function (model, options) {
         var sectionContents = fluid.transform($.makeArray(model.artifactMedia), function (mediaItem) {
             return {
-                image: mediaItem.type === "video" ? options.defaultVideoThumbnail : options.defaultAudioThumbnail,
+                //image: mediaItem.type === "video" ? options.defaultVideoThumbnail : options.defaultAudioThumbnail,
                 target: mediaItem.uri,
                 title: mediaItem.title
             };
