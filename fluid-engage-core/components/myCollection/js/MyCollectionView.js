@@ -13,38 +13,10 @@
 
 fluid = fluid || {};
 
-(function ($) {
-    
-    /**
-     * Assigns the href attribute to the back button to document.referrer.
-     * 
-     * @param {Object} that, the component.
-     */
-    var initBackLink = function (that) {    
-        var backUrl = document.referrer;
-        
-        if (backUrl === "") {
-            return "#";
-        }
-        
-        if (backUrl.indexOf("uuid") < 0) { // Workaround for the case when
-                                           // we come from the artifact page
-                                           // for the first time.
-            backUrl += "&" + $.param({uuid: that.uuid});
-        }
-        that.locate("backButton").attr("href", backUrl);
-    };           
+(function ($) {      
 
-    /**
-     * Make a model for the navigation list subcomponent
-     * 
-     * @param model, the My Collection model
-     */
-    var mapToNavListModel = function (model) {
-        if (model.length === 0) {
-            return [];
-        }
-        return fluid.transform(model, function (artifact) {
+    var mapToNavListModel = function (collectedArtifacts) {
+        return fluid.transform(collectedArtifacts, function (artifact) {
             return {
                 target: artifact.target,
                 image: artifact.image,
@@ -59,13 +31,20 @@ fluid = fluid || {};
      * @param that, the component
      */
     var initNavigationList = function (that) {
-        var navListModel = mapToNavListModel(that.model.data);
-        fluid.merge("merge", that.options.navigationList.options, {model: navListModel});
+        var collectedArtifacts = that.model.collectedArtifacts;
+        if (collectedArtifacts.length === 0) {
+            return;
+        }
         
-        that.navigationList = fluid.initSubcomponent(that, "navigationList",
-                [that.locate("navListContainer"),
-                 that.options.navigationList.options]);
+        fluid.merge("merge", that.options.navigationList.options, {
+            model: mapToNavListModel(collectedArtifacts)
+        });
         
+        that.navigationList = fluid.initSubcomponent(that, "navigationList", [
+            that.locate("navListContainer"),
+            that.options.navigationList.options
+        ]);
+
         that.navigationList.events.afterRender.addListener(function () {
             that.container.removeClass(that.options.styles.load);
         });
@@ -99,8 +78,8 @@ fluid = fluid || {};
         });
     };
     
-    var setupStatusMessage = function (statusEl, strings, model) {
-        var collectionSize = model.data.length;
+    var setupStatusMessage = function (statusEl, strings, collectedArtifacts) {
+        var collectionSize = collectedArtifacts.length;
         var status = strings.emptyCollectionMessage;
         
         // TODO: This needs to be internationalized.
@@ -120,20 +99,14 @@ fluid = fluid || {};
      * 
      * @param {Object} that, the component
      */
-    var setupMyCollection = function (that) {
-        setupNavList(that);
-        
-        // Setup navigation bar title, this will be replaced by the navigation bar component
-        that.locate("navbarTitle").text(that.options.strings.header);
-        
-        // Instantiate the user subcomponent and grab the current user's ID.
-        that.user = fluid.initSubcomponent(that, "user");
-        that.uuid = that.user.getUuid();
-        
-        setupStatusMessage(that.locate("collectionStatus"), that.options.strings, that.model);
-                
+    var setupMyCollection = function (that) {    	
+    	setupNavList(that);
+        setupStatusMessage(that.locate("collectionStatus"), 
+                           that.options.strings, 
+                           that.model.collectedArtifacts);
+
         // TODO: This should be replaced by the Navigation Bar component.
-        initBackLink(that);
+        that.locate("navbarTitle").text(that.options.strings.header);
     };
 
     /**
@@ -158,11 +131,7 @@ fluid = fluid || {};
                     useDefaultImage: true,
                     defaultToGrid: true
                 }
-            },
-            
-            user: {
-                type: "fluid.user"
-            },
+    		},
                 
             selectors: {
                 myCollectionContainer: ".flc-myCollection-imageContainer",

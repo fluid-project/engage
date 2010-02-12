@@ -83,9 +83,10 @@ fluid = fluid || {};
         that.collectView = fluid.initSubcomponent(that, "collectView", [
             that.locate("collectArtifact"),
             {
-                artifactCollected: that.model.artifactCollected,
-                museum: that.model.museum,
-                artifactId: that.model.artifactId,
+                model: {
+                    museum: that.model.museum,
+                    artifactId: that.model.artifactId
+                },
                 strings: that.options.strings
             }
         ]);
@@ -148,6 +149,8 @@ fluid = fluid || {};
                 selector: ".artifact-accession-number"
             }
         ],
+        
+        // TODO: These should be moved into ArtifactCollectView's defaults.
         strings : {
             collect: "Collect Artifact",
             uncollect: "Uncollect Artifact",
