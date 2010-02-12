@@ -58,7 +58,6 @@ fluid = fluid || {};
                 },
                 "artifactDate": "Creation date",
                 "artifactAccessionNumber": "Accession number",
-                "artifactTags": "Tags",
                 "artifactDescription": {
                     "path": "Description",
                     "func": "getDescription"
