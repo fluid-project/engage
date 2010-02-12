@@ -27,9 +27,7 @@ initServices: [
     "fluid.codeEntry.initCodeEntryDataFeed",
     "fluid.codeEntry.initCodeEntryService",
     "fluid.myCollection.initMyCollectionService",
-    "fluid.collectOperations.initAcceptor",
-    "fluid.reorder.initAcceptor",
-    "fluid.userService.initAcceptor"
+    "fluid.collectOperations.initAcceptor"
 ],
 views: {
     all: "all",

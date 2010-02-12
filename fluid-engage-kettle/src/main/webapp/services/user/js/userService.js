@@ -11,66 +11,41 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
 // Declare dependencies.
 /*global jQuery, fluid*/
+"use strict";
 
 fluid = fluid || {};
-fluid.userService = fluid.userService || {};
+fluid.engage = fluid.engage || {};
 
 (function ($) {
-    /**
-     * Creates a user document for Engage in the users database.
-     * The UUID returned is the CouchDB ID of the document.
-     * 
-     * @param {Object} config, the JSON config file for Engage.
-     */
-    var generateUuid = function (config) {
-        var data;
-        
-        var errorCallback = function (XMLHttpRequest, textStatus, errorThrown) {
-            fluid.log("Status: " + textStatus);
-            fluid.log("Error: " + errorThrown);
-        };
-        
-        var successCallback = function (returnedData) {
-            data = returnedData.replace("\n", ""); // CouchDB inserts a new line at the end of its response
-                                                   // that seems to crash the JSON parser, so we remove it.
-        };
-
-        var url = fluid.myCollection.common.compileUserDocumentUrl("", config);
-        
-        var userDocument = {};
-        userDocument.type = "user";
-        userDocument.email = "";
-        userDocument.collection = {};
-        userDocument.collection.artifacts = [];
-
-        $.ajax({
-            url: url,
-            async: false,
-            success: successCallback,
-            error: errorCallback,
-            data: JSON.stringify(userDocument),
-            processData: false,
-            dataType: "json",
-            type: "POST"
-        });
-        
-        return JSON.parse(data).id;
+    
+    fluid.engage.idURLBuilder = function (urlTemplate, data) {
+        data.id = data.id === "NEW_DOC" ? "" : data.id;
+        return fluid.stringTemplate(urlTemplate, data);
     };
     
-    /**
-     * Creates an acceptor for the user service.
-     * 
-     *  @param {Object} config, the JSON config file for Engage.
-     *  @param {Object} app, the Engage application.
-     */
-    fluid.userService.initAcceptor = function (config, app) {
-        var dataHandler = function (env) {
-            var uuid = generateUuid(config);
-            
-            return [200, {"Content-Type": "text/plain"}, uuid];
-        };
-
-        var acceptor = fluid.engage.makeAcceptorForResource("userService", "js", dataHandler);
-        fluid.engage.mountAcceptor(app, "users", acceptor);
-    };
+    fluid.engage.userDataSource = fluid.kettle.dataSource({
+        source: {
+            type: "fluid.kettle.couchDBSource",
+            writeable: true,
+            urlBuilder: {
+                funcName: "fluid.engage.idURLBuilder",
+                args: ["{config}.querySingleDocumentURLTemplate", {
+                    dbName: "users",
+                    id: "${id}"
+                }]
+            }
+        }
+    });
+    
+    fluid.kettle.dataSpout({
+        url: "users/users",
+        contentType: "JSON",
+        source: {
+            name: "fluid.engage.userDataSource",
+            args: [{
+                id: "{params}.id"
+            }]
+        }
+    });
+    
 })(jQuery);

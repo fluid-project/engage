@@ -36,8 +36,11 @@ fluid.myCollection = fluid.myCollection || {};
      */
     var getArtifactsByMuseum = function (user) {
         var result = []; 
-        var collection = user.collection;
-        fluid.transform(collection.artifacts, function (artifact) {
+        if (!user.collection || !user.collection.artifacts) {
+            return result;
+        }
+        
+        fluid.transform(user.collection.artifacts, function (artifact) {
             if (!result[artifact.museum]) {
                 result.push(artifact.museum);
                 result[artifact.museum] = [];
@@ -80,6 +83,10 @@ fluid.myCollection = fluid.myCollection || {};
      *  @param user, the user document from Couch
      */
     var getArtifactIds = function (user) {
+        if (!user.collection || !user.collection.artifacts) {
+            return [];
+        }
+        
         return fluid.transform(user.collection.artifacts, function (artifact) {
             return artifact.id;
         });
@@ -197,13 +204,18 @@ fluid.myCollection = fluid.myCollection || {};
      *  @param {Object} config, the JSON config file for Engage.
      */
     var assembleData = function (params, config) {
-        if (!uuid) {
-            return {model: {data: []}};
+        var userID = params.user;
+        if (!userID) {
+            return {
+                model: {
+                    collectedArtifacts: []
+                }
+            };
         }
         
-        // TODO: Despite being called getCollection(), this function actually returns user documents. We should rename this.
-        var user = fluid.myCollection.common.getCollection(params.uuid, config);
-
+        // TODO: Despite being called getCollection(), this function actually returns user documents.
+        // TODO: We should replace this with the user dataSource defined in userService.
+        var user = fluid.myCollection.common.getCollection(userID, config);
         var urls = compileDataURLs(config, user);
         var originalArtifactIds = getArtifactIds(user);
 
@@ -224,17 +236,14 @@ fluid.myCollection = fluid.myCollection || {};
         });
 
         // Restore the original order for artifacts as they have been aggregated by museum
-
         var artifactIds = fluid.transform(links, function (link) {
             return link.id;
         });
         
-        data.model.data = [];
+        data.model.collectedArtifacts = [];
         for (var i = 0; i < originalArtifactIds.length; i++) {
-            data.model.data.push(links[$.inArray(originalArtifactIds[i], artifactIds)]);
+            data.model.collectedArtifacts.push(links[$.inArray(originalArtifactIds[i], artifactIds)]);
         }
-
-        data.model.collectionId = params.uuid;
         
         return data;
     };
@@ -263,13 +272,8 @@ fluid.myCollection = fluid.myCollection || {};
         
         handler.registerProducer("myCollection", function (context, env) {
             var params = context.urlState.params;
-            
-            var options = assembleData(params, config);
-            
-            var strings =
-            	fluid.kettle.getBundle(renderHandlerConfig, context.urlState.params);
-            
-            options.strings = strings;
+            var options = assembleData(params, config);            
+            options.strings = fluid.kettle.getBundle(renderHandlerConfig, context.urlState.params) || {};
             
             var initBlock = {
                 ID: "initBlock",

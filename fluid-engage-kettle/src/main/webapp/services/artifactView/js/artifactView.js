@@ -120,7 +120,7 @@ fluid.artifactView = fluid.artifactView || {};
             };
             
             var strings =
-            	fluid.kettle.getBundle(renderHandlerConfig, context.urlState.params);
+            	fluid.kettle.getBundle(renderHandlerConfig, context.urlState.params) || {};
             
             options.strings = strings;
 
