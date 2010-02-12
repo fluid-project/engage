@@ -71,7 +71,7 @@ fluid = fluid || {};
     var setup = function (that) {        
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
         var selectorsToIgnore = [];
-        if (that.model.catalogueSize) {
+        if (that.model.catalogueSize > 0) {
             selectorsToIgnore.push("catalogue");
         }
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
