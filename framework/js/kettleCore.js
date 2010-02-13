@@ -156,7 +156,7 @@ fluid = fluid || {};
     
     fluid.kettle.fetchTemplateSection = function(url) {
         return fluid.kettle.operateUrl(url, fluid.kettle.stripTemplateQuickly, {async: false});
-    }
+    };
   
 })(jQuery, fluid);
     
