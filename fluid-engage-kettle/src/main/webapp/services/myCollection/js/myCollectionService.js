@@ -12,6 +12,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
 // Declare dependencies.
 /*global jQuery, fluid*/
+"use strict";
 
 fluid = fluid || {};
 fluid.myCollection = fluid.myCollection || {};
@@ -24,31 +25,33 @@ fluid.myCollection = fluid.myCollection || {};
      * @param database, the name of the museum database.
      * @param query, the query to perform.
      */
-    var compileArtifactQueryURL = function (config, database, query) {
-        return fluid.stringTemplate(config.queryURLTemplate, 
-                {dbName: database || "", view: config.views.byId, query: query || ""});
+    var compileArtifactQueryURL = function (urlTemplate, view, database, query) {
+        return fluid.stringTemplate(urlTemplate, {
+            dbName: database || "", 
+            view: view, 
+            query: query || ""
+        });
     };
     
     /**
-     * Returns a associative array of museums to arrays of artifact ids.
+     * Returns an object consisting of artifact arrays keyed by their museum.
      * 
      *  @param user, the user document from Couch
      */
-    var getArtifactsByMuseum = function (user) {
-        var result = []; 
+    var groupArtifactsByMuseum = function (user) {
+        var museums = {}; 
         if (!user.collection || !user.collection.artifacts) {
-            return result;
+            return museums;
         }
         
-        fluid.transform(user.collection.artifacts, function (artifact) {
-            if (!result[artifact.museum]) {
-                result.push(artifact.museum);
-                result[artifact.museum] = [];
+        $.each(user.collection.artifacts, function (idx, artifact) {
+            if (!museums[artifact.museum]) {
+                museums[artifact.museum] = [];
             }
-            result[artifact.museum].push(artifact.id);
+            museums[artifact.museum].push(artifact.id);
         });
         
-        return result;
+        return museums;
     };
     
     /**
@@ -57,75 +60,52 @@ fluid.myCollection = fluid.myCollection || {};
      *  @param {Object} config, the JSON config file for Engage.
      *  @param user, the user document from Couch
      */
-    var compileDataURLs = function (config, user) {
-        var artifactsByMuseum = getArtifactsByMuseum(user);
+    var buildArtifactURLsByMuseum = function (urlTemplate, view, user) {
+        var artifactsByMuseum = groupArtifactsByMuseum(user);
+        var urlsByMuseum = [];
         
-        return fluid.transform(artifactsByMuseum, function (artifact, index) {
-            var database = artifactsByMuseum[index];
-            
-            var artifacts = artifactsByMuseum[database];
-
-            var query = "";
-            for (var i = 0; i < artifacts.length; i++) {
-                query += artifacts[i];
-                if (i < artifacts.length - 1) {
-                    query += encodeURIComponent(" OR ");
+        // Go through the artifacts in each museum and compile up a giant OR query for Couch.
+        for (var museum in artifactsByMuseum) {
+            var artifacts = artifactsByMuseum[museum];            
+            if (artifacts && artifacts.length > 0) {
+                var query = "";
+                for (var i = 0; i < artifacts.length; i++) {
+                    query += artifacts[i];
+                    if (i < artifacts.length - 1) {
+                        query += encodeURIComponent(" OR ");
+                    }
                 }
+                urlsByMuseum.push({
+                    url: compileArtifactQueryURL(urlTemplate, view, museum, query),
+                    museum: museum
+                })
             }
-            
-            return {database: database, url: compileArtifactQueryURL(config, database, query)};
-        });
-    };
-  
-    /**
-     * Returns an array of artifact ids.
-     * 
-     *  @param user, the user document from Couch
-     */
-    var getArtifactIds = function (user) {
-        if (!user.collection || !user.collection.artifacts) {
-            return [];
         }
         
-        return fluid.transform(user.collection.artifacts, function (artifact) {
-            return artifact.id;
-        });
+        return urlsByMuseum;
     };
     
     /**
-     * Returns the URL for opening an artifact in artifact view.
-     * 
-     * @param URLBase, the URL handling artifact view.
-     * @param params, the parameters that need to be passed to the URL.
-     */
-    var compileTargetURL = function (URLBase, params) {
-        return URLBase + "?" + $.param(params); 
-    };
-    
-    /**
-     * Creates the data feed returned to the client.
+     * Creates a nav-list friendly view of Artifacts.
      * 
      * @param {Object} data, the normalized artifact data.
      * @param dbName, the name of the museum database that contains the set of artifacts.
-     * @param uuid, the unique user id for the owner of the collection.
      * @param lang, the language selection.
      */
-    var compileData = function (data, dbName, uuid, lang) {
+    var mapArtifactsToNavListModel = function (artifacts, dbName, lang) {
         var baseArtifactURL = "../artifacts/view.html";
         
-        return fluid.transform(data, function (artifact) {
+        return fluid.transform(artifacts, function (artifact) {
             return {                
                 id: artifact.id,
-                museum: dbName,
-                target: compileTargetURL(baseArtifactURL, {
+                target: baseArtifactURL + "?" +  $.param({
                     accessNumber: artifact.artifactAccessionNumber,
                     db: dbName,
-                    uuid: uuid,
                     lang: lang
                 }),
                 image: artifact.artifactImage,
                 title: artifact.artifactTitle,
-                dated: artifact.artifactDate
+                description: artifact.artifactDate
             };
         });
     };
@@ -153,9 +133,14 @@ fluid.myCollection = fluid.myCollection || {};
     
     // This function does a mapping from a document returned by Lucene to
     // the standard document returned by the native couchdb view
+    // TODO: This is completely hard-baked to McCord. 
+    //       This whole function should be removed when we correctly refactor the model mapping code in Engage.js
     var preMap = function (document, database) {
         var artifact = document.artifact;
-        var mappedModel = {value: {}};
+        var mappedModel = {
+            id: document._id
+        };
+
         if (database === "mccord") {
             mappedModel.value = {
                 'title': artifact.label.title || artifact.label.object,
@@ -172,13 +157,9 @@ fluid.myCollection = fluid.myCollection || {};
                 'comments': artifact.comments ? artifact.comments.comment || [] : [],
                 'relatedArtifactsCount': artifact.related_artifacts ? artifact.related_artifacts.cnt || "0" : "0",
                 'relatedArtifacts': artifact.related_artifacts ? artifact.related_artifacts.artifact || [] : [],
-                'image': artifact.images ? artifact.images.image : [],
-                'id': document._id                                                                  
+                'image': artifact.images ? artifact.images.image : []            
             };
         }
-
-        // TODO: Mapping for other databases
-
         return mappedModel;
     };
     
@@ -188,7 +169,7 @@ fluid.myCollection = fluid.myCollection || {};
      * @param rawArtifactData, the raw data returned by CouchDB.
      * @param database, the museum database data is originating from.
      */
-    var getArtifactData = function (rawArtifactData, database) {
+    var mapRawArtifacts = function (rawArtifactData, database) {
         var dataRows = rawArtifactData.rows || [];
         
         return fluid.transform(dataRows, function (row) {
@@ -198,54 +179,33 @@ fluid.myCollection = fluid.myCollection || {};
     };
     
     /**
-     * Packs up all other functions to create a data feed of artifacts contained in a user collection.
-     * 
+     *  Fetches data from Couch and returns a NavList-friendly array of artifact data.
+     
      *  @param {Object} params, the parameters passed to the service.
      *  @param {Object} config, the JSON config file for Engage.
      */
-    var assembleData = function (params, config) {
+    var fetchAndMapCollectedArtifacts = function (params, config) {
         var userID = params.user;
         if (!userID) {
-            return {
-                model: {
-                    collectedArtifacts: []
-                }
-            };
+            return [];
         }
         
         // TODO: Despite being called getCollection(), this function actually returns user documents.
         // TODO: We should replace this with the user dataSource defined in userService.
         var user = fluid.myCollection.common.getCollection(userID, config);
-        var urls = compileDataURLs(config, user);
-        var originalArtifactIds = getArtifactIds(user);
+        var urls = buildArtifactURLsByMuseum(config.queryURLTemplate, config.views.byId, user);
 
-        var dataSet = fluid.transform(urls, function (artifactURL) {
-            var rawArtifactData = ajaxCall(artifactURL.url);
-            var artifactData = getArtifactData(rawArtifactData, artifactURL.database);
-            return compileData(artifactData, artifactURL.database, params.uuid, params.lang);            
-        });
-
-        var data = {
-            model: {}
-        };
+        var collectedArtifacts = [];
         
-        var links = jQuery.map(dataSet, function (dataItem) {        
-            return fluid.transform(dataItem, function (link) {
-                return link;
-            });
-        });
-
-        // Restore the original order for artifacts as they have been aggregated by museum
-        var artifactIds = fluid.transform(links, function (link) {
-            return link.id;
+        $.each(urls, function (idx, artifactQuery) {
+            var rawArtifactData = ajaxCall(artifactQuery.url);
+            var artifactData = mapRawArtifacts(rawArtifactData, artifactQuery.museum);
+            var mappedArtifactsForMuseum = mapArtifactsToNavListModel(artifactData, artifactQuery.museum, params.lang);
+            collectedArtifacts = collectedArtifacts.concat(mappedArtifactsForMuseum);
         });
         
-        data.model.collectedArtifacts = [];
-        for (var i = 0; i < originalArtifactIds.length; i++) {
-            data.model.collectedArtifacts.push(links[$.inArray(originalArtifactIds[i], artifactIds)]);
-        }
-        
-        return data;
+        // My Collection displays artifact data in reverse order of collection--newest first, so flip the array around.
+        return collectedArtifacts.reverse();
     };
 
     /**
@@ -255,7 +215,7 @@ fluid.myCollection = fluid.myCollection || {};
      *  @param {Object} app, the Engage application. 
      */
     fluid.myCollection.initMyCollectionService = function (config, app) {
-    	var renderHandlerConfig = {
+        var renderHandlerConfig = {
             config: config,
             app: app,
             target: "users/",
@@ -267,21 +227,23 @@ fluid.myCollection = fluid.myCollection || {};
                 }
             }
         };
-    	
+        
         var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
         
         handler.registerProducer("myCollection", function (context, env) {
             var params = context.urlState.params;
-            var options = assembleData(params, config);            
-            options.strings = fluid.kettle.getBundle(renderHandlerConfig, context.urlState.params) || {};
-            
-            var initBlock = {
+            var collectedArtifacts = fetchAndMapCollectedArtifacts(params, config);
+            var strings = fluid.kettle.getBundle(renderHandlerConfig, context.urlState.params) || {};
+            var options = {
+                model: collectedArtifacts,
+                strings: strings
+            };
+                
+            return {
                 ID: "initBlock",
                 functionname: "fluid.engage.myCollection",
                 arguments: [".flc-myCollection", options]
             };
-            
-            return initBlock;
         });
     };
 

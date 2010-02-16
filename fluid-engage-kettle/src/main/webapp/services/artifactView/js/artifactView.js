@@ -32,7 +32,6 @@ fluid.artifactView = fluid.artifactView || {};
         $.ajax({
             url: modelURL, 
             success: successCallback,
-            dataType: "json",
             async: false
         });
         
@@ -49,44 +48,10 @@ fluid.artifactView = fluid.artifactView || {};
             })
         }); 
     };
-    
-    var checkCollectStatus = function (config, params, artifactId) {
-        if (!params.uuid) {
-            return false;
-        }
-        
-        var url = fluid.stringTemplate(config.queryURLTemplate, {
-            dbName: "users",
-            view: config.views.byUserArtifact,
-            query: encodeURIComponent("user AND " + params.uuid + " AND " + artifactId)
-        });
-        
-        var collected = false;
-        
-        var successCallback = function (data) {
-            collected = JSON.parse(data).total_rows > 0;
-        };
-        
-        var errorCallback = function (XMLHttpRequest, textStatus, errorThrown) {
-            fluid.log("Status: " + textStatus);
-            fluid.log("Error: " + errorThrown);
-        };
-        
-        $.ajax({url: url, async: false, success: successCallback, error: errorCallback});
-        
-        return collected;
-    };
-    
+
     var fetchAndNormalizeModel = function (params, config) {
-        var urlBase = "browse.html?";
-        var data = getData(buildDataURL(params, config));
-        var artifactModel = fluid.engage.mapModel(data, params.db);
-        return {
-            artifact: artifactModel,
-            artifactId: data.id,
-            museum: params.db,
-            artifactCollected: checkCollectStatus(config, params, data.id)            
-        };
+        var artifactModel = fluid.engage.mapModel(getData(buildDataURL(params, config)), params.db);
+        return artifactModel;
     };
     
     fluid.artifactView.initDataFeed = function (config, app) {
@@ -98,8 +63,20 @@ fluid.artifactView = fluid.artifactView || {};
         fluid.engage.mountAcceptor(app, "artifacts", acceptor);
     };
     
+    var prepareArtifactViewOptions = function (data, artifactViewStrings, moreLessStrings) {
+        return {
+            model: data,
+            descriptionMoreLess: {
+                options: {
+                    strings: moreLessStrings
+                }
+            },
+            strings: artifactViewStrings
+        };
+    };
+    
     fluid.artifactView.initMarkupFeed = function (config, app) {
-    	var renderHandlerConfig = {
+        var renderHandlerConfig = {
             config: config,
             app: app,
             target: "artifacts/",
@@ -111,19 +88,21 @@ fluid.artifactView = fluid.artifactView || {};
                 }
             }
         };
-    	
         var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
         
         handler.registerProducer("view", function (context, env) {
-            var options = {
-                model: fetchAndNormalizeModel(context.urlState.params, config)
-            };
-            
-            var strings =
-            	fluid.kettle.getBundle(renderHandlerConfig, context.urlState.params) || {};
-            
-            options.strings = strings;
-
+            var params = context.urlState.params;
+            var data = fetchAndNormalizeModel(params, config);
+            var artifactViewStrings = fluid.kettle.getBundle(renderHandlerConfig, params) || {};
+            var moreLessStrings = fluid.kettle.getBundle({
+                config: renderHandlerConfig.config,
+                source: "components/moreLess/html/",
+                sourceMountRelative: "engage"
+            }, params) || {};
+            var options = prepareArtifactViewOptions(data, artifactViewStrings, moreLessStrings);
+            // TODO: solution awaiting proper definition of "domain ids" and their domain of uniqueness
+            var guestbookOptions = fluid.engage.guestbook.makeRemoteOptions({type: "artifact", id: "accessNumber"});
+            options.comments = guestbookOptions;
             return {
                 ID: "initBlock", 
                 functionname: "fluid.engage.artifactView", 

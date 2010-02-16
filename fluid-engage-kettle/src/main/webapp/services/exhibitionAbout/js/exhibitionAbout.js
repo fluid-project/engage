@@ -27,9 +27,9 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     var compileDatabaseURL = function (params, config) {
         return fluid.stringTemplate(config.viewURLTemplateWithKey, {
             dbName: params.db || "", 
-            view: config.views.exhibitionByTitle, 
+            view: config.views.exhibitionByID, 
             key: JSON.stringify({
-                title: params.title,
+                id: params.id,
                 lang: params.lang
             })
         });
@@ -38,8 +38,6 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     var ajaxCall = function (url, success, error) {
         $.ajax({
             url: url,
-            dataType: "json",
-            asyn: false,
             success: success,
             error: error
         });
@@ -49,8 +47,10 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         var data;
         var success = function (returnedData, status) {
             data = JSON.parse(returnedData.substring(0, returnedData.length - 1));
-        };        
+        };
+        fluid.log("Beginning model fetch");      
         ajaxCall(url, success, error);
+        fluid.log("End model fetch");
         return data;
     };
     
@@ -98,14 +98,15 @@ fluid.exhibitionService = fluid.exhibitionService || {};
             
         handler.registerProducer("about", function (context, env) {
             var params = context.urlState.params;
-            var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
+            var strings = fluid.exhibitionService.getBundle(renderHandlerConfig, params);
+            fluid.log("Decoded bundle");
             var options = {
                 model: getData(errorCallback, context.urlState.params, config)
             };
             if (strings) {
                 options.strings = strings;
             }
-
+            fluid.log("Acquired model");
             return {
                 ID: "initBlock",
                 functionname: "fluid.engage.exhibitionView",
