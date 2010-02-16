@@ -3,14 +3,25 @@
     border-bottom: none;
 }
 
+.fl-list-thumbnails > li:last-child {
+    margin-bottom: 0px;
+}
+
+.fl-list > li {
+    border-left: none;
+    border-right: none;
+}
+
 .fl-theme-iphone .fl-list a {
     color: rgb(0, 0, 0);
     font-size: 0.7em;
+    padding-bottom: 0;
 }
 
 .fl-theme-iphone [class*="fl-list"] > li .fl-link-summary {
     color: rgb(0, 0, 0);
     font-size: 1em;
+    margin: 0;
 }
 
 .fl-list-thumbnails.fl-thumbnails-expanded.fl-grid li {
@@ -50,4 +61,16 @@
     margin: 0;
     right: 5px;
     bottom: 10px;
+}
+
+.fl-navigationList-textContainer {
+    height: 42px;
+}
+
+[class*=fl-list] li a div span {
+    display: block;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    width: auto;
 }
