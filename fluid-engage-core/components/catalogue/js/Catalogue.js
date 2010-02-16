@@ -104,7 +104,7 @@ fluid = fluid || {};
             catalogueThemes: ".flc-catalogue-themes",
             catalogueTheme: ".flc-catalogue-theme",
             linkToThemeArtifacts: ".flc-catalogue-linkToThemeArtifacts",
-            linkToThemeArtifactsText: ".flc-catalogue-linkToThemeArtifactsText",
+            linkToThemeArtifactsText: ".flc-catalogue-linkToThemeArtifactsText"
         },
         
         strings: {

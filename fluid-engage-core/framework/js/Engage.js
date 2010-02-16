@@ -19,8 +19,6 @@ fluid = fluid || {};
     
     fluid.engage = fluid.engage || {};
     
-    var noTitle = "No Title";
-    
     var tryFunc = function (func, value, defaultValue) {
         try {
             return func(value);
@@ -60,12 +58,11 @@ fluid = fluid || {};
                 },
                 "artifactDate": "Creation date",
                 "artifactAccessionNumber": "Accession number",
-                "artifactTags": "Tags",
                 "artifactDescription": {
                     "path": "Description",
                     "func": "getDescription"
                 },
-                "id": "id"
+                "id": "Accession number"
             },
             mappers: {
                 getDescription: function (value) {
@@ -126,7 +123,8 @@ fluid = fluid || {};
                 "artifactMention": "value.mention",
                 "artifactRelated": "value.relatedArtifacts",
                 "artifactRelatedCount": "value.relatedArtifactsCount",
-                "id": "value.id"
+                "id": "value.accessnumber",
+                "uuid": "id"
             },
             mappers: {
                 getImage: function (value) {
@@ -154,6 +152,7 @@ fluid = fluid || {};
                     "func": "makeBoolean"
                 },
                 "title": "value.title",
+                "id": "value.id",
                 "displayDate": "value.displayDate",
                 "endDate": "value.endDate",
                 "image": {
@@ -179,7 +178,8 @@ fluid = fluid || {};
                     "path": "value.isCurrent",
                     "func": "makeBoolean"
                 },
-                "title": "key.title",
+                "id": "key.id",
+                "title": "value.title",
                 "displayDate": "value.displayDate",
                 "endDate": "value.endDate",
                 "image": {
@@ -222,7 +222,8 @@ fluid = fluid || {};
         },
         mccord_exhibitions_catalogue: {
             dataSpec: {
-                "title": "key.title",
+                "id": "key.id",
+                "title": "value.title",
                 "numArtifacts": "value.catalogueSize",
                 "themes": {
                     "path": "value.sections",
@@ -247,6 +248,7 @@ fluid = fluid || {};
                         fluid.transform(value, function (val) {
                             sections.push({
                                 title: val.sectionTitle,
+                                sectionID: val.sectionID,
                                 numArtifacts: val.sectionSize,
                                 artifacts: getArtifactInfo(val.sectionHighlights)
                             });
@@ -259,8 +261,10 @@ fluid = fluid || {};
         },
         mccord_exhibitions_catalogueArtifacts: {
             dataSpec: {
-                "exhibitionTitle": "key.exhibitTitle",
-                "sectionTitle": "key.sectionTitle",
+                "exhibitionID": "key.exhibitID",
+                "sectionID": "key.sectionID",
+                "exhibitionTitle": "value.exhibitTitle",
+                "sectionTitle": "value.sectionTitle",
                 "sectionSize": "value.sectionSize",
                 "sectionArtifacts": {
                     "path": "value.sectionArtifacts",

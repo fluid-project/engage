@@ -15,24 +15,13 @@ fluid = fluid || {};
 
 (function ($) {      
 
-    var mapToNavListModel = function (collectedArtifacts) {
-        return fluid.transform(collectedArtifacts, function (artifact) {
-            return {
-                target: artifact.target,
-                image: artifact.image,
-                title: artifact.title,
-                description: artifact.dated
-            };
-        });
-    };
-
     /**
      * Isolate the initialization of the navigation list here
      * @param that, the component
      */
     var initNavigationList = function (that) {
         fluid.merge("merge", that.options.navigationList.options, {
-            model: mapToNavListModel(that.model.collectedArtifacts)
+            model: that.model
         });
         
         that.navigationList = fluid.initSubcomponent(that, "navigationList", [
@@ -51,7 +40,7 @@ fluid = fluid || {};
     
     var setupNavList = function (that) {
         // Don't bother fetching or rendering the nav list if we have no artifacts collected.
-        if (that.model.collectedArtifacts.length === 0) {
+        if (that.model.length === 0) {
             return;
         }
 
@@ -103,7 +92,7 @@ fluid = fluid || {};
     	setupNavList(that);
         setupStatusMessage(that.locate("collectionStatus"), 
                            that.options.strings, 
-                           that.model.collectedArtifacts);
+                           that.model);
 
         // TODO: This should be replaced by the Navigation Bar component.
         that.locate("navbarTitle").text(that.options.strings.header);

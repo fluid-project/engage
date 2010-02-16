@@ -75,7 +75,10 @@ fluid = fluid || {};
             node.attr("href", currentHREF + (idxQ < 0 ? param : "&" + param.substr(1)));
         }
         
-        that.locate("languageSelectionLink").click(that.showLanguageSelection);
+        that.locate("languageSelectionLink").click(function (evt) {
+            that.showLanguageSelection();
+            evt.preventDefault();
+        });
         that.locate("links").click(setLanguage);
         that.locate("englishLink").click(function () {
             that.addCookie("en");
@@ -95,6 +98,11 @@ fluid = fluid || {};
             }
         });
         that.refreshView();
+        
+        // TODO: Nasty hard-baked hack to get user IDs into My Collection until we can think through this better. Get rid of it!
+        var myCollectionLink = that.locate("myCollectionLink");
+        var myCollectionURL = myCollectionLink.attr("href");
+        myCollectionLink.attr("href", myCollectionURL + "?user=" + fluid.engage.user.currentUser()._id);
     }
     
     fluid.engage.home = function (container, options) {
@@ -146,6 +154,7 @@ fluid = fluid || {};
             objectCodeIcon: ".flc-home-objectCodeIcon",
             languageIcon: ".flc-home-languageIcon",
             exhibitionsCaption: ".flc-home-exhibitionsCaption",
+            myCollectionLink: ".flc-home-links-myCollection",
             myCollectionCaption: ".flc-home-myCollectionCaption",
             objectCodeCaption: ".flc-home-objectCodeCaption",
             languageCaption: ".flc-home-languageCaption",

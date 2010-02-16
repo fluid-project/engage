@@ -39,6 +39,11 @@ fluid = fluid || {};
             that.cabinet = fluid.initSubcomponent(that, "cabinet", [that.locate("browseContents"), fluid.COMPONENT_OPTIONS]);
         }
         that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
+        that.navBar.events.onToggle.addListener(function () {
+            $.each(that.navLists, function (idx, navList) {
+                navList.that.toggleLayout();
+            });            
+        });   
     };
     
     var mapToNavListModel = function (items) {
@@ -51,12 +56,12 @@ fluid = fluid || {};
                 showBadge: item.media
             };
         });
-    }
+    };
     
     var generateHeaderForCategory = function (category, component, strings, styles) {
         var description = category.description;
         var headerValues = {
-            category: category.name === "viewAll" ? strings.allObjects : category.name, 
+            category: !category.name ? strings.allObjects : category.name, 
             size: category.items.length
         };
         
@@ -112,8 +117,18 @@ fluid = fluid || {};
     var setup = function (that) {
         bindEvents(that);
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
+        var selectorsToIgnore = ["browseDescription", "browseContents"];
+        
+        //Checks the showToggle option.
+        //A selector "toggle" is expressed in the selectors object, and the renderer is only told to ignore it, if we want to display it.
+        //This takes advantage of the renderer's feature that will strip out markup that has a selector mapped but no associated node in the component tree.
+        //Since the toggle button is just markup, and no component tree node ever added, not ignoring it will trigger the renderer to not display it.
+        if (that.options.showToggle) {
+            selectorsToIgnore.push("toggle");
+        }
+        
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
-            selectorsToIgnore: ["browseDescription", "toggle", "browseContents"],
+            selectorsToIgnore: selectorsToIgnore,
             repeatingSelectors: ["lists"],
             rendererOptions: {
                 messageLocator: messageLocator,
@@ -203,6 +218,7 @@ fluid = fluid || {};
         },
         
         useCabinet: false,
+        showToggle: true,
         
         showHeaderForFirstCategory: true,
         

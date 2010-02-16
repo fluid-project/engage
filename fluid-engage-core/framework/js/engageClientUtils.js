@@ -318,6 +318,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
     fluid.engage.renderUtils.createRendererFunction = function (container, selectors, options) {
         options = options || {};
         container = $(container);
+        var source = options.templateSource? options.templateSource: {node: container};
         var rendererOptions = options.rendererOptions || {};
         var templates = null;
         
@@ -328,7 +329,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             if (templates) {
                 fluid.reRender(templates, container, tree, rendererOptions);
             } else {
-                templates = fluid.selfRender(container, tree, rendererOptions);
+                templates = fluid.render(source, container, tree, rendererOptions);
             }
         };
     };
@@ -442,9 +443,9 @@ https://source.fluidproject.org/svn/LICENSE.txt
            }
            else {
                function memberPusher(component, key) {
-               comp[key] = component;
+                   comp[key] = component;
                }
-           expandMembers(entry, comp, memberPusher);
+               expandMembers(entry, comp, memberPusher);
            }
         }
         
@@ -458,8 +459,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
                if (key.charAt(0) === IDescape) {
                    key = key.substring(1);
                }
-               if (entry.children) {
-                   if (key.indexOf(":" === -1)) {
+               if (entry && entry.children) {
+                   if (key.indexOf(":") === -1) {
                        key = key + ":";
                    }
                    var children = entry.children;
@@ -469,9 +470,14 @@ https://source.fluidproject.org/svn/LICENSE.txt
                    }
                }
                else {
-                   var comp = {};
-                   expandComponent(comp, entry);
-                   pusher(comp, key);
+                   if (typeof(entry) === "string" || !fluid.isPrimitive(entry) ) {
+                       var comp = fluid.freshContainer(entry);
+                       expandComponent(comp, entry);
+                       pusher(comp, key);
+                   }
+                   else if (entry !== undefined) {
+                       pusher(entry, key);
+                   }
                }
             }
         }
@@ -488,8 +494,6 @@ https://source.fluidproject.org/svn/LICENSE.txt
         };
         return expandChildren;
     };
-    
-        
     
     fluid.engage.renderUtils.uiContainer = function (id, children) {
         return {

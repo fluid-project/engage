@@ -23,7 +23,7 @@ fluid.engage = fluid.engage || {};
      */
     var compileUsersPath = function () {
         var artifactPath = location.pathname.substring(0, location.pathname.lastIndexOf("/"));
-        return artifactPath.substring(0, artifactPath.lastIndexOf("/")) + "/users";     
+        return "http://" + location.host + artifactPath.substring(0, artifactPath.lastIndexOf("/")) + "/users";     
     };
     
     /**
@@ -33,25 +33,18 @@ fluid.engage = fluid.engage || {};
      * @param artifactId, the artifact ID.
      */
     var buildCollectURL = function (userId, museum, artifactId) {
-        return "http://" + location.host + compileUsersPath() + 
-               "/" + userId + "/collection/" + museum + "/artifacts/" + artifactId;
+        return compileUsersPath() +  "/" + userId + "/collection/" + museum + "/artifacts/" + artifactId;
     };
     
     var confirmCollect = function (that, message, linkText) {
         // TODO: This needs to be read out of the URL, not out of the cookie. What if the cookie was never set?
         var lang = fluid.engage.getCookie("fluid-engage").lang;
-        
-        that.collectStatus.attr("href", "http://" + location.host + compileUsersPath() + 
-                                "/myCollection.html" + "?lang=" + lang + "&user=" + that.model.user._id);
-        that.collectStatus.addClass("active");      
+        that.collectLink.text(linkText);
+        that.collectStatus.attr("href", compileUsersPath() + "/myCollection.html" + 
+                                      "?lang=" + lang + "&user=" + that.model.user._id);      
         that.collectStatus.text(message);
-  
-        that.collectStatus.fadeTo(1000, 1, function () {
-            that.collectStatus.fadeTo(4000, 0, function () {
-                that.collectLink.text(linkText);
-                that.collectStatus.removeClass("active").removeAttr("href");
-            });
-        });
+        that.collectStatus.show();
+        that.collectStatus.fadeOut(4000);
     };
     
     // TODO: This should be implemented as a Couch view, but will do the trick for now.
@@ -61,12 +54,12 @@ fluid.engage = fluid.engage || {};
         }
         
         var artifacts = user.collection.artifacts;
-        $.each(artifacts, function (idx, artifact) {
+        for (var i = 0; i < artifacts.length; i++) {
+            var artifact = artifacts[i];
             if (artifact.id === artifactId) {
                 return true;
             }
-        });
-        
+        }
         return false;
     };
     
@@ -74,9 +67,10 @@ fluid.engage = fluid.engage || {};
         that.model.user = fluid.engage.user.currentUser(that);
         
         // Setup the collect/uncollect link and status.
-        that.isCollected = isArtifactInUserCollection(that.model.artifactId, that.model.user);
-        that.collectLink = that.locate("collectLink").text(that.isCollected ? that.options.strings.uncollect : 
-                                                                              that.options.strings.collect);
+        that.isCollected = isArtifactInUserCollection(that.model.artifact.uuid, that.model.user);
+        that.collectLink = that.locate("collectLink");
+        that.collectLink.text(that.isCollected ? that.options.strings.uncollect : 
+                                                 that.options.strings.collect);
         that.collectStatus = that.locate("status");
                                                              
         
@@ -99,18 +93,20 @@ fluid.engage = fluid.engage || {};
         
         that.collectArtifact = function () {
             $.ajax({
-                url: buildCollectURL(that.model.user._id, that.model.museum, that.model.artifactId),
+                url: buildCollectURL(that.model.user._id, that.model.museumID, that.model.artifact.uuid),
                 type: "POST"
             });
             confirmCollect(that, that.options.strings.collectedMessage, that.options.strings.uncollect);
+            that.isCollected = true;
         };
         
         that.uncollectArtifact = function () {
             $.ajax({
-                url: buildCollectURL(that.model.user._id, that.model.museum, that.model.artifactId),
+                url: buildCollectURL(that.model.user._id, that.model.museumID, that.model.artifact.uuid),
                 type: "DELETE"
             });
             confirmCollect(that, that.options.strings.uncollectedMessage, that.options.strings.collect);
+            that.isCollected = false;
         };
         
         that.toggleArtifact = function () {
@@ -127,8 +123,8 @@ fluid.engage = fluid.engage || {};
     
     fluid.defaults("fluid.engage.artifactCollectView", {
         selectors : {
-            collectLink: ".flc-collect-link",
-            status: ".flc-collection-link"
+            collectLink: ".flc-artifact-collect-link",
+            status: ".flc-artifact-collect-status"
         }
     });
 })(jQuery);

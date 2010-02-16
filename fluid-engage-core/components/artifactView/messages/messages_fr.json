@@ -1,4 +1,7 @@
 {
+    "artifactMedia": "Voir les contenus audios et vidéos (%size)",
+    "artifactComments": "Voir les commentaires (%size)",
+    "artifactRelated": "Voir les artéfacts associés (%size)",
     "collect": "TODO Collect Artifact",
     "uncollect": "TODO Uncollect Artifact",
     "collectedMessage": "TODO This artifact has been added to your personal collection; tap here to go there now.",

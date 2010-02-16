@@ -1,5 +1,5 @@
 {
-addNote: "Add Note"
-delete: "Delete",
-reportAbuse: "Report Abuse"
+	"addNote": "Add Note",
+	"delete": "Delete",
+	"reportAbuse": "Report Abuse"
 }

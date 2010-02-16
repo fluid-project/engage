@@ -62,12 +62,16 @@ fluid = fluid || {};
         }
         
         that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
+        // Avoid for view where guestbook is not configured triggering an error since most likely code is not loaded (about view)
+        if (that.options.guestbook.options.model) {
+            that.guestbook = fluid.initSubcomponent(that, "guestbook", [that.locate("guestbook"), fluid.COMPONENT_OPTIONS]);
+        }
     };
     
     var setup = function (that) {        
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
         var selectorsToIgnore = [];
-        if (that.model.catalogueSize) {
+        if (that.model.catalogueSize > 0) {
             selectorsToIgnore.push("catalogue");
         }
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
@@ -106,6 +110,17 @@ fluid = fluid || {};
             }
         },
         
+        guestbook: {
+            type: "fluid.engage.guestbook",
+            options: {
+                navigationBar: {
+                    options: {
+                        disabled: true
+                    }
+                }
+            }
+        },
+                
         navigationBar: {
             type: "fluid.engage.navigationBar"
         },

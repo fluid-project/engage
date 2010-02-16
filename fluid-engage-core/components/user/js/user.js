@@ -74,7 +74,7 @@ fluid.engage.user = fluid.engage.user = {};
            return fluid.engage.user.fetchUser(cookieId);
         } else {
             var user = fluid.engage.user.createNewUser();
-            fluid.engage.setCookie("engage.uuid", user.id,  {
+            fluid.engage.setCookie("engage.uuid", user._id,  {
                 path: "/"
             });
             return user;

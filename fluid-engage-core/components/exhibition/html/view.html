@@ -30,28 +30,37 @@
         <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationList/js/NavigationList.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/components/exhibition/js/ExhibitionView.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/iPhoneChromeless.js"></script>
+        <!-- Dependencies for Guestbook - will one day be applied automatically -->
+        
+        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/datepicker/ui.datepicker-stub.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/datepicker/i18n/jquery.ui.datepicker-en-GB.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/datepicker/i18n/jquery.ui.datepicker-fr.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/dateUtils.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/kettleCore.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/guestbook/js/guestbook.js"></script>
+        
+        <link type="text/css" rel="stylesheet" href="../../guestbook/css/guestbook.css" />
+        
     </head>   
     <body class="fl-theme-iphone">
         <div class="flc-exhibition-container fl-exhibition">
             
             <!-- Navigation Bar and Header -->
-            <div class="flc-navigationBar fl-navbar fl-table">
-                <div class="fl-table-row">
-                    <!-- Back button -->
-                    <div class="fl-table-cell">
-                        <a rsf:id="scr=null" class="flc-navigationBar-back fl-button" href="#">
-                            <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/back.png" alt="Go back"/>
-                        </a>
-                    </div>
-                    <!-- Home button -->
-                    <div class="fl-table-cell">
-                        <a rsf:id="scr=null" class="flc-navigationBar-home fl-button" href="#">
-                            <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/home.png" alt="Go home"/>
-                        </a>
-                    </div>
-                    <!-- Page header -->
-                    <h1 class="flc-exhibition-navBarTitle fl-table-cell">Exhibition View</h1>
+            <div class="flc-navigationBar fl-navbar fl-col-mixed">
+                <!-- Back button -->
+                <div class="fl-col-fixed fl-force-left">
+                    <a rsf:id="scr=null" class="flc-navigationBar-back fl-button fl-backButton" href="#">
+                        <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/back.png" alt="Go back"/>
+                    </a>
                 </div>
+                <!-- Home button -->
+                <div class="fl-col-fixed fl-force-left">
+                    <a rsf:id="scr=null" class="flc-navigationBar-home fl-button" href="#">
+                        <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/home.png" alt="Go home"/>
+                    </a>
+                </div>
+                <!-- Page header -->
+                <h1 class="flc-exhibition-navBarTitle fl-navbar-title fl-col-flex">Exhibition View</h1>
             </div>
 
             <ol class="fl-list-menu">
@@ -106,8 +115,18 @@
                 </li>
             </ol>
         </div>
+        <div id="guestbook-template" class="fl-offScreen-hidden">
+           The markup for the guestbook template is inserted here when run from the server.
+        </div>
         <script id="flc-initBlock" type="text/javascript">
-            fluid.engage.initComponentWithLocalData("fluid.engage.exhibitionView", ".flc-exhibition-container");
+            fluid.engage.initComponentWithLocalData("fluid.engage.exhibitionView", ".flc-exhibition-container", 
+                { guestbook: {
+                    type: "fluid.engage.guestbook", 
+                    options: {templateSource: fluid.kettle.fetchTemplateSection("../../guestbook/html/guestbook.html").data,
+                              model: fluid.kettle.operateUrl("../../guestbook/data/demoData.json", JSON.parse, {async: false}).data
+                             }
+                             }
+                    });
         </script>
     </body>
 </html>

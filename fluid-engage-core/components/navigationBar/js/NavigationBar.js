@@ -34,10 +34,11 @@ fluid.engage = fluid.engage || {};
         $("img", that.backButton).attr("alt", that.options.strings.goBack);
         $("img", that.homeButton).attr("alt", that.options.strings.goHome);
     
-        // Locaize the toggle icons.
+        // Localize the toggle icons.
         that.defaultIcon.attr("alt", that.options.strings.defaultToggle);
         that.alternateIcon.attr("alt", that.options.strings.alternateToggle);
-    }
+    };
+    
     var setupNavigationBar = function (that) {
         that.backButton = that.locate("backButton").click(preventingHandler(that.back));
         that.homeButton = that.locate("homeButton").click(preventingHandler(that.home));
@@ -54,6 +55,10 @@ fluid.engage = fluid.engage || {};
     
     fluid.engage.navigationBar = function (container, options) {
         var that = fluid.initView("fluid.engage.navigationBar", container, options);
+        if (that.options.disabled) {
+            that.locate("bar").hide();
+            return null;
+        }
         
         that.home = function () {
             // TODO: This is grossly hardcoded and needs to be improved
@@ -75,6 +80,7 @@ fluid.engage = fluid.engage || {};
     
     fluid.defaults("fluid.engage.navigationBar", {
         selectors: {
+            bar: ".flc-navigationBar",
             backButton: ".flc-navigationBar-back",
             homeButton: ".flc-navigationBar-home",
             toggleButton: ".flc-navigationBar-toggle",
@@ -88,7 +94,7 @@ fluid.engage = fluid.engage || {};
             defaultToggle: "Switch to grid layout",
             alternateToggle: "Switch to list layout"
         },
-        
+        disabled: false,
         events: {
             onToggle: null
         }

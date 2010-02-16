@@ -1,4 +1,4 @@
-.flc-head-message {
+.fl-codeEntry-headMessage {
     width: 320px;
     height: 80px;
     margin: auto;
@@ -7,18 +7,18 @@
     text-align: center;
 }
 
-.fl-invalid-code {
+.fl-codeEntry-invalidCode {
 	color: white;
-	background-color: 464646;
+	background-color: #464646;
 }
 
-.flc-entry-block {
+.fl-codeEntry-block {
     width: 300px;	
     margin: auto;
     text-align: center;
 }
 
-.fl-digit-field {
+.fl-codeEntry-digitField {
 	width: 64px;
 	height: 64px;
 	margin-top: 10px;
@@ -31,13 +31,23 @@
 	display: inline-block;
 }
 
-.flc-numpad {
+.fl-codeEntry-numpad {
 	width: 320px;
 	margin: auto; 
 }
 
-.flc-numpad img {
-    margin: -10px;
-    outline: none;
+.fl-codeEntry-numpad img {
+	position: relative;
+    margin: 0px;
+    margin-bottom: 1px;
+    outline: 0 none;
     cursor: pointer;
+    border: 0px none;
+    padding: 0px;
+    float: left;
+}
+
+.fl-codeEntry-middleButton {
+    margin-left: 1px;
+    margin-right: 1px;
 }
