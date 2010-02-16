@@ -63,6 +63,9 @@
     bottom: 10px;
 }
 
+.fl-grid .fl-navigationList-textContainer {
+    display: none;
+}
 .fl-navigationList-textContainer {
     height: 42px;
 }
