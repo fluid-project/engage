@@ -1,5 +1,4 @@
 {
     "header": "TODO My Collection",
-    "statusMessageTemplate": "TODO Your collection contains %artifactsNumber artifact%artifactsPlural. Touch and drag the thumbnails to reorganize.",
     "emptyCollectionMessage": "TODO Your collection is empty. Start adding artifacts to your collection by using the 'Collect' button you find on artifact screens."
 }

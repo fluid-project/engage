@@ -32,8 +32,11 @@ fluid = fluid || {};
         that.navigationList.events.afterRender.addListener(function () {
             that.container.removeClass(that.options.styles.load);
         });
-        
-        that.locate("toggler").click(function () {
+    };
+    
+    var setupNavBar = function (that) {
+        that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
+        that.navBar.events.onToggle.addListener(function () {
             that.navigationList.toggleLayout();
         });
     };
@@ -67,20 +70,12 @@ fluid = fluid || {};
         });
     };
     
-    var setupStatusMessage = function (statusEl, strings, collectedArtifacts) {
-        var collectionSize = collectedArtifacts.length;
+    var setupStatusMessage = function (statusEl, myCollectionContainerEl, strings, styles) {
         var status = strings.emptyCollectionMessage;
         
-        // TODO: This needs to be internationalized.
-        if (collectionSize > 0) {
-            status = fluid.stringTemplate(
-                strings.statusMessageTemplate, {
-                    artifactsNumber: collectionSize,
-                    artifactsPlural: collectionSize === 1 ? "" : "s"
-                }
-            );
-        }
         statusEl.text(status);
+        statusEl.addClass(styles.emptyStatus);
+        myCollectionContainerEl.addClass(styles.collectionEmpty);
     };
     
     /**
@@ -88,14 +83,17 @@ fluid = fluid || {};
      * 
      * @param {Object} that, the component
      */
-    var setupMyCollection = function (that) {    	
-    	setupNavList(that);
-        setupStatusMessage(that.locate("collectionStatus"), 
-                           that.options.strings, 
-                           that.model);
-
-        // TODO: This should be replaced by the Navigation Bar component.
-        that.locate("navbarTitle").text(that.options.strings.header);
+    var setupMyCollection = function (that) {
+        setupNavBar(that);
+        setupNavList(that);
+        if (that.model.length === 0) {
+            setupStatusMessage(that.locate("collectionEmptyStatus"),
+                               that.locate("myCollectionContainer"),
+                               that.options.strings, 
+                               that.options.styles);
+        }
+        // Init title
+        that.locate("title").text(that.options.strings.header);
     };
 
     /**
@@ -114,33 +112,34 @@ fluid = fluid || {};
     
     fluid.defaults("fluid.engage.myCollection",
         {
+            navigationBar : {
+                type : "fluid.engage.navigationBar"
+            },
+            
             navigationList: {
                 type: "fluid.navigationList",
                 options: {
                     useDefaultImage: true,
                     defaultToGrid: true
                 }
-    		},
+            },
                 
             selectors: {
-                myCollectionContainer: ".flc-myCollection-imageContainer",
-                navbarTitle: ".flc-navbar-title", 
+                myCollectionContainer: ".flc-myCollection-container",
                 navListContainer: ".flc-navigationList",
-                navListLink: ".flc-navigationList-link",
-                backButton: ".flc-myCollection-back",
-                collectionStatus: ".flc-myCollection-status",
-                toggler: ".flc-myCollection-toggler"
+                navListLink: ".flc-myCollection-navigationList-link",
+                collectionEmptyStatus: ".flc-myCollection-emptyStatus",
+                title: "flc-myCollection-title"
             },
 
             styles: {
-                load: "fl-myCollection-loading"
+                load: "fl-myCollection-loading",
+                collectionEmpty: "fl-myCollection-empty",
+                emptyStatus: "fl-myCollection-emptyStatus"
             },
 
             strings: {
                 header: "My Collection",
-                statusMessageTemplate:
-                    "Your collection contains %artifactsNumber artifact" +
-                    "%artifactsPlural. Touch and drag the thumbnails to reorganize.",
                 emptyCollectionMessage:
                     "Your collection is empty. Start adding artifacts to your " +
                     "collection by using the \"Collect\" button you find on artifact screens."
