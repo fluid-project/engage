@@ -19,6 +19,7 @@
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/ui/js/ui.core.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/plugins/delegate/js/jquery.delegate.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/plugins/cookie/js/jquery.cookie.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/jquery.keyboard-a11y.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/json/js/json2.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
@@ -29,6 +30,8 @@
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/iPhoneChromeless.js"></script>   
         <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationBar/js/NavigationBar.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/user/js/user.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/artifactView/js/ArtifactCollectView.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/components/artifactView/js/ArtifactView.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/loadData.js"></script>
@@ -68,6 +71,17 @@
 	            <!-- Page header -->
 	            <h1 class="flc-artifact-navBarTitle fl-navbar-title fl-col-flex">Catalogue for This Exhibition</h1>
 	        </div>
+	        
+	        <!-- My Collection sub-header -->
+	        <div>
+                <div class="flc-artifact-collect fl-table-cell">
+                    <a rsf:id="scr=null" class="flc-artifact-collect-link fl-button" href="#">Collect/Uncollect artifact</a>
+                    <div>
+                        <a class="flc-artifact-collect-status fl-artifact-collect-status" href="#"></a>
+                    </div>
+                </div>                          
+            </div>
+            
             <div class="fl-table fl-artifact-image-content">
 	            <div class="fl-artifact-image-cell fl-table-cell">
 	                <img src="../images/a.jpg" alt="Artifact Image" class="flc-artifact-image fl-artifact-image" />

@@ -61,7 +61,8 @@ fluid = fluid || {};
                 "artifactDescription": {
                     "path": "Description",
                     "func": "getDescription"
-                }
+                },
+                "id": "Accession number"
             },
             mappers: {
                 getDescription: function (value) {
@@ -121,7 +122,9 @@ fluid = fluid || {};
                 "artifactMedium": "value.medium",
                 "artifactMention": "value.mention",
                 "artifactRelated": "value.relatedArtifacts",
-                "artifactRelatedCount": "value.relatedArtifactsCount"
+                "artifactRelatedCount": "value.relatedArtifactsCount",
+                "id": "value.accessnumber",
+                "uuid": "id"
             },
             mappers: {
                 getImage: function (value) {

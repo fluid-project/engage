@@ -33,3 +33,7 @@
 .fl-artifactView-hidden-icons {
     display: none;
 }
+
+.fl-artifact-collect-status {
+    display: none;
+}

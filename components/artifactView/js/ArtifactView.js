@@ -152,7 +152,7 @@ fluid = fluid || {};
         that.sections = makeCabinetSections(that.model, that.options, mediaIconURLs);
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
-            selectorsToIgnore: ["sectionContainer", "audioIcon", "videoIcon"],
+            selectorsToIgnore: ["collectArtifact", "sectionContainer", "audioIcon", "videoIcon"],
             repeatingSelectors: ["sections"],
             rendererOptions: {
                 messageLocator: messageLocator,
@@ -164,7 +164,21 @@ fluid = fluid || {};
     };
     
     var setupSubcomponents = function (that) {
+        var museumID = fluid.kettle.paramsToMap(window.location.search.substring(1)).db;
+    
         that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
+                
+        that.collectView = fluid.initSubcomponent(that, "collectView", [
+            that.locate("collectArtifact"),
+            {
+                model: {
+                    museumID: museumID,
+                    artifact: that.model
+                },
+                strings: that.options.strings
+            }
+        ]);
+        
         if (that.sections.length > 0 && that.options.useCabinet) {
             that.cabinet = fluid.initSubcomponent(that, "cabinet", [that.locate("sectionContainer"), fluid.COMPONENT_OPTIONS]);
         }
@@ -222,6 +236,10 @@ fluid = fluid || {};
             type: "fluid.engage.navigationBar"
         },
         
+        collectView : {
+            type: "fluid.engage.artifactCollectView"
+        },
+        
         selectors: {
             navBarTitle: ".flc-artifact-navBarTitle",
             accessionNumber: ".flc-artifact-accessionNumber",
@@ -239,7 +257,8 @@ fluid = fluid || {};
             sectionContents: ".flc-cabinet-contents",
             sectionHeader: ".flc-cabinet-header",
             audioIcon: ".flc-artifactView-audio-icon",
-            videoIcon: ".flc-artifactView-video-icon"
+            videoIcon: ".flc-artifactView-video-icon",
+            collectArtifact: ".flc-artifact-collect"
         },
         
         useCabinet: true,
@@ -247,8 +266,13 @@ fluid = fluid || {};
         strings: {
             artifactMedia: "Show Audio and Video (%size)",
             artifactComments: "Show Comments (%size)",
-            artifactRelated: "Show Related Artifacts (%size)"
+            artifactRelated: "Show Related Artifacts (%size)",
             
+            // TODO: These strings should be correctly scoped to the ArtifactCollectView.
+            collect: "Collect Artifact",
+            uncollect: "Uncollect Artifact",
+            collectedMessage: "This artifact has been added to your personal collection; tap here to go there now.",
+            uncollectedMessage: "This artifact has been removed from your personal collection; tap here to go there now."
         }
     });
     

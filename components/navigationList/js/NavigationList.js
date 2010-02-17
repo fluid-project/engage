@@ -123,6 +123,7 @@ fluid = fluid || {};
         
         that.refreshView = function () {
             that.render(generateTree(that.model, that.options));
+            that.events.afterRender.fire();
         };
         
         setup(that);
@@ -157,7 +158,9 @@ fluid = fluid || {};
         
         strings: {},
         
-        events: {},
+        events: {
+        	afterRender: null
+        },
         
         useDefaultImage: false,
                 

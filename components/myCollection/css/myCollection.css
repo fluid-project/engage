@@ -1,0 +1,93 @@
+.flc-navigationListLink {
+	display: none;
+}
+/* TODO: clean up the css */
+
+.flc-myCollection-image {
+    background: #eee;
+    margin-left: auto;
+    margin-right: auto;
+    width: 64px;
+    height: 64px;
+}
+
+
+.flc-myCollection-period {
+	color: #777;
+}
+
+.fl-myCollection-loading .flc-myCollection-imageContainer {
+    display: none;
+}
+
+.fl-myCollection-loading .flc-myCollection-navbar {
+	display: none;
+}
+
+.fl-myCollection-loading .flc-myCollection-subHeading {
+    display: none;
+}
+
+.fl-myCollection-loading .fl-myCollection-loadMessage {
+    display: block;
+    text-align: center;
+    margin-top: 100px;
+}
+
+.fl-myCollection-loadMessage {
+    display: none;
+}
+
+.flc-myCollection-toggler {
+	cursor: pointer;
+	white-space: normal !important;
+}
+
+.flc-myCollection-back {
+    cursor: pointer;
+}
+
+.flc-myCollection-items {
+	outline: none;
+    padding: 3.5px;
+    width: 71px !important;
+    height: 71px !important;
+}
+
+.flc-myCollection-items .flc-myCollection-image {
+	outline: 2px solid red;
+}
+
+.fl-list .flc-myCollection-items {
+	width: 100% !important;	 
+}
+
+.fl-invisible {
+    display: none !important;
+}
+
+.flc-myCollection-status {
+    white-space: normal !important;
+}
+
+.fl-myCollection-dropMarker {    
+	height: 64px !important;
+	width: 64px !important;
+	margin: 0 -2px;
+	padding: 0 2px;
+	background-color: red !important;
+	float: left;
+}
+
+.flc-myCollection-titleText {
+	margin-left: 100px;
+	margin-top: -50px;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.flc-myCollection-period {
+	margin-left: 100px;
+	white-space: nowrap;	
+	overflow: hidden;
+}

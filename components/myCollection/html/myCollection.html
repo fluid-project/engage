@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></meta>
+		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"></meta>
+		<meta name="apple-mobile-web-app-capable" content="yes"></meta>
+		
+		<title>My Collection</title>
+		
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-layout.css" ></link>
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-transitions.css" ></link>
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" ></link>
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" ></link>
+		<link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/myCollection/css/myCollection.css" ></link>
+
+		<script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
+		<script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/ui/js/ui.core.js"></script>
+		<script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/plugins/delegate/js/jquery.delegate.js"></script>
+		<script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/json/js/json2.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/ui/js/ui.draggable.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/jquery.keyboard-a11y.js"></script>
+		<script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
+		<script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/FluidDOMUtilities.js"></script>
+		<script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/DataBinding.js"></script>
+		<script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
+		<script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>		
+
+		<script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/plugins/cookie/js/jquery.cookie.js"></script>		
+		<script type="text/javascript" src="../../../../fluid-engage-core/framework/js/loadData.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationList/js/NavigationList.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/user/js/user.js"></script>
+   		<script type="text/javascript" src="../../../../fluid-engage-core/components/myCollection/js/MyCollectionView.js"></script>
+		
+	</head>
+	<body class="fl-theme-iphone">
+<!--		<div class="flc-myCollection fl-myCollection-loading">-->
+		<div class="flc-myCollection">			
+			<div class="flc-myCollection-navbar fl-navbar fl-table">
+			    <div class="fl-table-row">
+	    		    <a class="flc-myCollection-back fl-backButton fl-table-cell">Back</a>
+	                <h1 class="flc-navbar-title fl-table-cell">My Collection</h1>
+	                <a class="flc-myCollection-toggler fl-table-cell" alt="Toggle View" title="Toggle View">Toggle View</a>
+	            </div>
+	            <div class="fl-table-row">
+	                <div class="fl-table-cell"></div>
+	                <div class="flc-myCollection-status fl-table-cell"></div>
+	                <div class="fl-table-cell"></div>
+	            </div>
+			</div>
+	
+			<div class="fl-myCollection-loadMessage fl-note fl-bevel-white">
+				Loading...
+			</div>
+	
+
+	  		<form class="flc-myCollection-imageContainer">
+				<div class="flc-navigationList">					
+				</div>
+			</form>
+			
+					
+			<!-- hidden link to the navigation list template -->
+			<a class="flc-navigationList-link" href="../../../../fluid-engage-core/components/navigationList/html/NavigationList.html"/>
+		</div>
+
+		<script id="flc-initBlock" type="text/javascript">
+			fluid.engage.initComponentWithLocalData("fluid.engage.myCollection", ".flc-myCollection");
+		</script>
+	</body>
+</html>
