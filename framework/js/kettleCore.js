@@ -54,16 +54,24 @@ fluid = fluid || {};
         }
     }
     
+    fluid.kettle.decodeURIComponent = function(comp) {
+       comp = comp.replace(/\+/g, " ");
+       return decodeURIComponent(comp);
+    };
+    
     fluid.kettle.paramsToMap = function (queryString) {
         var togo = {};
         queryString = queryString || "";
+        if (queryString.charAt(0) === "?") {
+            queryString = queryString.substring(1);
+        }
         var segs = queryString.split("&");
         for (var i = 0; i < segs.length; ++ i) {
             var seg = segs[i];
             var eqpos = seg.indexOf("=");
             var key = seg.substring(0, eqpos);
             var value = seg.substring(eqpos + 1);
-            push(togo, key, value);
+            push(togo, fluid.kettle.decodeURIComponent(key), fluid.kettle.decodeURIComponent(value));
         }
         return togo;
     };
@@ -107,12 +115,15 @@ fluid = fluid || {};
         return togo;
     };
     
-    fluid.kettle.operateUrl = function(url, responseParser, writeDispose) {
+    fluid.kettle.operateUrl = function(url, responseParser, writeDispose, callback) {
         var togo = {};
         responseParser = responseParser || fluid.identity;
         function success(responseText, textStatus) {
             togo.data = responseParser(responseText); 
             togo.textStatus = textStatus;
+            if (callback) {
+                callback(togo);
+            }
         }
         function error(xhr, textStatus, errorThrown) {
             fluid.log("Data fetch error - textStatus: " + textStatus);
@@ -120,6 +131,9 @@ fluid = fluid || {};
             togo.textStatus = textStatus;
             togo.errorThrown = errorThrown;
             togo.isError = true;
+            if (callback) {
+                callback(togo);
+            }
         }
         var ajaxOpts = {
             type: "GET",

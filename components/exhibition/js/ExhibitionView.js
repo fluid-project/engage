@@ -16,6 +16,10 @@ fluid = fluid || {};
 
 (function ($) {
     
+    function guard(test, component) {
+        return test? component: undefined;
+    }
+    
     function makeProtoComponents(model) {
         var proto = {
             navBarTitle: "%title",
@@ -23,15 +27,15 @@ fluid = fluid || {};
             shortDescription: "%shortDescription",
             description: {markup: model.introduction ? model.introduction : model.content},
             guestbook: {messagekey: "guestbook", args: {size: "%guestbookSize"}},
-            guestbookLink: {target: "%guestbookLink"},
-            guestbookLinkText: {messagekey: "guestbookLinkText"},
+            guestbookLink: guard(model.comments, {target: "%guestbookLink"}),
+            guestbookLinkText: guard(model.comments, {messagekey: "guestbookLinkText"}),
             image: {target: "%image"},
             catalogueLink: {target: "%catalogueLink"},
             catalogueLinkText: {messagekey: "catalogueLinkText"},
             aboutLink: {target: "%aboutLink"},
             aboutLinkText: {messagekey: "aboutLink"},
             title: "%title",
-            guestbookInvitation: model.comments || {messagekey: "guestbookInvitationString"}
+            guestbookInvitation: guard(!model.comments, {messagekey: "guestbookInvitationString"})
         };
         if (model.catalogueSize > 0) {
             fluid.renderer.mergeComponents(proto, {
@@ -88,6 +92,9 @@ fluid = fluid || {};
     fluid.engage.exhibitionView = function (container, options) {
         var that = fluid.initView("fluid.engage.exhibitionView", container, options);        
         that.model = that.options.model;
+        if (that.options.guestbook.options.model) {
+            that.model.comments = that.options.guestbook.options.model.comments.length;
+        }
 
         var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
         

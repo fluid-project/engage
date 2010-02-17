@@ -18,20 +18,19 @@ fluid = fluid || {};
     fluid.setLogging(true);
 
     var makeCommentAction = function(model, comment) {
-        return {messagekey: model.ownid === comment.authorid? "delete" : "reportAbuse"};
+        return {messagekey: model.ownid === comment.authorId? "delete" : "reportAbuse"};
     }
-    var makeProtoComponents = function(model, locale, dateFormat) {
-        if (locale !== "fr") {
-            locale = "en";
-        }
+    var makeProtoComponents = function(model, options) {
         return {
+          "addNote": {target: options.addNoteTarget},
+          "addNoteText": {messagekey: "addNote"},
           "commentCell:": {
             "children": 
             fluid.transform(model.comments, function(comment) {
               return {
                 author: comment.author,
                 location: comment.location,
-                date: fluid.dateUtils.renderLocalisedDate(fluid.dateUtils.parseISO8601(comment.date), dateFormat, locale),
+                date: fluid.dateUtils.renderLocalisedDate(fluid.dateUtils.parseISO8601(comment.date), options.dateFormat, options.locale),
                 commentText: comment.text,
                 action: makeCommentAction(model, comment)
               }; 
@@ -51,7 +50,7 @@ fluid = fluid || {};
             rendererOptions: {
                 messageLocator: messageLocator,
                 model: that.model,
-                debugMode: true
+                debugMode: false
             }
         });
         that.refreshView();
@@ -59,13 +58,18 @@ fluid = fluid || {};
     };
 
     fluid.engage.guestbook = function (container, options) {
-        var that = fluid.initView("fluid.engage.guestbook", container, options);        
+        var that = fluid.initView("fluid.engage.guestbook", container, options);
+        // TODO: Normalise locale handling and fallback, destroy jquery ui datepicker stopgap
+        if (that.options.locale !== "fr") {
+            that.options.locale = "en";
+        }
         that.model = that.options.model;
+        that.model.ownid =  fluid.engage.user.currentUser().id;
 
         var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
         
         that.refreshView = function () {
-            var protoTree = makeProtoComponents(that.model, that.options.locale, that.options.dateFormat);
+            var protoTree = makeProtoComponents(that.model, that.options);
             var tree = expander(protoTree);
             that.render(tree);
             setupSubcomponents(that);
@@ -82,6 +86,8 @@ fluid = fluid || {};
         },
         
         selectors: {
+            addNote: ".flc-guestbook-addnote-control",
+            addNoteText: ".flc-guestbook-addnote-text",
             commentCell: ".flc-guestbook-comment-cell",
             author: ".flc-guestbook-author",
             location: ".flc-guestbook-location",
@@ -89,6 +95,7 @@ fluid = fluid || {};
             commentText: ".flc-guestbook-text",
             action: ".flc-guestbook-action" 
         },
+        addNoteTarget: "comments.html",
         locale: "en",
         dateFormat: "MMMM dd, yyyy",
         events: {
@@ -100,6 +107,8 @@ fluid = fluid || {};
             "reportAbuse": "Report Abuse"
             }
     });
+    
+    
     
     var bindCommentHandlers = function(that) {
         that.locate("cancel").click(function() { 
@@ -115,7 +124,16 @@ fluid = fluid || {};
     
     var submitComment = function(that) {
         var text = that.locate("text").val();
-        fluid.log("Submitting text " + text + " to URL " + that.postURL);
+        fluid.log("Submitting text " + text + " to URL " + that.options.postURL);
+        var fixedDate = fluid.dateUtils.fromDate(new Date());
+        var isoDate = fluid.dateUtils.renderISO8601(fixedDate);
+        var user = fluid.engage.user.currentUser();
+        var doc = $.extend({text: text, date: isoDate, authorId: user.id}, that.options.docRoot);
+
+        fluid.kettle.operateUrl(that.options.postURL, null, {
+            type: "POST",
+            data: JSON.stringify(doc)
+        });
     };
     
     fluid.engage.guestbookComment = function (container, options) {
@@ -140,10 +158,9 @@ fluid = fluid || {};
             form: ".flc-guestbook-form"
         },
         userid: "anonymous",
-        userName: "Anonymous",
-        postUrl: "#",
-        directModel: {
-            path: "comments"
+        postURL: "#",
+        docRoot: {
+            userName: "Anonymous"
         }
     });
       
