@@ -15,6 +15,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 fluid = fluid || {};
 
 (function ($) {
+    fluid.setLogging(true);
 
     var makeCommentAction = function(model, comment) {
         return {messagekey: model.ownid === comment.authorid? "delete" : "reportAbuse"};
@@ -80,15 +81,6 @@ fluid = fluid || {};
             type: "fluid.engage.navigationBar"
         },
         
-        navigationList: {
-            type: "fluid.navigationList",
-            options: {
-                styles: {
-                    titleText: "fl-browse-shortenText"
-                },
-                useDefaultImage: true
-            }
-        },
         selectors: {
             commentCell: ".flc-guestbook-comment-cell",
             author: ".flc-guestbook-author",
@@ -107,6 +99,52 @@ fluid = fluid || {};
             "delete": "Delete",
             "reportAbuse": "Report Abuse"
             }
+    });
+    
+    var bindCommentHandlers = function(that) {
+        that.locate("cancel").click(function() { 
+            history.back();
+            return false;
+           });
+        that.locate("form").submit(function() {
+            that.submit();
+            history.back();
+            return false;
+        });
+    };
+    
+    var submitComment = function(that) {
+        var text = that.locate("text").val();
+        fluid.log("Submitting text " + text + " to URL " + that.postURL);
+    };
+    
+    fluid.engage.guestbookComment = function (container, options) {
+        var that = fluid.initView("fluid.engage.guestbookComment", container, options);    
+        that.model = that.options.model;
+        that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
+        
+        bindCommentHandlers(that);
+        that.submit = function() {submitComment(that)};
+        
+        return that;
+    }
+    
+    fluid.defaults("fluid.engage.guestbookComment", {
+        navigationBar: {
+            type: "fluid.engage.navigationBar"
+        },
+        selectors: {
+            text: ".flc-guestbook-text",
+            cancel: ".flc-guestbook-cancel",
+            submit: ".flc-guestbook-submit",
+            form: ".flc-guestbook-form"
+        },
+        userid: "anonymous",
+        userName: "Anonymous",
+        postUrl: "#",
+        directModel: {
+            path: "comments"
+        }
     });
       
 }(jQuery));

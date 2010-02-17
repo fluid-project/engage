@@ -72,9 +72,6 @@ fluid = fluid || {};
         var togo = {};
         var segs = pathInfo.split("/");
         if (segs.length > 0) {
-            if (!segs[0]) {
-                segs = segs.slice(1);
-            }
             var top = segs.length - 1;
             var dotpos = segs[top].indexOf(".");
             if (dotpos !== -1) {
@@ -156,7 +153,7 @@ fluid = fluid || {};
     
     fluid.kettle.fetchTemplateSection = function(url) {
         return fluid.kettle.operateUrl(url, fluid.kettle.stripTemplateQuickly, {async: false});
-    }
+    };
   
 })(jQuery, fluid);
     

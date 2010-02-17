@@ -56,8 +56,8 @@ fluid = fluid || {};
             }
         }, function (resourceSpecs) {
             // TODO: Need to fix DOM-specific selectors here.
-            var navListGroup = $(resourceSpecs.navlist.resourceText).find(".flc-navigationList-groupContainer");
-            navListContainer.html(navListGroup.html());
+            var navList = $(resourceSpecs.navlist.resourceText).find(".flc-navigationList-listGroup");
+            navListContainer.append(navList);
             
             // After we have fetched the template we can initialize the navigation
             // list subcomponent and the image reorderer subcomponent.

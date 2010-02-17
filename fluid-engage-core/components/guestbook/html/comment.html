@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <title>Guestbook</title>
+        <title>Comment entry</title>
         
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-layout.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-text.css" />
@@ -22,10 +22,6 @@
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>
 
-        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/datepicker/ui.datepicker-stub.js"></script>
-        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/datepicker/i18n/jquery.ui.datepicker-en-GB.js"></script>
-        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/datepicker/i18n/jquery.ui.datepicker-fr.js"></script>
-        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/dateUtils.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageClientUtils.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationBar/js/NavigationBar.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/components/guestbook/js/guestbook.js"></script>
@@ -34,8 +30,9 @@
     </head>
     <body class="fl-theme-iphone">
         <!--DISREPUTABLE TEMPLATE BOUNDARY-->
-        <div class="flc-guestbook-container fl-guestbook" >
-                        <!-- Navigation Bar and Header -->
+        <div class="flc-guestbook-container" >
+        
+            <!-- Navigation Bar and Header -->
             <div class="flc-navigationBar fl-navbar fl-col-mixed">
                 <!-- Back button -->
                 <div class="fl-col-fixed fl-force-left">
@@ -43,40 +40,23 @@
                         <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/back.png" alt="Go back"/>
                     </a>
                 </div>
-                <!-- Home button -->
-                <div class="fl-col-fixed fl-force-left">
-                    <a class="flc-navigationBar-home fl-button" href="#">
-                        <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/home.png" alt="Go home"/>
-                    </a>
-                </div>
                 <!-- Page header -->
-                <h1 class="flc-catalogue-title fl-navbar-title fl-col-flex">Guestbook for This Exhibition</h1>
+                <h1 class="flc-comment-entry fl-navbar-title fl-col-flex">Comment entry</h1>
             </div>
-            
-            <div class="flc-guestbook-addnote fl-guestbook-addnote">
-               <div class="fl-centered">
-                   <label for="fl-addnote" class="flc-guestbook-addnote-Text fl-guestbook-title">Add a note</label>
-                   <a href="comment.html"><div id="fl-addnote" class="flc-guestbook-addnote-control fl-guestbook-addnote-control"></div></a>
-               </div>
-            </div>
-            <div class="flc-guestbook-comment-cell fl-guestbook-comment-cell">
-              <div class="fl-guestbook-header fl-push">
-                <span class="flc-guestbook-author fl-guestbook-author fl-guestbook-slash-after">Robert Brown</span>
-                <span class="flc-guestbook-location fl-guestbook-location fl-guestbook-slash-after">Washington, DC</span>
-                <span class="flc-guestbook-date fl-guestbook-date">July 16, 2009</span>
-              </div>
-                <span class="flc-guestbook-text fl-guestbook-text fl-push">I had such an amazing time at this
-                exhibit! Really loved the red sleigh especially. I had one just like it growing up</span>
-              <div class="fl-push"> </div>
-              <div class="fl-guestbook-actions fl-force-right">
-                <a class="flc-guestbook-action fl-guestbook-action">REPORT ABUSE</a>
-              </div>
-              <div class="fl-push"> </div>
-            </div>
+            <form class="flc-guestbook-form">
+	            <textarea class="flc-guestbook-text fl-guestbook-textarea-width fl-guestbook-textarea-height"></textarea>
+	            <div class="fl-push"> </div>
+	            <div class="fl-guestbook-buttons fl-guestbook-textarea-width" >
+	                <div class="fl-force-right">
+	                    <input class="flc-guestbook-cancel" type="submit" value="Cancel"/>
+	                    <input class="flc-guestbook-submit" type="submit" value="Submit"/>
+	                </div>
+	            </div>
+            </form>
         </div>
         <!--DISREPUTABLE TEMPLATE BOUNDARY-->
         <script id="flc-initBlock" type="text/javascript">
-            fluid.engage.initComponentWithLocalData("fluid.engage.guestbook", ".flc-guestbook-container");
+            fluid.engage.guestbookComment(".flc-guestbook-container", {});
         </script>
     </body>
 </html>

@@ -22,18 +22,6 @@
     border-bottom-left-radius:  0px;
 }
 
-.fl-list-thumbnails > li:last-child {
-    margin-bottom: 0px;
-}
-
-.fl-browse-shortenText {
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    height: 1.2em;
-    display: block;
-}
-
 .fl-browse-loading .fl-browse-loadMessage {
     display: block;
     text-align:center;

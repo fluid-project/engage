@@ -25,10 +25,6 @@ a.fl-catalogue-linkToArtifacts {
     margin: 0px;
 }
 
-.fl-list-thumbnails > li:last-child {
-    margin-bottom: 0px;
-}
-
 .fl-list-menu.fl-list-thumbnails.fl-thumbnails-expanded.fl-grid {
     background-color: white;
 }
@@ -57,12 +53,4 @@ a.fl-catalogue-linkToArtifacts {
 
 [class*=fl-list] li.fl-catalogue-linkToThemeArtifactsContainer a.fl-catalogue-linkToThemeArtifacts {
     font-size: 0.7em;
-}
-[class*=fl-list] li a div {
-    padding-right: 20px;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    width: auto;
-    height: 42px;
 }
