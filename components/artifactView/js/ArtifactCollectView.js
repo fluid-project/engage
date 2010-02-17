@@ -17,14 +17,6 @@ fluid = fluid || {};
 fluid.engage = fluid.engage || {};
 
 (function ($) {
-
-    /**
-     * Creates an URL for the users namespace.
-     */
-    var compileUsersPath = function () {
-        var artifactPath = location.pathname.substring(0, location.pathname.lastIndexOf("/"));
-        return "http://" + location.host + artifactPath.substring(0, artifactPath.lastIndexOf("/")) + "/users";     
-    };
     
     /**
      * Create a restful URL for querying the server side for collect/uncollect operations.
@@ -33,14 +25,14 @@ fluid.engage = fluid.engage || {};
      * @param artifactId, the artifact ID.
      */
     var buildCollectURL = function (userId, museum, artifactId) {
-        return compileUsersPath() +  "/" + userId + "/collection/" + museum + "/artifacts/" + artifactId;
+        return "../users/" + userId + "/collection/" + museum + "/artifacts/" + artifactId;
     };
     
     var confirmCollect = function (that, message, linkText) {
         // TODO: This needs to be read out of the URL, not out of the cookie. What if the cookie was never set?
         var lang = fluid.engage.getCookie("fluid-engage").lang;
         that.collectLink.text(linkText);
-        that.collectStatus.attr("href", compileUsersPath() + "/myCollection.html" + 
+        that.collectStatus.attr("href", "../users/myCollection.html" + 
                                       "?lang=" + lang + "&user=" + that.model.user._id);      
         that.collectStatus.text(message);
         that.collectStatus.show();

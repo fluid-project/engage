@@ -21,7 +21,7 @@ fluid.engage.user = fluid.engage.user = {};
 
     var buildUserServiceURL = function (id) {
         var idParam = id ? ("?id=" + id) : "";
-        return "http://" + location.host + "/users/users.json" + idParam;
+        return "../users/users.json" + idParam;
     };
     
     // TODO: This should not be synchronous!!
