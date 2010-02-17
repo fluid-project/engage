@@ -31,16 +31,11 @@ fluid.engage = fluid.engage || {};
         that.deleteEnabled = true;
     };
 
-    /**
-     * Redirects the browser to the given URL.
-     * 
-     * @param {Object} that, the component.
-     * @param url, the URL to redirect to.
-     */
-    var redirectToArtifactPage = function (that, url) {
-        // Do some cleanup before leaving the page
-        reset(that);
-        window.location = url;
+    var updateStatusMessage = function (that, handleClass, msgText) {
+        var msg = that.locate("headMessage");        
+        var style = that.options.styles.invalidCode;
+        msg.text(msgText);
+        msg[handleClass](style);
     };
 
     /**
@@ -50,17 +45,10 @@ fluid.engage = fluid.engage || {};
      * @param url, the URL to redirect to.
      */
     var redirectSequence = function (that, url) {
-        var msg = that.locate("headMessage");
-        var opts = that.options;
-        
-        // Replace the invalid code message with something...
-        msg.text(opts.strings.redirecting);
-        
-        msg.removeClass(opts.styles.invalidCode);
-        
+        updateStatusMessage(that, "removeClass", that.options.strings.redirecting);
         setTimeout(function () {
-            redirectToArtifactPage(that, url);
-        }, opts.redirectDelay);
+            window.location = url;
+        }, that.options.redirectDelay);
     };
 
     /**
@@ -69,15 +57,10 @@ fluid.engage = fluid.engage || {};
      * @param {Object} that, the component.
      */
     var wrongCodeSequence = function (that) {
-        var msg = that.locate("headMessage");
-        var opts = that.options;
-        
-        msg.text(opts.strings.invalidCode);
-        msg.addClass(opts.styles.invalidCode);
-        
-        msg.show(250, function () {
+        updateStatusMessage(that, "addClass", that.options.strings.invalidCode);
+        setTimeout(function () {
             reset(that);
-        });
+        }, that.options.redirectDelay);
     };
 
     /**
