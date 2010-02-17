@@ -168,7 +168,7 @@ fluid = fluid || {};
      * 
      * @param {Object} that, the component
      */
-    var addKeyNav = function (that) {
+    var addKeyNav = function (that) {        
         that.container.attr("tabindex", 0);
         that.container.fluid("selectable", {
             selectableSelector: that.options.selectors.handle
@@ -208,7 +208,11 @@ fluid = fluid || {};
             that.openDrawers(that.locate("openByDefault"));
         }
         addClickEvent(that);
-        addKeyNav(that);
+        
+        // Only add keyboard navigation if we've got the keyboard-a11y available to us.
+        if (fluid.a11y) {
+            addKeyNav(that);
+        }
     };
     
     /**
