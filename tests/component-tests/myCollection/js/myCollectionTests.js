@@ -1,5 +1,5 @@
 /*
-Copyright 2008-2009 University of Toronto
+Copyright 2010 University of Toronto
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one of these
@@ -9,12 +9,8 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://source.fluidproject.org/svn/LICENSE.txt
 */
 
-/*global jQuery*/
-/*global fluid*/
-/*global jqUnit*/
-/*global expect*/
-/*global document*/
-/*global setTimeout*/
+/*global document, jQuery, fluid, jqUnit, expect, stop, start*/
+"use strict";
 
 (function ($) {
     $(document).ready(function () {
@@ -25,7 +21,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         var setup = function () {
             tests.fetchTemplate(
                     "../../../../components/myCollection/html/myCollection.html",
-                    ".flc-myCollection");
+                    ".flc-myCollection-container");
             
             // Workaround to the different relative path when running tests.
             // We retrieve the navigation list link and rewrite it with a
@@ -43,13 +39,26 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 async: false
             });
             
-            component = fluid.engage.myCollection(".flc-myCollection", {model: model});     
+            component = fluid.engage.myCollection(".flc-myCollection-container", {
+                navigationList: {
+                    type: "fluid.navigationList",
+                    options: {
+                        listeners: {
+                            afterRender: function () {
+                                start();
+                            }
+                        }
+                    }
+                },
+                model: model
+            });
+
+            // Here we delay the running of the tests to allow the My Collection component
+            // to be initialized. This is necessary because its initialization is delayed.
+            stop();
         };
         
-        tests = jqUnit.testCase("My Collection Tests"/*, setup*/);
-        // Setup here is called directly to walk around the delayed initialization of
-        // the navigationList subcomponent in Firefox
-        setup();
+        tests = jqUnit.testCase("My Collection Tests", setup);
         
         var myCollectionTests = function () {
             tests.test("Component construction test", function () {
@@ -58,10 +67,10 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 jqUnit.assertNotUndefined("Component defined.", component);
                 jqUnit.assertNotNull("Component not null.", component);
                 
-                jqUnit.assertNotUndefined("User subcomponent defined.",
-                        component.user);
-                jqUnit.assertNotNull("User subcomponent not null.",
-                        component.user);
+                jqUnit.assertNotUndefined("Navigation bar subcomponent defined.",
+                        component.navBar);
+                jqUnit.assertNotNull("Navigation bar subcomponent not null.",
+                        component.navBar);
                 
                 jqUnit.assertNotUndefined("Navigation List subcomponent defined.",
                         component.navigationList);
@@ -81,30 +90,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 jqUnit.assertEquals("Model node museum matches passed museum.",
                         model.data[0].museum, component.model.data[0].museum);
             });
-            
-            tests.test("Strings test", function () {
-                expect(1);
-                
-                var expectedStatus = fluid.stringTemplate(
-                    component.options.strings.statusMessageTemplate, {
-                        artifactsNumber: model.data.length,
-                        artifactsPlural: model.data.length === 1 ? "" : "s"
-                    }
-                );
-                
-                var status = component.locate("collectionStatus").html();
-                
-                jqUnit.assertEquals("Correct status message.",
-                        expectedStatus, status);
-            });            
         };
 
-        var doTests = function () { 
-            myCollectionTests();
-        };
-
-        // Again we delay the tests execution to walk around the delayed
-        // initialization of the navigationList subcomponent
-        setTimeout(doTests, 1);         
+        myCollectionTests();
     });
 })(jQuery);
