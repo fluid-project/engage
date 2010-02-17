@@ -45,6 +45,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
     }
     
     var config = {
+        couchDBBaseUrl: "http://142.150.154.59:5984",
         queryURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
         viewURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/%view",
         viewURLTemplateWithKey: "http://titan.atrc.utoronto.ca:5984/%dbName/%view?key=%key",
@@ -53,6 +54,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
             all: "all",
             byCollectionCategory: "by_collection_category",
             exhibitionByTitle: "_design/exhibitions/_view/view",
+            exhibitionsByID: "_design/exhibitions/_view/browseByID",
+            artifactByAccession: {view: "_design/artifacts/_view/view", keyList: ["accessNumber", "lang"]},
             catalogueByTitle: "_design/catalogue/_view/viewWithArtifacts",
             catalogueArtifacts: "_design/catalogueArtefacts/_view/view",
             exhibitions: "_design/exhibitions/_view/browse"
@@ -62,6 +65,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
     var KettleTests = new jqUnit.TestCase("Kettle JS Tests");
 
     KettleTests.test("URL Tests", function() {
+      // Windows-style URL tests
         var baseUrl = "E:\\workspace\\fluid-engage-kettle\\src\\main\\webapp/";
         var rewBaseUrl = fluid.kettle.slashiseUrl(baseUrl);
         jqUnit.assertEquals("Deslash", "E:/workspace/fluid-engage-kettle/src/main/webapp/", rewBaseUrl);
@@ -78,8 +82,55 @@ https://source.fluidproject.org/svn/LICENSE.txt
         jqUnit.assertEquals("Rewrite Short Mount", "../fluid-engage-core/components/home/css/Home.css", rewriter("../css/Home.css"));
         jqUnit.assertNull("Rewrite non-Mount", rewriter("../../../../../fluid-infusion"));
         
-        
+     // Unix-style URL tests   
+        var baseUrl2 = "/private/var/folders/I3/I3gaY-IBGri5Uac95qFZ4++++TM/-Tmp-/Jetty_0_0_0_0_8080_fe.war__fe__qg2u39/webapp/";
+        var rewBaseUrl2 = fluid.kettle.slashiseUrl(baseUrl2);
+        jqUnit.assertEquals("Deslash idempotency", baseUrl2, rewBaseUrl2);
+        var infusionbase2 = fluid.kettle.makeCanon(fluid.kettle.slashiseUrl(baseUrl2 + "fluid-infusion/"));
+        jqUnit.assertEquals("Retain slash front", "/private/var/folders/I3/I3gaY-IBGri5Uac95qFZ4++++TM/-Tmp-/Jetty_0_0_0_0_8080_fe.war__fe__qg2u39/webapp/fluid-infusion/", infusionbase2);
+        var file = fluid.kettle.pathToFileURL(infusionbase2);
+        jqUnit.assertEquals("File triple slash", "file:///private/var/folders/I3/I3gaY-IBGri5Uac95qFZ4++++TM/-Tmp-/Jetty_0_0_0_0_8080_fe.war__fe__qg2u39/webapp/fluid-infusion/", file);
       
+    });
+    
+    KettleTests.test("Couch URL Tests", function() {
+        var encoded = fluid.kettle.couchDBViewTemplate(config.viewURLTemplateWithKey, {
+                    dbName: "mccord_exhibitions",
+                    view: config.views.exhibitionsByID,
+                    key: "en"
+                });
+        jqUnit.assertEquals("Stringify quoting", 
+           "http://titan.atrc.utoronto.ca:5984/mccord_exhibitions/_design/exhibitions/_view/browseByID?key=\"en\"", encoded);
+        
+        var encoded2 = fluid.kettle.couchDBViewTemplate(config.viewURLTemplateWithKey, {
+                    dbName: "mccord_exhibitions",
+                    view: config.views.artifactByAccession,
+                    key: {lang: "en",
+                          accessNumber: "II-43721",
+                          }
+                });
+                
+        jqUnit.assertEquals("Composite ordered encoding", 
+           "http://titan.atrc.utoronto.ca:5984/mccord_exhibitions/_design/artifacts/_view/view?key={\"accessNumber\":\"II-43721\",\"lang\":\"en\"}", encoded2);
+    
+          
+        var options = {
+            baseUrl: config.couchDBBaseUrl,
+            dbName: "mccord_comments",
+            design: "comments",
+            view: "comments",
+            keyList: ["type", "id", "date"],
+            startkey: {type: "exhibition",
+                       id: "1"},
+            endkeyExtend: {date: "9999"},
+            limit: "2",
+            descending: true
+        };
+        
+        var encoded = fluid.kettle.couchDBViewBuilder(options);
+        jqUnit.assertEquals("Couch builder", "http://142.150.154.59:5984/mccord_comments/_design/comments/_view/comments?startkey={\"type\":\"exhibition\",\"id\":\"1\",\"date\":\"9999\"}&endkey={\"type\":\"exhibition\",\"id\":\"1\"}&limit=2&descending=true",
+            encoded);
+        
     });
  
     var dataSourceConfig = {

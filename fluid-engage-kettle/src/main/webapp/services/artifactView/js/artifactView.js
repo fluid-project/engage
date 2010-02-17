@@ -39,13 +39,13 @@ fluid.artifactView = fluid.artifactView || {};
     };
     
     var buildDataURL = function (params, config) {
-        return fluid.stringTemplate(config.viewURLTemplateWithKey, {
-            dbName: params.db, 
-            view: config.views.artifactByAccession, 
-            key: JSON.stringify({
+        return fluid.kettle.couchDBViewTemplate(config.viewURLTemplateWithKey, {
+            dbName: params.db,
+            view: config.views.artifactByAccession,
+            key: {
                 accessNumber: params.accessNumber,
                 lang: params.lang
-            })
+            }
         }); 
     };
 
@@ -101,7 +101,7 @@ fluid.artifactView = fluid.artifactView || {};
             }, params) || {};
             var options = prepareArtifactViewOptions(data, artifactViewStrings, moreLessStrings);
             // TODO: solution awaiting proper definition of "domain ids" and their domain of uniqueness
-            var guestbookOptions = fluid.engage.guestbook.makeRemoteOptions({type: "artifact", id: "accessNumber"});
+            var guestbookOptions = fluid.engage.guestbook.makeRemoteOptions({dbName: params.db, type: "artifact", id: params.accessNumber});
             options.comments = guestbookOptions;
             return {
                 ID: "initBlock", 

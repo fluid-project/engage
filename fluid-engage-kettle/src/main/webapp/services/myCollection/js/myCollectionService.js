@@ -193,7 +193,7 @@ fluid.myCollection = fluid.myCollection || {};
         // TODO: Despite being called getCollection(), this function actually returns user documents.
         // TODO: We should replace this with the user dataSource defined in userService.
         var user = fluid.myCollection.common.getCollection(userID, config);
-        var urls = buildArtifactURLsByMuseum(config.queryURLTemplate, config.views.byId, user);
+        var urls = buildArtifactURLsByMuseum(config.queryURLTemplate, config.views.artifactsByID, user);
 
         var collectedArtifacts = [];
         

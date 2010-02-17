@@ -214,48 +214,7 @@ fluid = fluid || {};
         }
         return that;
     };
-    // Taken from jquery.couch.js
-    function encodeDocId(docID) {
-      var parts = docID.split("/");
-      if (parts[0] == "_design") {
-        parts.shift();
-        return "_design/" + encodeURIComponent(parts.join('/'));
-      }
-      return encodeURIComponent(docID);
-    }
 
-    fluid.kettle.couchDBSource = function(options) {
-        fluid.log("Creating couchDBSource with writeable = " + options.writeable);
-        function resolveUrl(resOptions, directModel) {
-            var expanded = fluid.kettle.resolveEnvironment(resOptions, directModel);
-            if (expanded.funcName) { // what other forms of delivery might there be?
-                return fluid.invokeGlobalFunction(expanded.funcName, expanded.args);
-            }
-        }
-        var that = fluid.initLittleComponent("fluid.kettle.couchDBSource", options);
-        that.get = function(directModel) {
-            var url = resolveUrl(that.options.urlBuilder, directModel);
-            if (url) {
-                return fluid.kettle.operateUrl(url, fluid.kettle.JSONParser);
-            }
-        };
-        if (options.writeable) {
-            that.put = function(model, directModel) {
-                var url = resolveUrl(that.options.urlBuilder, directModel);
-                var expanded = fluid.kettle.resolveEnvironment(that.options, directModel);
-                var ajaxOpts = {data: JSON.stringify(model), contentType: fluid.kettle.contentTypeRegistry.JSON.contentTypeHeader};
-                   if (model._id === undefined) {
-                       ajaxOpts.type = "POST";
-                   } else {
-                       ajaxOpts.type = "PUT";
-                       url = url + encodeDocId(doc._id);
-                   }
-                return fluid.kettle.operateUrl(url, fluid.kettle.JSONParser, ajaxOpts);
-                };
-            }
-        return that;
-    };
-    
     // to integrate with FluidIoC
     fluid.parseContextReference = function(reference, index, delimiter) {
         var endcpos = reference.indexOf("}", index + 1);

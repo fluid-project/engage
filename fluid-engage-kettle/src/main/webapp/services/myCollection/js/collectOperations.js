@@ -18,10 +18,20 @@ fluid.collectOperations = fluid.collectOperations || {};
 
 (function ($) {
     
-    /** Those constants are used to parse the restful URL that is handled by this acceptor */
-    var USER_ID_INDEX = 1;
-    var MUSEUM_INDEX = 3;
-    var ARTIFACT_INDEX = 5;
+    var parsePathInfo = function (pathInfo) {
+        // These bizarre "backwards" indices are workaround for a potential problem in Kettle's URL routing code.
+        // Remember, this code is hard-baked for URLs that look like this:                
+        //      users/[userUUID]/collection/[museumID]/artifacts/[artifactUUID]
+        var length = pathInfo.length;
+        return {
+            users: pathInfo[length - 6],
+            userUUID: pathInfo[length - 5],
+            collection: pathInfo[length - 4],
+            museumID: pathInfo[length -  3],
+            artifacts: pathInfo[length - 2],
+            artifactUUID: pathInfo[length - 1]
+        };
+    };
     
     /**
      * Extracts the artifact data from a restful path object.
@@ -29,10 +39,11 @@ fluid.collectOperations = fluid.collectOperations || {};
      * @param {Object} pathInfo, the parsed path segments of the query URL.
      */
     var compileArtifactData = function (pathInfo) {
+        var pathSegs = parsePathInfo(pathInfo);
         return {
-            id: pathInfo[ARTIFACT_INDEX],
-            museum: pathInfo[MUSEUM_INDEX],
-            uuid: pathInfo[USER_ID_INDEX]
+            id: pathSegs.artifactUUID,
+            museum: pathSegs.museumID,
+            uuid: pathSegs.userUUID
         };
     };
     
@@ -86,16 +97,15 @@ fluid.collectOperations = fluid.collectOperations || {};
     };
     
     fluid.collectOperations.initAcceptor = function (config, app) {
-        // Custom acceptor for collecting/uncollecting artifacts. This acceptor responds to URLs like:
-        //        /users/[userId]/collection/[museumId]/artifacts/[artifactId]
+        // Custom acceptor for collecting/uncollecting artifacts.
         // POST will collect the specified artifact into the user's personal collection; DELETE will uncollect
         fluid.engage.mountAcceptor(app, "users", {
             accept: function (segment, relPath, pathInfo, context) {
-                var pathSegs = pathInfo.pathInfo;
+                var pathSegs = parsePathInfo(pathInfo.pathInfo);
                 var method = context.method;
                 
                 // TODO: This is totally hard coded. A framework-wide solution to resource-oriented URL mounting is needed.
-                if (pathSegs.length !== 6 || pathSegs[2] !== "collection" || pathSegs[4] !== "artifacts") {
+                if (pathSegs.artifacts !== "artifacts" || pathSegs.collection !== "collection" || pathSegs.users !== "users") {
                     return null;
                 }
                 
