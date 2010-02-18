@@ -21,10 +21,6 @@
     -webkit-border-radius:8px;
 }
 
-.fl-theme-iphone .fl-cabinet-handle {
-    -webkit-tap-highlight-color: rgba(0,0,255,0.5);
-}
-
 .fl-theme-iphone .fl-container-autoHeading > :first-child {
     background: -webkit-gradient(linear, left top, left bottom, from(#ECECEC), to(#F8F8F8));
     color: #000;
