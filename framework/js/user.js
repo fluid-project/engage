@@ -19,11 +19,48 @@ fluid.engage.user = fluid.engage.user = {};
 
 (function ($) {
 
+    /*******************************
+      * Cookies                     *
+      * --------------------------- *
+      * depends on jquery.cookie.js *
+      *******************************/
+
+     /**
+      * Used to set a cookie
+      * 
+      * @param {Object} name, the name of the cookie
+      * @param {Object} value, the value to be stored in the cookie (expects an object)
+      * @param {Object} options, optional options to pass in (i.e. for setting experation date and etc.) See jQuery.cookie.js for more details
+      */
+    fluid.engage.setCookie = function (name, value, options) {
+        value = JSON.stringify(value);
+        $.cookie(name, value, options);
+    };
+
+    /**
+    * Used to delete a cookie
+    * 
+    * @param {Object} name, the name of the cookie
+    */
+    fluid.engage.deleteCookie = function (name) {
+        $.cookie(name, null);
+    };
+
+    /**
+    * Returns the value of a cookie as an object
+    * 
+    * @param {Object} name, the name of the 
+    */
+    fluid.engage.getCookie = function (name) {
+        var cookie = $.cookie(name);
+        return cookie ? JSON.parse(cookie) : null;
+    };
+
     var buildUserServiceURL = function (id) {
         var idParam = id ? ("?id=" + id) : "";
         return "../users/users.json" + idParam;
     };
-    
+
     // TODO: This should not be synchronous!!
     var ajax = function (id, data, type, success) {
         $.ajax({
@@ -40,7 +77,7 @@ fluid.engage.user = fluid.engage.user = {};
             }
         });
     };
-    
+
     fluid.engage.user.fetchUser = function (id) {
         var user;
         ajax(id, null, "GET", function (data) {
@@ -48,7 +85,7 @@ fluid.engage.user = fluid.engage.user = {};
         });
         return user;
     };
-    
+
     fluid.engage.user.createNewUser = function () {
         // Create a new user document and send it off to Couch.
         var user = {
@@ -57,21 +94,21 @@ fluid.engage.user = fluid.engage.user = {};
                 artifacts: []
             }
         };
-        
+
         ajax("NEW_DOC", user, "PUT", function (data) {
             user._id = data.id;
         });
-        
+
         return user;
     };
-    
+
     fluid.engage.user.currentUser = function () {
         // Check the cookie to see if we've already met the user and grab their model.
         // If not, create a new document for them.
         // TODO: We should harmonize this cookie usage with the home screen. Why have two cookies?        
         var cookieId = fluid.engage.getCookie("engage.uuid");
         if (cookieId) {
-           return fluid.engage.user.fetchUser(cookieId);
+            return fluid.engage.user.fetchUser(cookieId);
         } else {
             var user = fluid.engage.user.createNewUser();
             fluid.engage.setCookie("engage.uuid", user._id,  {
@@ -80,5 +117,4 @@ fluid.engage.user = fluid.engage.user = {};
             return user;
         }
     };
-    
 })(jQuery);

@@ -12,39 +12,13 @@
 /*global window, jQuery, fluid*/
 
 fluid = fluid || {};
+fluid.engage = fluid.engage || {};
 
 (function ($) {
     //TODO:
     //Render out language options. Currently this is hardcoded to only English and Frech.
     //This has led to several spots in the code where it is assumed to only be either or.
     //In the future it would make more sense to render the languages out.
-    fluid.engage = fluid.engage || {};
-    
-    function makeProtoComponents(str) {
-        function altTextNode(text) {
-            return {
-                decorators: [{
-                    type: "attrs",
-                    attributes: {
-                        alt: fluid.stringTemplate(str.iconAltText, {iconName: text})
-                    }
-                }]
-            };
-        }
-        
-        return {
-            homeTitle: {messagekey: "homeTitle"},
-            languageSelectionTitle: {messagekey: "languageSelectionTitle"},
-            exhibitionsCaption: {messagekey: "exhibitionsCaption"},
-            myCollectionCaption: {messagekey: "myCollectionCaption"},
-            objectCodeCaption: {messagekey: "objectCodeCaption"},
-            languageCaption: {messagekey: "languageCaption"},
-            exhibitionsIcon: altTextNode(str.exhibitionsCaption),
-            myCollectionIcon: altTextNode(str.myCollectionCaption),
-            objectCodeIcon: altTextNode(str.objectCodeCaption),
-            languageIcon: altTextNode(str.languageCaption)
-        };
-    }
     
     function addCookie(that, value) {
         fluid.engage.setCookie(that.options.cookieName, value || {}, {path: "/"});
@@ -88,17 +62,25 @@ fluid = fluid || {};
         });
     }
     
-    function setup(that) {
-        var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
-        var selectorsToIgnore = ["homeContent", "languageSelectionContent", "languageSelectionLink", "languageLinks"];
-        that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
-            selectorsToIgnore: selectorsToIgnore,
-            rendererOptions: {
-                messageLocator: messageLocator
-            }
+    fluid.engage.quickI18N = function(dom, strings, map, op) {
+        fluid.transform(map, function(key, value) {
+            dom.locate(key).text(strings[value]);
         });
-        that.refreshView();
+    };
+    
+    var localizeAltText = function (dom, strings, map) {
+        fluid.transform(map, function(key, value) {
+            dom.locate(key).attr("alt", strings[value]);
+        });
+    };
+    
+    function setup(that) {
+        fluid.engage.quickI18N(that.dom, that.options.strings, that.options.labelI18N, "text");
+        localizeAltText(that.dom, that.options.strings, that.options.iconI18N);
         
+        bindEvents(that);
+        cookieCheck(that);
+                
         // TODO: Nasty hard-baked hack to get user IDs into My Collection until we can think through this better. Get rid of it!
         var myCollectionLink = that.locate("myCollectionLink");
         var myCollectionURL = myCollectionLink.attr("href");
@@ -107,7 +89,6 @@ fluid = fluid || {};
     
     fluid.engage.home = function (container, options) {
         var that = fluid.initView("fluid.engage.home", container, options);
-        var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
         
         /**
          * Swaps the classes, which will show the language selection and hide the regular home screen
@@ -127,19 +108,7 @@ fluid = fluid || {};
             addCookie(that, {lang: lang});
         };
         
-        /**
-         * Loads/refreshes the view
-         */
-        that.refreshView = function () {
-            var protoTree = makeProtoComponents(that.options.strings);
-            var tree = expander(protoTree);
-            that.render(tree);
-            bindEvents(that);
-            cookieCheck(that);
-        };
-        
         setup(that);
-        
         return that;
     };
     
@@ -176,6 +145,22 @@ fluid = fluid || {};
             homeTitle: "McCord Museum",
             languageSelectionTitle: "Language Selection",
             iconAltText: "%iconName icon"
+        },
+        
+        labelI18N: {
+            homeTitle: "homeTitle",
+            languageSelectionTitle: "languageSelectionTitle",
+            exhibitionsCaption: "exhibitionsCaption",
+            myCollectionCaption: "myCollectionCaption",
+            objectCodeCaption: "objectCodeCaption",
+            languageCaption: "languageCaption",
+        },
+        
+        iconI18N: {
+            exhibitionsIcon: "exhibitionsCaption",
+            myCollectionIcon: "myCollectionCaption",
+            objectCodeIcon: "objectCodeCaption",
+            languageIcon: "languageCodeCaption"
         },
         
         cookieName: "fluid-engage"
