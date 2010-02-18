@@ -34,10 +34,7 @@ fluid = fluid || {};
     };
     
     fluid.identity = function() {
-        if (arguments.length < 2) {
-            return arguments[0];
-        }
-        else return $.makeArray(arguments);
+        return arguments[0];
     }
   
     // From URLUtil.java
@@ -167,7 +164,7 @@ fluid = fluid || {};
                 return fluid.kettle.operateUrl(url, fluid.kettle.JSONParser);
             }
         };
-        if (options.writeable) {
+        if (that.options.writeable) {
             that.put = function(model, directModel) {
                 var url = resolveUrl(that.options.urlBuilder, directModel);
                 var expanded = fluid.kettle.resolveEnvironment(that.options, directModel);
@@ -176,12 +173,50 @@ fluid = fluid || {};
                         ajaxOpts.type = "POST";
                     } else {
                         ajaxOpts.type = "PUT";
-                        url = url + encodeURIComponent(doc._id);
+                        if (that.options.couchDBDocumentURL) {
+                            url = url + encodeURIComponent(model._id);
+                        }
                     }
                 return fluid.kettle.operateUrl(url, fluid.kettle.JSONParser, ajaxOpts);
                 };
             }
         return that;
+    };
+    
+    // TODO: defaults should be client/server specific
+    fluid.defaults("fluid.kettle.URLDataSource", {
+        couchDBDocumentURL: true
+    });
+    
+    fluid.kettle.dummyDataSource = function(initModel) {
+        return {
+            get: function() {return initModel;},
+            put: function() {}
+        };
+    };
+    
+    fluid.kettle.simpleURLDataSource = function (url) {
+        return url? fluid.kettle.URLDataSource({
+            writeable: true,
+            couchDBDocumentURL: false,
+            urlBuilder: { funcName: "fluid.identity", args: url}
+        }) : fluid.kettle.dummyDataSource;  
+    };
+    
+    fluid.kettle.makeSourceApplier = function(dataSource, directModel, model) {
+        if (model === undefined) {
+            model = dataSource.get(directModel);
+        }
+        var baseApplier = fluid.makeChangeApplier(model);
+        // TODO: One day transactional applier will appear from FLUID-2881 branch
+        var togo = {
+            fireChangeRequest: function(dar) {
+                 baseApplier.fireChangeRequest(dar);
+                 dataSource.put(model, directModel);
+            }
+        };
+        fluid.model.bindRequestChange(togo);
+        return togo;
     };
     
     // Temporary definitions to quickly extract template segment from file

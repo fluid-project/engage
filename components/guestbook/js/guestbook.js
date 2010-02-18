@@ -17,10 +17,25 @@ fluid = fluid || {};
 (function ($) {
     fluid.setLogging(true);
 
-    var makeCommentAction = function(model, comment) {
-        return {messagekey: model.ownid === comment.authorId? "delete" : "reportAbuse"};
+    var messageActions = {
+        deleteAction: function(applier, comment, model) {
+            applier.requestChange("deleted", true);
+        },
+        reportAbuseAction: function(applier, comment, model) {
+            applier.requestChange("abuseReported."+model.ownId, true); 
+        }
+    };
+
+    var makeCommentAction = function(model, comment, dataSource) {
+        var applier = fluid.kettle.makeSourceApplier(dataSource, {}, comment);
+        var messagekey = model.ownId === comment.authorId? "delete" : "reportAbuse";
+        return {messagekey: messagekey, decorators: {"jQuery": ["click", function() {
+            messageActions[messagekey+"Action"](applier, comment, model);
+            return false;
+        }]}
+        };
     }
-    var makeProtoComponents = function(model, options) {
+    var makeProtoComponents = function(model, options, commentDataSource) {
         return {
           "addNote": {target: options.addNoteTarget},
           "addNoteText": {messagekey: "addNote"},
@@ -32,7 +47,7 @@ fluid = fluid || {};
                 location: comment.location,
                 date: fluid.dateUtils.renderLocalisedDate(fluid.dateUtils.parseISO8601(comment.date), options.dateFormat, options.locale),
                 commentText: comment.text,
-                action: makeCommentAction(model, comment)
+                action: makeCommentAction(model, comment, commentDataSource)
               }; 
             })
         }};
@@ -64,12 +79,13 @@ fluid = fluid || {};
             that.options.locale = "en";
         }
         that.model = that.options.model;
-        that.model.ownid = fluid.engage.user.currentUser()._id;
+        that.model.ownId = fluid.engage.user.currentUser()._id;
 
         var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
+        var commentDataSource = fluid.kettle.simpleURLDataSource(that.options.postURL);
         
         that.refreshView = function () {
-            var protoTree = makeProtoComponents(that.model, that.options);
+            var protoTree = makeProtoComponents(that.model, that.options, commentDataSource);
             var tree = expander(protoTree);
             that.render(tree);
             setupSubcomponents(that);
@@ -95,6 +111,7 @@ fluid = fluid || {};
             commentText: ".flc-guestbook-text",
             action: ".flc-guestbook-action" 
         },
+        postURL: "",
         addNoteTarget: "comments.html",
         locale: "en",
         dateFormat: "MMMM dd, yyyy",
