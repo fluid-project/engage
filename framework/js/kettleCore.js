@@ -150,6 +150,40 @@ fluid = fluid || {};
         return togo;
     };
     
+    fluid.kettle.resolveEnvironment = fluid.identity; // this will be overridden on the server
+    
+    fluid.kettle.URLDataSource = function(options) {
+        fluid.log("Creating URLDataSource with writeable = " + options.writeable);
+        function resolveUrl(resOptions, directModel) {
+            var expanded = fluid.kettle.resolveEnvironment(resOptions, directModel);
+            if (expanded.funcName) { // what other forms of delivery might there be?
+                return fluid.invokeGlobalFunction(expanded.funcName, $.makeArray(expanded.args));
+            }
+        }
+        var that = fluid.initLittleComponent("fluid.kettle.URLDataSource", options);
+        that.get = function(directModel) {
+            var url = resolveUrl(that.options.urlBuilder, directModel);
+            if (url) {
+                return fluid.kettle.operateUrl(url, fluid.kettle.JSONParser);
+            }
+        };
+        if (options.writeable) {
+            that.put = function(model, directModel) {
+                var url = resolveUrl(that.options.urlBuilder, directModel);
+                var expanded = fluid.kettle.resolveEnvironment(that.options, directModel);
+                var ajaxOpts = {data: JSON.stringify(model), contentType: "application/json; charset=UTF-8"};
+                    if (model._id === undefined) {
+                        ajaxOpts.type = "POST";
+                    } else {
+                        ajaxOpts.type = "PUT";
+                        url = url + encodeURIComponent(doc._id);
+                    }
+                return fluid.kettle.operateUrl(url, fluid.kettle.JSONParser, ajaxOpts);
+                };
+            }
+        return that;
+    };
+    
     // Temporary definitions to quickly extract template segment from file
     // will be replaced by more mature system which will also deal with head matter
     // collection and rewriting

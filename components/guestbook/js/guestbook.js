@@ -64,7 +64,7 @@ fluid = fluid || {};
             that.options.locale = "en";
         }
         that.model = that.options.model;
-        that.model.ownid =  fluid.engage.user.currentUser().id;
+        that.model.ownid = fluid.engage.user.currentUser()._id;
 
         var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
         
@@ -128,7 +128,7 @@ fluid = fluid || {};
         var fixedDate = fluid.dateUtils.fromDate(new Date());
         var isoDate = fluid.dateUtils.renderISO8601(fixedDate);
         var user = fluid.engage.user.currentUser();
-        var doc = $.extend({text: text, date: isoDate, authorId: user.id}, that.options.docRoot);
+        var doc = $.extend({text: text, date: isoDate, authorId: user._id}, that.options.docRoot);
 
         fluid.kettle.operateUrl(that.options.postURL, null, {
             type: "POST",
