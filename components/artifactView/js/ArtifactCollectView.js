@@ -33,10 +33,13 @@ fluid.engage = fluid.engage || {};
         var lang = fluid.engage.getCookie("fluid-engage").lang;
         that.collectLink.text(linkText);
         that.collectStatus.attr("href", "../users/myCollection.html" + 
-                                      "?lang=" + lang + "&user=" + that.model.user._id);      
+                                      "?lang=" + lang + "&user=" + that.model.user._id);
+        that.collectStatus.hide();
         that.collectStatus.text(message);
-        that.collectStatus.show();
-        that.collectStatus.fadeOut(4000);
+        that.collectStatus.slideDown();
+        setTimeout(function () {
+            that.collectStatus.slideUp();
+        }, that.options.notificationDelay);
     };
     
     // TODO: This should be implemented as a Couch view, but will do the trick for now.
@@ -63,6 +66,8 @@ fluid.engage = fluid.engage || {};
         that.collectLink = that.locate("collectLink");
         that.collectLink.text(that.isCollected ? that.options.strings.uncollect : 
                                                  that.options.strings.collect);
+        that.collectLink.addClass(that.isCollected ? that.options.styles.uncollectArtifact : 
+            that.options.styles.collectArtifact);
         that.collectStatus = that.locate("status");
         
         // Bind the collection link's click handler.
@@ -70,6 +75,11 @@ fluid.engage = fluid.engage || {};
             that.toggleArtifact();
             evt.preventDefault();
         });
+    };
+    
+    var toggleCollectButtonStyle = function (that) {
+        that.collectLink.toggleClass(that.options.styles.collectArtifact);
+        that.collectLink.toggleClass(that.options.styles.uncollectArtifact);
     };
     
     /**
@@ -106,6 +116,7 @@ fluid.engage = fluid.engage || {};
             } else {
                 that.collectArtifact();
             }
+            toggleCollectButtonStyle(that);
         };
                 
         setupArtifactCollectionView(that);
@@ -116,6 +127,11 @@ fluid.engage = fluid.engage || {};
         selectors : {
             collectLink: ".flc-artifact-collect-link",
             status: ".flc-artifact-collect-status"
-        }
+        },
+        styles: {
+            uncollectArtifact: "fl-artifact-uncollect",
+            collectArtifact: "fl-artifact-collect"
+        },
+        notificationDelay: 10000
     });
 })(jQuery);

@@ -42,6 +42,7 @@ fluid = fluid || {};
             dimensions: "%artifactDimensions",
             mention: "%artifactMention",
             image: {target: "%artifactImage"},
+            commentButton: {messagekey: "comment"},
             sections: {
                 children: fluid.transform(that.sections, function (section) {
                     var decorator = section.sectionContents === COMMENT_SECTION ? {
@@ -152,7 +153,7 @@ fluid = fluid || {};
         that.sections = makeCabinetSections(that.model, that.options, mediaIconURLs);
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
         that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
-            selectorsToIgnore: ["collectArtifact", "sectionContainer", "audioIcon", "videoIcon"],
+            selectorsToIgnore: ["artifactPanel", "sectionContainer", "audioIcon", "videoIcon"],
             repeatingSelectors: ["sections"],
             rendererOptions: {
                 messageLocator: messageLocator,
@@ -169,7 +170,7 @@ fluid = fluid || {};
         that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
                 
         that.collectView = fluid.initSubcomponent(that, "collectView", [
-            that.locate("collectArtifact"),
+            that.locate("artifactPanel"),
             {
                 model: {
                     museumID: museumID,
@@ -185,6 +186,7 @@ fluid = fluid || {};
         // Note current deficient, time-dependent and awkward strategy based on rebuilding components on re-render, awaiting
         // RENDEROUR ANTIGENS
         that.comments = fluid.initSubcomponent(that, "comments", [fluid.jById(rendererIdMap.comments), fluid.COMPONENT_OPTIONS]);
+        that.locate("commentButton").attr("href", that.comments.options.addNoteTarget);
     };
 
     fluid.engage.artifactView = function (container, options) {
@@ -258,7 +260,8 @@ fluid = fluid || {};
             sectionHeader: ".flc-cabinet-header",
             audioIcon: ".flc-artifactView-audio-icon",
             videoIcon: ".flc-artifactView-video-icon",
-            collectArtifact: ".flc-artifact-collect"
+            artifactPanel: ".flc-artifact-actionPanel",
+            commentButton: ".flc-artifact-comment-link"
         },
         
         useCabinet: true,
@@ -266,13 +269,14 @@ fluid = fluid || {};
         strings: {
             artifactMedia: "Show Audio and Video (%size)",
             artifactComments: "Show Comments (%size)",
-            artifactRelated: "Show Related Artifacts (%size)",
+            artifactRelated: "Show Related Artifacts (%size)",            
+            comment: "Comment",
             
             // TODO: These strings should be correctly scoped to the ArtifactCollectView.
-            collect: "Collect Artifact",
-            uncollect: "Uncollect Artifact",
-            collectedMessage: "This artifact has been added to your personal collection; tap here to go there now.",
-            uncollectedMessage: "This artifact has been removed from your personal collection; tap here to go there now."
+            collect: "Collect",
+            uncollect: "Uncollect",
+            collectedMessage: "Added to your \"My Collection\". Tap here to go there now.",
+            uncollectedMessage: "Removed from your \"My Collection\". Tap here to go there now."
         }
     });
     

@@ -34,6 +34,53 @@
     display: none;
 }
 
-.fl-artifact-collect-status {
+.fl-artifact-actionPanel {
+    width: 100%;
+    background: #F5F5F5;
+}
+
+.fl-artifact-actionButtons {
+	height: 45px;		
+	padding-left: 5px;	
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.fl-artifact-actionButtons a.fl-artifact-action-button {
+    color: #FFFFFF;
+    padding: 5px 10px 5px 30px;
+    border-style:solid;
+    border-width: 2px;
+    border-color: #000000;
+    -webkit-border-image: none;
+	text-align: center;
+	margin: auto;
+}
+
+.fl-artifact-uncollect {
+    background: url(../../../shared/images/uncollect.png) no-repeat left,
+        -webkit-gradient(linear, left top, right bottom, from(#9E9D79), to(#C6C5A1));
+}
+
+.fl-artifact-collect {
+    background: url(../../../shared/images/collect.png) no-repeat left,
+        -webkit-gradient(linear, left top, right bottom, from(#A6A6A6), to(#C8C8C8));
+}
+
+.fl-artifact-comment {
+    background: url(../../../shared/images/comment.png) no-repeat left,
+        -webkit-gradient(linear, left top, right bottom, from(#A6A6A6), to(#C8C8C8));
+}
+
+a.fl-artifact-collect-status {
+    color: white;	
     display: none;
+    width: 100%;
+    margin: auto;    
+	position: absolute;
+	top: 90px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: center;
+	background-color: rgba(62, 62, 62, 0.5);
 }
