@@ -76,15 +76,18 @@ fluid.engage = fluid.engage || {};
         that.navigationList.events.afterRender.addListener(function () {
             that.container.removeClass(that.options.styles.load);
         });
+        
+        that.navBar.events.onToggle.addListener(function () {
+            that.navigationList.toggleLayout();
+        });
     };
     
     var setupNavBar = function (that) {
         that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
-        that.navBar.events.onToggle.addListener(function () {
-            if (that.navigationList) {
-                that.navigationList.toggleLayout();
-            }
-        });
+        
+        if (that.model.length === 0) {
+            that.navBar.locate("toggleButton").remove();
+        }
     };
     
     var setupNavList = function (that) {
