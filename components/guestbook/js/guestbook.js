@@ -31,12 +31,15 @@ fluid = fluid || {};
 
     var makeCommentAction = function(model, comment, dataSource) {
         var applier = fluid.kettle.makeSourceApplier(dataSource, {}, comment);
+        applier.modelChanged.addListener(function() {
+            document.location.reload();          
+        });
         var messagekey = model.ownId === comment.authorId? 
             "delete" : 
             comment.abuseReported? "abuseReported" : "reportAbuse";
         var togo = {messagekey: messagekey, decorators: [{"jQuery": ["click", function() {
             messageActions[messagekey+"Action"](applier, comment, model);
-            document.location.reload();
+
             return false;
         }]}]
         };
@@ -83,8 +86,12 @@ fluid = fluid || {};
     };
 
     fluid.engage.disturbUrl = function(url) {
+      // TODO: do this in a less silly way
         var qpos = url.indexOf("?");
-        var apos = url.indexOf("&");
+        var dpos = url.indexOf("&disturb");
+        if (dpos !== -1) {
+            url = url.substring(0, dpos);
+        }
         url += (qpos === -1? "?" : "&") + "disturb="+Math.floor(Math.random()*1e6);
         return url;
     };
@@ -167,7 +174,7 @@ fluid = fluid || {};
            });
         that.locate("form").submit(function() {
             that.submit();
-            that.goBack();
+            //that.goBack(); // cannot do this here - on Safari, navigation cancels XHR
             return false;
         });
     };
@@ -179,11 +186,12 @@ fluid = fluid || {};
         var isoDate = fluid.dateUtils.renderISO8601(fixedDate);
         var user = fluid.engage.user.currentUser();
         var doc = $.extend({text: text, date: isoDate, authorId: user._id}, that.options.docRoot);
-
+        // TODO: update to use dataSource
         fluid.kettle.operateUrl(that.options.postURL, null, {
             type: "POST",
+            contentType: "application/json; charset=UTF-8",
             data: JSON.stringify(doc)
-        });
+        }, that.goBack);
     };
     
     fluid.engage.guestbookComment = function (container, options) {
@@ -228,7 +236,7 @@ fluid = fluid || {};
             cancel: "Cancel",
             submit: "Submit",
             commentEntry: "Comment Entry",
-        }
+        },
     });
       
 }(jQuery));

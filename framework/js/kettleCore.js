@@ -161,7 +161,7 @@ fluid = fluid || {};
             }
         };
         if (that.options.writeable) {
-            that.put = function(model, directModel) {
+            that.put = function(model, directModel, callback) {
                 var url = resolveUrl(that.options.urlBuilder, directModel);
                 var expanded = fluid.kettle.resolveEnvironment(that.options, directModel);
                 var ajaxOpts = {data: JSON.stringify(model), contentType: "application/json; charset=UTF-8"};
@@ -173,7 +173,7 @@ fluid = fluid || {};
                             url = url + encodeURIComponent(model._id);
                         }
                     }
-                return fluid.kettle.operateUrl(url, fluid.kettle.JSONParser, ajaxOpts);
+                return fluid.kettle.operateUrl(url, fluid.kettle.JSONParser, ajaxOpts, callback);
                 };
             }
         return that;
@@ -204,12 +204,15 @@ fluid = fluid || {};
             model = dataSource.get(directModel);
         }
         var baseApplier = fluid.makeChangeApplier(model);
+        var changed = fluid.event.getEventFirer();
         // TODO: One day transactional applier will appear from FLUID-2881 branch
+        // TODO: modelChanged semantic is not standard
         var togo = {
             fireChangeRequest: function(dar) {
                  baseApplier.fireChangeRequest(dar);
-                 dataSource.put(model, directModel);
-            }
+                 dataSource.put(model, directModel, function(arg) {changed.fire(arg)});
+            },
+            modelChanged: changed
         };
         fluid.model.bindRequestChange(togo);
         return togo;
