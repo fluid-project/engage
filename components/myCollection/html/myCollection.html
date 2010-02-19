@@ -16,7 +16,10 @@
 		<link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/myCollection/css/myCollection.css" ></link>
 
 		<script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
+		<script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/ui/js/ui.core.js"></script>
+		<script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/ui/js/ui.dialog.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/iPhoneChromeless.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>        
@@ -55,6 +58,11 @@
                 <!-- Page header -->
                 <h1 class="flc-myCollection-title fl-navbar-title fl-col-flex">My Collection</h1>
             </div>
+            <div class="fl-myCollection-actionPanel">
+                <div class="fl-myCollection-actionButtons">
+                    <a rsf:id="scr=null" class="flc-myCollection-sendEmailButton fl-myCollection-action-button fl-myCollection-send fl-button" href="#">Send</a>
+                </div>
+            </div>
 
             <div class="flc-myCollection-emptyStatus"></div>
 	
@@ -67,11 +75,15 @@
 				<div class="flc-navigationList">					
 				</div>
 			</form>
-			
-					
+				
 			<!-- hidden link to the navigation list template -->
-			<a class="flc-myCollection-navigationList-link" href="../../../../fluid-engage-core/components/navigationList/html/NavigationList.html"/>
+			<a class="flc-myCollection-navigationList-link fl-myCollection-navigationList-link" href="../../../../fluid-engage-core/components/navigationList/html/NavigationList.html"/>
 		</div>
+		
+		<div class="flc-myCollection-sendMailDialog fl-myCollection-sendMailDialog" title="Dialog Title">
+            <div class="flc-myCollection-sendMailMessage">We'll send your collection to the email address below.</div>
+            <input class="flc-myCollection-sendEmailInput fl-myCollection-sendEmailInput fl-centered" type="text"/>
+        </div>
 
 		<script id="flc-initBlock" type="text/javascript">
 			fluid.engage.initComponentWithLocalData("fluid.engage.myCollection", ".flc-myCollection");

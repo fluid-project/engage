@@ -15,7 +15,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 (function ($) {
     $(document).ready(function () {
         var tests = {};
-        var model = {};
+        var model = [];
         var component;
 
         var setup = function () {
@@ -84,11 +84,11 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 expect(3);
                 
                 jqUnit.assertEquals("Model length matches data length.",
-                        model.data.length, component.model.data.length);
+                        model.length, component.model.length);
                 jqUnit.assertEquals("Model node artifact ID matches passed ID.",
-                        model.data[0].id, component.model.data[0].id);
+                        model[0].id, component.model[0].id);
                 jqUnit.assertEquals("Model node museum matches passed museum.",
-                        model.data[0].museum, component.model.data[0].museum);
+                        model[0].museum, component.model[0].museum);
             });
         };
 

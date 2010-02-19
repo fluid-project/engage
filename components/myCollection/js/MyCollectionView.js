@@ -10,10 +10,54 @@
 
  */
 /*global jQuery, fluid, window*/
+"use strict";
 
 fluid = fluid || {};
+fluid.engage = fluid.engage || {};
 
-(function ($) {      
+(function ($) {
+    
+    var openSendEmailDialog = function (that) {
+        that.sendEmailDialog.dialog("open");
+        window.scroll(0, 0);
+    };
+
+    // TODO: This should be replaced with paramsToMap() rather than custom code.
+    var getLanguage = function () {
+        var query = window.location.search;
+
+        var idx = query.indexOf("lang=");
+        if (idx < 0) {
+            return;
+        }
+        idx += "lang=".length;
+
+        var endIdx = query.indexOf("&", idx);
+
+        endIdx = endIdx > idx ? endIdx : query.length;
+
+        return query.substring(idx, endIdx);
+    };      
+
+    var buildSendCollectionParams = function (that) {
+        var artifacts = fluid.transform(that.model, function (artifact) {
+            return artifact.artifactId;
+        });
+
+        return {
+            language: getLanguage(),
+            action: "add",
+            email: that.locate("sendEmailInput").attr("value"),
+            artifacts: artifacts.join()
+        };
+    };
+
+    var sendEmail = function (that) {
+        $.ajax({
+            url: "../myCollection/sendEmail.json" + "?" + $.param(buildSendCollectionParams(that)),
+            type: "GET"        
+        });
+    };
 
     /**
      * Isolate the initialization of the navigation list here
@@ -78,6 +122,48 @@ fluid = fluid || {};
         myCollectionContainerEl.addClass(styles.collectionEmpty);
     };
     
+    var setupSendEmailDialog = function (that) {
+        var strings = that.options.strings;
+
+        var sendEmailMessage = that.locate("sendEmailMessage");
+        sendEmailMessage.text(strings.sendEmailDialogMessage);
+
+        var submit = strings.submitEmailButton;
+        var cancel = strings.cancelEmailButton;
+        var options = {
+            autoOpen: false,
+            modal: false,
+            position: ["center", "top"],
+            width: 320,
+            minHeight: 200,
+            dialogClass: that.options.styles.dialogClass,
+            buttons: {},
+            closeText: "",
+            title: " "
+        };
+        options.buttons[submit] = function () {
+            sendEmail(that);
+            $(this).dialog("close");
+        };
+        options.buttons[cancel] = function () {
+            $(this).dialog("close");
+        };
+
+        that.sendEmailDialog = that.locate("sendEmailDialog");
+        that.sendEmailDialog.dialog(options);
+    };
+
+    var setupSendEmailButton = function (that) {
+        var sendEmailButton  = that.locate("sendEmailButton");
+        if (that.model.length === 0) {
+            sendEmailButton.hide();
+        }
+        sendEmailButton.click(function (evt) {
+            openSendEmailDialog(that);
+            evt.preventDefault();
+        });
+    };
+    
     /**
      * Initializes all elements of the collection view that have not been initialized.
      * 
@@ -92,8 +178,13 @@ fluid = fluid || {};
                                that.options.strings, 
                                that.options.styles);
         }
+        // This needs to be done through the renderer.        
         // Init title
         that.locate("title").text(that.options.strings.header);
+        // Init send button
+        that.locate("sendEmailButton").text(that.options.strings.sendEmailButton);
+        setupSendEmailDialog(that);
+        setupSendEmailButton(that);
     };
 
     /**
@@ -104,8 +195,7 @@ fluid = fluid || {};
      */
     fluid.engage.myCollection = function (container, options) {
         var that = fluid.initView("fluid.engage.myCollection", container, options);
-        that.model = that.options.model;
-        
+        that.model = that.options.model;        
         setupMyCollection(that);
         return that;
     };
@@ -129,21 +219,29 @@ fluid = fluid || {};
                 navListContainer: ".flc-navigationList",
                 navListLink: ".flc-myCollection-navigationList-link",
                 collectionEmptyStatus: ".flc-myCollection-emptyStatus",
-                title: "flc-myCollection-title"
+                title: ".flc-myCollection-title",
+                sendEmailButton: ".flc-myCollection-sendEmailButton",
+                sendEmailDialog: ".flc-myCollection-sendMailDialog",
+                sendEmailMessage: ".flc-myCollection-sendMailMessage",
+                sendEmailInput: ".flc-myCollection-sendEmailInput"
             },
 
             styles: {
                 load: "fl-myCollection-loading",
                 collectionEmpty: "fl-myCollection-empty",
-                emptyStatus: "fl-myCollection-emptyStatus"
+                emptyStatus: "fl-myCollection-emptyStatus",
+                dialogClass: "fl-myCollection-dialogContainer"
             },
 
             strings: {
                 header: "My Collection",
-                emptyCollectionMessage:
-                    "Your collection is empty. Start adding artifacts to your " +
-                    "collection by using the \"Collect\" button you find on artifact screens."
-            }
+                emptyCollectionMessage: "Your collection is empty. Start adding artifacts to your " +
+                    "collection by using the \"Collect\" button you find on artifact screens.",
+                sendEmailButton: "Send",
+                sendEmailDialogMessage: "We'll send your collection to the email address below.",
+                submitEmailButton: "Submit",
+                cancelEmailButton: "Cancel"
+            }        
         }
     );
 })(jQuery);

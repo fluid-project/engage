@@ -1,4 +1,9 @@
 {
     "header": "Ma Collection",
-    "emptyCollectionMessage": "Votre collection est vide. Ajoutez des objets en utilisant la fonction \"Collectionner\" qui se trouve dans les pages d'objet."
+    "emptyCollectionMessage": "Votre collection est vide. Ajoutez des objets en utilisant la fonction \"Collectionner\" qui se trouve dans les pages d'objet.",
+    "sendEmailDialogMessage": "Nous enverrons le contenu de votre collection ‚àö‚Ä† l'adresse courriel indiqu‚àö¬©e.",
+    "sendEmailButton": "Envoyer",
+    "submitEmailButton": "Sauvegarder",
+    "cancelEmailButton": "Annuler",
+    "defaultEmail": "adresse courriel"    
 }
