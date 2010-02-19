@@ -1,6 +1,12 @@
 .fl-exhibition-header {
     background: -webkit-gradient(linear, left top, left bottom, from(#EEE9E9), to(#F5F5F5));
     padding: 5px 0 5px 0;
+    border-top:1px solid #000000;
+    font-weight:bold;
+}
+
+.fl-exhibition-catalogue-title fl-exhibitionAbout-textBlock {
+    font-size:19px;
 }
 
 .fl-exhibition-image {
@@ -9,10 +15,6 @@
 
 .fl-exhibition-title-date {
     padding: 0 ! important;
-}
-
-.fl-exhibitionAbout-textBlock {
-    margin: 5px;
 }
 
 .fl-exhibitionNavBar-title {
@@ -27,12 +29,13 @@
     background: none;
 }
 
-.fl-list-menu li:last-child {
-    border-bottom-width: 0px;
+
+.fl-list-menu li a {
+    padding:12px 0px 12px 12px;
 }
 
-[class*=fl-list] > li {
-    border-style: none;
+.fl-list-menu li:last-child {
+    border-bottom-width: 0px;
 }
 
 .fl-exhibition-content {
@@ -41,10 +44,6 @@
 
 [class*="fl-list"] > li {
     font-weight: normal;
-}
-
-.fl-exhibition-shortDescription {
-    font-weight: bold;
 }
 
 .fl-navBar-left {
@@ -71,4 +70,29 @@
 .fl-exhibition-linkText {
     padding-right: 20px;
     text-decoration: underline;
+}
+
+.fl-exhibition-title {
+    font-size:24px;
+}
+
+.fl-exhibitionAbout-textBlock {
+    margin: 5px;
+}
+
+.fl-exhibition-shortDescription {
+    font-size:19px;
+}
+
+.fl-exhibition-displayDate {
+    font-size:16px;
+}
+
+.fl-navigationList-titleText {
+    font-size:15px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+	height:auto;
+	width:64px;
 }
