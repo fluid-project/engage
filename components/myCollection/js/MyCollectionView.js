@@ -81,7 +81,9 @@ fluid.engage = fluid.engage || {};
     var setupNavBar = function (that) {
         that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
         that.navBar.events.onToggle.addListener(function () {
-            that.navigationList.toggleLayout();
+            if (that.navigationList) {
+                that.navigationList.toggleLayout();
+            }
         });
     };
     
