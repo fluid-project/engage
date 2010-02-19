@@ -11,6 +11,8 @@
 
 .fl-exhibition-image {
     padding: 0 ! important;
+    width:75px;
+    height:75px;
 }
 
 .fl-exhibition-title-date {
