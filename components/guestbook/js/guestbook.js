@@ -36,6 +36,7 @@ fluid = fluid || {};
             comment.abuseReported? "abuseReported" : "reportAbuse";
         var togo = {messagekey: messagekey, decorators: [{"jQuery": ["click", function() {
             messageActions[messagekey+"Action"](applier, comment, model);
+            document.location.reload();
             return false;
         }]}]
         };
