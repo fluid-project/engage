@@ -26,7 +26,7 @@ fluid = fluid || {};
             displayDate: "%displayDate",
             shortDescription: "%shortDescription",
             description: {markup: model.introduction ? model.introduction : model.content},
-            guestbook: {messagekey: "guestbook", args: {size: "%guestbookSize"}},
+            guestbookHeader: {messagekey: "guestbookHeader", args: {size: "%comments"}},
             guestbookLink: guard(model.comments, {target: "%guestbookLink"}),
             guestbookLinkText: guard(model.comments, {messagekey: "guestbookLinkText"}),
             image: {target: "%image"},
@@ -74,7 +74,7 @@ fluid = fluid || {};
     
     var setup = function (that) {        
         var messageLocator = fluid.messageLocator(that.options.strings, fluid.stringTemplate);
-        var selectorsToIgnore = [];
+        var selectorsToIgnore = ["guestbook"]; // pass this one through
         if (that.model.catalogueSize > 0) {
             selectorsToIgnore.push("catalogue");
         }
@@ -93,7 +93,7 @@ fluid = fluid || {};
         var that = fluid.initView("fluid.engage.exhibitionView", container, options);        
         that.model = that.options.model;
         if (that.options.guestbook.options.model) {
-            that.model.comments = that.options.guestbook.options.model.comments.length;
+            that.model.comments = that.options.guestbook.options.model.totalComments;
         }
 
         var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
@@ -145,6 +145,7 @@ fluid = fluid || {};
             catalogueTitle: ".flc-exhibition-catalogue-title",
             catalogueLink: ".flc-exhibition-catalogueLink",
             catalogueLinkText: ".flc-exhibition-catalogueLinkText",
+            guestbookHeader: ".flc-exhibition-guestbookHeader",
             guestbook: ".flc-exhibition-guestbook",
             guestbookLink: ".flc-exhibition-guestbookLink",
             guestbookLinkText: ".flc-exhibition-guestbookLinkText",
@@ -154,7 +155,7 @@ fluid = fluid || {};
         strings: {
             guestbookInvitationString: "No comments yet. Create your own comment.",
             catalogueTitle: "Catalogue (%size)",
-            guestbook: "Guestbook (%size)",
+            guestbookHeader: "Guestbook (%size)",
             guestbookLinkText: "Read all comments",
             catalogueLinkText: "View the full catalogue",
             aboutLink: "Read more"

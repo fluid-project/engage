@@ -1,5 +1,9 @@
 {
 	"addNote": "Ajouter un commentaire",
 	"delete": "Effacer",
-	"reportAbuse": "Signaler un abus"
+	"reportAbuse": "Signaler un abus",
+	"abuseReported": "Abus rapporté. Un modérateur a été informé.",
+  "cancel": "Annuler",
+  "submit": "Sauvegarder",
+  "commentEntry": "Entrée des commentaires" 
 }

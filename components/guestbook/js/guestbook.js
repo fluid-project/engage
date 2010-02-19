@@ -23,17 +23,26 @@ fluid = fluid || {};
         },
         reportAbuseAction: function(applier, comment, model) {
             applier.requestChange("abuseReported."+model.ownId, true); 
+        },
+        abuseReportedAction : function () {
+          
         }
     };
 
     var makeCommentAction = function(model, comment, dataSource) {
         var applier = fluid.kettle.makeSourceApplier(dataSource, {}, comment);
-        var messagekey = model.ownId === comment.authorId? "delete" : "reportAbuse";
-        return {messagekey: messagekey, decorators: {"jQuery": ["click", function() {
+        var messagekey = model.ownId === comment.authorId? 
+            "delete" : 
+            comment.abuseReported? "abuseReported" : "reportAbuse";
+        var togo = {messagekey: messagekey, decorators: [{"jQuery": ["click", function() {
             messageActions[messagekey+"Action"](applier, comment, model);
             return false;
-        }]}
+        }]}]
         };
+        if (messagekey === "abuseReported") {
+            togo.decorators.push({"removeClass": "fl-guestbook-action"});
+        }
+        return togo;
     }
     var makeProtoComponents = function(model, options, commentDataSource) {
         return {
@@ -72,6 +81,13 @@ fluid = fluid || {};
         that.events.afterRender.fire(that);
     };
 
+    fluid.engage.disturbUrl = function(url) {
+        var qpos = url.indexOf("?");
+        var apos = url.indexOf("&");
+        url += (qpos === -1? "?" : "&") + "disturb="+Math.floor(Math.random()*1e6);
+        return url;
+    };
+
     fluid.engage.guestbook = function (container, options) {
         var that = fluid.initView("fluid.engage.guestbook", container, options);
         // TODO: Normalise locale handling and fallback, destroy jquery ui datepicker stopgap
@@ -80,6 +96,8 @@ fluid = fluid || {};
         }
         that.model = that.options.model;
         that.model.ownId = fluid.engage.user.currentUser()._id;
+        var returnUrl = fluid.engage.disturbUrl(window.location.href);
+        that.options.addNoteTarget = that.options.addNoteTarget + "&" + $.param({"returnUrl": returnUrl});
 
         var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
         var commentDataSource = fluid.kettle.simpleURLDataSource(that.options.postURL);
@@ -112,7 +130,7 @@ fluid = fluid || {};
             action: ".flc-guestbook-action" 
         },
         postURL: "",
-        addNoteTarget: "comments.html",
+        addNoteTarget: "comment.html?param1=1",
         locale: "en",
         dateFormat: "MMMM dd, yyyy",
         events: {
@@ -121,20 +139,34 @@ fluid = fluid || {};
         strings: {
             "addNote": "Add Note",
             "delete": "Delete",
-            "reportAbuse": "Report Abuse"
+            "reportAbuse": "Report Abuse",
+            "abuseReported": "Abuse reported. Pending moderator review",
+            "cancel": "Cancel",
+            "submit": "Submit",
+            "commentEntry": "Comment Entry" 
             }
     });
     
+    fluid.engage.setText = function(node, text) {
+        if (node.length) {
+            /^input$/i.test(node[0].tagName)? node.attr("value", text) : node.text(text);
+        }
+    };
     
+    fluid.engage.quickI18N = function(dom, strings, map) {
+        fluid.transform(map, function(key, value) {
+            fluid.engage.setText(dom.locate(key), strings[value]);
+        });
+    };
     
     var bindCommentHandlers = function(that) {
         that.locate("cancel").click(function() { 
-            history.back();
+            that.goBack();
             return false;
            });
         that.locate("form").submit(function() {
             that.submit();
-            history.back();
+            that.goBack();
             return false;
         });
     };
@@ -159,10 +191,21 @@ fluid = fluid || {};
         that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
         
         bindCommentHandlers(that);
+        fluid.engage.quickI18N(that.dom, that.options.strings, {
+          cancel: "cancel", submit: "submit", commentEntry: "commentEntry"});
         that.submit = function() {submitComment(that)};
+        var params = fluid.kettle.paramsToMap(window.location.search);
+        that.goBack = function() {
+            if (params.returnUrl) {
+                window.location = params.returnUrl;
+            }
+            else {
+                history.back();
+            }
+        };
         
         return that;
-    }
+    };
     
     fluid.defaults("fluid.engage.guestbookComment", {
         navigationBar: {
@@ -172,12 +215,18 @@ fluid = fluid || {};
             text: ".flc-guestbook-text",
             cancel: ".flc-guestbook-cancel",
             submit: ".flc-guestbook-submit",
+            commentEntry: ".flc-guestbook-commentEntry",
             form: ".flc-guestbook-form"
         },
         userid: "anonymous",
         postURL: "#",
         docRoot: {
             userName: "Anonymous"
+        },
+        strings: {
+            cancel: "Cancel",
+            submit: "Submit",
+            commentEntry: "Comment Entry",
         }
     });
       

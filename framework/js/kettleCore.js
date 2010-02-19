@@ -32,10 +32,6 @@ fluid = fluid || {};
         }
         return togo;       
     };
-    
-    fluid.identity = function() {
-        return arguments[0];
-    }
   
     // From URLUtil.java
     function push(hash, key, value) {

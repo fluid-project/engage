@@ -29,7 +29,7 @@
     border-bottom: 1px solid #aaa;
 }
 
-.fl-guestbook a {
+a.fl-guestbook-action {
     text-decoration: underline;
     cursor: Pointer;
     }
