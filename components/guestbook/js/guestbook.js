@@ -50,6 +50,7 @@ fluid = fluid || {};
     }
     var makeProtoComponents = function(model, options, commentDataSource) {
         return {
+          "title": {messagekey: "title"},
           "addNote": {target: options.addNoteTarget},
           "addNoteText": {messagekey: "addNote"},
           "commentCell:": {
@@ -128,6 +129,7 @@ fluid = fluid || {};
         },
         
         selectors: {
+            title: ".flc-guestbook-title",
             addNote: ".flc-guestbook-addnote-control",
             addNoteText: ".flc-guestbook-addnote-text",
             commentCell: ".flc-guestbook-comment-cell",
