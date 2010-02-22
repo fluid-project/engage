@@ -11,8 +11,8 @@
 
 .fl-exhibition-image {
     padding: 0 ! important;
-    width:75px;
-    height:75px;
+    width:72px;
+    height:72px;
 }
 
 .fl-exhibition-title-date {
@@ -97,4 +97,8 @@
     white-space:nowrap;
 	height:auto;
 	width:64px;
+}
+
+.fl-col-mixed .fl-col-flex {
+    margin-left: 70px;
 }
