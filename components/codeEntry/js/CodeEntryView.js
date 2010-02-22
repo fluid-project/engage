@@ -99,8 +99,13 @@ fluid.engage = fluid.engage || {};
     };
     
     var setupDelete = function (that, button) {
-        button.attr("alt", that.options.strings.deleteLabel);
-        button.click(that.deleteLastDigit);
+        var label = that.options.strings.deleteLabel;
+        that.locate("delLabel").text(label);
+        button.attr("alt", label);
+        button.click(function (evt) {
+            that.deleteLastDigit();
+            evt.preventDefault();
+        });
     };
 
     /**
@@ -125,8 +130,10 @@ fluid.engage = fluid.engage || {};
         //Initialize number buttons
         that.locate("numButtons").each(function () {
             var btn = $(this);
-            btn.click(function () {
-                that.enterDigit(parseInt(btn.attr("alt"), 10));
+            btn.click(function (evt) {
+                var img = that.locate("buttonImage", btn);
+                that.enterDigit(parseInt(img.attr("alt"), 10));
+                evt.preventDefault();
             });
         });
         
@@ -189,7 +196,9 @@ fluid.engage = fluid.engage || {};
             firstDigitField : ".flc-codeEntry-firstDigit",
             secondDigitField : ".flc-codeEntry-secondDigit",
             numButtons: ".flc-codeEntry-numButton",
-            delButton: ".flc-codeEntry-delButton"
+            delButton: ".flc-codeEntry-delButton",
+            delLabel: ".flc-codeEntry-delLabel",
+            buttonImage: "img"
         },
         styles : {
             invalidCode : "fl-codeEntry-invalidCode"
