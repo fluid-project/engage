@@ -17,6 +17,7 @@
 
 .fl-exhibition-title-date {
     padding: 0 ! important;
+    margin-left: 80px;
 }
 
 .fl-exhibitionNavBar-title {
@@ -75,7 +76,8 @@
 }
 
 .fl-exhibition-title {
-    font-size:24px;
+    font-size:19px;
+    text-decoration: bold;
 }
 
 .fl-exhibitionAbout-textBlock {
@@ -87,7 +89,7 @@
 }
 
 .fl-exhibition-displayDate {
-    font-size:16px;
+    font-size:17px;
 }
 
 .fl-navigationList-titleText {
