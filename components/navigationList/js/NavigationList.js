@@ -44,7 +44,13 @@ fluid = fluid || {};
                 if (navListItem.image || options.useDefaultImage) {
                     itemSubtree.children.push({
                         ID: "image",
-                        target: navListItem.image
+                        target: navListItem.image,
+                        decorators: {
+                            type: "attrs",
+                            attributes: {
+                                alt: navListItem.title || ""
+                            }
+                        }
                     });
                 }
                 

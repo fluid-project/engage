@@ -29,7 +29,15 @@ fluid = fluid || {};
             guestbookHeader: {messagekey: "guestbookHeader", args: {size: "%comments"}},
             guestbookLink: guard(model.comments, {target: "%guestbookLink"}),
             guestbookLinkText: guard(model.comments, {messagekey: "guestbookLinkText"}),
-            image: {target: "%image"},
+            image: {
+                target: "%image",
+                decorators: {
+                    type: "attrs",
+                    attributes: {
+                        alt: model.title
+                    }
+                }
+            },
             catalogueLink: {target: "%catalogueLink"},
             catalogueLinkText: {messagekey: "catalogueLinkText"},
             aboutLink: {target: "%aboutLink"},

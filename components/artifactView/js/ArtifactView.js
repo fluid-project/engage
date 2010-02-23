@@ -41,7 +41,15 @@ fluid = fluid || {};
             medium: "%artifactMedium",
             dimensions: "%artifactDimensions",
             mention: "%artifactMention",
-            image: {target: "%artifactImage"},
+            image: {
+                target: "%artifactImage",
+                decorators: {
+                    type: "attrs",
+                    attributes: {
+                        alt: that.model.artifactTitle
+                    }
+                }
+            },
             commentButton: {messagekey: "comment"},
             sections: {
                 children: fluid.transform(that.sections, function (section) {
