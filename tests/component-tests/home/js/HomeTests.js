@@ -23,57 +23,69 @@ https://source.fluidproject.org/svn/LICENSE.txt
         fluid.engage.deleteCookie(cookieName);
     }   
     
-    function stylingTests(component, styled, unStyled, className, funcName) {
+    function testExpectedClasses(component, styled, unStyled, className) {        
         var sel = component.options.selectors;
         var cName = component.options.styles[className];
-        
-        if (funcName) {
-            component[funcName]();
-        }
         
         jqUnit.assertTrue(styled + " has class: " + cName, $(sel[styled]).hasClass(cName));
         jqUnit.assertFalse(unStyled + " does not have class: " + cName, $(sel[unStyled]).hasClass(cName));
     }
     
-    function testStringApplication(strings, selectors) {
-        for (var key in strings) {
-            var string = strings[key];
-            
-            //Can't test strings that are used more than once, nor ones that are templates.
-            if (string.indexOf("%") === -1) {
-                jqUnit.assertEquals("Ensure correct text applied", string, $(selectors[key]).text());
-            }
-        }
-    }
-    
-    function testAltTextApplication(strings, selectors) {
-        for (var key in selectors) {
-            if (key.indexOf("Icon") >= 0) {
-                var strEL = key.replace("Icon", "Caption");
-                var expected = fluid.stringTemplate(strings.iconAltText, {iconName: strings[strEL]});
-                jqUnit.assertEquals("Alt text for " + key + " applied", expected, $(selectors[key]).attr("alt"));
-            }
-        }
-    }
+    var testHomeIsVisible = function (component) {
+        var styles = component.options.styles;
+        var sels = component.options.selectors;
+        
+        jqUnit.assertTrue("Home content is not hidden", $(sels.homeContent).hasClass(styles.hidden));
+        jqUnit.assertFalse("Langugage selection is hidden", $(sels.languageSelectionContent).hasClass(styles.hidden));
+    };
     
     $(document).ready(function () {
         
         //Tests for page load without cookie
         var homeTests = jqUnit.testCase("Home Screen Tests", function () {
             homeTests.fetchTemplate("../../../../components/home/html/home.html", selector);
-            component = fluid.engage.home(selector, {cookieName: cookieName});
+            component = fluid.engage.home(selector, {
+                cookieName: cookieName,
+                strings: {
+                    exhibitionsCaption: "Localized Exhibitions",
+                    myCollectionCaption: "Localized My collection",
+                    objectCodeCaption: "Localized Enter object code",
+                    languageCaption: "Localized Change language",
+                    homeTitle: "Localized McCord Museum",
+                    languageSelectionTitle: "Localized Language Selection",
+                    iconAltText: "Localized %iconName icon"
+                }
+            });
         }, deleteCookie);
         
         homeTests.test("Page load styling", function () {
-            stylingTests(component, "homeContent", "languageSelectionContent", "hidden");
+            testHomeIsVisible(component);
         });
         
-        homeTests.test("Strings applied", function () {
-            testStringApplication(component.options.strings, component.options.selectors);
-        });
+        var testLocalization = function (component, i18NMap) {
+            var strings = component.options.strings;
+            var selectors = component.options.selectors;
+            
+            for (var selectorName in i18NMap) {
+                var stringName = i18NMap[selectorName];
+                var localizedText = strings[stringName];
+
+                // Can't test strings that are used more than once, nor ones that are templates.
+                // TODO: Are we sure?
+                if (stringName.indexOf("%") === -1) {
+                    jqUnit.assertEquals("Ensure the element named " + stringName + " was correctly localized.", 
+                                        localizedText, 
+                                        $(selectors[selectorName]).text());
+                }
+            }
+        };
         
-        homeTests.test("Alt Text applied", function () {
-            testAltTextApplication(component.options.strings, component.options.selectors);
+        homeTests.test("Localization", function () {            
+            // Test that all icon labels have been localized.
+            testLocalization(component, component.options.labelI18N);
+            
+            // TODO: Test that alt text has been localized.
+            jqUnit.assertTrue("The alt text unit tests have not been correctly implemented", false);
         });
         
         homeTests.test("Adding the cookie", function () {
@@ -82,7 +94,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
         });
         
         homeTests.test("Language Selection page stlying", function () {
-            stylingTests(component, "homeContent", "languageSelectionContent", "hidden", "showLanguageSelection");
+            component.showLanguageSelection();
+            testHomeIsVisible(component);
         });
     });
 })(jQuery);
