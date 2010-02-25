@@ -132,7 +132,7 @@ fluid.engage = fluid.engage || {};
             var btn = $(this);
             btn.click(function (evt) {
                 var img = that.locate("buttonImage", btn);
-                that.enterDigit(parseInt(img.attr("alt"), 10));
+                that.enterDigit(img.attr("alt"));
                 evt.preventDefault();
             });
         });
@@ -150,15 +150,12 @@ fluid.engage = fluid.engage || {};
     fluid.engage.codeEntry = function (container, options) {
         var that = fluid.initView("fluid.engage.codeEntry", container, options);
         
-        that.enterDigit = function (digit) {
-            getCurrentDigitField(that).text(digit);
-            if (that.atDigit === 0) {
-                if (digit !== 0) {
-                    that.code += digit;
-                }
+        that.enterDigit = function (digitStr) {
+            getCurrentDigitField(that).text(digitStr);
+            that.code += digitStr;
+            if (that.atDigit === 0) {                
                 that.atDigit++;
             } else {
-                that.code += digit;
                 that.deleteEnabled = false;
                 var artifactLink = that.options.getArtifactUrlFn(that);
                 if (artifactLink) {
