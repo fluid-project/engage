@@ -39,6 +39,35 @@ https://source.fluidproject.org/svn/LICENSE.txt
         jqUnit.assertFalse("Langugage selection is hidden", $(sels.languageSelectionContent).hasClass(styles.hidden));
     };
     
+    var parseParams = function (url) {
+        var search = url.substr(url.indexOf("?") + 1);
+        var params = search.split("&");
+        
+        var parsedParams = []
+        $.each(params, function (idx, param) {
+            var paramTokens = param.split("=");
+            parsedParams.push({
+                name: paramTokens[0],
+                value: paramTokens[1]
+            });
+        });
+        
+        return parsedParams;
+    };
+    
+    var isParamSetOnce = function (array, paramObj) {
+        var count = 0;
+        var matched = false;
+        $.each(array, function (idx, item) {
+            if (jqUnit.deepEq(item, paramObj)) {
+                count++;
+                matched = true;
+            }
+        });
+        
+        return matched && (count === 1);
+    };
+    
     $(document).ready(function () {
         
         //Tests for page load without cookie
@@ -97,5 +126,66 @@ https://source.fluidproject.org/svn/LICENSE.txt
             component.showLanguageSelection();
             testHomeIsVisible(component);
         });
+        
+        var testAllLinksForLangParam = function (dom, lang) {
+            dom.locate("links").each(function (idx, link) {
+                link = $(link);
+                var url = link.attr("href");
+                var params = parseParams(url);
+                var isLangSet = isParamSetOnce(params, {
+                    name: "lang", 
+                    value: lang
+                });
+                
+                jqUnit.assertTrue("The lang parameter and value is present in the URL only once.", isLangSet);
+            });
+        };
+        
+        var setAndTestLanguage = function (component, lang) {
+            component.setLanguage(lang);
+            testAllLinksForLangParam(component.dom, lang)
+        };
+        
+        homeTests.test("URL rewriting with language parameter", function () {
+            setAndTestLanguage(component, "fr");
+            setAndTestLanguage(component, "fr"); // Again, same language.
+            setAndTestLanguage(component, "en"); // New language
+        });
+        
+        
+        // Parameter parsing tests
+        
+        var url = "http://localhost:8080/test/url.html";
+        
+        var langParam = {
+            name: "lang",
+            value: "fr"
+        };
+        
+        var addParamAndParse = function (url, paramName, paramValue) {
+            var result = fluid.engage.addParamToURL(url, langParam.name, langParam.value);
+            return parseParams(result);
+        };
+        
+        homeTests.test("addParamToURL() with an existing query parameter already present", function () {
+            var existingParam = {
+                name: "param1",
+                value: "value1"
+            };
+
+            var testURL = url + "?" + existingParam.name + "=" + existingParam.value;
+            var resultParams = addParamAndParse(testURL, langParam.name, langParam.value);
+            
+            jqUnit.assertEquals("There should only be 2 parameters in the URL", 2, resultParams.length);
+            jqUnit.assertTrue("The existing param is still in the URL", isParamSetOnce(resultParams, existingParam));
+            jqUnit.assertTrue("The lang param has been added to the URL once", isParamSetOnce(resultParams, langParam));
+        });
+        
+        homeTests.test("addParamToURL() with no existing query parameters", function () {
+            var resultParams = addParamAndParse(url, langParam.name, langParam.value);
+            jqUnit.assertEquals("There should only be 1 parameter in the URL", 1, resultParams.length);
+            jqUnit.assertTrue("The lang param should be added to the URL once", isParamSetOnce(resultParams, langParam));
+        });
+        
     });
 })(jQuery);
