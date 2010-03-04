@@ -195,13 +195,7 @@ fluid.engage = fluid.engage || {};
     fluid.defaults("fluid.engage.myCollection",
         {
             navigationBar : {
-                type : "fluid.engage.navigationBar",
-                options: {
-                    selectors: {
-                        toggleDefaultIcon: ".flc-navigationBar-toggle-list",
-                        toggleAlternateIcon: ".flc-navigationBar-toggle-grid"
-                    }
-                }
+                type : "fluid.engage.navigationBar"
             },
             
             navigationList: {

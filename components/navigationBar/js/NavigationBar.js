@@ -84,8 +84,8 @@ fluid.engage = fluid.engage || {};
             backButton: ".flc-navigationBar-back",
             homeButton: ".flc-navigationBar-home",
             toggleButton: ".flc-navigationBar-toggle",
-            toggleDefaultIcon: ".flc-navigationBar-toggle-grid",
-            toggleAlternateIcon: ".flc-navigationBar-toggle-list"
+            toggleDefaultIcon: ".flc-navigationBar-toggle-list",
+            toggleAlternateIcon: ".flc-navigationBar-toggle-grid"
         },
         
         strings: {
