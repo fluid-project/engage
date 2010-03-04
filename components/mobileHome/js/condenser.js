@@ -15,21 +15,36 @@ fluid.engage = fluid.engage || {};
         return urlAtt? tag.getAttribute(urlAtt) : null;
     };
     
-    registerDependency = function (that, el, url, volatyle) {
-        that.dependencies[url] = true;
-        if (volatyle) {
-            var id = fluid.allocateSimpleId(el);
-            that.volatileSources[id] = id;
-            }
+    registerDependency = function (that, url, ancestral) {
+        that[ancestral? "ancestral" : "dependencies"][url] = true;
         };
+        
+    registerVolatile = function (that, el, url) {
+        var id, oldEl = that.dependencies[url];
+        if (typeof(oldEl) === "string") {
+            id = oldEl; 
+        }
+        else {
+            id = fluid.allocateSimpleId(el);
+            that.dependencies[url] = id;
+        }
+        that.volatileSources[id] = id;
+    };
     
     var injectUniqueTag = function (that, injectFn, tag, type) {
         var tagURL = parseURL(tag);
         var isLoaded = that.dependencies[tagURL];
+        var isAncestral = that.ancestral[tagURL];
         var isVolatile = $.nodeName(tag, "link");
-        if (!isLoaded) {
-            registerDependency(that, tag, tagURL, isVolatile);
-            injectFn(tag);
+        if (isVolatile || !isLoaded) {
+            if (!isLoaded) {
+                registerDependency(that, tagURL);
+                injectFn(tag);
+            }
+            if (isVolatile && !isAncestral) {
+                registerVolatile(that, tag, tagURL);
+            }
+
         }
     };
     
@@ -80,19 +95,22 @@ fluid.engage = fluid.engage || {};
         that.container.html(doc.body);
     };
     
-    var registerDependencies = function (that, elements, type) {
+    var registerDependencies = function (that, elements, type, ancestral) {
         elements.each(function (idx, el) {
             el = fluid.wrap(el);
             var urlAttr = tagURLMap[type];
             var url = el.attr(urlAttr);
             if (url) {
-                registerDependency(that, el, url);
+                registerDependency(that, url);
+                if (ancestral) {
+                    registerDependency(that, url, true);
+                }
             }
         });
     };
     
     var registerHeadDependencies = function (that) {
-        registerDependencies(that, $("head link"), "link");
+        registerDependencies(that, $("head link"), "link", true);
         registerDependencies(that, $("head script"), "script");
     };
     
@@ -147,6 +165,7 @@ fluid.engage = fluid.engage || {};
     fluid.engage.screenNavigator = function (container, options) {
         var that = fluid.initView("fluid.engage.screenNavigator", container, options);
         that.dependencies = {};
+        that.ancestral = {};
         that.pageStack = [""];
         that.historyPos = 0;
         that.volatileSources = {};
@@ -176,9 +195,10 @@ fluid.engage = fluid.engage || {};
                 url: fluid.kettle.addParamsToUrl(options.condenser, {targetUrl: newUrl}),
                 dataType: "json",
                 success: function (doc) {
-                    success(that, newUrl);
-                    that.currentURL = that.pageStack[that.historyPos];
-                    inject(that, doc);
+                    window.setTimeout(function() {
+                        success(that, newUrl);
+                        that.currentURL = that.pageStack[that.historyPos];
+                        inject(that, doc);}, 1);
                 },
                 error: function (xhr, textstatus, errthrown) {
                     fluid.log("An error occurred while trying to fetch a page: " + textstatus);
