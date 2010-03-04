@@ -126,7 +126,7 @@ fluid = fluid || {};
                 image: val.thumbnail ? val.thumbnail[0].nodetext : "",  
                 title: val.title,
                 description: val.subtitle,
-                target: window.location.href.replace(model.artifactAccessionNumber, val.accessnumber),
+                target: fluid.engage.url.location().replace(model.artifactAccessionNumber, val.accessnumber),
                 showBadge: val.hasMedia === "yes"
             };
         });
@@ -173,7 +173,7 @@ fluid = fluid || {};
     };
     
     var setupSubcomponents = function (that) {
-        var museumID = fluid.kettle.paramsToMap(window.location.search.substring(1)).db;
+        var museumID = fluid.engage.url.params().db;
     
         that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);
                 

@@ -47,7 +47,7 @@ fluid.engage = fluid.engage || {};
     var redirectSequence = function (that, url) {
         updateStatusMessage(that, "removeClass", that.options.strings.redirecting);
         setTimeout(function () {
-            window.location = url;
+            fluid.engage.url.location(url);
         }, that.options.redirectDelay);
     };
 

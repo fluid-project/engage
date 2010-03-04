@@ -30,10 +30,8 @@ fluid.engage = fluid.engage || {};
         if (!cookie || !cookie.lang) {
             that.showLanguageSelection();
         } else {
-            var params = window.location.search;
-            if (params.indexOf("lang=" + cookie.lang) < 0) {
-                // TODO: Need to use a SN-specific API instead of randomly changing window.location
-                window.location = that.locate(cookie.lang === "en" ? "englishLink" : "frenchLink").attr("href");
+            if (!that.lang) {
+                fluid.engage.url.location(that.locate(cookie.lang === "en" ? "englishLink" : "frenchLink").attr("href"));
             }
         }
     }
@@ -63,20 +61,11 @@ fluid.engage = fluid.engage || {};
         });
     };
     
-    // TODO: This is a stub until we have a real API for determining the language.
-    function getLanguage(that) {
-        if (that.model && that.model.lang) {
-            return that.model.lang;
-        }
-        
-        return fluid.kettle.paramsToMap(window.location.search).lang;
-    }
-    
     function addLanguageToLinks(links, lang) {            
         links.each(function (idx, link) {
             link = $(link);
             var url = link.attr("href");
-            link.attr("href", fluid.engage.addParamToURL(url, "lang", lang));
+            link.attr("href", fluid.engage.url.addParamToURL(url, "lang", lang));
         });    
     }
     
@@ -90,17 +79,17 @@ fluid.engage = fluid.engage || {};
         // Set the user ID for the My Collection Link.
         var myCollectionLink = that.locate("myCollectionLink");
         var myCollectionURL = myCollectionLink.attr("href");
-        myCollectionLink.attr("href", fluid.engage.addParamToURL(myCollectionURL, "user", fluid.engage.user.currentUser()._id));
+        myCollectionLink.attr("href", fluid.engage.url.addParamToURL(myCollectionURL, "user", fluid.engage.user.currentUser()._id));
         
         // Set the component's language, rewriting all URLs in the process.
-        var lang = getLanguage(that);
-        if (lang) {
-            that.setLanguage(lang);
+        if (that.lang) {
+            that.setLanguage(that.lang);
         }
     }
     
     fluid.engage.home = function (container, options) {
         var that = fluid.initView("fluid.engage.home", container, options);
+        that.lang = fluid.engage.url.params().lang;
         
         that.setLanguage = function (lang) {
             addLanguageToLinks(that.locate("links"), lang);
@@ -126,26 +115,6 @@ fluid.engage = fluid.engage || {};
         
         setup(that);
         return that;
-    };
-    
-    // TODO: This function is probably not sufficiently robust and should be replaced by a new URL utility when we have one.
-    fluid.engage.addParamToURL = function (url, param, value) {
-        var urlBase = url;
-        var trimURL = function (idx) {
-            var trimmed;
-            if (idx != -1) {
-                trimmed = url.substring(idx);
-                urlBase = urlBase.substring(0, idx);            
-            };
-            
-            return trimmed;
-        };
-        
-        var hash = trimURL(url.indexOf("#")) || "";
-        var q = trimURL(url.indexOf("?")) || "";
-        var params = q ? fluid.kettle.paramsToMap(q) : {};
-        params[param] = value;
-        return urlBase + "?" + $.param(params) + hash;
     };
     
     fluid.defaults("fluid.engage.home", {

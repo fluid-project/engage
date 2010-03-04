@@ -47,7 +47,8 @@ fluid = fluid || {};
             togo.decorators.push({"removeClass": "fl-guestbook-action"});
         }
         return togo;
-    }
+    };
+    
     var makeProtoComponents = function(model, options, commentDataSource) {
         return {
           "title": {messagekey: "title"},
@@ -105,7 +106,7 @@ fluid = fluid || {};
         }
         that.model = that.options.model;
         that.model.ownId = fluid.engage.user.currentUser()._id;
-        var returnUrl = fluid.engage.disturbUrl(window.location.href);
+        var returnUrl = fluid.engage.disturbUrl(fluid.engage.url.location());
         that.options.addNoteTarget = that.options.addNoteTarget + "&" + $.param({"returnUrl": returnUrl});
 
         var expander = fluid.renderer.makeProtoExpander({ELstyle: "%"});
@@ -205,13 +206,13 @@ fluid = fluid || {};
         fluid.engage.quickI18N(that.dom, that.options.strings, {
           cancel: "cancel", submit: "submit", commentEntry: "commentEntry"});
         that.submit = function() {submitComment(that)};
-        var params = fluid.kettle.paramsToMap(window.location.search);
+        var params = fluid.engage.url.params();
         that.goBack = function() {
             if (params.returnUrl) {
-                window.location = params.returnUrl;
+                fluid.engage.url.location(params.returnUrl);
             }
             else {
-                history.back();
+                fluid.engage.url.history.back();
             }
         };
         

@@ -16,7 +16,7 @@ fluid = fluid || {};
 (function ($, fluid) {
     fluid.kettle = fluid.kettle || {};
     
-    /** Three utilities that might well go into the framework **/
+    /** Two utilities that might well go into the framework **/
 
     /** Version of jQuery.makeArray that handles the case where the argument is undefined **/
     
@@ -48,8 +48,8 @@ fluid = fluid || {};
     }
     
     fluid.kettle.decodeURIComponent = function(comp) {
-       comp = comp.replace(/\+/g, " ");
-       return decodeURIComponent(comp);
+         comp = comp.replace(/\+/g, " ");
+         return decodeURIComponent(comp);
     };
     
     fluid.kettle.paramsToMap = function (queryString) {
@@ -83,20 +83,57 @@ fluid = fluid || {};
         togo.pathInfo = segs;
         return togo;
     };
-        
+
+    fluid.kettle.splitUrl = function(url) {
+        var qpos = url.indexOf("?");
+        if (qpos === -1) {
+            return {path: url}
+        }
+        else return {
+            path: url.substring(0, qpos),
+            query: url.substring(qpos + 1)
+        };
+    };
+
+    fluid.kettle.parseUrl = function(url) {
+        var split = fluid.kettle.splitUrl(url);
+        togo = fluid.kettle.parsePathInfo(split.path);
+        if (split.query) {        
+            togo.params = fluid.kettle.paramsToMap(split.query);
+        }
+        return togo;
+    };
+    
+    fluid.kettle.renderUrl = function(parsed) {
+        var togo = fluid.kettle.makeRelPath(parsed);
+        if (parsed.params) {
+            togo += "?" + $.param(parsed.params);
+        }
+        return togo;
+    };
+    
+    fluid.kettle.addParamsToUrl = function(url, addParams) {
+        var parsed = fluid.kettle.parseUrl(url);
+        parsed.params = $.extend(parsed.params || {}, addParams);
+        return fluid.kettle.renderUrl(parsed);
+    };
+    
     /** Collapse the array of segments into a URL path, starting at the specified
      * segment index - this will not terminate with a slash, unless the final segment
      * is the empty string
      */
-    fluid.kettle.collapseSegs = function(segs, from) {
+    fluid.kettle.collapseSegs = function(segs, from, to) {
         var togo = "";
         if (from === undefined) { 
             from = 0;
         }
-        for (var i = from; i < segs.length - 1; ++ i) {
+        if (to === undefined) {
+            to = segs.length;
+        }
+        for (var i = from; i < to - 1; ++ i) {
             togo += segs[i] + "/";
         }
-        togo += segs[segs.length - 1];
+        togo += segs[to - 1];
         return togo;   
     };
 
@@ -107,6 +144,31 @@ fluid = fluid || {};
         }
         return togo;
     };
+    
+    /** Canonicalise IN PLACE the supplied segment array derived from parsing a
+     * pathInfo structure. Warning, this destructively modifies the argument.
+     */
+    fluid.kettle.cononocolosePath = function(pathInfo) {
+        var consume = 0;
+        for (var i = 0; i < pathInfo.length; ++ i) {
+            if (pathInfo[i] === "..") {
+                ++consume;
+            }
+            else if (consume !== 0) {
+                pathInfo.splice(i - consume*2, consume*2);
+                i -= consume * 2;
+                consume = 0;
+            }
+        }
+        return pathInfo;
+    };
+    
+    fluid.kettle.makeCanon = function(compound) {
+        var parsed = fluid.kettle.parsePathInfo(compound);
+        fluid.kettle.cononocolosePath(parsed.pathInfo);
+        return fluid.kettle.makeRelPath(parsed); 
+    }
+    
     
     fluid.kettle.operateUrl = function(url, responseParser, writeDispose, callback) {
         var togo = {};

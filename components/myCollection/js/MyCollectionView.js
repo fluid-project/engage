@@ -22,21 +22,8 @@ fluid.engage = fluid.engage || {};
         window.scroll(0, 0);
     };
 
-    // TODO: This should be replaced with paramsToMap() rather than custom code.
     var getLanguage = function () {
-        var query = window.location.search;
-
-        var idx = query.indexOf("lang=");
-        if (idx < 0) {
-            return;
-        }
-        idx += "lang=".length;
-
-        var endIdx = query.indexOf("&", idx);
-
-        endIdx = endIdx > idx ? endIdx : query.length;
-
-        return query.substring(idx, endIdx);
+        return fluid.engage.url.params().lang;
     };      
 
     var buildSendCollectionParams = function (that) {

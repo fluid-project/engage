@@ -29,7 +29,7 @@ fluid = fluid || {};
                     that.navLists[index] = {
                         type: "fluid",
                         func: "fluid.navigationList",
-                        options: {model: theme.artifacts}
+                        options: $.extend(true, {model: theme.artifacts}, that.options.navigationList.options)
                     };
                     return {
                         catalogueTheme: thisTheme + "title",
@@ -94,7 +94,10 @@ fluid = fluid || {};
         },
         
         navigationList: {
-            type: "fluid.navigationList"
+            type: "fluid.navigationList",
+            options: {
+                defaultToGrid: true
+            }
         },
         
         selectors: {

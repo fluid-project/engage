@@ -62,11 +62,11 @@ fluid.engage = fluid.engage || {};
         
         that.home = function () {
             // TODO: This is grossly hardcoded and needs to be improved
-            window.location = "../home/home.html";
+            fluid.engage.url.location("../home/home.html" +  "?lang=" + fluid.engage.url.params().lang);
         };
         
         that.back = function () {
-            history.go(-1);
+             fluid.engage.url.history.go(-1);
         };
         
         that.toggle = function () {
