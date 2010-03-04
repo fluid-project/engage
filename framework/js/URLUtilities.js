@@ -1,3 +1,18 @@
+/*
+Copyright 2010 University of Toronto
+Copyright 2010 University of Cambridge
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://source.fluidproject.org/svn/LICENSE.txt
+*/
+
+/*global window, history, fluid, jQuery*/
+"use strict";
+
 fluid = fluid || {};
 fluid.engage = fluid.engage || {};
 fluid.engage.url = fluid.engage.url || {};
@@ -36,20 +51,16 @@ fluid.engage.url = fluid.engage.url || {};
         return (typeof(url) === "undefined") ? getLocation() : setLocation(url);
     };
     
+    // This shim is here for future expansion of our backtracking support. For now,
+    // We just rely on the browser's back functionality along with the jQuery hashchange plugin.
     fluid.engage.url.history = {
-        go: function(num) {
-            var nav = getScreenNavigatorSingleton();
-            if (nav) {
-                nav.goHistory(num);
-            }
-            else {
-                history.go(num);
-            }
+        go: function (num) {
+            history.go(num);
         },
-        back: function() {
+        back: function () {
             fluid.engage.url.history.go(-1);
         },
-        forward: function() {
+        forward: function () {
             fluid.engage.url.history.go(1);
         }
     };
@@ -79,10 +90,10 @@ fluid.engage.url = fluid.engage.url || {};
         var urlBase = url;
         var trimURL = function (idx) {
             var trimmed;
-            if (idx != -1) {
+            if (idx !== -1) {
                 trimmed = url.substring(idx);
                 urlBase = urlBase.substring(0, idx);            
-            };
+            }
             
             return trimmed;
         };

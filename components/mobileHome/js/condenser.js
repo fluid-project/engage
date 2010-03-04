@@ -12,14 +12,14 @@ fluid.engage = fluid.engage || {};
     
     var parseURL = function (tag) {
         var urlAtt = tagURLMap[tag.nodeName.toLowerCase()];
-        return urlAtt? tag.getAttribute(urlAtt) : null;
+        return urlAtt ? tag.getAttribute(urlAtt) : null;
     };
     
-    registerDependency = function (that, url, ancestral) {
-        that[ancestral? "ancestral" : "dependencies"][url] = true;
-        };
+    var registerDependency = function (that, url, ancestral) {
+        that[ancestral ? "ancestral" : "dependencies"][url] = true;
+    };
         
-    registerVolatile = function (that, el, url) {
+    var registerVolatile = function (that, el, url) {
         var id, oldEl = that.dependencies[url];
         if (typeof(oldEl) === "string") {
             id = oldEl; 
@@ -75,7 +75,7 @@ fluid.engage = fluid.engage || {};
     };
     
     function clearVolatiles(that, newVols, oldVols) {
-        fluid.transform(oldVols, function(id) {
+        fluid.transform(oldVols, function (id) {
             if (!newVols[id]) {
                 var node = fluid.byId(id);
                 var url = parseURL(node);
@@ -143,8 +143,7 @@ fluid.engage = fluid.engage || {};
         };
     };
     
-    var setupNavigator = function (that) {
-        registerHeadDependencies(that);
+    var bindEvents = function (that) {
         // Bind a live click event that will override all natural page transitions and do them via Ajax instead.
         $("a:not([href^=#])").live("click", function (evt) {
             var url = $(this).attr("href");
@@ -157,7 +156,23 @@ fluid.engage = fluid.engage || {};
             evt.preventDefault();
         });
         
-        fluid.engage.screenNavigator.that = that; // Expose this screenNavigator instance as a singleton.
+        // Listen for the hashchange event in order to support the browser back button.
+        $(window).bind("hashchange", function () {
+            var hash = getFragmentLocation();
+            if (hash !== that.currentURL) {
+                that.setLocation(hash);
+            }
+        });
+    };
+    
+    var setupNavigator = function (that) {
+        registerHeadDependencies(that);
+        bindEvents(that);
+        
+        // Expose this screenNavigator instance as a singleton.
+        fluid.engage.screenNavigator.that = that; 
+        
+        // If a URL hash already exists, load it right away.
         var fragLoc = getFragmentLocation();
         that.setLocation(fragLoc || that.options.initialUrl);
     };
@@ -195,10 +210,13 @@ fluid.engage = fluid.engage || {};
                 url: fluid.kettle.addParamsToUrl(options.condenser, {targetUrl: newUrl}),
                 dataType: "json",
                 success: function (doc) {
-                    window.setTimeout(function() {
+                    // This timeout is used to stablize debugging in Firebug even when
+                    // we are injecting script blocks dynamically into the page.
+                    window.setTimeout(function () {
                         success(that, newUrl);
                         that.currentURL = that.pageStack[that.historyPos];
-                        inject(that, doc);}, 1);
+                        inject(that, doc);
+                    }, 1);
                 },
                 error: function (xhr, textstatus, errthrown) {
                     fluid.log("An error occurred while trying to fetch a page: " + textstatus);
