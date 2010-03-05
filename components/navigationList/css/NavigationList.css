@@ -1,76 +1,76 @@
-.fl-list-thumbnails > li:not(:last-child) {
+.fl-navigationList-container.fl-list-thumbnails > li:not(:last-child) {
     margin-bottom: 0px;
     border-bottom: none;
 }
 
-.fl-list-thumbnails > li:last-child {
+.fl-navigationList-container.fl-list-thumbnails > li:last-child {
     margin-bottom: 0px;
 }
 
-.fl-list > li {
+.fl-navigationList-container.fl-list > li {
     border-left: none;
     border-right: none;
 }
 
-.fl-theme-iphone .fl-list a {
+.fl-theme-iphone .fl-navigationList-container.fl-list a {
     color: rgb(0, 0, 0);
     font-size: 0.7em;
     padding-bottom: 0;
 }
 
-.fl-theme-iphone [class*="fl-list"] > li .fl-link-summary {
+.fl-navigationList-container.fl-list > li .fl-link-summary {
     color: rgb(0, 0, 0);
     font-size: 1em;
     margin: 0;
 }
 
-.fl-list-thumbnails.fl-thumbnails-expanded.fl-grid li {
-    margin: 4px;    
+.fl-navigationList-container.fl-list-thumbnails.fl-thumbnails-expanded.fl-grid li {
+    margin: 4px 0 4px 12.8px;
 }
     
-.fl-table-cell .fl-navigationList-title {
+.fl-navigationList-container .fl-table-cell .fl-navigationList-title {
     display: none;
 }
 
-.fl-table-cell .fl-link-summary.fl-navigationList-description {
+.fl-navigationList-container .fl-table-cell .fl-link-summary.fl-navigationList-description {
     display: none;
 }
 
-.fl-list.fl-list-thumbnails > li a .fl-icon {
+.fl-navigationList-container.fl-list.fl-list-thumbnails > li a .fl-icon {
     height: 48px;
     width: 48px;
 }
 
-.fl-list-thumbnails.fl-grid li {
+.fl-navigationList-container.fl-list-thumbnails.fl-grid li {
     overflow: hidden;
 }
 
-.fl-engage-badged-thumbnail {
+.fl-navigationList-container .fl-engage-badged-thumbnail {
     position: relative;
 }
 
-.fl-grid li img.fl-engage-badge-icon {
+.fl-navigationList-container.fl-grid li img.fl-engage-badge-icon {
     position: absolute;
     margin: 0;
     bottom: 4px;
     right: 4px;
 }
 
-.fl-list li img.fl-engage-badge-icon {
+.fl-navigationList-container.fl-list li img.fl-engage-badge-icon {
     position: absolute;
     margin: 0;
     right: 5px;
     bottom: 10px;
 }
 
-.fl-grid .fl-navigationList-textContainer {
+.fl-navigationList-container.fl-grid .fl-navigationList-textContainer {
     display: none;
 }
-.fl-navigationList-textContainer {
+.fl-navigationList-container .fl-navigationList-textContainer {
     height: 42px;
 }
 
-[class*=fl-list] li a div span {
+.fl-navigationList-container.fl-list li a div span {
     display: block;
     overflow:hidden;
     text-overflow:ellipsis;
