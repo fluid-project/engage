@@ -190,7 +190,7 @@ fluid.engage = fluid.engage || {};
         };
         
         that.setRelativeLocation = function (url, historyUpdater) {
-            var current = that.currentURL || "mobileHome/mobileHome.html"; // TODO: no idea what to do here
+            var current = that.currentURL || "home/home.html"; // TODO: no idea what to do here
             var parsedCurrent = fluid.kettle.parseUrl(current);
             var prefix = fluid.kettle.collapseSegs(parsedCurrent.pathInfo, 0, parsedCurrent.pathInfo.length - 1) + "/"; 
             var splitUrl = fluid.kettle.splitUrl(url);
@@ -244,7 +244,7 @@ fluid.engage = fluid.engage || {};
     };
     
     fluid.defaults("fluid.engage.screenNavigator", {
-        initialURL: "home/home.html"
+        initialURL: "app/home.html"
     });
     
 })(jQuery);
