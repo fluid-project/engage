@@ -47,6 +47,33 @@ fluid.engage.url = fluid.engage.url || {};
         return url;
     };
     
+    var busy = false;
+    
+    var queue = [];
+    
+    function execQueue() {
+        for (var i = 0; i < queue.length; ++ i) {
+            queue[i]();
+        }
+        queue = [];
+    }
+    
+    fluid.engage.url.deferUntilQuiet = function(func) {
+        if (!busy) {
+            func();
+        }
+        else {
+            queue.push(func);
+        }
+    };
+    
+    fluid.engage.url.setBusy = function(newBusy) {
+        busy = newBusy;
+        if (!newBusy && queue.length) {
+            execQueue();
+        }
+    }
+    
     fluid.engage.url.location = function (url) {
         return (typeof(url) === "undefined") ? getLocation() : setLocation(url);
     };

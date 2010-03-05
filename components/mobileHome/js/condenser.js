@@ -5,6 +5,16 @@ fluid = fluid || {};
 fluid.engage = fluid.engage || {};
 
 (function ($) {
+  
+    fluid.setLogging(true);
+  
+    var accreteFunction = function (func1, func2) {
+        return function () {
+            func1.apply(null, arguments);
+            func2.apply(null, arguments);
+        };
+    };
+  
     var tagURLMap = {
         link: "href",
         script: "src"
@@ -31,47 +41,69 @@ fluid.engage = fluid.engage || {};
         that.volatileSources[id] = id;
     };
     
-    var injectUniqueTag = function (that, injectFn, tag, type) {
+    var injectUniqueTag = function (that, injectFn, tag, callback) {
         var tagURL = parseURL(tag);
         var isLoaded = that.dependencies[tagURL];
         var isAncestral = that.ancestral[tagURL];
         var isVolatile = $.nodeName(tag, "link");
+        var called = false;
         if (isVolatile || !isLoaded) {
             if (!isLoaded) {
                 registerDependency(that, tagURL);
-                injectFn(tag);
+                injectFn(tag, callback);
+                called = true;
             }
             if (isVolatile && !isAncestral) {
                 registerVolatile(that, tag, tagURL);
             }
 
         }
+        if (!called && callback) { callback();}
     };
     
-    var createSafariInjectFn = function (container, type) {
-        return function (tag) {
-            var existing = $(type, container);
-            if (existing.length === 0) {
-                container.append(tag);
-            } else {
-                var lastEl = $(type + ":last", container);
-                lastEl.after(tag);
-            }
+    var createSafariInjectFn = function (container) {
+        return function(tag, callback) {
+            container.append(tag);
+            var timer = setInterval(function() {
+                //fluid.log("Inner timer");
+                if (/loaded|complete/.test(document.readyState)) {
+                    clearInterval(timer);
+                //    fluid.log("Inner callback");
+                    callback();
+                    }
+                    }, 10);
         };
     };
     
     var createCleanInjectFn = function (container) {
-        return function (tag) {
+        return function (tag, callback) {
             container[0].appendChild(tag);
+            callback();
         };
     };
     
-    var injectUniqueTags = function (that, container, type, tags) {
-        var injectFn = $.browser.safari ? createSafariInjectFn(container, type) : createCleanInjectFn(container);        
-        $.each(tags, function (idx, tag) {
-            var cleaned = $.clean([tag])[0];
-            injectUniqueTag(that, injectFn, cleaned, type);
-        });
+    fluid.engage.injectUniqueImpl = function(iP) {
+        //fluid.log("iUI start");
+        var self = function() {fluid.engage.injectUniqueImpl(iP);};
+        for (var i = 0; i < iP.tags.length; ++ i) {
+            if (!iP.status[i]) {
+                iP.status[i] = "q";
+                var cleaned = $.clean([iP.tags[i]])[0];
+        //        fluid.log("Dispatched for " + i + ": " + (cleaned.src || cleaned.href)); 
+                injectUniqueTag(iP.that, iP.injectFn, cleaned, self);
+                return;
+            }
+        }
+        //fluid.log("Outer iUI callback");
+        if (iP.callback) {
+            iP.callback();
+        }
+    };
+    
+    injectUniqueTags = function (that, container, tags, callback) {
+        var injectFn = $.browser.safari ? createSafariInjectFn(container) : createCleanInjectFn(container);
+        var injectPack = {that: that, tags: tags, injectFn: injectFn, callback: callback, status: []};
+        fluid.engage.injectUniqueImpl(injectPack);
     };
     
     function clearVolatiles(that, newVols, oldVols) {
@@ -85,14 +117,16 @@ fluid.engage = fluid.engage || {};
         });
     }
     
-    var inject = function (that, doc) {
+    var inject = function (that, doc, callback) {
         var head = $("head");
         var oldVols = fluid.copy(that.volatileSources);
         that.volatileSources = {};
-        injectUniqueTags(that, head, "link", doc.linkTags);
-        injectUniqueTags(that, head, "script", doc.scriptTags);
-        clearVolatiles(that, that.volatileSources, oldVols);
-        that.container.html(doc.body);
+        injectUniqueTags(that, head, doc.linkTags, function() {
+            injectUniqueTags(that, head, doc.scriptTags, function() {
+     //           fluid.log("inner inject callback");
+                clearVolatiles(that, that.volatileSources, oldVols);
+                that.container.html(doc.body);
+                callback();})});
     };
     
     var registerDependencies = function (that, elements, type, ancestral) {
@@ -134,13 +168,6 @@ fluid.engage = fluid.engage || {};
         }
         that.pageStack.push(newUrl);
         ++that.historyPos;
-    };
-    
-    var accreteFunction = function (func1, func2) {
-        return function () {
-            func1.apply(null, arguments);
-            func2.apply(null, arguments);
-        };
     };
     
     var bindEvents = function (that) {
@@ -206,17 +233,21 @@ fluid.engage = fluid.engage || {};
         };
             
         that.injectPage = function (newUrl, success) {
+            fluid.engage.url.setBusy(true);
             $.ajax({
                 url: fluid.kettle.addParamsToUrl(options.condenser, {targetUrl: newUrl}),
                 dataType: "json",
                 success: function (doc) {
-                    // This timeout is used to stablize debugging in Firebug even when
+                    // This timeout is used to stabilize debugging in Firebug even when
                     // we are injecting script blocks dynamically into the page.
                     window.setTimeout(function () {
                         success(that, newUrl);
                         that.currentURL = that.pageStack[that.historyPos];
-                        inject(that, doc);
-                        window.scrollTo(0, 0);
+                        inject(that, doc, function() {
+         //                   fluid.log("Final callback");
+                            window.scrollTo(0, 0);
+                            fluid.engage.url.setBusy(false);
+                            });
                     }, 1);
                 },
                 error: function (xhr, textstatus, errthrown) {
