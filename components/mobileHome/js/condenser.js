@@ -216,6 +216,7 @@ fluid.engage = fluid.engage || {};
                         success(that, newUrl);
                         that.currentURL = that.pageStack[that.historyPos];
                         inject(that, doc);
+                        window.scrollTo(0, 0);
                     }, 1);
                 },
                 error: function (xhr, textstatus, errthrown) {
