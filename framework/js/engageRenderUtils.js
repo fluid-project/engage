@@ -12,7 +12,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 /*global jQuery, fluid*/
 "use strict";
 
-fluid = fluid || {};
+var fluid = fluid || {};
 fluid.engage = fluid.engage || {};
 
 (function ($) {

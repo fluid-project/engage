@@ -13,7 +13,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 /*global window, history, fluid, jQuery*/
 "use strict";
 
-fluid = fluid || {};
+var fluid = fluid || {};
 fluid.engage = fluid.engage || {};
 fluid.engage.url = fluid.engage.url || {};
 

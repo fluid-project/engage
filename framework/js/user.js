@@ -13,7 +13,7 @@
 /*global jQuery, fluid*/
 "use strict";
 
-fluid = fluid || {};
+var fluid = fluid || {};
 fluid.engage = fluid.engage || {};
 fluid.engage.user = fluid.engage.user = {};
 
