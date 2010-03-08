@@ -34,7 +34,7 @@ fluid.engage = fluid.engage || {};
         return {
             language: getLanguage(),
             action: "add",
-            email: that.locate("sendEmailInput").attr("value"),
+            email: $(that.options.selectors.sendEmailInput).attr("value"),
             artifacts: artifacts.join()
         };
     };
