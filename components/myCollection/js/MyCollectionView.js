@@ -34,7 +34,7 @@ fluid.engage = fluid.engage || {};
         return {
             language: getLanguage(),
             action: "add",
-            email: $(that.options.selectors.sendEmailInput).attr("value"),
+            email: that.locate("sendEmailInput", that.sendEmailDialog).attr("value"), // apply scoping to account for removal of dialog markup
             artifacts: artifacts.join()
         };
     };
@@ -115,6 +115,7 @@ fluid.engage = fluid.engage || {};
     };
     
     var setupSendEmailDialog = function (that) {
+        if (that.setupDialog) return;
         var strings = that.options.strings;
 
         var sendEmailMessage = that.locate("sendEmailMessage");
@@ -143,6 +144,7 @@ fluid.engage = fluid.engage || {};
 
         that.sendEmailDialog = that.locate("sendEmailDialog");
         that.sendEmailDialog.dialog(options);
+        that.setupDialog = true;
     };
 
     var setupSendEmailButton = function (that) {
@@ -151,6 +153,7 @@ fluid.engage = fluid.engage || {};
             sendEmailButton.hide();
         }
         sendEmailButton.click(function (evt) {
+            setupSendEmailDialog(that);
             openSendEmailDialog(that);
             evt.preventDefault();
         });
@@ -175,7 +178,6 @@ fluid.engage = fluid.engage || {};
         that.locate("title").text(that.options.strings.header);
         // Init send button
         that.locate("sendEmailButton").text(that.options.strings.sendEmailButton);
-        setupSendEmailDialog(that);
         setupSendEmailButton(that);
     };
 

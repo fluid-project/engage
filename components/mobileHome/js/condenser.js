@@ -64,14 +64,14 @@ fluid.engage = fluid.engage || {};
     var createSafariInjectFn = function (container) {
         return function(tag, callback) {
             container.append(tag);
-            var timer = setInterval(function() {
-                //fluid.log("Inner timer");
-                if (/loaded|complete/.test(document.readyState)) {
-                    clearInterval(timer);
-                //    fluid.log("Inner callback");
-                    callback();
-                    }
-                    }, 10);
+            callback();
+//            var timer = setInterval(function() {
+//                fluid.log("Inner timer: " + document.readyState);
+//                if (/loaded|complete/.test(document.readyState)) {
+//                    clearInterval(timer);
+//                    callback();
+//                    }
+//                    }, 5);
         };
     };
     
@@ -83,18 +83,18 @@ fluid.engage = fluid.engage || {};
     };
     
     fluid.engage.injectUniqueImpl = function(iP) {
-        //fluid.log("iUI start");
+//        fluid.log("iUI start");
         var self = function() {fluid.engage.injectUniqueImpl(iP);};
         for (var i = 0; i < iP.tags.length; ++ i) {
             if (!iP.status[i]) {
                 iP.status[i] = "q";
                 var cleaned = $.clean([iP.tags[i]])[0];
-        //        fluid.log("Dispatched for " + i + ": " + (cleaned.src || cleaned.href)); 
+//                fluid.log("Dispatched for " + i + ": " + (cleaned.src || cleaned.href + ": " + iP.tags[i])); 
                 injectUniqueTag(iP.that, iP.injectFn, cleaned, self);
                 return;
             }
         }
-        //fluid.log("Outer iUI callback");
+//        fluid.log("Outer iUI callback");
         if (iP.callback) {
             iP.callback();
         }
@@ -123,7 +123,7 @@ fluid.engage = fluid.engage || {};
         that.volatileSources = {};
         injectUniqueTags(that, head, doc.linkTags, function() {
             injectUniqueTags(that, head, doc.scriptTags, function() {
-     //           fluid.log("inner inject callback");
+//                fluid.log("inner inject callback");
                 clearVolatiles(that, that.volatileSources, oldVols);
                 that.container.html(doc.body);
                 callback();})});
@@ -233,6 +233,7 @@ fluid.engage = fluid.engage || {};
         };
             
         that.injectPage = function (newUrl, success) {
+//            fluid.log("########## START NAVIGATION: " + newUrl);
             fluid.engage.url.setBusy(true);
             $.ajax({
                 url: fluid.kettle.addParamsToUrl(options.condenser, {targetUrl: newUrl}),
@@ -244,7 +245,7 @@ fluid.engage = fluid.engage || {};
                         success(that, newUrl);
                         that.currentURL = that.pageStack[that.historyPos];
                         inject(that, doc, function() {
-         //                   fluid.log("Final callback");
+//                            fluid.log("Final callback");
                             window.scrollTo(0, 0);
                             fluid.engage.url.setBusy(false);
                             });
