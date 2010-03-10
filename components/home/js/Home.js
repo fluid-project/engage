@@ -50,13 +50,13 @@ fluid.engage = fluid.engage || {};
     }
     
     fluid.engage.quickI18N = function(dom, strings, map, op) {
-        fluid.transform(map, function(key, value) {
+        fluid.transform(map, function(value, key) {
             dom.locate(key).text(strings[value]);
         });
     };
     
     var localizeAltText = function (dom, strings, map) {
-        fluid.transform(map, function(key, value) {
+        fluid.transform(map, function(value, key) {
             dom.locate(key).attr("alt", strings[value]);
         });
     };
@@ -165,7 +165,7 @@ fluid.engage = fluid.engage || {};
             exhibitionsIcon: "exhibitionsCaption",
             myCollectionIcon: "myCollectionCaption",
             objectCodeIcon: "objectCodeCaption",
-            languageIcon: "languageCodeCaption"
+            languageIcon: "languageCaption"
         },
         
         cookieName: "fluid-engage"

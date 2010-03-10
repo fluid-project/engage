@@ -91,30 +91,28 @@ https://source.fluidproject.org/svn/LICENSE.txt
             testHomeIsVisible(component);
         });
         
-        var testLocalization = function (component, i18NMap) {
+        var testLocalization = function (component, i18nMap, attr) {
             var strings = component.options.strings;
-            var selectors = component.options.selectors;
-            
-            for (var selectorName in i18NMap) {
-                var stringName = i18NMap[selectorName];
+            var selectors = component.options.selectors;            
+            for (var selectorName in i18nMap) {
+                var stringName = i18nMap[selectorName];
                 var localizedText = strings[stringName];
-
                 // Can't test strings that are used more than once, nor ones that are templates.
                 // TODO: Are we sure?
                 if (stringName.indexOf("%") === -1) {
-                    jqUnit.assertEquals("Ensure the element named " + stringName + " was correctly localized.", 
-                                        localizedText, 
-                                        $(selectors[selectorName]).text());
+                    var selector = $(selectors[selectorName]);
+                    jqUnit.assertEquals("Ensure that the " + (attr ? attr + " attribute for " : "") + 
+                                        "element named " + stringName + " was correctly localized.", 
+                                        localizedText,
+                                        attr ? selector.attr(attr) : selector.text());
                 }
             }
         };
         
         homeTests.test("Localization", function () {            
-            // Test that all icon labels have been localized.
+            // Test that all icon labels and alt text have been localized.
             testLocalization(component, component.options.labelI18N);
-            
-            // TODO: Test that alt text has been localized.
-            jqUnit.assertTrue("The alt text unit tests have not been correctly implemented", false);
+            testLocalization(component, component.options.iconI18N, "alt");            
         });
         
         homeTests.test("Adding the cookie", function () {
