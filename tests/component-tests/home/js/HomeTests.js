@@ -163,7 +163,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         };
         
         var addParamAndParse = function (url, paramName, paramValue) {
-            var result = fluid.engage.addParamToURL(url, langParam.name, langParam.value);
+            var result = fluid.engage.url.addParamToURL(url, langParam.name, langParam.value);
             return parseParams(result);
         };
         
