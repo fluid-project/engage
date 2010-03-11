@@ -87,9 +87,10 @@ fluid = fluid || {};
         return proto;
     };
     
-    var makeSection = function (titleKey, count, sectionContents) {
+    var makeSection = function (titleKey, titleOpenKey, count, sectionContents) {
         return {
             sectionTitleKey: titleKey,
+            sectionTitleOpenKey: titleOpenKey,
             sectionSize: count,
             sectionContents: sectionContents 
         };
@@ -103,7 +104,7 @@ fluid = fluid || {};
                 title: mediaItem.title
             };
         });
-        return makeSection("artifactMedia", model.artifactMediaCount, sectionContents);
+        return makeSection("artifactMedia", "artifactMediaOpened", model.artifactMediaCount, sectionContents);
     };
     
     var commentsToSection = function (model, options) {
@@ -117,7 +118,7 @@ fluid = fluid || {};
  //           };
  //       });
         var commentCount = options.comments.options.model.comments.length;
-        return makeSection("artifactComments", commentCount, sectionContents);              
+        return makeSection("artifactComments", "artifactCommentsOpened", commentCount, sectionContents);              
     };
     
     var relatedArtifactsToSection = function (model, options) {
@@ -130,7 +131,7 @@ fluid = fluid || {};
                 showBadge: val.hasMedia === "yes"
             };
         });
-        return makeSection("artifactRelated", model.artifactRelatedCount, sectionContents);
+        return makeSection("artifactRelated", "artifactRelatedOpened", model.artifactRelatedCount, sectionContents);
     };
     
     var makeCabinetSections = function (model, options, mediaIconURLs) {
@@ -172,6 +173,13 @@ fluid = fluid || {};
         that.refreshView();
     };
     
+    var updateSectionHeader = function (that, cabinetSelector, newSectionHeaderText) {
+        var section = that.sections[that.locate("sections", that.options.selectors.sectionContainer).index(cabinetSelector)];
+        that.locate("sectionHeader", cabinetSelector)
+            .text(fluid.stringTemplate(that.options.strings[section[newSectionHeaderText]], 
+                {size: section.sectionSize}));
+    };
+    
     var setupSubcomponents = function (that) {
         var museumID = fluid.engage.url.params().db;
     
@@ -190,6 +198,12 @@ fluid = fluid || {};
         
         if (that.sections.length > 0 && that.options.useCabinet) {
             that.cabinet = fluid.initSubcomponent(that, "cabinet", [that.locate("sectionContainer"), fluid.COMPONENT_OPTIONS]);
+            that.cabinet.events.afterOpen.addListener(function (cabinetSelector) {
+                updateSectionHeader(that, cabinetSelector, "sectionTitleOpenKey");
+            });
+            that.cabinet.events.afterClose.addListener(function (cabinetSelector) {
+                updateSectionHeader(that, cabinetSelector, "sectionTitleKey");
+            });
         }
         // Note current deficient, time-dependent and awkward strategy based on rebuilding components on re-render, awaiting
         // RENDEROUR ANTIGENS
@@ -277,7 +291,10 @@ fluid = fluid || {};
         strings: {
             artifactMedia: "Show Audio and Video (%size)",
             artifactComments: "Show Comments (%size)",
-            artifactRelated: "Show Related Artifacts (%size)",            
+            artifactRelated: "Show Related Artifacts (%size)",
+            artifactMediaOpened: "Hide Audio and Video (%size)",
+            artifactCommentsOpened: "Hide Comments (%size)",
+            artifactRelatedOpened: "Hide Related Artifacts (%size)",            
             comment: "Comment",
             
             // TODO: These strings should be correctly scoped to the ArtifactCollectView.
