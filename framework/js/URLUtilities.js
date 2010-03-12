@@ -78,6 +78,10 @@ fluid.engage.url = fluid.engage.url || {};
         return (typeof(url) === "undefined") ? getLocation() : setLocation(url);
     };
     
+    fluid.engage.url.isLocal = function () {
+        return window.location.href.indexOf("file://") !== -1;
+    };
+    
     // This shim is here for future expansion of our backtracking support. For now,
     // We just rely on the browser's back functionality along with the jQuery hashchange plugin.
     fluid.engage.url.history = {

@@ -1,0 +1,429 @@
+{
+    "model": {
+        "title": "Simply Montr√©al: Glimpses of a Unique City",
+        "allArtifactsViewURL": "browse.html?db=mccord_exhibitions&exhibitID=4&lang=en",
+        "numArtifacts": "506",
+        "themes": [
+            {
+                "title": "Surviving Winter - Brrrr!",
+                "allArtifactsViewURL": "browse.html?db=mccord_exhibitions&exhibitID=4&sectionID=01&lang=en",
+                "numArtifacts": "12",
+                "artifacts": [
+                    {
+                        "description": "Wm. Notman & Son",
+                        "showBadge": false,
+                        "title": "Stormy day, St. Catherine Street, Montreal, QC, 1901",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/v3449.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=VIEW-3449&lang=en"
+                    },
+                    {
+                        "description": "1845",
+                        "showBadge": false,
+                        "title": "Travels in North America with Geological Observations on the United States, Canada, and Nova Scotia",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/RB-0576-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=RB-0576&lang=en"
+                    },
+                    {
+                        "description": "Arthur Lablanc",
+                        "showBadge": false,
+                        "title": "Shovel",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M22431-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M22431&lang=en"
+                    },
+                    {
+                        "description": "1842",
+                        "showBadge": false,
+                        "title": "From Charles Lyell to John Samuel McCord about the barometrical height of Mount Royal",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/P001-D12_36-820.11-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=P001-D12_36-820.11&lang=en"
+                    }
+                ]
+            },
+            {
+                "title": "Surviving Winter - Cozy Mittens, Winterproof Walls",
+                "allArtifactsViewURL": "browse.html?db=mccord_exhibitions&exhibitID=4&sectionID=02&lang=en",
+                "numArtifacts": "31",
+                "artifacts": [
+                    {
+                        "description": "Anonyme - Anonymous",
+                        "showBadge": false,
+                        "title": "Belt",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/ME982.568-P2.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=ME982.568&lang=en"
+                    },
+                    {
+                        "description": "1890-1900",
+                        "showBadge": false,
+                        "title": "Stove model",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/1638.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M992.101.194.1-12&lang=en"
+                    },
+                    {
+                        "description": "About 1825",
+                        "showBadge": false,
+                        "title": "Stove",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/0822.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M24632.1-6&lang=en"
+                    },
+                    {
+                        "description": "1900-1925",
+                        "showBadge": false,
+                        "title": "Man's winter overcoat",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M993.94.2-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M993.94.2&lang=en"
+                    }
+                ]
+            },
+            {
+                "title": "Surviving Winter - Montreal, Winter City",
+                "allArtifactsViewURL": "browse.html?db=mccord_exhibitions&exhibitID=4&sectionID=03&lang=en",
+                "numArtifacts": "25",
+                "artifacts": [
+                    {
+                        "description": "",
+                        "showBadge": false,
+                        "title": "Gloves",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M969.15.129.1-2-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M969.15.129.1-2&lang=en"
+                    },
+                    {
+                        "description": "Wm. Notman & Son",
+                        "showBadge": false,
+                        "title": "Sherbrooke Street in winter, Montreal, QC, 1896",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/v2801.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=VIEW-2801&lang=en"
+                    },
+                    {
+                        "description": "About 1930",
+                        "showBadge": false,
+                        "title": "Muff",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M976.18.10-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M976.18.10&lang=en"
+                    },
+                    {
+                        "description": "H. B.",
+                        "showBadge": false,
+                        "title": "Charles Lumkin Half-Way House, C√¥te-des-Neiges, 1885",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/5453.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M971.73&lang=en"
+                    }
+                ]
+            },
+            {
+                "title": "Enjoyment - From Cricket to Arm-wrestling",
+                "allArtifactsViewURL": "browse.html?db=mccord_exhibitions&exhibitID=4&sectionID=10&lang=en",
+                "numArtifacts": "27",
+                "artifacts": [
+                    {
+                        "description": "Notman & Sandham",
+                        "showBadge": false,
+                        "title": "Curling on the St. Lawrence, Montreal, QC, composite, 1878",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/II48781.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=II-48781&lang=en"
+                    },
+                    {
+                        "description": "Wm. Notman & Son",
+                        "showBadge": false,
+                        "title": "Polo players at racetrack, Montreal, QC, 1900",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/v8787.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=VIEW-8787&lang=en"
+                    },
+                    {
+                        "description": "Brentwood Sportswear",
+                        "showBadge": false,
+                        "title": "Mans' cabana set",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M973.46.5.1-2-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M973.46.5.1-2&lang=en"
+                    },
+                    {
+                        "description": "1875-1900",
+                        "showBadge": false,
+                        "title": "Sash",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M985.187.1-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M985.187.1&lang=en"
+                    }
+                ]
+            },
+            {
+                "title": "Enjoyment - Open-air City",
+                "allArtifactsViewURL": "browse.html?db=mccord_exhibitions&exhibitID=4&sectionID=11&lang=en",
+                "numArtifacts": "78",
+                "artifacts": [
+                    {
+                        "description": "1928-1929",
+                        "showBadge": false,
+                        "title": "Program of the 1928-1929 Season of the Winter Club, Montreal",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/C069_C,174.1-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=C069_C.174.1&lang=en"
+                    },
+                    {
+                        "description": "1996",
+                        "showBadge": false,
+                        "title": "Salmon fly",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M2005.109.8-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M2005.109.8&lang=en"
+                    },
+                    {
+                        "description": "1870",
+                        "showBadge": false,
+                        "title": "Constitution and By - Laws of the Montreal Snow Shoe Club, established 1843",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/C069_D,97.1-P2.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M5627&lang=en"
+                    },
+                    {
+                        "description": "Ken Anger",
+                        "showBadge": false,
+                        "title": "Decoy, duck - Mallard",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M2001.26.101-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M2001.26.101&lang=en"
+                    }
+                ]
+            },
+            {
+                "title": "Enjoyment - A Swinging City",
+                "allArtifactsViewURL": "browse.html?db=mccord_exhibitions&exhibitID=4&sectionID=12&lang=en",
+                "numArtifacts": "37",
+                "artifacts": [
+                    {
+                        "description": "1880-1900",
+                        "showBadge": false,
+                        "title": "Bottle",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M994X.2.79-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M994X.2.79&lang=en"
+                    },
+                    {
+                        "description": "1940-1950",
+                        "showBadge": false,
+                        "title": "Necklace",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M988.70.14.1-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M988.70.14.1&lang=en"
+                    },
+                    {
+                        "description": "Jacques Fath",
+                        "showBadge": false,
+                        "title": "Evening dress",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M967.29.4.1-2-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M967.29.4.1-2&lang=en"
+                    },
+                    {
+                        "description": "Toronto Lithographing Co. Ltd.",
+                        "showBadge": false,
+                        "title": "Fine Old Rye. Bottled by Alex. Elliott",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M999.70.20-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M999.70.20&lang=en"
+                    }
+                ]
+            },
+            {
+                "title": "Prospering -They Came from the Sea",
+                "allArtifactsViewURL": "browse.html?db=mccord_exhibitions&exhibitID=4&sectionID=07&lang=en",
+                "numArtifacts": "62",
+                "artifacts": [
+                    {
+                        "description": "Anonyme - Anonymous",
+                        "showBadge": false,
+                        "title": "Necklace",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/5667.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M998X.3.4&lang=en"
+                    },
+                    {
+                        "description": "Anonyme - Anonymous",
+                        "showBadge": false,
+                        "title": "Spiked tomahawk",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M2151-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M2151&lang=en"
+                    },
+                    {
+                        "description": "Anonyme - Anonymous",
+                        "showBadge": false,
+                        "title": "Bag",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M12528-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M12528&lang=en"
+                    },
+                    {
+                        "description": "Donald Hill",
+                        "showBadge": false,
+                        "title": "Portrait of Charles Jean-Baptiste Chaboillez, (1736-1808)",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/5837.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M1588&lang=en"
+                    }
+                ]
+            },
+            {
+                "title": "Prospering - City of Promise, Land of Trade",
+                "allArtifactsViewURL": "browse.html?db=mccord_exhibitions&exhibitID=4&sectionID=08&lang=en",
+                "numArtifacts": "81",
+                "artifacts": [
+                    {
+                        "description": "Louis Marx & Co. Inc.",
+                        "showBadge": false,
+                        "title": "Chair, toy",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M974.82.54.29-31-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M974.82.54.30&lang=en"
+                    },
+                    {
+                        "description": "William Henry Bartlett (1809-1854)",
+                        "showBadge": false,
+                        "title": "Doll platter",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M997.56.1.10-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M997.56.1.10&lang=en"
+                    },
+                    {
+                        "description": "Louis Marx & Co. Inc.",
+                        "showBadge": false,
+                        "title": "Piano, toy",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M974.82.54.5-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M974.82.54.5&lang=en"
+                    },
+                    {
+                        "description": "Wooton Desk Company",
+                        "showBadge": false,
+                        "title": "Wooton desk",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M988.103.1.1-53.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M988.103.1.1-53&lang=en"
+                    }
+                ]
+            },
+            {
+                "title": "Prospering - The Highs and Lows of an Imperial Jewel",
+                "allArtifactsViewURL": "browse.html?db=mccord_exhibitions&exhibitID=4&sectionID=09&lang=en",
+                "numArtifacts": "48",
+                "artifacts": [
+                    {
+                        "description": "1829",
+                        "showBadge": false,
+                        "title": "Pocket watch",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M993X.1.1-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M993X.1.1&lang=en"
+                    },
+                    {
+                        "description": "About 1850-1875",
+                        "showBadge": false,
+                        "title": "Pocket watch",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M993X.1.2-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M993X.1.2&lang=en"
+                    },
+                    {
+                        "description": "A. W. C. CO.",
+                        "showBadge": false,
+                        "title": "Pocket watch",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M989.158.1.1-3-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M989.158.1.1-3&lang=en"
+                    },
+                    {
+                        "description": "1890-1910",
+                        "showBadge": false,
+                        "title": "Spittoon",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M998.14.5.16-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M998.14.5.16&lang=en"
+                    }
+                ]
+            },
+            {
+                "title": "Different Cultures Meet - Alliances and Passions",
+                "allArtifactsViewURL": "browse.html?db=mccord_exhibitions&exhibitID=4&sectionID=06&lang=en",
+                "numArtifacts": "57",
+                "artifacts": [
+                    {
+                        "description": "1800-1900",
+                        "showBadge": false,
+                        "title": "Rolling pin",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M22006-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M22006&lang=en"
+                    },
+                    {
+                        "description": "1900-1933",
+                        "showBadge": false,
+                        "title": "Cup, toy",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M2000.41.160.8-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M2000.41.160.8&lang=en"
+                    },
+                    {
+                        "description": "1919?",
+                        "showBadge": false,
+                        "title": "Slippers",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M2007.139.2.1-2-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M2007.139.2.1-2&lang=en"
+                    },
+                    {
+                        "description": "Patent Package Co.",
+                        "showBadge": false,
+                        "title": "Spice box",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M974.61.1.2A-B-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M974.61.1.2A-B&lang=en"
+                    }
+                ]
+            },
+            {
+                "title": "Different Cultures Meet - Living Together",
+                "allArtifactsViewURL": "browse.html?db=mccord_exhibitions&exhibitID=4&sectionID=05&lang=en",
+                "numArtifacts": "18",
+                "artifacts": [
+                    {
+                        "description": "Anonyme - Anonymous",
+                        "showBadge": false,
+                        "title": "Root club",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/ME966.175-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=ME966.175&lang=en"
+                    },
+                    {
+                        "description": "Anonyme - Anonymous",
+                        "showBadge": false,
+                        "title": "Powder horn",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M234.1-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M234.1&lang=en"
+                    },
+                    {
+                        "description": "",
+                        "showBadge": false,
+                        "title": "Cannonball",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M993X.2.4-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M993X.2.4&lang=en"
+                    },
+                    {
+                        "description": "John Mare (attribu√© √†  / attributed to)",
+                        "showBadge": false,
+                        "title": "Rene-Ovide Hertel de Rouville, 1720-1792",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M966.62.2-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M966.62.2&lang=en"
+                    }
+                ]
+            },
+            {
+                "title": "Different Cultures Meet - A Northern Mosaic",
+                "allArtifactsViewURL": "browse.html?db=mccord_exhibitions&exhibitID=4&sectionID=04&lang=en",
+                "numArtifacts": "30",
+                "artifacts": [
+                    {
+                        "description": "Ernest Lloyd",
+                        "showBadge": false,
+                        "title": "Portrait of Miss Marion Tomlison",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M970.84-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M970.84&lang=en"
+                    },
+                    {
+                        "description": "D. N. Inglis",
+                        "showBadge": false,
+                        "title": "Mrs. Ernest (Mary) Stuart",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M2002.104.2-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M2002.104.2&lang=en"
+                    },
+                    {
+                        "description": "William Notman (1826-1891)",
+                        "showBadge": false,
+                        "title": "Mrs. J. Henry Joseph, Montreal, QC, 1869",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/I-38462.1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=I-38462.1&lang=en"
+                    },
+                    {
+                        "description": "John Bell-Smith",
+                        "showBadge": false,
+                        "title": "Portrait of Alfred La Rocque",
+                        "image": "http://www.mccord-museum.qc.ca/ThumbView/M994.65.2-P1.jpg",
+                        "target": "../artifacts/view.html?db=mccord&accessNumber=M994.65.2&lang=en"
+                    }
+                ]
+            }
+        ]
+    }
+}

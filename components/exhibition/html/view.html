@@ -121,14 +121,7 @@
            The markup for the guestbook template is inserted here when run from the server.
         </div>
         <script id="flc-initBlock" type="text/javascript">
-            fluid.engage.initComponentWithLocalData("fluid.engage.exhibitionView", ".flc-exhibition-container", 
-                { guestbook: {
-                    type: "fluid.engage.guestbook", 
-                    options: {templateSource: fluid.kettle.fetchTemplateSection("../../guestbook/html/guestbook.html").data,
-                              model: fluid.kettle.operateUrl("../../guestbook/data/demoData.json", JSON.parse, {async: false}).data
-                             }
-                             }
-                    });
+            fluid.engage.initComponentWithLocalData("fluid.engage.exhibitionView", ".flc-exhibition-container");
         </script>
     </body>
 </html>

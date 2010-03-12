@@ -41,7 +41,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             dataType: "json",
             success: function (data) {
                 if (data) {
-                    options.model = data;
+                    options = $.extend(true, options, data);
                 }
                 fluid.invokeGlobalFunction(componentName, [container, options]);
             }

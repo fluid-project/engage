@@ -105,7 +105,16 @@ fluid.engage.user = fluid.engage.user = {};
     fluid.engage.user.currentUser = function () {
         // Check the cookie to see if we've already met the user and grab their model.
         // If not, create a new document for them.
-        // TODO: We should harmonize this cookie usage with the home screen. Why have two cookies?        
+        // TODO: We should harmonize this cookie usage with the home screen. Why have two cookies?
+        
+        // This bit checks if fluid.engage.user.createNewUser is used in kettleless environment
+        // and if so it returns a fixes user structure.
+        if (fluid.engage.url.isLocal()) {
+            var localUser = fluid.engage.user.createNewUser();
+            localUser._id = "localUserID";
+            return localUser;
+        }
+        
         var cookieId = fluid.engage.getCookie("engage.uuid");
         if (cookieId) {
             return fluid.engage.user.fetchUser(cookieId);

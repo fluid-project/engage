@@ -1,21 +1,80 @@
 {
-    "title": "eSpace",
-    "isCurrent": "yes",
-    "displayDate": "July 22, 2009 to January 10, 2010",
-    "endDate": "2010-01-10",
-    "imageURL": "../../navigationList/images/Artifacts-.jpg",
-    "shortDescription": "This installation brings together two different yet intimately linked universes.",
-    "introduction": "This installation brings together two different yet intimately linked universes: the real and the imaginary. Objects that are reflections or sometimes symbols of these two &quot;spaces&quot; appear side by side, grouped according to the themes of exploration and the conquest of space.",
-    "content": "In 1969, an American astronaut took the first step on the Moon. On the 40th anniversary of this remarkable event, we invite you to enter eSpace. This exhibition brings together two different yet intimately linked universes: the real and the imaginary. A rarely before seen selection of objects, toys, cartoons and an original space suit from the Smithsonian National Air and Space Museum of Washington will spark the imagination of young and old alike. Interactive terminals and video excerpts also come together to make of eSpace. a truly unique experience.",
-    "catalogueSize": 172,
-    "cataloguePreview": [{
-        "media": true,
-        "title": "Thermometer",
-        "image": "../../navigationList/images/Snuffbox.jpg"
-    }, {
-        "title": "Barometer",
-        "image": "../../navigationList/images/Snuffbox.jpg"
+    "model": {
+        "isCurrent": true,
+        "id": "4",
+        "title": "Simply Montr√©al: Glimpses of a Unique City",
+        "displayDate": "Permanent exhibition",
+        "endDate": "2020-12-31",
+        "image": "http://www.mccord-museum.qc.ca/expositions_doc/images/thumbnail/simply.jpg",
+        "introduction": "<p>\nBy turns dazzling and dark, dignified and frivolous, steamy-hot and icy-cold, Montreal - city of a thousand spires, crossroads of a continent - casts its eternal spell. Like a tune that lingers in the mind, its history speaks to the hearts of all: Montrealers, people experiencing its charm for the first time, and those who just keep coming back. The McCord Museum's permanent exhibition, entitled <i><b>Simply Montr√©al</b></i>, offers myriad glimpses of this unique city and immerse visitors into the very heart of the rich and varied experience it offers.\n</p>\n<p>\nAn array of First Nations objects, full of symbolism and emotion; a selection of extraordinary photographs by the renowned Canadian photographer William Notman; a variety of sports equipment and charming toys; a series of splendid gowns and outfits worn by illustrious Montrealers - over <b>800 objects</b> from the McCord's famous collection will bring the great Montreal adventure to life.\n</p>\n<p>\nAccented with interactive installations and enveloped in evocative atmospheres, <i><b>Simply Montr√©al</b></i> is an invitation to people of all ages to steep themselves in the city, surround themselves with its sounds and sensations - even to brave an authentic \"made in Montreal\" snowstorm!\n</p>",
+        "catalogueSize": "506",
+        "shortDescription": "Immerse yourself into the very heart of the rich and varied experience this city offers.",
+        "cataloguePreview": [
+            {
+                "target": "../artifacts/view.html?db=mccord&accessNumber=M994.47.3.1-4&lang=en",
+                "image": "http://www.mccord-museum.qc.ca/ThumbView/M994.47.3.1-4-P1.jpg",
+                "media": false,
+                "title": "Syphon"
+            },
+            {
+                "target": "../artifacts/view.html?db=mccord&accessNumber=II-120280&lang=en",
+                "image": "http://www.mccord-museum.qc.ca/ThumbView/ii120280.jpg",
+                "media": false,
+                "title": "Mrs. Sang Kee's group, Montreal, QC, 1897"
+            },
+            {
+                "target": "../artifacts/view.html?db=mccord&accessNumber=M1314&lang=en",
+                "image": "http://www.mccord-museum.qc.ca/ThumbView/5118.jpg",
+                "media": false,
+                "title": "Rifle"
+            },
+            {
+                "target": "../artifacts/view.html?db=mccord&accessNumber=M996X.2.871.1-2&lang=en",
+                "image": "http://www.mccord-museum.qc.ca/ThumbView/M996X.2.871.1-2-P1.jpg",
+                "media": false,
+                "title": "Ice skates"
+            }
+        ],
+        "catalogueLink": "../catalogue/view.html?db=mccord_exhibitions&id=4&lang=en",
+        "aboutLink": "about.html?db=mccord_exhibitions&id=4&lang=en",
+        "guestbookLink": "../guestbook/guestbook.html?db=mccord_exhibitions&type=exhibition&id=Simply+Montr%C3%A9al%3A+Glimpses+of+a+Unique+City&lang=en"
+    },
+    "guestbook": {
+        "options": {
+            "model": {
+                "comments": [
+                    {
+                        "_id": "4c9c3a70b8c2de014f3af7771df89f52",
+                        "_rev": "2-f9a36034840a5f018a1984d55f64c9f0",
+                        "text": "is this bug fixed?",
+                        "date": "2010-03-03T14:25:29.000Z",
+                        "authorId": "78ef6ad3f39646cc91628ffe32ae5b10",
+                        "userName": "Anonymous",
+                        "type": "fluid.guestbook.comment",
+                        "authorName": "Anonymous CATT",
+                        "targetType": "exhibition",
+                        "targetId": "Simply Montr√©al: Glimpses of a Unique City",
+                        "abuseReported": {
+                            "41fe99ef52e5bc926244934b7643e3ce": true
+                        }
+                    }
+                ],
+                "totalComments": 24
+            },
+            "strings": {
+                "addNote": "Add Note",
+                "delete": "Delete",
+                "reportAbuse": "Report Abuse",
+                "abuseReported": "Abuse reported. Pending moderator review",
+                "cancel": "Cancel",
+                "submit": "Submit",
+                "commentEntry": "Comment Entry",
+                "title": "Guestbook for This Exhibition"
+            },
+            "addNoteTarget": "../guestbook/comment.html?type=exhibition&id=Simply+Montr%C3%A9al%3A+Glimpses+of+a+Unique+City&db=mccord&lang=en",
+            "postURL": "../guestbook/comment.json?db=mccord",
+            "locale": "en",
+            "templateSource": "\r\n        <div class=\"flc-guestbook-container fl-guestbook\" >\r\n                        <!-- Navigation Bar and Header -->\r\n            <div class=\"flc-navigationBar fl-navbar fl-col-mixed\">\r\n                <!-- Back button -->\r\n                <div class=\"fl-col-fixed fl-force-left\">\r\n                    <a class=\"flc-navigationBar-back fl-button fl-backButton\" href=\"#\">\r\n                        <img class=\"fl-button-inner fl-button-icon\" src=\"../../../../fluid-engage-core/shared/images/back.png\" alt=\"Go back\"/>\r\n                    </a>\r\n                </div>\r\n                <!-- Home button -->\r\n                <div class=\"fl-col-fixed fl-force-left\">\r\n                    <a class=\"flc-navigationBar-home fl-button\" href=\"#\">\r\n                        <img class=\"fl-button-inner fl-button-icon\" src=\"../../../../fluid-engage-core/shared/images/home.png\" alt=\"Go home\"/>\r\n                    </a>\r\n                </div>\r\n                <!-- Page header -->\r\n                <h1 class=\"flc-guestbook-title fl-navbar-title fl-col-flex\">Guestbook for This Exhibition</h1>\r\n            </div>\r\n            \r\n            <div class=\"flc-guestbook-addnote fl-guestbook-addnote\">\r\n               <div class=\"fl-centered\">\r\n                   <a class=\"flc-guestbook-addnote-control\" href=\"comment.html\">\r\n                       <label for=\"fl-addnote\" class=\"flc-guestbook-addnote-text fl-guestbook-title\">Add a note</label>\r\n                       <span id=\"fl-addnote\" class=\"fl-guestbook-addnote-control\"></span>\r\n                   </a>\r\n               </div>\r\n            </div>\r\n            <div class=\"flc-guestbook-comment-cell fl-guestbook-comment-cell\">\r\n              <div class=\"fl-guestbook-header fl-push\">\r\n                <span class=\"flc-guestbook-author fl-guestbook-author fl-guestbook-slash-after\">Robert Brown</span>\r\n                <span class=\"flc-guestbook-location fl-guestbook-location fl-guestbook-slash-after\">Washington, DC</span>\r\n                <span class=\"flc-guestbook-date fl-guestbook-date\">July 16, 2009</span>\r\n              </div>\r\n                <span class=\"flc-guestbook-text fl-guestbook-text fl-push\">I had such an amazing time at this\r\n                exhibit! Really loved the red sleigh especially. I had one just like it growing up</span>\r\n              <div class=\"fl-push\"> </div>\r\n              <div class=\"fl-guestbook-actions fl-force-right\">\r\n                <a class=\"flc-guestbook-action fl-guestbook-action\">REPORT ABUSE</a>\r\n              </div>\r\n              <div class=\"fl-push\"> </div>\r\n            </div>\r\n        </div>\r\n        "
+        }
     }
-    ]
 }
-    

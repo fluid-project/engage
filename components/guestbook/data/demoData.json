@@ -1,26 +1,326 @@
 {
-"ownId": "catt",
-"comments": [
-{
-"authorId": "rb269",
-"author": "Robert Brown",
-"location": "Washington, DC",
-"date": "2009-07-16T12:15:07Z",
-"text": "I had such an amazing time at this exhibit! Really loved the red sleigh especially. I had one just like it growing up",
-},
-{
-"authorId": "jo236",
-"author": "Jamie Orange",
-"location": "Montreal, QC",
-"date": "2009-07-12T17:22:15Z",
-"text": "Quisque sed adipiscing tellus. Nulla facilisi. Sed vel eros vei FELLIS imperdiet varius vehicula nec turpis.",
-"abuseReported": {} 
-},
-{
-"authorId": "catt",
-"author": "anonymous",
-"date": "2009-05-01T22:13:00Z",
-"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eget massa at nulla scelerisque pretium. Proin arcu lorem!",
-}
-]
+    "model": {
+        "comments": [
+            {
+                "_id": "4c9c3a70b8c2de014f3af7771df89f52",
+                "_rev": "2-f9a36034840a5f018a1984d55f64c9f0",
+                "text": "is this bug fixed?",
+                "date": "2010-03-03T14:25:29.000Z",
+                "authorId": "78ef6ad3f39646cc91628ffe32ae5b10",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City",
+                "abuseReported": {
+                    "41fe99ef52e5bc926244934b7643e3ce": true
+                }
+            },
+            {
+                "_id": "f4a7c01b023ff996327e3dbb555f320b",
+                "_rev": "1-e2d8df13d0c1dbf010677c322358f849",
+                "text": "test",
+                "date": "2010-03-03T14:23:49.000Z",
+                "authorId": "78ef6ad3f39646cc91628ffe32ae5b10",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "5f100909099501ccabeca13a56f728c4",
+                "_rev": "1-73325269816e5ad0831ad56d80e82a10",
+                "text": "test",
+                "date": "2010-03-03T14:03:49.000Z",
+                "authorId": "5b3a4aafad98f3cdf13fd7e00f353b8a",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "5bee8f8b9f0e92cc84de7cd2602a33e6",
+                "_rev": "1-8969e61c9a33921dea435c40b5d52312",
+                "text": "foozball",
+                "date": "2010-03-03T13:52:20.000Z",
+                "authorId": "5b3a4aafad98f3cdf13fd7e00f353b8a",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "b01182096497b4f4e72846587e67a148",
+                "_rev": "1-476009bbc63b130c900ceb81f8493a9d",
+                "text": "fbkdch",
+                "date": "2010-03-03T10:45:24.000Z",
+                "authorId": "3575741b2925734583f6df284ad7fa2a",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "85b94ebb287f7824e07169d29cb5e36a",
+                "_rev": "1-389321b3dff5b6e9e8517fd0fe37175f",
+                "text": "hi!",
+                "date": "2010-03-02T16:55:25.000Z",
+                "authorId": "fb5ba4176bebe04a695a1edccad40eeb",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "c942f5f067b01e392ae7b7c1c3f03754",
+                "_rev": "2-9ccc285005e6b61db98dde496768126c",
+                "text": "test",
+                "date": "2010-03-02T15:30:47.000Z",
+                "authorId": "8e72a1959d474d3096412a78530e30dc",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City",
+                "abuseReported": {
+                    "8c0826e60c83c95f52437075e8a8e7c3": true
+                }
+            },
+            {
+                "_id": "53da4599148f478b4dabdbe61aad6867",
+                "_rev": "1-ed05e0eb657c2da46f269969ea7681c7",
+                "text": "I'm at the foot warmer exhibit, #06",
+                "date": "2010-03-02T14:33:02.000Z",
+                "authorId": "1a128015864c2771a8f8bfdbf9b29d60",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "9ac4fe2199604e123bd4f55e4f6d2576",
+                "_rev": "1-005726858aaa78fdd7454ebdfec1a867",
+                "text": "a note",
+                "date": "2010-03-02T11:07:42.000Z",
+                "authorId": "27a91cc06b663b2ce87a7807ae6a42ec",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "57cfce364de92434e87dfa96b1df1e59",
+                "_rev": "1-ac6aab17611b033ab4f0d665f8a8822f",
+                "text": "hola",
+                "date": "2010-03-01T12:29:49.000Z",
+                "authorId": "34a8d1e769ff969108514592b9f13537",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "f41faa33b516a3c94ba7b85e9da8a4e9",
+                "_rev": "1-326be22c0e7d844d89498e4534641eae",
+                "text": "",
+                "date": "2010-03-01T12:28:29.000Z",
+                "authorId": "433ac8530f82de253c5103b14d3431a1",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "72f77250a76ccfd82e7c138e5f82a69e",
+                "_rev": "1-5482a64a67e0aa227d4ce8d04fc92559",
+                "text": "",
+                "date": "2010-03-01T12:21:47.000Z",
+                "authorId": "433ac8530f82de253c5103b14d3431a1",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "e552e953736fb1a22149a0dac89d2be1",
+                "_rev": "1-b0092adeb18ebe5542232d4ba9340b42",
+                "text": "",
+                "date": "2010-03-01T12:12:01.000Z",
+                "authorId": "433ac8530f82de253c5103b14d3431a1",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "13fdec17cb36333d57c000510d891ec0",
+                "_rev": "1-cf28bfe77608af07c3dd6e4d4857e65f",
+                "text": "",
+                "date": "2010-03-01T12:06:06.000Z",
+                "authorId": "433ac8530f82de253c5103b14d3431a1",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "8d5273f1a3ea0c6ecbe19cec3c6aff30",
+                "_rev": "1-97f214ea728e480190eec81bd136354a",
+                "text": "",
+                "date": "2010-03-01T12:04:07.000Z",
+                "authorId": "433ac8530f82de253c5103b14d3431a1",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "d509ff0171cf2d282af930ffbe2556eb",
+                "_rev": "1-36c1303f231db8c6204ecb31505a674e",
+                "text": "",
+                "date": "2010-03-01T12:03:34.000Z",
+                "authorId": "433ac8530f82de253c5103b14d3431a1",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "1bad39b7d83e05bfc3445b559c85c9e4",
+                "_rev": "1-4fd5fc123f7d2cb32ff2bbe83ef2b186",
+                "text": "I like the skates.",
+                "date": "2010-03-01T12:01:13.000Z",
+                "authorId": "433ac8530f82de253c5103b14d3431a1",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "4532b4f2b5a1a399c82d04b5bccb2344",
+                "_rev": "1-ed331999116a4c1c7c52bd6b70c63a59",
+                "text": "test",
+                "date": "2010-03-01T12:00:37.000Z",
+                "authorId": "433ac8530f82de253c5103b14d3431a1",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "8d9976c85c4830e20acb64d94ebf97f3",
+                "_rev": "1-5913a9ebf0dc98a4b9fdccae23a5b4e0",
+                "text": "not the end of the world",
+                "date": "2010-03-01T11:36:03.000Z",
+                "authorId": "433ac8530f82de253c5103b14d3431a1",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "07ddb5eae5c64d5b65213e5251969d39",
+                "_rev": "1-ffbf11d6643eed91c30e8bf829867cb1",
+                "text": "",
+                "date": "2010-02-23T10:48:49.000Z",
+                "authorId": "dbe1d5a130cd376f190ee71a9f318fa4",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City"
+            },
+            {
+                "_id": "05ad11555786b3e05d501d583611af9a",
+                "_rev": "2-1a591df4d669b9c7bd91c7bb4d5982d3",
+                "text": "Ffgh",
+                "date": "2010-02-22T16:33:40.000Z",
+                "authorId": "bb434c8e4c4a740adc9ae752c84034f2",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City",
+                "abuseReported": {
+                    "c54edc30c19ce8b6e22682b2ecdc61f2": true
+                }
+            },
+            {
+                "_id": "83509f0a9897c64e9373b2751c5f0404",
+                "_rev": "2-1a144f8dc59b796542fb6cd5c38cb93c",
+                "text": "Cats are us",
+                "date": "2010-02-19T10:52:37.000Z",
+                "authorId": "8753a26e5e0daf1f68d8456aa27d15e9",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City",
+                "abuseReported": {
+                    "bb434c8e4c4a740adc9ae752c84034f2": true
+                }
+            },
+            {
+                "_id": "cc5c8b7b197891e5fedf7617fc03ca85",
+                "_rev": "2-40d4bc39770a7ccf9457724c69cdacdc",
+                "text": "test",
+                "date": "2010-02-19T09:51:53.000Z",
+                "authorId": "db53d3bacd4686134aca59daad95f719",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City",
+                "abuseReported": {
+                    "c54edc30c19ce8b6e22682b2ecdc61f2": true
+                }
+            },
+            {
+                "_id": "966875eff0c3549b422b1a16bed72433",
+                "_rev": "2-35294f38da241bdbbd2897f9c4bbd1c6",
+                "text": "cats",
+                "date": "2010-02-18T21:52:03.000Z",
+                "authorId": "9a8dae88f899c76a74b76d403600109b",
+                "userName": "Anonymous",
+                "type": "fluid.guestbook.comment",
+                "authorName": "Anonymous CATT",
+                "targetType": "exhibition",
+                "targetId": "Simply Montr√©al: Glimpses of a Unique City",
+                "abuseReported": {
+                    "94e3d00e54e1059465cbcae6af85039b": true
+                }
+            }
+        ],
+        "totalComments": 24
+    },
+    "strings": {
+        "addNote": "Add Note",
+        "delete": "Delete",
+        "reportAbuse": "Report Abuse",
+        "abuseReported": "Abuse reported. Pending moderator review",
+        "cancel": "Cancel",
+        "submit": "Submit",
+        "commentEntry": "Comment Entry",
+        "title": "Guestbook for This Exhibition"
+    },
+    "addNoteTarget": "../guestbook/comment.html?type=exhibition&id=Simply+Montr%C3%A9al%3A+Glimpses+of+a+Unique+City&db=mccord&lang=en",
+    "postURL": "../guestbook/comment.json?db=mccord",
+    "locale": "en"
 }

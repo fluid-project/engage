@@ -1,74 +1,60 @@
 {
-    categories: [
-        {
-            name: "Category 1",
-            items: [
+    "showHeaderForFirstCategory": false,
+    "model": {
+        "categories": [
+            {
+                "name": "currentCategory",
+                "items": [
                     {
-                        target: "../../navigationList/images/Artifacts-.jpg",
-                        image: "../../navigationList/images/Artifacts-.jpg",
-                        title: "Title 1",
-                        description: "Description 1"
+                        "isCurrent": true,
+                        "url": "../exhibitions/view.html?db=mccord_exhibitions&id=55&lang=en",
+                        "imageUrl": "http://www.mccord-museum.qc.ca/expositions_doc/images/thumbnail/irish.jpg",
+                        "title": "Being Irish O'Quebec",
+                        "description": "The exhibition is extended until October 11, 2010."
                     },
                     {
-                        target: "../../navigationList/images/Snuffbox.jpg",
-                        image: "../../navigationList/images/Snuffbox.jpg",
-                        title: "Title 2",
-                        description: "Description 2"
+                        "isCurrent": true,
+                        "url": "../exhibitions/view.html?db=mccord_exhibitions&id=60&lang=en",
+                        "imageUrl": "http://www.mccord-museum.qc.ca/expositions_doc/images/thumbnail/jewishpainters.jpg",
+                        "title": "Jewish Painters of Montreal: Witnesses of Their Time, 1930-1948",
+                        "description": "From January 29 to May 2, 2010"
                     },
                     {
-                        target: "../../navigationList/images/Snuffbox.jpg",
-                        image: "../../navigationList/images/Snuffbox.jpg",
-                        title: "Title 3",
-                        description: "Description 3"
+                        "isCurrent": true,
+                        "url": "../exhibitions/view.html?db=mccord_exhibitions&id=4&lang=en",
+                        "imageUrl": "http://www.mccord-museum.qc.ca/expositions_doc/images/thumbnail/simply.jpg",
+                        "title": "Simply Montr√©al: Glimpses of a Unique City",
+                        "description": "Permanent exhibition"
                     }
                 ]
-            
-        },
-        {
-            name: "Category 2",
-            items: [
+            },
+            {
+                "name": "upcomingCategory",
+                "items": [
                     {
-                        target: "../../navigationList/images/Artifacts-.jpg",
-                        image: "../../navigationList/images/Artifacts-.jpg",
-                        title: "Title 1",
-                        description: "Description 1"
-                    },
-                    {
-                        target: "../../navigationList/images/Snuffbox.jpg",
-                        image: "../../navigationList/images/Snuffbox.jpg",
-                        title: "Title 2",
-                        description: "Description 2"
-                    },
-                    {
-                        target: "../../navigationList/images/Snuffbox.jpg",
-                        image: "../../navigationList/images/Snuffbox.jpg",
-                        title: "Title 3",
-                        description: "Description 3"
+                        "isCurrent": false,
+                        "url": "about.html?db=mccord_exhibitions&id=57&lang=en",
+                        "imageUrl": "http://www.mccord-museum.qc.ca/expositions_doc/images/x-small/Wathahine2_bandeau.jpg",
+                        "title": "Wathahine - Photographs of Aboriginal Women by Nance Ackerman",
+                        "description": "From March 10, 2010 to May 15, 2011"
                     }
                 ]
-        },
-        {
-            name: "Category 3",
-            items: [
-                    {
-                        target: "../../navigationList/images/Artifacts-.jpg",
-                        image: "../../navigationList/images/Artifacts-.jpg",
-                        title: "Title 1",
-                        description: "Description 1"
-                    },
-                    {
-                        target: "../../navigationList/images/Snuffbox.jpg",
-                        image: "../../navigationList/images/Snuffbox.jpg",
-                        title: "Title 2",
-                        description: "Description 2"
-                    },
-                    {
-                        target: "../../navigationList/images/Snuffbox.jpg",
-                        image: "../../navigationList/images/Snuffbox.jpg",
-                        title: "Title 3",
-                        description: "Description 3"
-                    }
-                ]
+            }
+        ],
+        "title": "title"
+    },
+    "showToggle": false,
+    "useCabinet": true,
+    "cabinet": {
+        "options": {
+            "startOpen": true,
+            "selectors": {
+                "openByDefault": ".flc-cabinet-drawer"
+            }
         }
-    ]
+    },
+    "strings": {
+        "categoryHeader": "Upcoming (%size)",
+        "title": "Exhibitions"
+    }
 }

@@ -69,7 +69,19 @@ fluid.engage = fluid.engage || {};
         });    
     }
     
+    var updateLocalLinks = function (that) {
+        $.each(["englishLink", "frenchLink"], function (index, value) {
+            var link = that.locate(value);
+            var href = link.attr("href");
+            href = href.replace(/app/i, "html");
+            link.attr("href", href);
+        });
+    };
+    
     function setup(that) {
+        if (fluid.engage.url.isLocal()) {
+            updateLocalLinks(that);
+        }
         fluid.engage.quickI18N(that.dom, that.options.strings, that.options.labelI18N, "text");
         localizeAltText(that.dom, that.options.strings, that.options.iconI18N);
         
