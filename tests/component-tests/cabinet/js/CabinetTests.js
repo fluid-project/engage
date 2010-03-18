@@ -13,20 +13,20 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
 
 (function ($) {
+    //constants
+    var CONTAINER = ".cabinet";
+    var ENTER = 13;
+    var SPACE = 32;
     
-    var setup = function (options, container) {
-        var obj = {};
-        obj.that = fluid.cabinet(container || ".cabinet", options);
-        obj.selectors = obj.that.options.selectors;
-        obj.styles = obj.that.options.styles;
-        obj.drawers = obj.that.locate("drawer");
-        obj.contents = obj.that.locate("contents");
-        obj.handles = obj.that.locate("handle");
-        
-        return obj;
+    //setup function
+    
+    var setup = function (options) {
+        return fluid.cabinet(CONTAINER, options);
     };
     
-    function simulateKeyDown(onElement, withKeycode, modifier) {
+    //helper functions 
+    
+    var simulateKeyDown = function (onElement, withKeycode, modifier) {
         var modifiers = {
             ctrl: (modifier === $.ui.keyCode.CTRL) ? true : false,
             shift: (modifier === $.ui.keyCode.SHIFT) ? true : false,
@@ -39,7 +39,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         onElement = fluid.unwrap(onElement);
 
         onElement.dispatchEvent(keyEvent);
-    }
+    };
     
     var hasClasses = function (selector, classes) {
         if (typeof classes === "string") {
@@ -79,6 +79,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
         return true;
     };
     
+    //test functions
+    
     var assertStyling = function (selector, styles, expected, message) {
         selector = fluid.wrap(selector);
         styles = styles.split(" ");
@@ -87,16 +89,15 @@ https://source.fluidproject.org/svn/LICENSE.txt
         });
     };
     
-    var closeStylingTests = function (drawerSelector, contentSelector, openStyle, closeStyle) {
-        
+    var verifyCloseStyling = function (drawerSelector, contentSelector, openStyle, closeStyle) {
         assertStyling(drawerSelector, closeStyle, true, "All specified drawers have close styling");
         assertStyling(drawerSelector, openStyle, false, "No specified drawer has open styling");
         
-        jqUnit.assertTrue("Drawer has aria-expended set to false", hasAttribute(drawerSelector, "aria-expanded", "false"));
+        jqUnit.assertTrue("Drawer has aria-expanded set to false", hasAttribute(drawerSelector, "aria-expanded", "false"));
         jqUnit.assertTrue("Contents are hidden", hasStyle(contentSelector, "display", "none"));
     };
     
-    var openStylingTests = function (drawerSelector, contentSelector, openStyle, closeStyle) {
+    var verifyOpenStyling = function (drawerSelector, contentSelector, openStyle, closeStyle) {
         assertStyling(drawerSelector, openStyle, true, "All specified drawers have open styling");
         assertStyling(drawerSelector, closeStyle, false, "No specified drawer has close styling");
         
@@ -104,214 +105,239 @@ https://source.fluidproject.org/svn/LICENSE.txt
         jqUnit.assertTrue("Contents are visible", hasStyle(contentSelector, "display", "block"));
     };
     
-    var assembleMessage = function (condition, beginning, end) {
-        var m = condition ? " " : " not ";
-        var b = beginning || "";
-        var e = end || "";
-        return b + m + e; 
+    var mixedStylingTests = function (component, openDrawers) {
+        var openStyle = component.options.styles.drawerOpened;
+        var closeStyle = component.options.styles.drawerClosed;
+        var closedDrawers = component.locate("drawer").not(openDrawers);
+        
+        verifyOpenStyling(openDrawers, component.locate("contents", openDrawers), openStyle, closeStyle);
+        verifyCloseStyling(closedDrawers, component.locate("contents", closedDrawers), openStyle, closeStyle);
     };
     
-    var apiBasedTests = function (func, startOpen, drawers, options) {
-        var cab = setup(fluid.merge("merge", {startOpen: startOpen}, options));
-        var drawer = typeof drawers === "number" ? cab.drawers.eq(drawers) : cab.drawers;
-        var content = typeof drawers === "number" ? cab.contents.eq(drawers) : cab.contents;
+    var openStylingTests = function (component, openDrawers) {
+        var openStyle = component.options.styles.drawerOpened;
+        var closeStyle = component.options.styles.drawerClosed;
         
-        if (typeof func === "function") {
-            func(cab);
-        } else {
-            cab.that[func](drawer);
-        }
-
-        (startOpen ? closeStylingTests : openStylingTests)(drawer, content, cab.styles.drawerOpened, cab.styles.drawerClosed);
-        (startOpen ? openStylingTests : closeStylingTests)(cab.drawers.not(drawer), cab.contents.not(content), cab.styles.drawerOpened, cab.styles.drawerClosed);
+        verifyOpenStyling(openDrawers, component.locate("contents", openDrawers), openStyle, closeStyle);
     };
     
-    var simulateKeyTest = function (keyCode, startOpen, drawers, options) {
-        if (!$.browser.mozilla) {
-            return;
-        }
-        function keyboardActivate(cab) {
-            simulateKeyDown(cab.handles.eq(drawers), $.ui.keyCode.SPACE);
-        }
-        apiBasedTests(keyboardActivate, startOpen, drawers, options);
-        return true;
+    var closeStylingTests = function (component, closedDrawers) {
+        var openStyle = component.options.styles.drawerOpened;
+        var closeStyle = component.options.styles.drawerClosed;
+        
+        verifyCloseStyling(closedDrawers, component.locate("contents", closedDrawers), openStyle, closeStyle);
     };
     
-    var eventBasedTests = function (startOpen, prevent, funcName, drawers) {
-        var openedEventFired, closedEventFired, openShouldFire, closeShouldFire;
-        var options = {
-                preventEventFireOnInit: prevent,
-                listeners: {
-                    afterOpen: function () {
-                        openedEventFired = true;
-                    },
-                    afterClose: function () {
-                        closedEventFired = true;
-                    }
-                }
-            };
-            
-        openShouldFire = !startOpen;
-        closeShouldFire = startOpen;
-        
-        switch (funcName) {
-        case "mouse":
-            function mouseClick(cab) {
-                cab.handles.eq(drawers).click();
-            }
-            apiBasedTests(mouseClick, startOpen, drawers, options);
-            break;
-        case "space":
-            if (!simulateKeyTest($.ui.keyCode.SPACE, startOpen, drawers, options)) {
-                return;
-            }
-            break;
-        case "enter":
-            if (!simulateKeyTest($.ui.keyCode.ENTER, startOpen, drawers, options)) {
-                return;
-            }
-            break;
-        case null:
-        case undefined: 
-            openShouldFire = !prevent && startOpen;
-            closeShouldFire = !prevent && !startOpen;
-            setup(fluid.merge("merge", {startOpen: startOpen}, options));
-            break;
-        default:
-            apiBasedTests(funcName, startOpen, drawers, options);
-        }     
-        jqUnit[openShouldFire ? "assertTrue" : "assertFalse"](assembleMessage(openShouldFire, "Opened events", "fired"), openedEventFired);
-        jqUnit[closeShouldFire ? "assertTrue" : "assertFalse"](assembleMessage(closeShouldFire, "Closed events", "fired"), closedEventFired);
+    var drawerTest = function (component, drawer, styleTest, eventTest) {
+        styleTest(component, drawer);
+        eventTest();
     };
         
-    var cabinetTests = function () {
-        var tests = jqUnit.testCase("Cabinet Tests");
-                    
-        tests.test("CSS class insertion", function () {
-            var cab = setup();
-            
-            var string = cab.selectors.drawer + "," + cab.selectors.handle + "," + cab.selectors.contents;
-            expect($(string).length);
-
-            assertStyling(cab.drawers, cab.styles.drawer, true, "All drawers have CSS styling");
-            assertStyling(cab.handles, cab.styles.handle, true, "All handles have CSS styling");
-            assertStyling(cab.contents, cab.styles.contents, true, "All content has CSS styling");
-        });
-        
-        tests.test("Aria insertion", function () {
-            var cab = setup();
-            expect(4);
-           
-            jqUnit.assertTrue("Cabinet has role of tablist", hasAttribute(cab.that.container, "role", "tablist"));
-            jqUnit.assertTrue("Cabinet has attribute aria-multiselectable set to true", hasAttribute(cab.that.container, "aria-multiselectable", "true"));
-            jqUnit.assertTrue("Drawer has role of tab", hasAttribute(cab.drawers, "role", "tab"));
-            jqUnit.assertTrue("Drawer has attribute of aria-expanded set", hasAttribute(cab.drawers));
-        });
-        
-        tests.test("Start Closed", function () {
-            var cab = setup({startOpen: false});
-            expect(cab.drawers.length * 2 + 2);
-
-            closeStylingTests(cab.drawers, cab.contents, cab.styles.drawerOpened, cab.styles.drawerClosed);
-        });
-        
-        tests.test("Start Open", function () {
-            var cab = setup({startOpen: true});
-            expect(cab.drawers.length * 2 + 2);
-
-            openStylingTests(cab.drawers, cab.contents, cab.styles.drawerOpened, cab.styles.drawerClosed);
-        });
-        
-        tests.test("Close a Single Drawer", function () {
-            apiBasedTests("closeDrawers", true, 0);
-        });
-        
-        tests.test("Open a Single Drawer", function () {
-            apiBasedTests("openDrawers", false, 0);
-        });
-        
-        tests.test("Toggle Close a Single Drawer", function () {
-            apiBasedTests("toggleDrawers", true, 0);
-        });
-        
-        tests.test("Toggle Open a Single Drawer", function () {
-            apiBasedTests("toggleDrawers", false, 0);
-        });
-        
-        tests.test("Close All Drawers", function () {
-            apiBasedTests("closeDrawers", true);
-        });
-        
-        tests.test("Open All Drawers", function () {
-            apiBasedTests("openDrawers", false);
-        });
-        
-        tests.test("Toggle Closed All Drawers", function () {
-            apiBasedTests("toggleDrawers", true);
-        });
-        
-        tests.test("Toggle Open All Drawers", function () {
-            apiBasedTests("toggleDrawers", false);
-        });
-        
-        tests.test("Prevent Events on Init Closed Drawers", function () {
-            eventBasedTests(false, true);
-        });
-        
-        tests.test("Prevent Events on Init Opened Drawers", function () {
-            eventBasedTests(true, true);
-        });
-        
-        tests.test("Fire Events on Init Closed Drawers", function () {
-            eventBasedTests(false, false);
-        });
-        
-        tests.test("Fire Events on Init Opened Drawers", function () {
-            eventBasedTests(true, false);
-        });
-        
-        tests.test("Fire Events on Drawer Closed", function () {
-            eventBasedTests(true, true, "closeDrawers");
-        });
-        
-        tests.test("Fire Events on Drawer Opened", function () {
-            eventBasedTests(false, true, "openDrawers");
-        });
-        
-        tests.test("Fire Events on Toggle Closed", function () {
-            eventBasedTests(true, true, "toggleDrawers");
-        });
-        
-        tests.test("Fire Events on Toggle Opened", function () {
-            eventBasedTests(false, true, "toggleDrawers");
-        });
-        
-        tests.test("Close Drawer With a Click", function () {
-            eventBasedTests(true, true, "mouse", 0);
-        });
-        
-        tests.test("Open Drawer With a Click", function () {
-            eventBasedTests(false, true, "mouse", 0);
-        });
-        
-        tests.test("Close Drawer With a Space Key", function () {
-            eventBasedTests(true, true, "space", 0);
-        });
-        
-        tests.test("Open Drawer With a Space Key", function () {
-            eventBasedTests(true, true, "space", 0);
-        });
-        
-        tests.test("Close Drawer With a Enter Key", function () {
-            eventBasedTests(false, true, "enter", 0);
-        });
-        
-        tests.test("Open Drawer With a Enter Key", function () {
-            eventBasedTests(true, true, "enter", 0);
-        });
-    };
+    //Tests
     
     $(document).ready(function () {
-        cabinetTests();
+        var cmpt; //component
+        
+        //setup tests
+        var tests = jqUnit.testCase("Cabinet Tests -  Common setup", function () {
+            cmpt = setup();
+        });
+
+        tests.test("CSS class insertion", function () {
+            var styles = cmpt.options.styles;
+            
+            assertStyling(cmpt.locate("drawer"), styles.drawer, true, "All drawers have CSS styling");
+            assertStyling(cmpt.locate("handle"), styles.handle, true, "All handles have CSS styling");
+            assertStyling(cmpt.locate("contents"), styles.contents, true, "All content has CSS styling");
+        });
+        
+        
+        tests.test("Aria insertion", function () {
+            var drawers = cmpt.locate("drawers");
+            expect(4);
+           
+            jqUnit.assertTrue("Cabinet has role of tablist", hasAttribute(cmpt.container, "role", "tablist"));
+            jqUnit.assertTrue("Cabinet has attribute aria-multiselectable set to true", hasAttribute(cmpt.container, "aria-multiselectable", "true"));
+            jqUnit.assertTrue("Drawer has role of tab", hasAttribute(drawers, "role", "tab"));
+            jqUnit.assertTrue("Drawer has attribute of aria-expanded set", hasAttribute(drawers));
+        });
+        
+        //variables for event tests
+        var openEventFired;
+        var closeEventFired;
+        
+        var noEventsFiredTest = function () {
+            jqUnit.assertFalse("The open event should not have fired", openEventFired);
+            jqUnit.assertFalse("The close event should not have fired", closeEventFired);
+        };
+        
+        var onlyOpenEventsFiredTest = function () {
+            jqUnit.assertTrue("The open event should have fired", openEventFired);
+            jqUnit.assertFalse("The close event should not have fired", closeEventFired);
+        };
+        
+        var onlyClosedEventsFiredTest = function () {
+            jqUnit.assertFalse("The open event should not have fired", openEventFired);
+            jqUnit.assertTrue("The close event should have fired", closeEventFired);
+        };
+        
+        var resetEventVariables = function () {
+            openEventFired = false;
+            closeEventFired = false;
+        };
+    
+        //Tests when drawers started closed
+        var startClosedTests = jqUnit.testCase("Cabinet Tests - Drawers started closed", function () {
+            cmpt = setup({
+                listeners: {
+                    afterOpen: function () {
+                        openEventFired = true;
+                    },
+                    afterClose: function () {
+                        closeEventFired = true;
+                    }
+                },
+                startOpen: false
+            });
+        }, resetEventVariables);
+        
+        startClosedTests.test("Start Closed", function () {
+            drawerTest(cmpt, cmpt.locate("drawer"), closeStylingTests, noEventsFiredTest);
+        });
+                
+        startClosedTests.test("Open a Single Drawer", function () {
+            var drawers = cmpt.locate("drawer");
+            var openDrawer = drawers.eq(0);
+            
+            cmpt.openDrawers(openDrawer);
+            drawerTest(cmpt, openDrawer, mixedStylingTests, onlyOpenEventsFiredTest);
+        });
+        
+        startClosedTests.test("Toggle Open a Single Drawer", function () {
+            var drawers = cmpt.locate("drawer");
+            var openDrawer = drawers.eq(0);
+            
+            cmpt.toggleDrawers(openDrawer);
+            drawerTest(cmpt, openDrawer, mixedStylingTests, onlyOpenEventsFiredTest);
+        });
+        
+        startClosedTests.test("Open All Drawers", function () {
+            var drawers = cmpt.locate("drawer");
+            
+            cmpt.openDrawers(drawers);
+            drawerTest(cmpt, drawers, openStylingTests, onlyOpenEventsFiredTest);
+        });
+        
+        startClosedTests.test("Toggle Open All Drawers", function () {
+            var drawers = cmpt.locate("drawer");
+            
+            cmpt.toggleDrawers(drawers);
+            drawerTest(cmpt, drawers, openStylingTests, onlyOpenEventsFiredTest);
+        });
+        
+        startClosedTests.test("Open Drawer With a Click", function () {
+            var drawers = cmpt.locate("drawer");
+            var openDrawer = drawers.eq(0);
+            
+            cmpt.locate("handle", openDrawer).click();
+            drawerTest(cmpt, openDrawer, mixedStylingTests, onlyOpenEventsFiredTest);
+        });
+        
+        startClosedTests.test("Open Drawer With a Space Key", function () {
+            if ($.browser.mozilla) {
+                var drawers = cmpt.locate("drawer");
+                var openDrawer = drawers.eq(0);
+                
+                simulateKeyDown(cmpt.locate("handle", openDrawer), SPACE);
+                drawerTest(cmpt, openDrawer, mixedStylingTests, onlyOpenEventsFiredTest);
+            }
+        });
+        
+        startClosedTests.test("Open Drawer With a Enter Key", function () {
+            if ($.browser.mozilla) {
+                var drawers = cmpt.locate("drawer");
+                var openDrawer = drawers.eq(0);
+                
+                simulateKeyDown(cmpt.locate("handle", openDrawer), ENTER);
+                drawerTest(cmpt, openDrawer, mixedStylingTests, onlyOpenEventsFiredTest);
+            }
+        });
+        
+        //Tests when drawers started open
+        var startOpenTests = jqUnit.testCase("Cabinet Tests - Drawers started open", function () {
+            cmpt = setup({
+                listeners: {
+                    afterOpen: function () {
+                        openEventFired = true;
+                    },
+                    afterClose: function () {
+                        closeEventFired = true;
+                    }
+                },
+                startOpen: true
+            });
+        }, resetEventVariables);
+        
+        startOpenTests.test("Start Open", function () {
+            drawerTest(cmpt, cmpt.locate("drawer"), openStylingTests, noEventsFiredTest);
+        });
+        
+        startOpenTests.test("Close a Single Drawer", function () {
+            var drawers = cmpt.locate("drawer");
+            var closedDrawer = drawers.eq(0);
+            
+            cmpt.closeDrawers(closedDrawer);
+            drawerTest(cmpt, drawers.not(closedDrawer), mixedStylingTests, onlyClosedEventsFiredTest);
+        });
+        
+        startOpenTests.test("Toggle Close a Single Drawer", function () {
+            var drawers = cmpt.locate("drawer");
+            var closedDrawer = drawers.eq(0);
+            
+            cmpt.toggleDrawers(closedDrawer);
+            drawerTest(cmpt, drawers.not(closedDrawer), mixedStylingTests, onlyClosedEventsFiredTest);
+        });
+        
+        startOpenTests.test("Close All Drawers", function () {
+            var drawers = cmpt.locate("drawer");
+            
+            cmpt.closeDrawers(drawers);
+            drawerTest(cmpt, drawers, closeStylingTests, onlyClosedEventsFiredTest);
+        });
+        
+        startOpenTests.test("Toggle Closed All Drawers", function () {
+            var drawers = cmpt.locate("drawer");
+            
+            cmpt.toggleDrawers(drawers);
+            drawerTest(cmpt, drawers, closeStylingTests, onlyClosedEventsFiredTest);
+        });
+
+        startOpenTests.test("Close Drawer With a Click", function () {
+            var drawers = cmpt.locate("drawer");
+            var closedDrawer = drawers.eq(0);
+            
+            cmpt.locate("handle", closedDrawer).click();
+            drawerTest(cmpt, drawers.not(closedDrawer), mixedStylingTests, onlyClosedEventsFiredTest);
+        });
+        
+        startOpenTests.test("Close Drawer With a Space Key", function () {
+            if ($.browser.mozilla) {
+                var drawers = cmpt.locate("drawer");
+                var closedDrawer = drawers.eq(0);
+                
+                simulateKeyDown(cmpt.locate("handle", closedDrawer), SPACE);
+                drawerTest(cmpt, drawers.not(closedDrawer), mixedStylingTests, onlyClosedEventsFiredTest);
+            }
+        });
+        
+        startOpenTests.test("Close Drawer With a Enter Key", function () {
+            if ($.browser.mozilla) {
+                var drawers = cmpt.locate("drawer");
+                var closedDrawer = drawers.eq(0);
+                
+                simulateKeyDown(cmpt.locate("handle", closedDrawer), ENTER);
+                drawerTest(cmpt, drawers.not(closedDrawer), mixedStylingTests, onlyClosedEventsFiredTest);
+            }        
+        });
     });
 })(jQuery);
