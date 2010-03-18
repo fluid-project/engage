@@ -76,10 +76,6 @@ fluid = fluid || {};
             var contents = findChild(element, function (element) {
                 return $(element).is(that.options.selectors.contents);
             });
-            
-            if (contents) {
-                $(contents).toggle();
-            }
         });
     };
     
@@ -278,8 +274,8 @@ fluid = fluid || {};
         styles: {
             drawerClosed: "fl-cabinet-drawerClosed",
             drawerOpened: "fl-cabinet-drawerOpened",            
-            drawer: "fl-container fl-container-autoHeading fl-cabinet-animation fl-container-collapsable",
-            shelf: "fl-container",
+            drawer: "fl-container-autoHeading fl-cabinet-animation fl-container-collapsable",
+            shelf: "",
             contents: "fl-cabinet-contents",
             handle: "fl-cabinet-handle"
         },

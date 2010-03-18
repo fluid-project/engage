@@ -5,14 +5,14 @@
         <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <title>Cabinet Demo</title>
-
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-layout.css" />
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-text.css" />
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-transitions.css" />
+	
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" />
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" />
-        <link type="text/css" rel="stylesheet" href="../css/Cabinet.css" />
-
+		<link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/fss-mobile-layout-engage.css" />
+		<link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/fss-mobile-theme-engage.css" />
+		<link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/engage-components-cabinet.css" />
+		
+		<link type="text/css" rel="stylesheet" href="../css/Cabinet.css" />
+	
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/ui/js/ui.core.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/plugins/delegate/js/jquery.delegate.js"></script>
@@ -24,76 +24,103 @@
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageRenderUtils.js"></script>  
-        <script type="text/javascript" src="../../navigationList/js/NavigationList.js"></script> 
         <script type="text/javascript" src="../js/Cabinet.js"></script>
     </head>
     
-    <body class="fl-theme-iphone">
-        <div class="cabinet">
-            <div class="flc-cabinet-drawer">
-                <div class="flc-cabinet-handle">
-                    <h2 class="flc-cabinet-header">Header</h2>
-                </div>
+    <body>
+
+		<div class="fl-cabinet fl-theme-engage">
+            <div class="flc-cabinet-drawer">                
+				<h2 class="flc-cabinet-handle flc-cabinet-header">Weather</h2>                
+                <ul class="flc-cabinet-contents fl-list-menu">
+					<li>
+						<img src="../images/28.png" class="fl-force-left" />
+						<div class="fl-force-left">
+							<p>Toronto</p>
+							<p class="fl-font-size-70">
+								27&#176; Celcius <br/>
+								10km/h wind<br/>
+							</p>
+						</div>						
+					</li>
+					<li><a href="#">Preferences</a></li>
+                </ul>				
+            </div>
+			
+            <div class="flc-cabinet-drawer">                
+				<h2 class="flc-cabinet-handle flc-cabinet-header">Sports</h2>
                 <div class="flc-cabinet-contents">
-                    <p>Some contents in a paragraph</p>
+                    <table>
+						<tr>
+							<td>Team</td>
+							<td>Name</td>
+							<td>Avr</td>
+						</tr>
+						<tr>
+							<td>Blazers</td>
+							<td>John</td>
+							<td>0.987</td>
+						</tr>
+						<tr>
+							<td>Giants</td>
+							<td>Sally</td>
+							<td>0.587</td>
+						</tr>
+						<tr>
+							<td>Towers</td>
+							<td>Darren</td>
+							<td>0.492</td>
+						</tr>
+					</table>
                 </div>
             </div>
-            <div class="flc-cabinet-drawer">
-                <div class="flc-cabinet-handle">
-                    <h2 class="flc-cabinet-header">Header</h2>
-                </div>
-                <div class="flc-cabinet-contents">
-                    <p>Some other contents</p>
-                </div>
+
+            <div class="flc-cabinet-drawer">                
+				<h2 class="flc-cabinet-handle flc-cabinet-header">Politics</h2>                
+                <ul class="flc-cabinet-contents fl-list-menu">
+                    <li>
+						<a href="#">Leaders take to the moon
+							<span class="fl-link-secondary">Apr. 01</span>
+							<span class="fl-link-summary">
+								President Obama and Prime Minister Harper decide Earth isn't good enough anymore, and take off with Richard Branson in an X-Plane
+							</span>
+						</a>
+					</li>
+                    <li>
+						<a href="#">Dairy farmers cheezed off
+							<span class="fl-link-secondary">Apr. 01</span>
+							<span class="fl-link-summary">
+								Dairy farmers in Canada feel they've been milked for all they're worth
+							</span>
+						</a>
+					</li>
+                    <li>
+						<a href="#">Smart people obsolete
+							<span class="fl-link-secondary">Apr. 01</span>
+							<span class="fl-link-summary">
+								Scientists around the world are regretting building an artificial intelligence so good that it will immediately replace all of them
+							</span>
+						</a>
+					</li>
+				</ul>
             </div>
-            <div class="flc-cabinet-drawer">
-                <div class="flc-cabinet-handle fl-cabinet-headerWithDescription">
-                    <h2 class="flc-cabinet-header">Header</h2>
-                    <span class="fl-font-size-80">Description</span>
-                </div>
-                <div class="flc-navigationList flc-cabinet-contents">
-                    <ul class="flc-navigationList-listGroup fl-list fl-list-menu fl-list-thumbnails">
-                        <li class="flc-navigationList-items">
-                            <div class="flc-navigationList-linkContainer">
-                                <a class="flc-navigationList-link">
-                                    <img class="flc-navigationList-image fl-icon"/>
-                                    <span class="flc-navigationList-titleText fl-navigationList-title">title/category</span>
-                                    <span class="flc-navigationList-descriptionText fl-link-summary fl-navigationList-description">description</span>
-                                </a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+			
+            <div class="flc-cabinet-drawer">                
+				<h2 class="flc-cabinet-header flc-cabinet-handle fl-cabinet-headerWithDescription">Twitter Feeds
+					<span class="fl-font-size-70">1290128 followers</span>
+				</h2>
+				<ul class="flc-cabinet-contents fl-list">
+					<li><a href="#">Mark</a> is following you...right now</li>
+					<li><a href="#">James</a> commented on your <a href="#">blog</a></li>
+					<li><a href="#">Sarah</a> is right behind you</li>
+					<li><a href="#">Frank</a> tweets about how useless he thinks twitter is</li>
+                </ul>
             </div>
+			
         </div>
-        
+
         <script type="text/javascript">
-            
-            var navigationListOptions = {
-                model: [{
-                    target: "../../navigationList/images/Artifacts-.jpg",
-                    image: "../../navigationList/images/Artifacts-.jpg",
-                    title: "Title",
-                    description: "Description"
-                }, {
-                    target: "../../navigationList/images/Snuffbox.jpg",
-                    image: "../../navigationList/images/Snuffbox.jpg",
-                    title: "Title",
-                    description: "Description"
-                }, {
-                    target: "../../navigationList/images/Snuffbox.jpg",
-                    image: "../../navigationList/images/Snuffbox.jpg",
-                    title: "Title",
-                    description: "Description"
-                }, {
-                    target: "http://build.fluidproject.org",
-                    title: "Category",
-                    size: 100
-                }]
-            };
-            
-            fluid.navigationList($(".flc-navigationList"), navigationListOptions);
-            fluid.cabinet(".cabinet");
+            fluid.cabinet("body > div:eq(0)");
         </script>
     </body>
 </html>

@@ -1,39 +1,52 @@
-.fl-cabinet-handle h2 {
-    margin:0;    
+.fl-cabinet {
+	overflow:auto;
+}
+.fl-cabinet-handle {
+	background-image:url("../images/openCloseArrows.png");
+	background-repeat:no-repeat;
+	background-position:left -105px;
+	padding:5px 0 5px 16px;
+	margin:0;
+}
+.fl-cabinet-handle:focus,
+.fl-cabinet-drawerOpened .fl-cabinet-handle {
+	outline:none;
+	background-color:#666;
+	color:#fff;
+}
+.fl-cabinet-handle:focus {
+	background-color:#999;
 }
 
-.fl-cabinet-handle.fl-cabinet-headerWithDescription {
-    padding:0 10px;
+.fl-cabinet-drawerClosed .fl-cabinet-contents {
+	display:none;
 }
-.fl-cabinet-handle.fl-cabinet-headerWithDescription h2 {
-    margin:0 0 -5px 0;
-    padding:5px 0 0 0;
-}
-
-.fl-collapsable {
-    margin: 12px;
-}
-.fl-cabinet-animation {
-    -webkit-transition: max-height 0.75s ease-in;
+.fl-cabinet-drawerClosed .fl-cabinet-handle {
+	background-position:left 5px;
 }
 
-.fl-collapsingPanel.fl-cabinet-drawerClosed > *:first-child {
-    -webkit-border-radius:8px;
+/************************ Theme Modifications *********************/
+/* add an "ndash" and a non-breaking space before the header */
+.fl-theme-iphone .fl-cabinet-handle::before {
+	content:"\2013\00A0";
+}
+/* add an "+" and a non-breaking space before the header */
+.fl-theme-iphone .fl-cabinet-drawerClosed .fl-cabinet-handle::before{
+	content:"+\00A0";
 }
 
-.fl-theme-iphone .fl-container-autoHeading > :first-child {
-    background: -webkit-gradient(linear, left top, left bottom, from(#ECECEC), to(#F8F8F8));
-    color: #000;
+/* add an "ndash" and a non-breaking space before the header */
+.fl-theme-android .fl-cabinet-handle::before {
+	content:"\2013\00A0";
 }
-[class*=fl-container]:not(.fl-navbar),
-[class*=fl-list] {
-    margin:0;
+/* add an "+" and a non-breaking space before the header */
+.fl-theme-android .fl-cabinet-drawerClosed .fl-cabinet-handle::before{
+	content:"+\00A0";
 }
 
-[class*=fl-container] [class*=fl-list] > li:last-child,
-[class*=fl-container] [class*=fl-list] > li:first-child,
-
-.fl-container-autoHeading > *:first-child,
-.fl-container-collapsable {
-    -webkit-border-radius:0;
+.fl-theme-mist .fl-cabinet-handle:focus {
+	background-color:#6DB5FB;
+}
+.fl-theme-mist .fl-cabinet-drawerOpened .fl-cabinet-handle {
+	background-color:#5A95CF;
 }
