@@ -1,0 +1,29 @@
+.fl-theme-engage .fl-cabinet .fl-cabinet-handle {
+    margin:0;    
+}
+.fl-theme-engage .fl-collapsable {
+    margin: 12px;
+}
+.fl-theme-engage .fl-cabinet-animation {
+    -webkit-transition: max-height 0.75s ease-in;
+}
+.fl-theme-engage .fl-collapsingPanel.fl-cabinet-drawerClosed > *:first-child {
+    -webkit-border-radius:8px;
+}
+.fl-theme-engage .fl-container-autoHeading > :first-child {
+    background: -webkit-gradient(linear, left top, left bottom, from(#ECECEC), to(#F8F8F8));
+	border-width:1px 0;
+	border-color:#fff transparent #ccc;
+	border-style:solid;
+    color: #000;
+}
+.fl-theme-engage [class*=fl-container]:not(.fl-navbar),
+.fl-theme-engage [class*=fl-list] {
+    margin:0;
+}
+./*fl-theme-engage [class*=fl-container] [class*=fl-list] > li:last-child,
+.fl-theme-engage [class*=fl-container] [class*=fl-list] > li:first-child,
+.fl-container-autoHeading > *:first-child,
+.fl-container-collapsable {
+    -webkit-border-radius:0;
+}*/
