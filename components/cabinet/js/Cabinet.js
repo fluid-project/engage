@@ -16,23 +16,6 @@ fluid = fluid || {};
 (function ($) {
     
     /**
-     * Finds the descendant of an element, as specified by the test function passed in the argument
-     * 
-     * @param {Object} element, the root node to test from
-     * @param {Object} test, a function that takes an element and returns true when the correct child is found
-     */
-    var findChild = function (element, test) {
-        element = fluid.unwrap(element);
-        var childNodes = element.childNodes;
-        
-        for (var i = 0; i < childNodes.length; i++) {
-            if (test(childNodes[i])) {
-                return childNodes[i];
-            }
-        }
-    };
-    
-    /**
      * Adds the various aria properties
      * 
      * @param {Object} that, the component
@@ -64,22 +47,6 @@ fluid = fluid || {};
     };
     
     /**
-     * Toggle's the visibility of the contents of the drawer. It finds the contents which
-     * are the children of the drawer that was open/closed and sets toggles the visibility
-     * 
-     * @param {Object} that, the component
-     * @param {Object} selector, a selector representing the drawers that were opened/closed
-     */
-    var toggleVisibility = function (that, selector) {
-        selector = fluid.wrap(selector);
-        selector.each(function (index, element) {
-            var contents = findChild(element, function (element) {
-                return $(element).is(that.options.selectors.contents);
-            });
-        });
-    };
-    
-    /**
      * A general function to adjust the position of the drawer (open or closed)
      * 
      * @param {Object} that, the component
@@ -94,7 +61,6 @@ fluid = fluid || {};
         selector.addClass(that.options.styles[addedStyleName]);
         selector.removeClass(that.options.styles[removedStyleName]);
         selector.attr("aria-expanded", ariaString);
-        toggleVisibility(that, selector);
 
         if (eventName) {
             that.events[eventName].fire(selector);
@@ -199,10 +165,13 @@ fluid = fluid || {};
         findShelves(that);
         addAria(that);
         addCSS(that);
-        moveDrawers(that, that.options.startOpen ? open : close, that.locate("drawer"), that.options.preventEventFireOnInit);
+        
         if (that.options.startOpen) {
-            that.openDrawers(that.locate("openByDefault"));
+            moveDrawers(that, open, that.locate(that.options.openByDefault ? "openByDefault" : "drawer"), true);
+        } else {
+            moveDrawers(that, close, that.locate("drawer"), true);
         }
+
         addClickEvent(that);
         
         // Only add keyboard navigation if we've got the keyboard-a11y available to us.
@@ -285,9 +254,7 @@ fluid = fluid || {};
             afterClose: null
         },
         
-        startOpen: false,
-        
-        preventEventFireOnInit: true
+        startOpen: false
     });
     
 })(jQuery);
