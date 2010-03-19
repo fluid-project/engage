@@ -2,20 +2,12 @@
 	overflow:auto;
 }
 .fl-cabinet-handle {
-	background-image:url("../images/openCloseArrows.png");
-	background-repeat:no-repeat;
-	background-position:left -105px;
 	padding:5px 0 5px 16px;
 	margin:0;
 }
 .fl-cabinet-handle:focus,
 .fl-cabinet-drawerOpened .fl-cabinet-handle {
 	outline:none;
-	background-color:#666;
-	color:#fff;
-}
-.fl-cabinet-handle:focus {
-	background-color:#999;
 }
 
 .fl-cabinet-drawerClosed .fl-cabinet-contents {
@@ -28,13 +20,12 @@
 /************************ Theme Modifications *********************/
 /* add an "ndash" and a non-breaking space before the header */
 .fl-theme-iphone .fl-cabinet-handle::before {
-	content:"\2013\00A0";
+    content:"\2013\00A0";
 }
 /* add an "+" and a non-breaking space before the header */
 .fl-theme-iphone .fl-cabinet-drawerClosed .fl-cabinet-handle::before{
-	content:"+\00A0";
+    content:"+\00A0";
 }
-
 /* add an "ndash" and a non-breaking space before the header */
 .fl-theme-android .fl-cabinet-handle::before {
 	content:"\2013\00A0";

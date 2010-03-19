@@ -1,19 +1,9 @@
 .fl-catalogue .fl-catalogue-themes h2 {
-    background: -webkit-gradient(linear, left top, left bottom, from(#EEE9E9), to(#F5F5F5));
     padding: 5px 0 5px 5px;
     margin: 0;
 }
 
-.fl-catalogue-linkToArtifactsHeader {
-    background-color: white;
-}
-
-a.fl-catalogue-linkToArtifacts {
-    background: url(../../../../fluid-infusion/src/webapp/framework/fss/images/themes/iphone/listmenu_arrow.png) no-repeat right 5px;
-}
-
 .flc-catalogue-linkToArtifactsText {
-    background: none;
     margin-left: 0;
 }
 
@@ -23,10 +13,6 @@ a.fl-catalogue-linkToArtifacts {
 
 [class*=fl-list] {
     margin: 0px;
-}
-
-.fl-list-menu.fl-list-thumbnails.fl-thumbnails-expanded.fl-grid {
-    background-color: white;
 }
 
 .fl-list-thumbnails > li{
@@ -44,7 +30,6 @@ a.fl-catalogue-linkToArtifacts {
 
 [class*=fl-list] li.fl-catalogue-linkToThemeArtifactsContainer {
     border-top: none;
-    background-color: #FBFBFB;
 }
 
 .fl-list-menu li a {
@@ -53,4 +38,24 @@ a.fl-catalogue-linkToArtifacts {
 
 [class*=fl-list] li.fl-catalogue-linkToThemeArtifactsContainer a.fl-catalogue-linkToThemeArtifacts {
     font-size: 0.7em;
+}
+
+/*************** Engage theme for component ********************************/
+.fl-theme-engageMobile .fl-catalogue .fl-catalogue-themes h2 {
+    background: -webkit-gradient(linear, left top, left bottom, from(#EEE9E9), to(#F5F5F5));
+}
+.fl-theme-engageMobile .fl-catalogue-linkToArtifactsHeader {
+    background-color: white;
+}
+.fl-theme-engageMobile a.fl-catalogue-linkToArtifacts {
+    background: url(../../../../fluid-infusion/src/webapp/framework/fss/images/themes/iphone/listmenu_arrow.png) no-repeat right 5px;
+}
+.fl-theme-engageMobile .flc-catalogue-linkToArtifactsText {
+    background: none;
+}
+.fl-theme-engageMobile .fl-list-menu.fl-list-thumbnails.fl-thumbnails-expanded.fl-grid {
+    background-color: white;
+}
+.fl-theme-engageMobile [class*=fl-list] li.fl-catalogue-linkToThemeArtifactsContainer {
+    background-color: #FBFBFB;
 }

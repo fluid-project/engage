@@ -8,12 +8,13 @@
         
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-layout.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" />
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" />
         
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/engage-mobile.css" />
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationBar/css/NavigationBar.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/engage-mobile-theme.css" />
+		<link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/engage-mobile-layout.css" />
+		
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationList/css/NavigationList.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/cabinet/css/Cabinet.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/engage-components-cabinet.css" />
         
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/browse/css/Browse.css" />
 
@@ -38,32 +39,26 @@
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/loadData.js" rsf:id="scr=ignore"></script>
         
     </head>
-    <body class="flc-browse fl-theme-iphone fl-browse-loading">
+    <body class="flc-browse fl-theme-engageMobile fl-browse-loading">
         <!-- Navigation Bar and Header -->
-        <div class="flc-navigationBar fl-navbar fl-col-mixed">
-            <!-- Back button -->
-            <div class="fl-col-fixed fl-force-left">
-                <a rsf:id="scr=null" class="flc-navigationBar-back fl-button fl-backButton" href="#">
-                    <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/back.png" alt="Go back"/>
-                </a>
-            </div>
-            <!-- Home button -->
-            <div class="fl-col-fixed fl-force-left">
-                <a rsf:id="scr=null" class="flc-navigationBar-home fl-button" href="#">
-                    <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/home.png" alt="Go home"/>
-                </a>
-            </div>
-            <!-- Toggle button -->
-            <div class="flc-browse-navlist-toggle fl-col-fixed fl-force-right">
-                <a rsf:id="scr=null" class="flc-navigationBar-toggle fl-button" href="#">
-                    <img class="flc-navigationBar-toggle-grid fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/toggle-grid.png" alt="Switch to grid layout"/>
-                    <img class="flc-navigationBar-toggle-list fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/toggle-list.png" alt="Switch to list layout"/>
-                </a>
-            </div>
-            <!-- Page header -->
-            <h1 class="flc-browse-title fl-navbar-title fl-col-flex">Browse</h1>
-        </div>
-        
+        <div class="flc-navigationBar fl-navbar">
+			<!-- Back button -->
+			<a rsf:id="scr=null" href="#" class="flc-navigationBar-back fl-force-left fl-button fl-backButton">
+				<img class="fl-button-inner" src="../../../../fluid-engage-core/shared/images/back.png" alt="Go back" />
+			</a>
+			<!-- Home button -->
+			<a rsf:id="scr=null" href="#" class="flc-navigationBar-home fl-force-left fl-button">
+				<img class="fl-button-inner" src="../../../../fluid-engage-core/shared/images/home.png" alt="Go home" />
+			</a>
+			<!-- Toggle button -->
+			<div class="flc-browse-navlist-toggle fl-force-right">
+		        <a rsf:id="scr=null" class="flc-navigationBar-toggle fl-button" href="#">
+		            <img class="flc-navigationBar-toggle-grid fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/toggle-grid.png" alt="Switch to grid layout"/>
+		            <img class="flc-navigationBar-toggle-list fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/toggle-list.png" alt="Switch to list layout"/>
+		        </a>
+		    </div>
+			<h1 class="flc-browse-title fl-navbar-title">Browse</h1>
+        </div>        
         <!-- loading message -->
         <div class="fl-browse-loadMessage fl-note fl-bevel-white">
             Loading...

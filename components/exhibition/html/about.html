@@ -8,9 +8,10 @@
         
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-layout.css" />
         <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" />
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" />
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/engage-mobile.css" />
-        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationBar/css/NavigationBar.css" />
+        
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/engage-mobile-theme.css" />
+		<link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/engage-mobile-layout.css" />
+        
         <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/exhibition/css/Exhibition.css" />
         
         <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
@@ -28,25 +29,21 @@
         <script type="text/javascript" src="../../../../fluid-engage-core/components/exhibition/js/ExhibitionView.js"></script>
         <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/loadData.js" rsf:id="scr=ignore"></script>
     </head>   
-    <body class="fl-theme-iphone">
+    <body class="fl-theme-engageMobile">
         <div class="flc-exhibition-container">
             
             <!-- Navigation Bar and Header -->
             <div class="flc-navigationBar fl-navbar fl-col-mixed">
                 <!-- Back button -->
-                <div class="fl-col-fixed fl-force-left">
-                    <a rsf:id="scr=null" class="flc-navigationBar-back fl-button fl-backButton" href="#">
-                        <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/back.png" alt="Go back"/>
-                    </a>
-                </div>
-                <!-- Home button -->
-                <div class="fl-col-fixed fl-force-left">
-                    <a rsf:id="scr=null" class="flc-navigationBar-home fl-button" href="#">
-                        <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/home.png" alt="Go home"/>
-                    </a>
-                </div>
+				<a rsf:id="scr=null" href="#" class="flc-navigationBar-back fl-force-left fl-button fl-backButton">
+					<img class="fl-button-inner" src="../../../../fluid-engage-core/shared/images/back.png" alt="Go back" />
+				</a>
+				<!-- Home button -->
+				<a rsf:id="scr=null" href="#" class="flc-navigationBar-home fl-force-left fl-button">
+					<img class="fl-button-inner" src="../../../../fluid-engage-core/shared/images/home.png" alt="Go home" />
+				</a>
                 <!-- Page header -->
-                <h1 class="flc-exhibition-navBarTitle fl-navbar-title fl-col-flex">About This Exhibition</h1>
+                <h1 class="flc-exhibition-navBarTitle fl-navbar-title">About This Exhibition</h1>
             </div>
             
             <div class="fl-exhibition-content">

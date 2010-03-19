@@ -1,0 +1,52 @@
+.fl-theme-engageMobile .fl-navbar {
+	min-height:35px;
+	padding:5px 0;
+    border: none;
+}
+.fl-theme-engageMobile .fl-navbar .fl-button {
+	margin-right:10px;
+	height: 35px;
+}
+.fl-theme-engageMobile .fl-navbar .fl-button img {
+	height: 25px;
+	margin-bottom: -5px;
+	padding: 0px;
+}
+.fl-theme-engageMobile .fl-navbar .fl-backButton {
+	padding: 0px;
+	margin:0 5px;
+}
+.fl-theme-engageMobile .fl-navbar .fl-navbar-title {
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+}
+.fl-theme-engageMobile [class*=fl-container] [class*=fl-list] > li:first-child,
+.fl-theme-engageMobile [class*=fl-container] [class*=fl-list] > li:first-child a {
+	-webkit-border-radius:0;
+}
+.fl-theme-engageMobile [class*=fl-container] [class*=fl-list] > li:last-child,
+.fl-theme-engageMobile [class*=fl-container] [class*=fl-list] > li:last-child a {
+	-webkit-border-radius:0;
+}
+.fl-theme-engageMobile [class*=fl-container] [class*=fl-list]:not(.fl-thumbnails-expanded) > li a .fl-icon {
+	-webkit-border-radius:0;
+}
+.fl-theme-engageMobile .fl-container-autoHeading {
+    margin: 0;
+}
+.fl-theme-engageMobile .fl-container-autoHeading > *:first-child {
+	-webkit-border-radius:0;
+}
+/* The last element found becomes the "content" - list or otherwise */
+.fl-theme-engageMobile .fl-container-autoHeading > *:last-child {
+	-webkit-border-radius:0;
+}
+.fl-theme-engageMobile .fl-container-autoHeading [class*=fl-list] > li:first-child:last-child,
+.fl-theme-engageMobile .fl-container-autoHeading [class*=fl-list] > li:first-child:last-child a {
+	-webkit-border-radius:0;
+}
+/* Collapsing and expanding panels */
+.fl-theme-engageMobile .fl-container-collapsable {	
+	-webkit-border-radius:0px;
+}

@@ -21,10 +21,6 @@
     width: 84px;    
 }
 
-.fl-home .fl-list-thumbnails.fl-grid li a {
-    background-color: rgb(255,255,255);
-}
-
 /* For Language Selection */
 .fl-languageSelection .fl-navbar.fl-table .fl-table-row img.fl-table-cell {
     height: 40px;
@@ -35,7 +31,19 @@
     text-align: center;
 }
 
-.fl-theme-iphone .fl-languageSelection [class*=fl-list]:not(.fl-list):not(.fl-grid) a,
-.fl-theme-iphone .fl-languageSelection [class*=fl-list]:not(.fl-list):not(.fl-grid) a:active {
+.fl-languageSelection .fl-navbar-title {
+    display: inline;
+}
+
+.fl-languageSelection .fl-navbar img {
+    vertical-align: middle;
+}
+
+/*************** Engage theme for component ********************************/
+.fl-theme-engageMobile .fl-home .fl-list-thumbnails.fl-grid li a {
+    background-color: rgb(255,255,255);
+}
+.fl-theme-engageMobile .fl-languageSelection [class*=fl-list]:not(.fl-list):not(.fl-grid) a,
+.fl-theme-engageMobile .fl-languageSelection [class*=fl-list]:not(.fl-list):not(.fl-grid) a:active {
     background: none;
 }

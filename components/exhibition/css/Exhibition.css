@@ -1,7 +1,5 @@
 .fl-exhibition-header {
-    background: -webkit-gradient(linear, left top, left bottom, from(#EEE9E9), to(#F5F5F5));
     padding: 5px 0 5px 0;
-    border-top:1px solid #000000;
     font-weight:bold;
 }
 
@@ -27,11 +25,6 @@
     width: auto;
     height: 45px;
 }
-
-.fl-theme-iphone {
-    background: none;
-}
-
 
 .fl-list-menu li a {
     padding:12px 0px 12px 12px;
@@ -59,12 +52,7 @@
     margin-right: 5px;
 }
 
-.fl-container li {
-    background-color: white;
-}
-
 .fl-exhibition-linkContainer {
-    background-color: #EEEEEE;
     -webkit-border-radius: 8px;
     padding: 0px;
     margin: 0px 10px 5px 0px;
@@ -103,4 +91,16 @@
 
 .fl-col-mixed .fl-col-flex {
     margin-left: 70px;
+}
+
+/*************** Engage theme for component ********************************/
+.fl-theme-engageMobile .fl-exhibition-header {
+    background: -webkit-gradient(linear, left top, left bottom, from(#EEE9E9), to(#F5F5F5));
+    border-top:1px solid #000000;
+}
+.fl-theme-engageMobile .fl-container li {
+    background-color: white;
+}
+.fl-theme-engageMobile .fl-exhibition-linkContainer {
+    background-color: #EEEEEE;
 }

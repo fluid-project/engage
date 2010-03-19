@@ -12,14 +12,12 @@
     border-right: none;
 }
 
-.fl-theme-iphone .fl-navigationList-container.fl-list a {
-    color: rgb(0, 0, 0);
+.fl-navigationList-container.fl-list a {
     font-size: 0.7em;
     padding-bottom: 0;
 }
 
 .fl-navigationList-container.fl-list > li .fl-link-summary {
-    color: rgb(0, 0, 0);
     font-size: 1em;
     margin: 0;
 }
@@ -76,4 +74,13 @@
     text-overflow:ellipsis;
     white-space:nowrap;
     width: auto;
+}
+
+/*************** Engage theme for component ********************************/
+.fl-theme-engageMobile .fl-navigationList-container.fl-list a {
+    color: rgb(0, 0, 0);
+}
+
+.fl-theme-engageMobile .fl-navigationList-container.fl-list > li .fl-link-summary {
+    color: rgb(0, 0, 0);
 }

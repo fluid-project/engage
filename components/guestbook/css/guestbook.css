@@ -2,24 +2,19 @@
     height: 48px;
     text-align:center;
     font-size:19px;
-    background:#F6F7F7;
 }
 
 .fl-guestbook-text {
     font-size: 19px;
 }
 
-/* Image must be specified in background like this since URLs are not 
- * yet rewritten in dependent templates */
 .fl-guestbook-addnote-control {
     height: 24px;
     width: 28px;
-    background-image: url("../images/addnote.png");
     display: inline-block
 }
 
 .fl-guestbook-header {
-    color: #666;
     font-weight: lighter;
     font-size: 16px;
 }
@@ -52,4 +47,17 @@ a.fl-guestbook-action {
 
 .fl-guestbook-textarea-width {
     width:90%;
+}
+
+/*************** Engage theme for component ********************************/
+.fl-theme-engageMobile .fl-guestbook-addnote {
+    background:#F6F7F7;
+}
+/* Image must be specified in background like this since URLs are not
+ * yet rewritten in dependent templates */
+.fl-theme-engageMobile .fl-guestbook-addnote-control {
+    background-image: url("../images/addnote.png");
+}
+.fl-theme-engageMobile.fl-guestbook-header {
+    color: #666;
 }
