@@ -36,6 +36,10 @@ fluid = fluid || {};
     
     var initSubcomponents = function (that) {
         if (that.options.useCabinet) {
+            if (!that.options.showHeaderForFirstCategory) {
+                that.locate("listContents").eq(0).removeClass(that.options.selectors.listContents.substr(1));
+                that.locate("lists").eq(0).removeClass(that.options.selectors.lists.substr(1));
+            }
             that.cabinet = fluid.initSubcomponent(that, "cabinet", [that.locate("browseContents"), fluid.COMPONENT_OPTIONS]);
         }
         that.navBar = fluid.initSubcomponent(that, "navigationBar", [that.container, fluid.COMPONENT_OPTIONS]);

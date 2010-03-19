@@ -38,12 +38,9 @@ fluid = fluid || {};
      * @param {Object} that, the component
      */
     var addCSS = function (that) {
-        that.locate("drawer").not(that.shelves || "").addClass(that.options.styles.drawer);
+        that.locate("drawer").addClass(that.options.styles.drawer);
         that.locate("contents").addClass(that.options.styles.contents);
         that.locate("handle").addClass(that.options.styles.handle);
-        if (that.shelves) {
-            that.shelves.addClass(that.options.styles.shelf);
-        }
     };
     
     /**
@@ -86,7 +83,6 @@ fluid = fluid || {};
      * @param {Object} stopEvent, a boolean value indicating if an event should be fired.
      */
     var close = function (that, selector, stopEvent) {
-        selector = that.shelves ? fluid.wrap(selector).not(that.shelves) : selector;
         drawerAdjust(that, selector, "drawerClosed", "drawerOpened", "false", stopEvent ? null : "afterClose");
     };
     
@@ -141,28 +137,11 @@ fluid = fluid || {};
     };
     
     /**
-     * Finds the set of drawers that don't have handles and creates a jquery object called that.shelves with them.
-     * 
-     * @param {Object} that, the component
-     */
-    var findShelves = function (that) {
-        var shelvesList;
-        that.locate("drawer").each(function () {
-            var drawer = $(this);
-            if (drawer.find(that.options.selectors.handle).length === 0) {
-                shelvesList = shelvesList ? shelvesList.add(drawer) : drawer;
-            }
-        });
-        that.shelves = shelvesList;
-    };
-    
-    /**
      * Calls the various setup functions
      * 
      * @param {Object} that, the component
      */
     var setup = function (that) {
-        findShelves(that);
         addAria(that);
         addCSS(that);
         
@@ -244,7 +223,6 @@ fluid = fluid || {};
             drawerClosed: "fl-cabinet-drawerClosed",
             drawerOpened: "fl-cabinet-drawerOpened",            
             drawer: "fl-container-autoHeading fl-cabinet-animation fl-container-collapsable",
-            shelf: "",
             contents: "fl-cabinet-contents",
             handle: "fl-cabinet-handle"
         },
