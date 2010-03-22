@@ -1,13 +1,27 @@
-.fl-cabinet {
+﻿.fl-cabinet {
 	overflow:auto;
 }
 .fl-cabinet-handle {
 	padding:5px 0 5px 16px;
 	margin:0;
+    background-color:#999;
+}
+.fl-cabinet-handle a {
+	text-decoration:none;
+    color:#fff;
+}
+.fl-cabinet-handle:hover,
+.fl-cabinet-handle:focus,
+.fl-cabinet-drawerOpened .fl-cabinet-handle:focus {
+    background-color:#ccc;
+}
+.fl-cabinet-drawerOpened .fl-cabinet-handle {
+    background-color:#666;
 }
 .fl-cabinet-handle:focus,
 .fl-cabinet-drawerOpened .fl-cabinet-handle {
-	outline:none;
+    outline:none;
+    color:#fff;
 }
 
 .fl-cabinet-drawerClosed .fl-cabinet-contents {
@@ -34,10 +48,32 @@
 .fl-theme-android .fl-cabinet-drawerClosed .fl-cabinet-handle::before{
 	content:"+\00A0";
 }
-
-.fl-theme-mist .fl-cabinet-handle:focus {
-	background-color:#6DB5FB;
-}
 .fl-theme-mist .fl-cabinet-drawerOpened .fl-cabinet-handle {
 	background-color:#5A95CF;
+}
+.fl-theme-mist .fl-cabinet-drawerOpened .fl-cabinet-handle a {
+	color:#fff;
+}
+.fl-theme-mist .fl-cabinet-drawerOpened .fl-cabinet-handle:focus,
+.fl-theme-mist .fl-cabinet-drawerClosed .fl-cabinet-handle:focus {
+	background-color:#6DB5FB;
+}
+.fl-theme-mist .fl-cabinet-drawerOpened .fl-cabinet-handle:focus a,
+.fl-theme-mist .fl-cabinet-drawerClosed .fl-cabinet-handle:focus a {
+	color:#fff;
+}
+
+.fl-theme-coal .fl-cabinet-drawerOpened .fl-cabinet-handle {
+	background-color:#333;
+}
+.fl-theme-coal .fl-cabinet-drawerOpened .fl-cabinet-handle a {
+	color:#fff;
+}
+.fl-theme-coal .fl-cabinet-drawerOpened .fl-cabinet-handle:focus,
+.fl-theme-coal .fl-cabinet-drawerClosed .fl-cabinet-handle:focus {
+	background-color:#666;
+}
+.fl-theme-coal .fl-cabinet-drawerOpened .fl-cabinet-handle:focus a,
+.fl-theme-coal .fl-cabinet-drawerClosed .fl-cabinet-handle:focus a {
+	color:#fff;
 }
