@@ -15,8 +15,29 @@ fluid = fluid || {};
 
 (function ($) {
     
+    var addAnchors = function (that) {
+        var headers = that.locate("header");
+        var headerClass = that.options.selectors.header.substr(1);
+        var anchor = "<a href='#_' class='" + headerClass + "' />";
+        
+        headers.each(function () {
+            var header = $(this);
+            if (!header.is("a")) {
+                header.wrapInner(anchor);
+                header.removeClass(headerClass);
+            }
+        });
+    };
+    
+    var setHeaders = function (that) {
+        addAnchors(that);
+        that.locate("headers").click(function (evt) {
+            evt.preventDefault();
+        });
+    };
+    
     /**
-     * Adds the various aria properties
+     * Ads the various aria properties
      * 
      * @param {Object} that, the component
      */
@@ -199,6 +220,7 @@ fluid = fluid || {};
          * This is usefull for when drawers are added/removed after instatiating the cabinet.
          */
         that.refreshView = function () {
+            setHeaders(that);
             addAria(that);
             addCSS(that);
             

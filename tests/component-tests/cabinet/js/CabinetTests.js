@@ -151,6 +151,14 @@ https://source.fluidproject.org/svn/LICENSE.txt
         jqUnit.assertTrue("Drawer has role of tab", hasAttribute(drawers, "role", "tab"));
         jqUnit.assertTrue("Drawer has attribute of aria-expanded set", hasAttribute(drawers));
     };
+    
+    var headerTests = function (component) {
+        var headers = component.locate("header");
+        
+        headers.each(function (idx) {
+            jqUnit.assertTrue("Header " + idx + ": is an anchor", $(this).is("a"));
+        });
+    };
         
     //Tests
     
@@ -171,12 +179,17 @@ https://source.fluidproject.org/svn/LICENSE.txt
             ariaAddedTests(cmpt);
         });
         
+        tests.test("Headers are all anchors", function () {
+            headerTests(cmpt);
+        });
+        
         tests.test("Add new drawer", function () {
             cmpt.container.append(DRAWER);
             cmpt.refreshView();
             
             cssInitTests(cmpt);
             ariaAddedTests(cmpt);
+            headerTests(cmpt);
         });
         
         //variables for event tests
