@@ -28,7 +28,7 @@ fluid = fluid || {};
         
         that.locate("drawer").attr({
             role: "tab",
-            "aria-expanded": "false"
+            "aria-expanded": that.options.startOpen
         });
     };
     
@@ -116,7 +116,10 @@ fluid = fluid || {};
      * @param {Object} that, the component
      */
     var addClickEvent = function (that) {
-        that.locate("handle").click(function () {
+        var handle = that.locate("handle");
+        
+        handle.unbind("click.cabinet");
+        handle.bind("click.cabinet", function () {
             that.toggleDrawers(findHandleBase(that, this));
         });
     };
@@ -137,26 +140,12 @@ fluid = fluid || {};
     };
     
     /**
-     * Calls the various setup functions
+     * Calls any functions necessary for the setup of the component on init
      * 
      * @param {Object} that, the component
      */
     var setup = function (that) {
-        addAria(that);
-        addCSS(that);
-        
-        if (that.options.startOpen) {
-            moveDrawers(that, open, that.locate(that.options.openByDefault ? "openByDefault" : "drawer"), true);
-        } else {
-            moveDrawers(that, close, that.locate("drawer"), true);
-        }
-
-        addClickEvent(that);
-        
-        // Only add keyboard navigation if we've got the keyboard-a11y available to us.
-        if (fluid.a11y) {
-            addKeyNav(that);
-        }
+        that.refreshView();
     };
     
     /**
@@ -202,6 +191,29 @@ fluid = fluid || {};
          */
         that.closeDrawers = function (selector) {
             moveDrawers(that, close, selector);
+        };
+        
+        /**
+         * Refreshes the cabinet.
+         * 
+         * This is usefull for when drawers are added/removed after instatiating the cabinet.
+         */
+        that.refreshView = function () {
+            addAria(that);
+            addCSS(that);
+            
+            if (that.options.startOpen) {
+                moveDrawers(that, open, that.locate(that.options.openByDefault ? "openByDefault" : "drawer"), true);
+            } else {
+                moveDrawers(that, close, that.locate("drawer"), true);
+            }
+    
+            addClickEvent(that);
+            
+            // Only add keyboard navigation if we've got the keyboard-a11y available to us.
+            if (fluid.a11y) {
+                addKeyNav(that);
+            }
         };
         
         setup(that);

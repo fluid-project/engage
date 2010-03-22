@@ -18,6 +18,13 @@ https://source.fluidproject.org/svn/LICENSE.txt
     var ENTER = 13;
     var SPACE = 32;
     
+    var DRAWER = '<div class="flc-cabinet-drawer">' +
+        '<h2 class="flc-cabinet-handle flc-cabinet-header">Header</h2>' +
+        '<div class="flc-cabinet-contents">' +
+        '<p>Some other contents</p>' +
+        '</div>' +
+        '</div>';
+    
     //setup function
     
     var setup = function (options) {
@@ -132,6 +139,23 @@ https://source.fluidproject.org/svn/LICENSE.txt
         styleTest(component, drawer);
         eventTest();
     };
+    
+    var cssInitTests = function (component) {
+        var styles = component.options.styles;
+            
+        assertStyling(component.locate("drawer"), styles.drawer, true, "All drawers have CSS styling");
+        assertStyling(component.locate("handle"), styles.handle, true, "All handles have CSS styling");
+        assertStyling(component.locate("contents"), styles.contents, true, "All content has CSS styling");
+    };
+    
+    var ariaAddedTests = function (component) {
+        var drawers = component.locate("drawer");
+           
+        jqUnit.assertTrue("Cabinet has role of tablist", hasAttribute(component.container, "role", "tablist"));
+        jqUnit.assertTrue("Cabinet has attribute aria-multiselectable set to true", hasAttribute(component.container, "aria-multiselectable", "true"));
+        jqUnit.assertTrue("Drawer has role of tab", hasAttribute(drawers, "role", "tab"));
+        jqUnit.assertTrue("Drawer has attribute of aria-expanded set", hasAttribute(drawers));
+    };
         
     //Tests
     
@@ -144,22 +168,20 @@ https://source.fluidproject.org/svn/LICENSE.txt
         });
 
         tests.test("CSS class insertion", function () {
-            var styles = cmpt.options.styles;
-            
-            assertStyling(cmpt.locate("drawer"), styles.drawer, true, "All drawers have CSS styling");
-            assertStyling(cmpt.locate("handle"), styles.handle, true, "All handles have CSS styling");
-            assertStyling(cmpt.locate("contents"), styles.contents, true, "All content has CSS styling");
+            cssInitTests(cmpt);
         });
         
         
         tests.test("Aria insertion", function () {
-            var drawers = cmpt.locate("drawers");
-            expect(4);
-           
-            jqUnit.assertTrue("Cabinet has role of tablist", hasAttribute(cmpt.container, "role", "tablist"));
-            jqUnit.assertTrue("Cabinet has attribute aria-multiselectable set to true", hasAttribute(cmpt.container, "aria-multiselectable", "true"));
-            jqUnit.assertTrue("Drawer has role of tab", hasAttribute(drawers, "role", "tab"));
-            jqUnit.assertTrue("Drawer has attribute of aria-expanded set", hasAttribute(drawers));
+            ariaAddedTests(cmpt);
+        });
+        
+        tests.test("Add new drawer", function () {
+            cmpt.container.append(DRAWER);
+            cmpt.refreshView();
+            
+            cssInitTests(cmpt);
+            ariaAddedTests(cmpt);
         });
         
         //variables for event tests
@@ -235,6 +257,17 @@ https://source.fluidproject.org/svn/LICENSE.txt
             drawerTest(cmpt, drawers, openStylingTests, onlyOpenEventsFiredTest);
         });
         
+        startClosedTests.test("OpenDrawers function works after refresh", function () {
+            cmpt.container.append(DRAWER);
+            cmpt.refreshView();
+            
+            var drawers = cmpt.locate("drawer");
+            var openDrawers = drawers.eq(0).add(drawers.eq(drawers.length - 1));
+            
+            cmpt.openDrawers(openDrawers);
+            drawerTest(cmpt, openDrawers, mixedStylingTests, onlyOpenEventsFiredTest);
+        });
+        
         startClosedTests.test("Open Drawer With a Click", function () {
             var drawers = cmpt.locate("drawer");
             var openDrawer = drawers.eq(0);
@@ -260,6 +293,19 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 
                 simulateKeyDown(cmpt.locate("handle", openDrawer), ENTER);
                 drawerTest(cmpt, openDrawer, mixedStylingTests, onlyOpenEventsFiredTest);
+            }
+        });
+        
+        startClosedTests.test("Click to open works after refresh", function () {
+            if ($.browser.mozilla) {
+                cmpt.container.append(DRAWER);
+                cmpt.refreshView();
+                
+                var drawers = cmpt.locate("drawer");
+                var openDrawers = drawers.eq(0).add(drawers.eq(drawers.length - 1));
+                
+                cmpt.locate("handle", openDrawers).click();
+                drawerTest(cmpt, openDrawers, mixedStylingTests, onlyOpenEventsFiredTest);
             }
         });
         
@@ -311,6 +357,17 @@ https://source.fluidproject.org/svn/LICENSE.txt
             cmpt.toggleDrawers(drawers);
             drawerTest(cmpt, drawers, closeStylingTests, onlyClosedEventsFiredTest);
         });
+        
+        startOpenTests.test("CloseDrawers function works after refresh", function () {
+            cmpt.container.append(DRAWER);
+            cmpt.refreshView();
+            
+            var drawers = cmpt.locate("drawer");
+            var closedDrawers = drawers.eq(0).add(drawers.eq(drawers.length - 1));
+            
+            cmpt.closeDrawers(closedDrawers);
+            drawerTest(cmpt, drawers.not(closedDrawers), mixedStylingTests, onlyClosedEventsFiredTest);
+        });
 
         startOpenTests.test("Close Drawer With a Click", function () {
             var drawers = cmpt.locate("drawer");
@@ -338,6 +395,19 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 simulateKeyDown(cmpt.locate("handle", closedDrawer), ENTER);
                 drawerTest(cmpt, drawers.not(closedDrawer), mixedStylingTests, onlyClosedEventsFiredTest);
             }        
+        });
+        
+        startOpenTests.test("Click to close drawers works after refresh", function () {
+            if ($.browser.mozilla) {
+                cmpt.container.append(DRAWER);
+                cmpt.refreshView();
+                
+                var drawers = cmpt.locate("drawer");
+                var closedDrawers = drawers.eq(0).add(drawers.eq(drawers.length - 1));
+                
+                cmpt.locate("handle", closedDrawers).click();
+                drawerTest(cmpt, drawers.not(closedDrawers), mixedStylingTests, onlyClosedEventsFiredTest);
+            }
         });
     });
 })(jQuery);
