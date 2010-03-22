@@ -135,11 +135,6 @@ https://source.fluidproject.org/svn/LICENSE.txt
         verifyCloseStyling(closedDrawers, component.locate("contents", closedDrawers), openStyle, closeStyle);
     };
     
-    var drawerTest = function (component, drawer, styleTest, eventTest) {
-        styleTest(component, drawer);
-        eventTest();
-    };
-    
     var cssInitTests = function (component) {
         var styles = component.options.styles;
             
@@ -224,7 +219,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
         }, resetEventVariables);
         
         startClosedTests.test("Start Closed", function () {
-            drawerTest(cmpt, cmpt.locate("drawer"), closeStylingTests, noEventsFiredTest);
+            closeStylingTests(cmpt, cmpt.locate("drawer"));
+            noEventsFiredTest();
         });
                 
         startClosedTests.test("Open a Single Drawer", function () {
@@ -232,7 +228,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var openDrawer = drawers.eq(0);
             
             cmpt.openDrawers(openDrawer);
-            drawerTest(cmpt, openDrawer, mixedStylingTests, onlyOpenEventsFiredTest);
+            mixedStylingTests(cmpt, openDrawer);
+            onlyOpenEventsFiredTest();
         });
         
         startClosedTests.test("Toggle Open a Single Drawer", function () {
@@ -240,21 +237,24 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var openDrawer = drawers.eq(0);
             
             cmpt.toggleDrawers(openDrawer);
-            drawerTest(cmpt, openDrawer, mixedStylingTests, onlyOpenEventsFiredTest);
+            mixedStylingTests(cmpt, openDrawer);
+            onlyOpenEventsFiredTest();
         });
         
         startClosedTests.test("Open All Drawers", function () {
             var drawers = cmpt.locate("drawer");
             
             cmpt.openDrawers(drawers);
-            drawerTest(cmpt, drawers, openStylingTests, onlyOpenEventsFiredTest);
+            openStylingTests(cmpt, drawers);
+            onlyOpenEventsFiredTest();
         });
         
         startClosedTests.test("Toggle Open All Drawers", function () {
             var drawers = cmpt.locate("drawer");
             
             cmpt.toggleDrawers(drawers);
-            drawerTest(cmpt, drawers, openStylingTests, onlyOpenEventsFiredTest);
+            openStylingTests(cmpt, drawers);
+            onlyOpenEventsFiredTest();
         });
         
         startClosedTests.test("OpenDrawers function works after refresh", function () {
@@ -265,7 +265,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var openDrawers = drawers.eq(0).add(drawers.eq(drawers.length - 1));
             
             cmpt.openDrawers(openDrawers);
-            drawerTest(cmpt, openDrawers, mixedStylingTests, onlyOpenEventsFiredTest);
+            mixedStylingTests(cmpt, openDrawers);
+            onlyOpenEventsFiredTest();
         });
         
         startClosedTests.test("Open Drawer With a Click", function () {
@@ -273,7 +274,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var openDrawer = drawers.eq(0);
             
             cmpt.locate("handle", openDrawer).click();
-            drawerTest(cmpt, openDrawer, mixedStylingTests, onlyOpenEventsFiredTest);
+            mixedStylingTests(cmpt, openDrawer);
+            onlyOpenEventsFiredTest();
         });
         
         startClosedTests.test("Open Drawer With a Space Key", function () {
@@ -282,7 +284,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 var openDrawer = drawers.eq(0);
                 
                 simulateKeyDown(cmpt.locate("handle", openDrawer), SPACE);
-                drawerTest(cmpt, openDrawer, mixedStylingTests, onlyOpenEventsFiredTest);
+                mixedStylingTests(cmpt, openDrawer);
+                onlyOpenEventsFiredTest();
             }
         });
         
@@ -292,7 +295,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 var openDrawer = drawers.eq(0);
                 
                 simulateKeyDown(cmpt.locate("handle", openDrawer), ENTER);
-                drawerTest(cmpt, openDrawer, mixedStylingTests, onlyOpenEventsFiredTest);
+                mixedStylingTests(cmpt, openDrawer);
+                onlyOpenEventsFiredTest();
             }
         });
         
@@ -305,7 +309,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 var openDrawers = drawers.eq(0).add(drawers.eq(drawers.length - 1));
                 
                 cmpt.locate("handle", openDrawers).click();
-                drawerTest(cmpt, openDrawers, mixedStylingTests, onlyOpenEventsFiredTest);
+                mixedStylingTests(cmpt, openDrawers);
+                onlyOpenEventsFiredTest();
             }
         });
         
@@ -325,7 +330,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
         }, resetEventVariables);
         
         startOpenTests.test("Start Open", function () {
-            drawerTest(cmpt, cmpt.locate("drawer"), openStylingTests, noEventsFiredTest);
+            openStylingTests(cmpt, cmpt.locate("drawer"));
+            noEventsFiredTest();
         });
         
         startOpenTests.test("Close a Single Drawer", function () {
@@ -333,7 +339,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var closedDrawer = drawers.eq(0);
             
             cmpt.closeDrawers(closedDrawer);
-            drawerTest(cmpt, drawers.not(closedDrawer), mixedStylingTests, onlyClosedEventsFiredTest);
+            mixedStylingTests(cmpt, drawers.not(closedDrawer));
+            onlyClosedEventsFiredTest();
         });
         
         startOpenTests.test("Toggle Close a Single Drawer", function () {
@@ -341,21 +348,24 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var closedDrawer = drawers.eq(0);
             
             cmpt.toggleDrawers(closedDrawer);
-            drawerTest(cmpt, drawers.not(closedDrawer), mixedStylingTests, onlyClosedEventsFiredTest);
+            mixedStylingTests(cmpt, drawers.not(closedDrawer));
+            onlyClosedEventsFiredTest();
         });
         
         startOpenTests.test("Close All Drawers", function () {
             var drawers = cmpt.locate("drawer");
             
             cmpt.closeDrawers(drawers);
-            drawerTest(cmpt, drawers, closeStylingTests, onlyClosedEventsFiredTest);
+            closeStylingTests(cmpt, drawers);
+            onlyClosedEventsFiredTest();
         });
         
         startOpenTests.test("Toggle Closed All Drawers", function () {
             var drawers = cmpt.locate("drawer");
             
             cmpt.toggleDrawers(drawers);
-            drawerTest(cmpt, drawers, closeStylingTests, onlyClosedEventsFiredTest);
+            closeStylingTests(cmpt, drawers);
+            onlyClosedEventsFiredTest();
         });
         
         startOpenTests.test("CloseDrawers function works after refresh", function () {
@@ -366,7 +376,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var closedDrawers = drawers.eq(0).add(drawers.eq(drawers.length - 1));
             
             cmpt.closeDrawers(closedDrawers);
-            drawerTest(cmpt, drawers.not(closedDrawers), mixedStylingTests, onlyClosedEventsFiredTest);
+            mixedStylingTests(cmpt, drawers.not(closedDrawers));
+            onlyClosedEventsFiredTest();
         });
 
         startOpenTests.test("Close Drawer With a Click", function () {
@@ -374,7 +385,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var closedDrawer = drawers.eq(0);
             
             cmpt.locate("handle", closedDrawer).click();
-            drawerTest(cmpt, drawers.not(closedDrawer), mixedStylingTests, onlyClosedEventsFiredTest);
+            mixedStylingTests(cmpt, drawers.not(closedDrawer));
+            onlyClosedEventsFiredTest();
         });
         
         startOpenTests.test("Close Drawer With a Space Key", function () {
@@ -383,7 +395,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 var closedDrawer = drawers.eq(0);
                 
                 simulateKeyDown(cmpt.locate("handle", closedDrawer), SPACE);
-                drawerTest(cmpt, drawers.not(closedDrawer), mixedStylingTests, onlyClosedEventsFiredTest);
+                mixedStylingTests(cmpt, drawers.not(closedDrawer));
+                onlyClosedEventsFiredTest();
             }
         });
         
@@ -393,7 +406,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 var closedDrawer = drawers.eq(0);
                 
                 simulateKeyDown(cmpt.locate("handle", closedDrawer), ENTER);
-                drawerTest(cmpt, drawers.not(closedDrawer), mixedStylingTests, onlyClosedEventsFiredTest);
+                mixedStylingTests(cmpt, drawers.not(closedDrawer));
+                onlyClosedEventsFiredTest();
             }        
         });
         
@@ -406,7 +420,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 var closedDrawers = drawers.eq(0).add(drawers.eq(drawers.length - 1));
                 
                 cmpt.locate("handle", closedDrawers).click();
-                drawerTest(cmpt, drawers.not(closedDrawers), mixedStylingTests, onlyClosedEventsFiredTest);
+                mixedStylingTests(cmpt, drawers.not(closedDrawers));
+                onlyClosedEventsFiredTest();
             }
         });
     });
