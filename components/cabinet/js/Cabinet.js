@@ -42,14 +42,26 @@ fluid = fluid || {};
      * @param {Object} that, the component
      */
     var addAria = function (that) {
+        var ids = [];
         that.container.attr({
             role: "tablist",
             "aria-multiselectable": "true"
         });
+
+        that.locate("handle").each(function () {
+            var handle = $(this);
+            ids.push(fluid.allocateSimpleId(handle));
+            handle.attr({
+                role: "tab",
+                "aria-expanded": that.options.startOpen
+            });
+        });
         
-        that.locate("drawer").attr({
-            role: "tab",
-            "aria-expanded": that.options.startOpen
+        that.locate("contents").each(function (idx) {
+            $(this).attr({
+                role: "tabpanel",
+                "aria-labelledby": ids[idx]
+            });
         });
     };
     
@@ -78,7 +90,7 @@ fluid = fluid || {};
         selector = fluid.wrap(selector);
         selector.addClass(that.options.styles[addedStyleName]);
         selector.removeClass(that.options.styles[removedStyleName]);
-        selector.attr("aria-expanded", ariaString);
+        that.locate("handle", selector).attr("aria-expanded", ariaString);
 
         if (eventName) {
             that.events[eventName].fire(selector);
