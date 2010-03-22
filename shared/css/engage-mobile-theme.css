@@ -169,7 +169,7 @@
 /* Default list system setup */
 
 .fl-theme-engageMobile .fl-list a {
-    color:#4a94f4;
+    /*color:#4a94f4;*/
 }
 
 .fl-theme-engageMobile [class*=fl-list] > li {

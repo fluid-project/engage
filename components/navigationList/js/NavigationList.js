@@ -155,8 +155,8 @@ fluid = fluid || {};
         
         styles: {
             grid: "fl-thumbnails-expanded fl-grid",
-            gridTable: "fl-table",
-            gridCell: "fl-table-cell",
+            gridTable: "",
+            gridCell: "",
             list: "fl-list"
         },
         
@@ -165,7 +165,7 @@ fluid = fluid || {};
         strings: {},
         
         events: {
-        	afterRender: null
+            afterRender: null
         },
         
         useDefaultImage: false,
