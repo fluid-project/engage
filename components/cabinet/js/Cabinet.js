@@ -31,7 +31,7 @@ fluid = fluid || {};
     
     var setHeaders = function (that) {
         addAnchors(that);
-        that.locate("headers").click(function (evt) {
+        that.locate("header").click(function (evt) {
             evt.preventDefault();
         });
     };
