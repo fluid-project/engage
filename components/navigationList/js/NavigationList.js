@@ -72,10 +72,26 @@ fluid = fluid || {};
      * @param {Object} that, the component
      */
     var setup = function (that) {
-        that.render = fluid.engage.renderUtils.createRendererFunction(that.container, that.options.selectors, {
-            repeatingSelectors: ["listItems"],
-            selectorsToIgnore: ["listGroup", "linkContainer", "gridToggle"]
-        });
+        var sel = that.options.selectors;
+         
+        var cutpoints = [
+            {id: "listItems:", selector: sel.listItems},
+            {id: "link", selector: sel.link},
+            {id: "image", selector: sel.image},
+            {id: "titleText", selector: sel.titleText},
+            {id: "descriptionText", selector: sel.descriptionText},
+            {id: "badgeIcon", selector: sel.badgeIcon}
+        ];
+        
+        var renderOpts = {cutpoints: cutpoints};
+    
+        that.render = function (tree) {
+            if (that.template) {
+                fluid.reRender(that.template, that.container, tree, renderOpts);
+            } else {
+                that.template = fluid.selfRender(that.container, tree, renderOpts);
+            }
+        };
 
         that.refreshView();
         that.locate("gridToggle").click(that.toggleLayout);
