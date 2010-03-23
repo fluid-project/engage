@@ -16,7 +16,12 @@ fluid = fluid || {};
 
 (function ($) {
     
-
+    /**
+     * Generates the component tree
+     * 
+     * @param {object} model, the components model
+     * @param {object} options, the components options
+     */
     var generateTree = function (model, options) {
         return {
             children: fluid.transform(model, function (navListItem) {
@@ -67,6 +72,27 @@ fluid = fluid || {};
     }; 
     
     /**
+     * Will transform the model based on a provided model map.
+     * If no modelMap provided, the model itself will be returned, unchanged.
+     * 
+     * @param {object} model, the model data to be mapped
+     * @param {object} modelMap, the optional map for which transformation of the model will be based on.
+     */
+    var mapModel = function (model, modelMap) {
+        var map = function () {
+            return fluid.transform(model, function (listItem) {
+                var obj = {};
+                for (var key in modelMap) {
+                    obj[key] = fluid.model.getBeanValue(listItem, modelMap[key]);
+                }
+                return obj;
+            });
+        };
+        
+        return modelMap ? map() : model;
+    };
+    
+    /**
      * The general setup function that calls the functions that need to be run on init
      * 
      * @param {Object} that, the component
@@ -102,16 +128,12 @@ fluid = fluid || {};
         }
     };
     
-    var styleAsGrid = function (listGroup, linkContainer, link, styles) {
+    var styleAsGrid = function (listGroup, styles) {
         listGroup.addClass(styles.grid).removeClass(styles.list);
-        linkContainer.addClass(styles.gridTable);
-        link.addClass(styles.gridCell);
     };
     
-    var styleAsList = function (listGroup, linkContainer, link, styles) {
+    var styleAsList = function (listGroup, styles) {
         listGroup.addClass(styles.list).removeClass(styles.grid);
-        linkContainer.removeClass(styles.gridTable);
-        link.removeClass(styles.gridCell);
     };
     
     /**
@@ -122,7 +144,6 @@ fluid = fluid || {};
      */
     fluid.navigationList = function (container, options) {
         var that = fluid.initView("fluid.navigationList", container, options);
-        that.model = that.options.model;
         that.isGrid = that.options.defaultToGrid;
         
         that.toggleLayout = function () {
@@ -134,17 +155,19 @@ fluid = fluid || {};
         };
         
         that.gridLayout = function () {
-            styleAsGrid(that.locate("listGroup"), that.locate("linkContainer"), that.locate("link"), that.options.styles);
+            styleAsGrid(that.locate("listGroup"), that.options.styles);
             that.isGrid = true;
         };
         
         that.listLayout = function () {
-            styleAsList(that.locate("listGroup"), that.locate("linkContainer"), that.locate("link"), that.options.styles);
+            styleAsList(that.locate("listGroup"), that.options.styles);
             that.isGrid = false;
         };
         
         that.refreshView = function () {
-            that.render(generateTree(that.model, that.options));
+            var opts = that.options;
+            that.model = mapModel(opts.model, opts.modelMap);
+            that.render(generateTree(that.model, opts));
             that.events.afterRender.fire();
         };
         
@@ -171,8 +194,6 @@ fluid = fluid || {};
         
         styles: {
             grid: "fl-thumbnails-expanded fl-grid",
-            gridTable: "",
-            gridCell: "",
             list: "fl-list"
         },
         
@@ -187,6 +208,8 @@ fluid = fluid || {};
         useDefaultImage: false,
                 
         badgeIconUrl: undefined,
+        
+        modelMap: undefined,
         
         model: [
             {

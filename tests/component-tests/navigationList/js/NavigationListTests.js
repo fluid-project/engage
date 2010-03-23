@@ -105,6 +105,34 @@ https://source.fluidproject.org/svn/LICENSE.txt
         }
     ];
     
+    var unMappedData = [
+        {
+            url: "../../../integration_demo/images/Artifacts-.jpg",
+            src: "../../../integration_demo/images/Artifacts-.jpg",
+            name: "Pic 1",
+            info: "Info 1"
+        },
+        {
+            url: "../../../integration_demo/images/Snuffbox.jpg",
+            src: "../../../integration_demo/images/Snuffbox.jpg",
+            name: "Pic 2",
+            info: "Info 2"
+        },
+        {
+            url: "../../../integration_demo/images/Snuffbox.jpg",
+            src: "../../../integration_demo/images/Snuffbox.jpg",
+            name: "Pic 3",
+            info: "Info 3"
+        }
+    ];
+    
+    var dataMap = {
+        target: "url",
+        image: "src",
+        title: "name",
+        description: "info"
+    };
+    
     //tests
     
     $(document).ready(function () {
@@ -161,6 +189,28 @@ https://source.fluidproject.org/svn/LICENSE.txt
         });
         
         gridTests.test("Rendered Values", function () {
+            renderedValuesTest(navList);
+        });
+        
+        var mapTests = jqUnit.testCase("NavList Tests - mapped data", function () {
+            navList = setup({
+                listeners: {
+                    afterRender: function () {
+                        afterRenderEventFired = true;
+                    }
+                },
+                model: unMappedData,
+                modelMap: dataMap
+                
+            });
+        }, cleanup);
+        
+        mapTests.test("Rendering of elements", function () {
+            renderingTest(navList);
+            jqUnit.assertTrue("afterRender event fired", afterRenderEventFired);
+        });
+        
+        mapTests.test("Rendered Values", function () {
             renderedValuesTest(navList);
         });
     });
