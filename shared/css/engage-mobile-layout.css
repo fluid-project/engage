@@ -21,12 +21,8 @@
 	text-overflow:ellipsis;
 	white-space:nowrap;
 }
-.fl-theme-engageMobile [class*=fl-container] [class*=fl-list] > li:first-child,
-.fl-theme-engageMobile [class*=fl-container] [class*=fl-list] > li:first-child a {
-	-webkit-border-radius:0;
-}
-.fl-theme-engageMobile [class*=fl-container] [class*=fl-list] > li:last-child,
-.fl-theme-engageMobile [class*=fl-container] [class*=fl-list] > li:last-child a {
+.fl-theme-engageMobile [class*=fl-container] [class*=fl-list] > li,
+.fl-theme-engageMobile [class*=fl-container] [class*=fl-list] > li a {
 	-webkit-border-radius:0;
 }
 .fl-theme-engageMobile [class*=fl-container] [class*=fl-list]:not(.fl-thumbnails-expanded) > li a .fl-icon {

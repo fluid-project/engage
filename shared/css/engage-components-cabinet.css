@@ -1,6 +1,9 @@
 .fl-theme-engageMobile .fl-cabinet-handle {
     padding: 5px;
 }
+.fl-theme-engageMobile .fl-cabinet-handle a {
+    color:#000;
+}
 .fl-theme-engageMobile .fl-cabinet-handle h2 {
     font-size: 1em;
 }

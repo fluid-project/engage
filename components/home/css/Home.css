@@ -41,7 +41,7 @@
 
 /*************** Engage theme for component ********************************/
 .fl-theme-engageMobile .fl-home .fl-list-thumbnails.fl-grid li a {
-    background-color: rgb(255,255,255);
+    background: rgb(255,255,255);
 }
 .fl-theme-engageMobile .fl-languageSelection [class*=fl-list]:not(.fl-list):not(.fl-grid) a,
 .fl-theme-engageMobile .fl-languageSelection [class*=fl-list]:not(.fl-list):not(.fl-grid) a:active {

@@ -1,9 +1,12 @@
-﻿.fl-navigationList {
+.fl-navigationList {
 }
 .fl-navigationList .fl-icon {
     width:64px;
     height:64px;
     float:left;
+}
+.fl-navigationList .fl-list-menu li {
+    position:relative;    
 }
 .fl-navigationList .fl-list-menu .fl-grid-caption {
     display:none;
@@ -11,7 +14,6 @@
 .fl-navigationList .fl-list-menu li .fl-navigationList-wrapper {}
 .fl-navigationList .fl-list-menu li .fl-navigationList-wrapper a {
     font-size:12px;
-    position:relative;
 }
 .fl-navigationList .fl-list-menu a .fl-engage-badge-icon {
     position:absolute;
@@ -25,9 +27,12 @@
 }
 .fl-navigationList .fl-grid a .fl-engage-badge-icon {
     height:30px;
-    bottom:25px;
-    right:15px;
+    bottom:5px;
+    right:5px;
     top:auto;
+}
+.fl-navigationList .fl-grid .fl-grid-caption ~ .fl-navigationList-wrapper a .fl-engage-badge-icon {
+    bottom:20px;
 }
 .fl-navigationList .fl-grid li {
     border-bottom:1px solid;

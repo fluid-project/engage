@@ -1,61 +1,42 @@
 .fl-catalogue .fl-catalogue-themes h2 {
-    padding: 5px 0 5px 5px;
+    padding: 10px 0 10px 5px;
     margin: 0;
+    border-top:1px solid #ccc;
 }
-
-.flc-catalogue-linkToArtifactsText {
-    margin-left: 0;
+.fl-catalogue .fl-catalogue-linkToThemeArtifactsContainer {
+    font-size:12px;
+    text-align:right;
 }
-
-.fl-catalogue-linkToThemeArtifactsText {
-    padding-right: 20px;
+.fl-catalogue .fl-catalogue-linkToThemeArtifactsContainer a {
+    padding-right:24px;
 }
-
-[class*=fl-list] {
-    margin: 0px;
+.fl-catalogue .fl-navigationList-container.fl-grid {
+    padding-bottom:10px;
 }
-
-.fl-list-thumbnails > li{
-    border-left-width: 0;
-    border-right-width: 0;
-}
-
-.fl-list-thumbnails > li:last-child {
-    border-bottom-width: 0px;
-}
-
-[class*=fl-list] > li:first-child {
-    border-top: none;
-}
-
-[class*=fl-list] li.fl-catalogue-linkToThemeArtifactsContainer {
-    border-top: none;
-}
-
-.fl-list-menu li a {
-    padding-bottom: 0px;
-}
-
-[class*=fl-list] li.fl-catalogue-linkToThemeArtifactsContainer a.fl-catalogue-linkToThemeArtifacts {
-    font-size: 0.7em;
-}
-
 /*************** Engage theme for component ********************************/
-.fl-theme-engageMobile .fl-catalogue .fl-catalogue-themes h2 {
-    background: -webkit-gradient(linear, left top, left bottom, from(#EEE9E9), to(#F5F5F5));
+.fl-theme-engageMobile .fl-catalogue .fl-catalogue-themes {
+    background: -webkit-gradient(linear, left top, left bottom, from(#EBEBEB), to(#F5F5F5));
 }
-.fl-theme-engageMobile .fl-catalogue-linkToArtifactsHeader {
+.fl-theme-engageMobile .fl-catalogue .fl-catalogue-themes h2 {
+    color:#000;
+    font-size:15px;
+}
+.fl-theme-engageMobile .fl-catalogue .fl-catalogue-linkToArtifactsHeader {
     background-color: white;
 }
-.fl-theme-engageMobile a.fl-catalogue-linkToArtifacts {
+.fl-theme-engageMobile .fl-catalogue .fl-catalogue-linkToThemeArtifactsContainer {
+    border:none;
+    background-color: #FBFBFB;
+}
+.fl-theme-engageMobile .fl-catalogue .fl-catalogue-linkToThemeArtifactsContainer a {
     background: url(../../../../fluid-infusion/src/webapp/framework/fss/images/themes/iphone/listmenu_arrow.png) no-repeat right 5px;
 }
-.fl-theme-engageMobile .flc-catalogue-linkToArtifactsText {
+.fl-theme-engageMobile .fl-catalogue .flc-catalogue-linkToArtifactsText {
     background: none;
 }
-.fl-theme-engageMobile .fl-list-menu.fl-list-thumbnails.fl-thumbnails-expanded.fl-grid {
-    background-color: white;
+.fl-theme-engageMobile .fl-catalogue .fl-list-menu {
+    background-color:#fff;
 }
-.fl-theme-engageMobile [class*=fl-list] li.fl-catalogue-linkToThemeArtifactsContainer {
-    background-color: #FBFBFB;
+.fl-theme-engageMobile .fl-catalogue .fl-grid {
+    background-color: transparent;
 }
