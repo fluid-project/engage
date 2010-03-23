@@ -13,48 +13,31 @@ https://source.fluidproject.org/svn/LICENSE.txt
 "use strict";
 
 (function ($) {
-    var CONTAINER = ".navigationList";
+    var CONTAINER = ".flc-navigationList";
     
-    var setup = function (container, options) {
-        return fluid.navigationList(container, options);
+    var setup = function (options) {
+        return fluid.navigationList(CONTAINER, options);
     };
     
     var hasClasses = function (selector, classes) {
-        if (typeof classes === "string") {
-            classes = [classes];
-        }
+        var sel = $(selector);
+        var cls = classes.split(" ");
+        var has = true;
         
-        for (var i = 0; i < classes.length; i++) {
-            if (!selector.hasClass(classes[i])) {
+        $.each(cls, function (idx, clsName) {
+            if (!sel.hasClass(clsName)) {
+                has = false;
                 return false;
             }
-        }
-        
-        return true;
-    };
-        
-    var assertStyling = function (selector, styles, expected, message) {
-        selector = fluid.wrap(selector);
-        styles = styles.split(" ");
-        selector.each(function (index, element) {
-            jqUnit[expected ? "assertTrue" : "assertFalse"](message, hasClasses(fluid.wrap(element), styles));
         });
+        
+        return has;
     };
     
-    var conditionalAssert = function (condition, test) {
-        if (condition) {
-            test();
-        }
-    };
-    
-    var isValidString = function (string) {
-        return string && string !== "";
-    };
-    
-    var numKeys = function (set, key) {
+    var countKeyObjArray = function (objArray, key) {
         var count = 0;
-        for (var i = 0; i < set.length; i++) {
-            if (set[i][key]) {
+        for (var i = 0; i < objArray.length; i++) {
+            if (objArray[i][key]) {
                 count++;
             }
         }
@@ -62,35 +45,46 @@ https://source.fluidproject.org/svn/LICENSE.txt
         return count;
     };
     
-    var arrayFromKey = function (objects, key) {
-        var vals = [];
-        for (var i = 0; i < objects.length; i++) {
-            var value = objects[i][key];
-            if (value) {
-                vals.push(value);
-            }
-        }
-        return vals;
-    };
-    
-    var renderingTests = function (component, selectors, links) {
-        jqUnit.assertEquals("All list items rendered", links.length, $(selectors.listItems).length);
-        jqUnit.assertEquals("All links rendered", links.length, $(selectors.link).length);
-        jqUnit.assertEquals("All titles rendered", numKeys(links, "title"), $(selectors.titleText).length || 0);
-        jqUnit.assertEquals("All descriptions rendered", numKeys(links, "description"), $(selectors.descriptionText).length);
-        jqUnit.assertEquals("All images rendered", numKeys(links, "image"), $(selectors.image).length);
-    };
-    
-    var valueTests = function (links, key, selector, message, funcName, property, overRideExpected) {
-        var expected = overRideExpected ? overRideExpected : arrayFromKey(links, key);
-        var actual = fluid.wrap(selector);
+    //test functions
+
+    var renderingTest = function (component) {
+        var model = component.model;
+        var modelSize = model.length;
         
-        actual.each(function (index) {
-            jqUnit.assertEquals(message, expected[index], actual.eq(index)[funcName](property));
+        jqUnit.assertEquals("All list items rendered", modelSize, component.locate("listItems").length);
+        jqUnit.assertEquals("All links rendered", modelSize, component.locate("link").length);
+        jqUnit.assertEquals("All titles rendered", modelSize, component.locate("titleText").length);
+        jqUnit.assertEquals("All descriptions rendered", countKeyObjArray(model, "description"), component.locate("descriptionText").length);
+        jqUnit.assertEquals("All images rendered", modelSize, component.locate("image").length);
+    };
+    
+    var renderedValuesTest = function (component) {
+        var img = component.locate("image");
+        var link = component.locate("link");
+        var title = component.locate("titleText");
+        var desc = component.locate("descriptionText");
+        
+        $.each(component.model, function (idx, listItem) {
+            jqUnit.assertEquals("Item number " + idx + "'s image src", listItem.image, img.eq(idx).attr("src"));
+            jqUnit.assertEquals("Item number " + idx + "'s target url", listItem.target, link.eq(idx).attr("href"));
+            jqUnit.assertEquals("Item number " + idx + "'s title", listItem.title, title.eq(idx).text());
+            jqUnit.assertEquals("Item number " + idx + "'s description", listItem.description, desc.eq(idx).text());
         });
     };
     
-    var generalData = {model: [
+    var assertGridStyling = function (listGroup, styles) {
+        jqUnit.assertTrue("Grid styling applied", hasClasses(listGroup, styles.grid));
+        jqUnit.assertFalse("List styling not applied", hasClasses(listGroup, styles.list));
+    };
+    
+    var assertListStyling = function (listGroup, styles) {
+        jqUnit.assertTrue("List styling applied", hasClasses(listGroup, styles.list));
+        jqUnit.assertFalse("Grid styling not applied", hasClasses(listGroup, styles.grid));
+    };
+    
+    //test data
+    
+    var generalData = [
         {
             target: "../../../integration_demo/images/Artifacts-.jpg",
             image: "../../../integration_demo/images/Artifacts-.jpg",
@@ -109,58 +103,65 @@ https://source.fluidproject.org/svn/LICENSE.txt
             title: "Title 3",
             description: "Description 3"
         }
-    ]};
+    ];
     
-    var navigationListTests = function () {
-        var tests = jqUnit.testCase("NavigationList Tests");
-            
-        tests.test("Rendering of elements", function () {
-            var navList = setup(CONTAINER, generalData);
-            var selectors = navList.options.selectors;
-            var links = navList.options.model;
-            expect(5);
-            
-            renderingTests(navList, selectors, links);
+    //tests
+    
+    $(document).ready(function () {
+        var navList;
+        var  afterRenderEventFired;
+        
+        var cleanup = function () {
+            afterRenderEventFired = false;
+        };
+        
+        var listTests = jqUnit.testCase("NavList Tests - list view", function () {
+            navList = setup({
+                listeners: {
+                    afterRender: function () {
+                        afterRenderEventFired = true;
+                    }
+                },
+                model: generalData
+            });
+        }, cleanup);
+        
+        listTests.test("Rendering of elements", function () {
+            renderingTest(navList);
+            jqUnit.assertTrue("afterRender event fired", afterRenderEventFired);
         });
-                
-        tests.test("CSS class insertion", function () {
-            var navList = setup(CONTAINER, generalData);
-            var selectors = navList.options.selectors;
-            var styles = navList.options.styles;
-            
-            conditionalAssert(isValidString(styles.listGroup), function () {
-                assertStyling(selectors.listGroup, styles.listGroup, true, "The list group has the specified CSS class(es)");
-            });
-            conditionalAssert(isValidString(styles.listItems), function () {
-                assertStyling(selectors.listItems, styles.listItems, true, "All list items have the specified CSS class(es)");
-            });
-            conditionalAssert(isValidString(styles.link), function () {
-                assertStyling(selectors.link, styles.link, true, "All links have the specified CSS class(es)");
-            });
-            conditionalAssert(isValidString(styles.titleText), function () {
-                assertStyling($(selectors.titleText), styles.titleText, true, "All titles have the specified CSS class(es)");
-            });
-            conditionalAssert(isValidString(styles.descriptionText), function () {
-                assertStyling(selectors.descriptionText, styles.descriptionText, true, "All descriptions have the specified CSS class(es)");
-            });
-            conditionalAssert(isValidString(styles.image), function () {
-                assertStyling(selectors.image, styles.image, true, "All images have the specified CSS class(es)");
+        
+        listTests.test("List styling applied", function () {
+            assertListStyling(navList.locate("listGroup"), navList.options.styles);
+        });
+        
+        listTests.test("Grid styling applied after switching from List", function () {
+            navList.toggleLayout();
+            assertGridStyling(navList.locate("listGroup"), navList.options.styles);
+        });
+        
+        listTests.test("Rendered Values", function () {
+            renderedValuesTest(navList);
+        });
+        
+        var gridTests = jqUnit.testCase("NavList Tests - grid view", function () {
+            navList = setup({
+                defaultToGrid: true,
+                model: generalData
             });
         });
         
-        tests.test("Rendered values", function () {
-            var navList = setup(CONTAINER, generalData);
-            var selectors = navList.options.selectors;
-            var links = navList.options.model;
-            
-            valueTests(links, "image", selectors.image, "Image has correct source", "attr", "src");
-            valueTests(links, "description", selectors.descriptionText, "Description text is correct", "text");
-            valueTests(links, "title", $(selectors.titleText), "Title text is correct", "text");
-            valueTests(links, "target", selectors.link, "Links have the correct href", "attr", "href");
+        gridTests.test("Grid styling applied", function () {
+            assertGridStyling(navList.locate("listGroup"), navList.options.styles);
         });
-    };
-    
-    $(document).ready(function () {
-        navigationListTests();
+        
+        gridTests.test("List styling applied after switching from Grid", function () {
+            navList.toggleLayout();
+            assertListStyling(navList.locate("listGroup"), navList.options.styles);
+        });
+        
+        gridTests.test("Rendered Values", function () {
+            renderedValuesTest(navList);
+        });
     });
 })(jQuery);
