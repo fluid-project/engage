@@ -34,7 +34,9 @@
     padding: 2px;
     border-bottom: 1px solid #aaa;
 }
-
+.fl-guestbook-comment-cell:last-child{
+    border-bottom: none;
+}
 a.fl-guestbook-action {
     text-decoration: underline;
     cursor: Pointer;

@@ -49,7 +49,7 @@
         <div class="flc-exhibition-container fl-exhibition">
             
             <!-- Navigation Bar and Header -->
-            <div class="flc-navigationBar fl-navbar fl-col-mixed">
+            <div class="flc-navigationBar fl-navbar">
                 <!-- Back button -->
 				<a rsf:id="scr=null" href="#" class="flc-navigationBar-back fl-force-left fl-button fl-backButton">
 					<img class="fl-button-inner" src="../../../../fluid-engage-core/shared/images/back.png" alt="Go back" />
@@ -62,56 +62,49 @@
                 <h1 class="flc-exhibition-navBarTitle fl-navbar-title">Exhibition View</h1>
             </div>
 
-            <ol class="fl-list-menu">
+            <ol class="fl-list">
                 <li>
                     <h2 class="flc-exhibition-title fl-exhibition-title">title</h2>
                     <div class="fl-exhibitionAbout-textBlock">
                         <div class="flc-exhibition-shortDescription fl-exhibition-shortDescription">Short Description</div>
                         <div class="flc-exhibition-displayDate fl-exhibition-displayDate">Display Date</div>
                     </div>
-                    <div class="fl-force-right fl-exhibition-linkContainer">
-                        <a class="flc-exhibition-aboutLink" href="#">
-                            <span class="flc-exhibition-aboutLinkText fl-exhibition-linkText">link</span>
-                        </a>
-                    </div>
+
+                    <a class="flc-exhibition-aboutLink fl-button" href="#">
+                        <span class="flc-exhibition-aboutLinkText">link</span>
+                    </a>
                 </li>
-                <li class="flc-exhibition-catalogue">
-                    <div class="fl-exhibition-header">
-                        <div class="flc-exhibition-catalogue-title fl-exhibition-catalogue-title fl-exhibitionAbout-textBlock">catalogue</div>
-                    </div>
-                    
-                    <ul class="flc-navigationList-listGroup fl-navigationList-container fl-list fl-list-thumbnails fl-thumbnails-expanded fl-grid">
-                        <li class="flc-navigationList-items">                
-                            <div class="flc-navigationList-linkContainer fl-table">
-                                <a class="flc-navigationList-link fl-table-cell" href="#">
-                                    <img class="flc-navigationList-image fl-icon" alt="icon" />
-                                    <img class="flc-navigationList-badge-icon fl-engage-badge-icon"
-                                         src="../../../../fluid-engage-core/shared/images/media-badge.png" 
-                                         alt="This artifact includes media" />
-                                </a>
+                
+                <li class="flc-exhibition-catalogue fl-navigationList">                    
+                    <h3 class="flc-exhibition-catalogue-title">catalogue</h3>                    
+                    <ul class="flc-navigationList-listGroup fl-navigationList-container fl-list-menu fl-list-thumbnails fl-grid">
+                        <li class="flc-navigationList-items flc-navigationList-linkContainer">                    
+                            <div class="fl-navigationList-wrapper">
+                                <a class="flc-navigationList-link">
+                                    <img class="flc-navigationList-image fl-icon"/>
+                                    <span class="flc-navigationList-badge-icon fl-engage-badge-icon"></span>
+                                    <span class="flc-navigationList-titleText fl-navigationList-title">title/category</span>
+                                    <span class="flc-navigationList-descriptionText fl-link-summary">description</span>                            
+                                </a>                
                             </div>
-                            <div class="flc-navigationList-titleText fl-navigationList-titleText">title</div>
+                            <div class="fl-grid-caption flc-navigationList-titleText">
+                                title/category
+                            </div>
                         </li>
                     </ul>
-                    <div class="fl-force-right fl-exhibition-linkContainer">
-                        <a class="flc-exhibition-catalogueLink" href="#">
-                            <span class="flc-exhibition-catalogueLinkText fl-exhibition-linkText">link</span>
-                        </a>
-                    </div>
+
+                    <a class="flc-exhibition-catalogueLink fl-button" href="#">
+                        <span class="flc-exhibition-catalogueLinkText">link</span>
+                    </a>
                 </li>
-                <li>
-                    <div class="fl-exhibition-header">
-                        <div class="flc-exhibition-guestbookHeader fl-exhibitionAbout-textBlock">guestbook</div>
-                    </div>
-                    <div class="flc-exhibition-guestbook">Actual Guestbook component will appear here</div>
-                    <div class="fl-exhibitionAbout-textBlock">
-                        <div class="flc-exhibition-guestbookInvitation fl-link-summary"></div>
-                    </div>
-                    <div class="fl-force-right fl-exhibition-linkContainer">
-                        <a class="flc-exhibition-guestbookLink" href="#">
-                            <span class="flc-exhibition-guestbookLinkText fl-exhibition-linkText">link</span>
-                        </a>
-                    </div>
+                
+                <li>                    
+                    <h3 class="flc-exhibition-guestbookHeader">guestbook</h3>                    
+                    <div class="flc-exhibition-guestbook">Actual Guestbook component will appear here</div>                    
+                    <div class="flc-exhibition-guestbookInvitation fl-link-summary"></div>                    
+                    <a class="flc-exhibition-guestbookLink fl-button" href="#">
+                        <span class="flc-exhibition-guestbookLinkText">link</span>
+                    </a>
                 </li>
             </ol>
         </div>
