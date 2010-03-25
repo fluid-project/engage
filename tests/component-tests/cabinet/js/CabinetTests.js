@@ -250,16 +250,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var drawers = cmpt.locate("drawer");
             var openDrawer = drawers.eq(0);
             
-            cmpt.openDrawers(openDrawer);
-            mixedStateTests(cmpt, openDrawer);
-            onlyOpenEventsFiredTest();
-        });
-        
-        startClosedTests.test("Toggle Open a Single Drawer", function () {
-            var drawers = cmpt.locate("drawer");
-            var openDrawer = drawers.eq(0);
-            
-            cmpt.toggleDrawers(openDrawer);
+            cmpt.positionDrawers(openDrawer, cmpt.OPEN);
             mixedStateTests(cmpt, openDrawer);
             onlyOpenEventsFiredTest();
         });
@@ -267,15 +258,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         startClosedTests.test("Open All Drawers", function () {
             var drawers = cmpt.locate("drawer");
             
-            cmpt.openDrawers(drawers);
-            openTests(cmpt, drawers);
-            onlyOpenEventsFiredTest();
-        });
-        
-        startClosedTests.test("Toggle Open All Drawers", function () {
-            var drawers = cmpt.locate("drawer");
-            
-            cmpt.toggleDrawers(drawers);
+            cmpt.positionDrawers(drawers, cmpt.OPEN);
             openTests(cmpt, drawers);
             onlyOpenEventsFiredTest();
         });
@@ -287,7 +270,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var drawers = cmpt.locate("drawer");
             var openDrawers = drawers.eq(0).add(drawers.eq(drawers.length - 1));
             
-            cmpt.openDrawers(openDrawers);
+            cmpt.positionDrawers(openDrawers, cmpt.OPEN);
             mixedStateTests(cmpt, openDrawers);
             onlyOpenEventsFiredTest();
         });
@@ -361,16 +344,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var drawers = cmpt.locate("drawer");
             var closedDrawer = drawers.eq(0);
             
-            cmpt.closeDrawers(closedDrawer);
-            mixedStateTests(cmpt, drawers.not(closedDrawer));
-            onlyClosedEventsFiredTest();
-        });
-        
-        startOpenTests.test("Toggle Close a Single Drawer", function () {
-            var drawers = cmpt.locate("drawer");
-            var closedDrawer = drawers.eq(0);
-            
-            cmpt.toggleDrawers(closedDrawer);
+            cmpt.positionDrawers(closedDrawer, cmpt.CLOSED);
             mixedStateTests(cmpt, drawers.not(closedDrawer));
             onlyClosedEventsFiredTest();
         });
@@ -378,15 +352,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         startOpenTests.test("Close All Drawers", function () {
             var drawers = cmpt.locate("drawer");
             
-            cmpt.closeDrawers(drawers);
-            closeTests(cmpt, drawers);
-            onlyClosedEventsFiredTest();
-        });
-        
-        startOpenTests.test("Toggle Closed All Drawers", function () {
-            var drawers = cmpt.locate("drawer");
-            
-            cmpt.toggleDrawers(drawers);
+            cmpt.positionDrawers(drawers, cmpt.CLOSED);
             closeTests(cmpt, drawers);
             onlyClosedEventsFiredTest();
         });
@@ -398,7 +364,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var drawers = cmpt.locate("drawer");
             var closedDrawers = drawers.eq(0).add(drawers.eq(drawers.length - 1));
             
-            cmpt.closeDrawers(closedDrawers);
+            cmpt.positionDrawers(closedDrawers, cmpt.CLOSED);
             mixedStateTests(cmpt, drawers.not(closedDrawers));
             onlyClosedEventsFiredTest();
         });

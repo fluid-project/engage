@@ -14,7 +14,6 @@
 fluid = fluid || {};
 
 (function ($) {
-    
     var addAnchors = function (that) {
         var headers = that.locate("header");
         var headerClass = that.options.selectors.header.substr(1);
@@ -120,18 +119,6 @@ fluid = fluid || {};
     };
     
     /**
-     * Opens/Closes the specified drawers, and fires the appropriate events.
-     * 
-     * @param {Object} that, the component
-     * @param {Object} openState, a boolean representing the open state of the drawer. True === open.
-     * @param {Object} selector, a selector representing the drawers to open/close
-     * @param {Object} stopEvent, a boolean used to prevent the event from firing. 
-     */
-    var moveDrawers = function (that, moveFunc, selector, stopEvent) {
-        moveFunc(that, selector, stopEvent);
-    };
-    
-    /**
      * Finds the drawer for a given handle
      * 
      * @param {Object} that, the component
@@ -144,6 +131,26 @@ fluid = fluid || {};
     };
     
     /**
+     * Toggles the open state of the drawer. 
+     * 
+     * @param {Object} drawer, the drawers to open/close
+     */
+    var toggleDrawers = function (that, drawers) {
+        var sty = that.options.styles;
+        drawers = fluid.wrap(drawers);
+        
+        drawers.each(function (index, drawer) {
+            var elm = $(drawer);
+            
+            if (elm.hasClass(sty.drawerClosed)) {
+                that.positionDrawers(elm, that.OPEN);
+            } else if (elm.hasClass(sty.drawerOpened)) {
+                that.positionDrawers(elm, that.CLOSED);
+            }
+        });
+    };
+    
+    /**
      * Adds a click event to each handle for opening/closing the drawer
      * 
      * @param {Object} that, the component
@@ -153,7 +160,7 @@ fluid = fluid || {};
         
         handle.unbind("click.cabinet");
         handle.bind("click.cabinet", function () {
-            that.toggleDrawers(findHandleBase(that, this));
+            toggleDrawers(that, findHandleBase(that, this));
         });
     };
     
@@ -168,7 +175,7 @@ fluid = fluid || {};
             selectableSelector: that.options.selectors.handle
         });
         that.locate("handle").fluid("activatable", function (evt) {
-            that.toggleDrawers(findHandleBase(that, evt.target));
+            toggleDrawers(that, findHandleBase(that, evt.target));
         });
     };
     
@@ -190,40 +197,21 @@ fluid = fluid || {};
     fluid.cabinet = function (container, options) {
         var that = fluid.initView("fluid.cabinet", container, options);
         
-        /**
-         * Toggles the open state of the drawer. 
-         * 
-         * @param {Object} drawer, the drawers to open/close
-         */
-        that.toggleDrawers = function (drawer) {
-            drawer = fluid.wrap(drawer);
-            drawer.each(function (index, element) {
-                var elm = $(element);
-                
-                if (elm.hasClass(that.options.styles.drawerClosed)) {
-                    that.openDrawers(elm);
-                } else if (elm.hasClass(that.options.styles.drawerOpened)) {
-                    that.closeDrawers(elm);
-                }
-            });
-        };
+        //Constants
+        that.OPEN = open; //Represents the open position
+        that.CLOSED = close; //Represents the closed position
         
         /**
-         * Opens all specified drawers
+         * Adjusts the position (open/closed) of the drawers, specified by a desired position
          * 
-         * @param {Object} selector, the set of drawers to open
+         * @param {Object} drawers, a selector representing the drawers to be moved
+         * @param {Object} position, a constant specified in the component "OPEN" or "CLOSED", 
+         * representing want the final state of the drawers should be.
          */
-        that.openDrawers = function (selector) {
-            moveDrawers(that, open, selector);
-        };
-        
-        /**
-         * Closes all specified drawers
-         * 
-         * @param {Object} selector, the set of drawers to close
-         */
-        that.closeDrawers = function (selector) {
-            moveDrawers(that, close, selector);
+        that.positionDrawers = function (drawers, position) {
+            if (position === that.OPEN || position === that.CLOSED) {
+                position(that, drawers);
+            }
         };
         
         /**
@@ -235,11 +223,11 @@ fluid = fluid || {};
             setHeaders(that);
             addAria(that);
             addCSS(that);
-            
+
             if (that.options.startOpen) {
-                moveDrawers(that, open, that.locate(that.options.openByDefault ? "openByDefault" : "drawer"), true);
+                open(that, that.locate(that.options.openByDefault ? "openByDefault" : "drawer"), true);
             } else {
-                moveDrawers(that, close, that.locate("drawer"), true);
+                close(that, that.locate("drawer"), true);
             }
     
             addClickEvent(that);
