@@ -50,10 +50,7 @@ fluid = fluid || {};
         that.locate("handle").each(function () {
             var handle = $(this);
             ids.push(fluid.allocateSimpleId(handle));
-            handle.attr({
-                role: "tab",
-                "aria-expanded": that.options.startOpen
-            });
+            handle.attr("role", "tab");
         });
         
         that.locate("contents").each(function (idx) {
@@ -86,10 +83,10 @@ fluid = fluid || {};
      * @param {Object} eventName, the name of the event to fire.
      */
     var drawerAdjust = function (that, selector, addedStyleName, removedStyleName, ariaString, eventName) {
-        selector = fluid.wrap(selector);
-        selector.addClass(that.options.styles[addedStyleName]);
-        selector.removeClass(that.options.styles[removedStyleName]);
-        that.locate("handle", selector).attr("aria-expanded", ariaString);
+        var drawers = $(selector).filter(that.options.selectors.drawer);
+        drawers.addClass(that.options.styles[addedStyleName]);
+        drawers.removeClass(that.options.styles[removedStyleName]);
+        that.locate("handle", drawers).attr("aria-expanded", ariaString);
 
         if (eventName) {
             that.events[eventName].fire(selector);
@@ -220,15 +217,13 @@ fluid = fluid || {};
          * This is usefull for when drawers are added/removed after instatiating the cabinet.
          */
         that.refreshView = function () {
+            var openDrawers = that.locate("openByDefault");
             setHeaders(that);
             addAria(that);
             addCSS(that);
 
-            if (that.options.startOpen) {
-                open(that, that.locate(that.options.openByDefault ? "openByDefault" : "drawer"), true);
-            } else {
-                close(that, that.locate("drawer"), true);
-            }
+            open(that, openDrawers, true);
+            close(that, that.locate("drawer").not(openDrawers), true);
     
             addClickEvent(that);
             
@@ -264,9 +259,7 @@ fluid = fluid || {};
         events: {
             afterOpen: null,
             afterClose: null
-        },
-        
-        startOpen: false
+        }
     });
     
 })(jQuery);

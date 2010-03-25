@@ -236,8 +236,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
                     afterClose: function () {
                         closeEventFired = true;
                     }
-                },
-                startOpen: false
+                }
             });
         }, resetEventVariables);
         
@@ -331,7 +330,9 @@ https://source.fluidproject.org/svn/LICENSE.txt
                         closeEventFired = true;
                     }
                 },
-                startOpen: true
+                selectors: {
+                    openByDefault: ".flc-cabinet-drawer"
+                }
             });
         }, resetEventVariables);
         
