@@ -14,9 +14,14 @@
 fluid = fluid || {};
 
 (function ($) {
-    var addAnchors = function (that) {
-        var headers = that.locate("header");
-        var headerClass = that.options.selectors.header.substr(1);
+    
+    /**
+     * Checks if the header is wrapped in an anchor and adds one if it isn't.
+     * 
+     * @param {Object} headers, a jquery representing the set of headers
+     * @param {Object} selectorString, a string representing the class for the headers.
+     */
+    var addAnchors = function (headers, headerClass) {
         var anchor = "<a href='#_' class='" + headerClass + "' />";
         
         headers.each(function () {
@@ -27,33 +32,35 @@ fluid = fluid || {};
             }
         });
     };
-    
-    var setHeaders = function (that) {
-        addAnchors(that);
-        that.locate("header").click(function (evt) {
-            evt.preventDefault();
+
+    /**
+     * Adds the tablist aria role and aria-multiselectable property to the container
+     * 
+     * @param {Object} container, the cabinet's container
+     */
+    var addContainerAria = function (container) {
+        container.attr({
+            role: "tablist",
+            "aria-multiselectable": "true"
         });
     };
     
     /**
-     * Ads the various aria properties
+     * Adds the various aria properties to the necessary parts of the drawers
      * 
-     * @param {Object} that, the component
+     * @param {Object} handles, a jquery representing the handles
+     * @param {Object} contents, a jquery representing the contents
      */
-    var addAria = function (that) {
+    var addDrawerAria = function (handles, contents) {
         var ids = [];
-        that.container.attr({
-            role: "tablist",
-            "aria-multiselectable": "true"
-        });
 
-        that.locate("handle").each(function () {
+        handles.each(function () {
             var handle = $(this);
             ids.push(fluid.allocateSimpleId(handle));
             handle.attr("role", "tab");
         });
         
-        that.locate("contents").each(function (idx) {
+        contents.each(function (idx) {
             $(this).attr({
                 role: "tabpanel",
                 "aria-labelledby": ids[idx]
@@ -66,53 +73,64 @@ fluid = fluid || {};
      * 
      * @param {Object} that, the component
      */
-    var addCSS = function (that) {
-        that.locate("drawer").addClass(that.options.styles.drawer);
-        that.locate("contents").addClass(that.options.styles.contents);
-        that.locate("handle").addClass(that.options.styles.handle);
+    var addCSS = function (drawers, contents, handles, styles) {
+        drawers.addClass(styles.drawer);
+        contents.addClass(styles.contents);
+        handles.addClass(styles.handle);
     };
-    
+
     /**
      * A general function to adjust the position of the drawer (open or closed)
      * 
      * @param {Object} that, the component
-     * @param {Object} selector, a selector representing the set of drawers
+     * @param {Object} drawers, a selector representing the set of drawers
      * @param {Object} addedStyleName, the style to be added
      * @param {Object} removedStyleName, the style to be removed
      * @param {Object} ariaString, the string to be added to the "aria-expanded" attribute
      * @param {Object} eventName, the name of the event to fire.
      */
-    var drawerAdjust = function (that, selector, addedStyleName, removedStyleName, ariaString, eventName) {
-        var drawers = $(selector).filter(that.options.selectors.drawer);
+    var drawerAdjustImpl = function (that, drawers, state, addedStyleName, removedStyleName, ariaValue, stopEvent) {
+        drawers = $(drawers).filter(that.options.selectors.drawer);
         drawers.addClass(that.options.styles[addedStyleName]);
         drawers.removeClass(that.options.styles[removedStyleName]);
-        that.locate("handle", drawers).attr("aria-expanded", ariaString);
-
-        if (eventName) {
-            that.events[eventName].fire(selector);
+        that.locate("handle", drawers).attr("aria-expanded", ariaValue);
+        drawers.each(function () {
+            that.model[fluid.allocateSimpleId(this)] = state;
+        });
+        
+        if (!stopEvent) {
+            that.events.afterModelChanged.fire(that.model);
         }
     };
     
     /**
-     * Causes the drawers to appear open
+     * Adjusts the specified drawers to be in the specified state
      * 
      * @param {Object} that, the component
-     * @param {Object} selector, a selector representing the set of drawers to open
-     * @param {Object} stopEvent, a boolean value indicating if an event should be fired.
+     * @param {Object} drawers, the drawers whose state will be set
+     * @param {Object} state, the state to place the drawers in e.g. "open", "closed"
      */
-    var open = function (that, selector, stopEvent) {
-        drawerAdjust(that, selector, "drawerOpened", "drawerClosed", "true", stopEvent ? null : "afterOpen");
-    };
-    
-    /**
-     * Causes the drawers to apper closed, won't close a drawer that doesn't have a handle
-     * 
-     * @param {Object} that, the component
-     * @param {Object} selector, a selector representing the set of drawers to close
-     * @param {Object} stopEvent, a boolean value indicating if an event should be fired.
-     */
-    var close = function (that, selector, stopEvent) {
-        drawerAdjust(that, selector, "drawerClosed", "drawerOpened", "false", stopEvent ? null : "afterClose");
+    var drawerAdjust = function (that, drawers, state, stopEvent) {
+        var newStyle;
+        var oldStyle;
+        var ariaValue;
+        
+        switch (state) {
+        case "open":
+            newStyle = "drawerOpened";
+            oldStyle = "drawerClosed";
+            ariaValue = "true";
+            break;
+        case "closed":
+            newStyle = "drawerClosed";
+            oldStyle = "drawerOpened";
+            ariaValue = "false";
+            break;
+        default:
+            return;
+        }
+        
+        drawerAdjustImpl(that, drawers, state, newStyle, oldStyle, ariaValue, stopEvent);
     };
     
     /**
@@ -128,36 +146,32 @@ fluid = fluid || {};
     };
     
     /**
-     * Toggles the open state of the drawer. 
-     * 
-     * @param {Object} drawer, the drawers to open/close
-     */
-    var toggleDrawers = function (that, drawers) {
-        var sty = that.options.styles;
-        drawers = fluid.wrap(drawers);
-        
-        drawers.each(function (index, drawer) {
-            var elm = $(drawer);
-            
-            if (elm.hasClass(sty.drawerClosed)) {
-                that.positionDrawers(elm, that.OPEN);
-            } else if (elm.hasClass(sty.drawerOpened)) {
-                that.positionDrawers(elm, that.CLOSED);
-            }
-        });
-    };
-    
-    /**
-     * Adds a click event to each handle for opening/closing the drawer
+     * Adds the click handlers to the handles and headers
      * 
      * @param {Object} that, the component
      */
-    var addClickEvent = function (that) {
-        var handle = that.locate("handle");
+    var addClickHandlers = function (that, handles, headers) {
+        handles.unbind("click.cabinet");
+        handles.bind("click.cabinet", function () {
+            var drawer = findHandleBase(that, this);
+            var curState = that.getDrawerState(drawer);
+            that.setDrawers(drawer, curState === "open" ? "closed" : "open");
+        });
         
-        handle.unbind("click.cabinet");
-        handle.bind("click.cabinet", function () {
-            toggleDrawers(that, findHandleBase(that, this));
+        headers.click(function (evt) {
+            evt.preventDefault();
+        });
+    };
+
+    /**
+     * Adds keyboard a11y to the container
+     * 
+     * @param {Object} that, the component
+     */
+    var addContainerKeyNav = function (that) {        
+        that.container.attr("tabindex", 0);
+        that.container.fluid("selectable", {
+            selectableSelector: that.options.selectors.handle
         });
     };
     
@@ -165,15 +179,38 @@ fluid = fluid || {};
      * Adds keyboard a11y to the handles
      * 
      * @param {Object} that, the component
+     * @param {Object} handles, a jquery representing the handles
      */
-    var addKeyNav = function (that) {        
-        that.container.attr("tabindex", 0);
-        that.container.fluid("selectable", {
-            selectableSelector: that.options.selectors.handle
+    var addDrawerKeyNav = function (that, handles, headers) {   
+        headers.attr("tabindex", -1);
+        handles.fluid("activatable", function (evt) {
+            var drawer = findHandleBase(that, evt.target);
+            var curState = that.getDrawerState(drawer);
+            that.setDrawers(drawer, curState === "open" ? "closed" : "open");
         });
-        that.locate("handle").fluid("activatable", function (evt) {
-            toggleDrawers(that, findHandleBase(that, evt.target));
-        });
+    };
+    
+    var init = function (that, drawers) {
+        drawers = fluid.wrap(drawers);
+        var openDrawers = that.locate("openByDefault");
+        var opts = that.options;
+        var headers = that.locate("header", drawers);
+        var handles = that.locate("handle", drawers);
+        var contents = that.locate("contents", drawers);
+        
+        addAnchors(headers, opts.selectors.header.substr(1));
+        addDrawerAria(handles, contents);
+        addCSS(drawers, contents, handles, opts.styles);
+
+        drawerAdjust(that, openDrawers, "open", true);
+        drawerAdjust(that, drawers.not(openDrawers), "closed", true);
+
+        addClickHandlers(that, handles, headers);
+        
+        // Only add keyboard navigation if we've got the keyboard-a11y available to us.
+        if (fluid.a11y) {
+            addDrawerKeyNav(that, handles, headers);
+        }
     };
     
     /**
@@ -182,7 +219,14 @@ fluid = fluid || {};
      * @param {Object} that, the component
      */
     var setup = function (that) {
-        that.refreshView();
+        that.model = {};
+        addContainerAria(that.container);
+        
+        if (fluid.a11y) {
+            addContainerKeyNav(that);
+        }
+        
+        init(that, that.locate("drawer"));
     };
     
     /**
@@ -194,9 +238,14 @@ fluid = fluid || {};
     fluid.cabinet = function (container, options) {
         var that = fluid.initView("fluid.cabinet", container, options);
         
-        //Constants
-        that.OPEN = open; //Represents the open position
-        that.CLOSED = close; //Represents the closed position
+        /**
+         * Returns the state of the specified drawer, or null if the drawer isn't found
+         * 
+         * @param {Object} drawer, a selector representing a single drawer
+         */
+        that.getDrawerState = function (drawer) {
+            return that.model[$(drawer).attr("id")] || null;
+        };
         
         /**
          * Adjusts the position (open/closed) of the drawers, specified by a desired position
@@ -205,10 +254,8 @@ fluid = fluid || {};
          * @param {Object} position, a constant specified in the component "OPEN" or "CLOSED", 
          * representing want the final state of the drawers should be.
          */
-        that.positionDrawers = function (drawers, position) {
-            if (position === that.OPEN || position === that.CLOSED) {
-                position(that, drawers);
-            }
+        that.setDrawers = function (drawers, state) {
+            drawerAdjust(that, drawers, state);
         };
         
         /**
@@ -217,20 +264,11 @@ fluid = fluid || {};
          * This is usefull for when drawers are added/removed after instatiating the cabinet.
          */
         that.refreshView = function () {
-            var openDrawers = that.locate("openByDefault");
-            setHeaders(that);
-            addAria(that);
-            addCSS(that);
-
-            open(that, openDrawers, true);
-            close(that, that.locate("drawer").not(openDrawers), true);
-    
-            addClickEvent(that);
-            
-            // Only add keyboard navigation if we've got the keyboard-a11y available to us.
-            if (fluid.a11y) {
-                addKeyNav(that);
-            }
+            that.locate("drawer").each(function () {
+                if (!that.getDrawerState(this)) {
+                    init(that, this);
+                }
+            });
         };
         
         setup(that);
@@ -257,8 +295,7 @@ fluid = fluid || {};
         },
         
         events: {
-            afterOpen: null,
-            afterClose: null
+            afterModelChanged: null
         }
     });
     

@@ -158,8 +158,14 @@ https://source.fluidproject.org/svn/LICENSE.txt
         jqUnit.assertTrue("Cabinet has attribute aria-multiselectable set to true", hasAttribute(component.container, "aria-multiselectable", "true"));
         jqUnit.assertTrue("Handle has role of tab", hasAttribute(handles, "role", "tab"));
         jqUnit.assertTrue("Handle has attribute of aria-expanded set", hasAttribute(handles, "aria-expanded"));
-        jqUnit.assertTrue("Contents has roel of tabpanel", hasAttribute(contents, "role", "tabpanel"));
+        jqUnit.assertTrue("Contents has role of tabpanel", hasAttribute(contents, "role", "tabpanel"));
         jqUnit.assertTrue("Contents has attribute of aria-labelledby set", hasAttribute(contents, "aria-labelledby"));
+    };
+    
+    var tabindexTests = function (component) {
+        
+        jqUnit.assertEquals("Cabinet container has tabindex set", "0", component.container.attr("tabindex"));
+        jqUnit.assertEquals("Headers have tabindex set", "-1", component.locate("header").attr("tabindex"));
     };
     
     var headerTests = function (component) {
@@ -189,6 +195,10 @@ https://source.fluidproject.org/svn/LICENSE.txt
             ariaAddedTests(cmpt);
         });
         
+        tests.test("Tabindex set", function () {
+            tabindexTests(cmpt);
+        });
+        
         tests.test("Headers are all anchors", function () {
             headerTests(cmpt);
         });
@@ -203,38 +213,26 @@ https://source.fluidproject.org/svn/LICENSE.txt
         });
         
         //variables for event tests
-        var openEventFired;
-        var closeEventFired;
+        var eventFireCount = 0;
         
         var noEventsFiredTest = function () {
-            jqUnit.assertFalse("The open event should not have fired", openEventFired);
-            jqUnit.assertFalse("The close event should not have fired", closeEventFired);
+            jqUnit.assertEquals("Events should not have fired", 0, eventFireCount);
         };
         
-        var onlyOpenEventsFiredTest = function () {
-            jqUnit.assertTrue("The open event should have fired", openEventFired);
-            jqUnit.assertFalse("The close event should not have fired", closeEventFired);
-        };
-        
-        var onlyClosedEventsFiredTest = function () {
-            jqUnit.assertFalse("The open event should not have fired", openEventFired);
-            jqUnit.assertTrue("The close event should have fired", closeEventFired);
+        var eventFiredTest = function (expected) {
+            jqUnit.assertEquals("An event should have fired", expected || 1, eventFireCount);
         };
         
         var resetEventVariables = function () {
-            openEventFired = false;
-            closeEventFired = false;
+            eventFireCount = 0;
         };
     
         //Tests when drawers started closed
         var startClosedTests = jqUnit.testCase("Cabinet Tests - Drawers started closed", function () {
             cmpt = setup({
                 listeners: {
-                    afterOpen: function () {
-                        openEventFired = true;
-                    },
-                    afterClose: function () {
-                        closeEventFired = true;
+                    afterModelChanged: function () {
+                        eventFireCount++;
                     }
                 }
             });
@@ -249,17 +247,17 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var drawers = cmpt.locate("drawer");
             var openDrawer = drawers.eq(0);
             
-            cmpt.positionDrawers(openDrawer, cmpt.OPEN);
+            cmpt.setDrawers(openDrawer, "open");
             mixedStateTests(cmpt, openDrawer);
-            onlyOpenEventsFiredTest();
+            eventFiredTest();
         });
         
         startClosedTests.test("Open All Drawers", function () {
             var drawers = cmpt.locate("drawer");
             
-            cmpt.positionDrawers(drawers, cmpt.OPEN);
+            cmpt.setDrawers(drawers, "open");
             openTests(cmpt, drawers);
-            onlyOpenEventsFiredTest();
+            eventFiredTest();
         });
         
         startClosedTests.test("OpenDrawers function works after refresh", function () {
@@ -269,9 +267,9 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var drawers = cmpt.locate("drawer");
             var openDrawers = drawers.eq(0).add(drawers.eq(drawers.length - 1));
             
-            cmpt.positionDrawers(openDrawers, cmpt.OPEN);
+            cmpt.setDrawers(openDrawers, "open");
             mixedStateTests(cmpt, openDrawers);
-            onlyOpenEventsFiredTest();
+            eventFiredTest();
         });
         
         startClosedTests.test("Open Drawer With a Click", function () {
@@ -280,7 +278,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             
             cmpt.locate("handle", openDrawer).click();
             mixedStateTests(cmpt, openDrawer);
-            onlyOpenEventsFiredTest();
+            eventFiredTest();
         });
         
         startClosedTests.test("Open Drawer With a Space Key", function () {
@@ -290,7 +288,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 
                 simulateKeyDown(cmpt.locate("handle", openDrawer), SPACE);
                 mixedStateTests(cmpt, openDrawer);
-                onlyOpenEventsFiredTest();
+                eventFiredTest();
             }
         });
         
@@ -301,7 +299,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 
                 simulateKeyDown(cmpt.locate("handle", openDrawer), ENTER);
                 mixedStateTests(cmpt, openDrawer);
-                onlyOpenEventsFiredTest();
+                eventFiredTest();
             }
         });
         
@@ -315,7 +313,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 
                 cmpt.locate("handle", openDrawers).click();
                 mixedStateTests(cmpt, openDrawers);
-                onlyOpenEventsFiredTest();
+                eventFiredTest(2);
             }
         });
         
@@ -323,11 +321,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
         var startOpenTests = jqUnit.testCase("Cabinet Tests - Drawers started open", function () {
             cmpt = setup({
                 listeners: {
-                    afterOpen: function () {
-                        openEventFired = true;
-                    },
-                    afterClose: function () {
-                        closeEventFired = true;
+                    afterModelChanged: function () {
+                        eventFireCount++;
                     }
                 },
                 selectors: {
@@ -345,17 +340,17 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var drawers = cmpt.locate("drawer");
             var closedDrawer = drawers.eq(0);
             
-            cmpt.positionDrawers(closedDrawer, cmpt.CLOSED);
+            cmpt.setDrawers(closedDrawer, "closed");
             mixedStateTests(cmpt, drawers.not(closedDrawer));
-            onlyClosedEventsFiredTest();
+            eventFiredTest();
         });
         
         startOpenTests.test("Close All Drawers", function () {
             var drawers = cmpt.locate("drawer");
             
-            cmpt.positionDrawers(drawers, cmpt.CLOSED);
+            cmpt.setDrawers(drawers, "closed");
             closeTests(cmpt, drawers);
-            onlyClosedEventsFiredTest();
+            eventFiredTest();
         });
         
         startOpenTests.test("CloseDrawers function works after refresh", function () {
@@ -365,9 +360,9 @@ https://source.fluidproject.org/svn/LICENSE.txt
             var drawers = cmpt.locate("drawer");
             var closedDrawers = drawers.eq(0).add(drawers.eq(drawers.length - 1));
             
-            cmpt.positionDrawers(closedDrawers, cmpt.CLOSED);
+            cmpt.setDrawers(closedDrawers, "closed");
             mixedStateTests(cmpt, drawers.not(closedDrawers));
-            onlyClosedEventsFiredTest();
+            eventFiredTest();
         });
 
         startOpenTests.test("Close Drawer With a Click", function () {
@@ -376,7 +371,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             
             cmpt.locate("handle", closedDrawer).click();
             mixedStateTests(cmpt, drawers.not(closedDrawer));
-            onlyClosedEventsFiredTest();
+            eventFiredTest();
         });
         
         startOpenTests.test("Close Drawer With a Space Key", function () {
@@ -386,7 +381,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 
                 simulateKeyDown(cmpt.locate("handle", closedDrawer), SPACE);
                 mixedStateTests(cmpt, drawers.not(closedDrawer));
-                onlyClosedEventsFiredTest();
+                eventFiredTest();
             }
         });
         
@@ -397,7 +392,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 
                 simulateKeyDown(cmpt.locate("handle", closedDrawer), ENTER);
                 mixedStateTests(cmpt, drawers.not(closedDrawer));
-                onlyClosedEventsFiredTest();
+                eventFiredTest();
             }        
         });
         
@@ -411,7 +406,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 
                 cmpt.locate("handle", closedDrawers).click();
                 mixedStateTests(cmpt, drawers.not(closedDrawers));
-                onlyClosedEventsFiredTest();
+                eventFiredTest(2);
             }
         });
     });
