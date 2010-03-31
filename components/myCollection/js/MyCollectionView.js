@@ -128,7 +128,6 @@ fluid.engage = fluid.engage || {};
             modal: false,
             position: ["center", "top"],
             width: 320,
-            minHeight: 200,
             dialogClass: that.options.styles.dialogClass,
             buttons: {},
             closeText: "",

@@ -46,6 +46,10 @@
     margin: auto;
 }
 
+.fl-myCollection-dialogContainer {
+    overflow: hidden;
+}
+
 .fl-myCollection-sendMailDialog {
     display: none;
     padding: 55px 10px 0 10px;
@@ -59,7 +63,7 @@
     float:right
 }
 
-.ui-state-default {
+.ui-dialog-buttonpane button {
     font-size: 14px;
     -webkit-border-bottom-left-radius: 10px 10px;
     -webkit-border-bottom-right-radius: 10px 10px;
@@ -99,7 +103,7 @@
 .fl-theme-engageMobile .fl-myCollection-sendMailDialog {
     color: white;
 }
-.fl-theme-engageMobile .ui-state-default {
+.fl-theme-engageMobile .ui-dialog-buttonpane button {
     color: #4D4D4D;
     background: #F5F5F5;
     border-color: rgba(62, 62, 62, 0.9);
