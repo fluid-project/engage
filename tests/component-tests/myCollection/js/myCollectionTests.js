@@ -15,7 +15,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 (function ($) {
     $(document).ready(function () {
         var tests = {};
-        var model = [];
+        var options = [];
         var component;
 
         var setup = function () {
@@ -34,25 +34,23 @@ https://source.fluidproject.org/svn/LICENSE.txt
             $.ajax({
                 url: url,
                 success: function (returnedData) {
-                        model = JSON.parse(returnedData);
-                    },
+                    options = JSON.parse(returnedData);
+                },
                 async: false
             });
             
-            component = fluid.engage.myCollection(".flc-myCollection-container", {
-                navigationList: {
-                    type: "fluid.navigationList",
-                    options: {
-                        listeners: {
-                            afterRender: function () {
-                                start();
+            component = fluid.engage.myCollection(".flc-myCollection-container", 
+                $.extend(true, {
+                    navigationList: {
+                        type: "fluid.navigationList",
+                        options: {
+                            listeners: {
+                                afterRender: function () {
+                                    start();
+                                }
                             }
                         }
-                    }
-                },
-                model: model
-            });
-
+                    }}, options));
             // Here we delay the running of the tests to allow the My Collection component
             // to be initialized. This is necessary because its initialization is delayed.
             stop();
@@ -84,11 +82,11 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 expect(3);
                 
                 jqUnit.assertEquals("Model length matches data length.",
-                        model.length, component.model.length);
+                        options.model.length, component.model.length);
                 jqUnit.assertEquals("Model node artifact ID matches passed ID.",
-                        model[0].id, component.model[0].id);
+                        options.model[0].id, component.model[0].id);
                 jqUnit.assertEquals("Model node museum matches passed museum.",
-                        model[0].museum, component.model[0].museum);
+                        options.model[0].museum, component.model[0].museum);
             });
         };
 
