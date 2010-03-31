@@ -173,11 +173,17 @@ fluid = fluid || {};
         that.refreshView();
     };
     
-    var updateSectionHeader = function (that, cabinetSelector, newSectionHeaderText) {
-        var section = that.sections[that.locate("sections", that.options.selectors.sectionContainer).index(cabinetSelector)];
-        that.locate("sectionHeader", cabinetSelector)
-            .text(fluid.stringTemplate(that.options.strings[section[newSectionHeaderText]], 
-                {size: section.sectionSize}));
+    var updateSectionHeader = function (that, model) {
+        var index = 0;
+        $.each(model, function (id, status) {
+            var header = that.locate("sectionHeader", "#" + id),
+                section = that.sections[index++],
+                newHeader = fluid.stringTemplate(that.options.strings[section[status === "open" ? 
+                    "sectionTitleOpenKey" : "sectionTitleKey"]], {size: section.sectionSize});
+            if (header.text() !== newHeader) {
+                header.text(newHeader);
+            }
+        });
     };
     
     var setupSubcomponents = function (that) {
@@ -198,11 +204,8 @@ fluid = fluid || {};
         
         if (that.sections.length > 0 && that.options.useCabinet) {
             that.cabinet = fluid.initSubcomponent(that, "cabinet", [that.locate("sectionContainer"), fluid.COMPONENT_OPTIONS]);
-            that.cabinet.events.afterOpen.addListener(function (cabinetSelector) {
-                updateSectionHeader(that, cabinetSelector, "sectionTitleOpenKey");
-            });
-            that.cabinet.events.afterClose.addListener(function (cabinetSelector) {
-                updateSectionHeader(that, cabinetSelector, "sectionTitleKey");
+            that.cabinet.events.afterModelChanged.addListener(function (model) {
+                updateSectionHeader(that, model);
             });
         }
         // Note current deficient, time-dependent and awkward strategy based on rebuilding components on re-render, awaiting
