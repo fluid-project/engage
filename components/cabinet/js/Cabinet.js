@@ -22,13 +22,15 @@ fluid = fluid || {};
      * @param {Object} selectorString, a string representing the class for the headers.
      */
     var addAnchors = function (headers, headerClass) {
-        var anchor = "<a href='#_' class='" + headerClass + "' />";
+        var anchor = "<a href='#_' class='" + headerClass + "' tabindex='-1' />";
         
         headers.each(function () {
             var header = $(this);
             if (!header.is("a")) {
                 header.wrapInner(anchor);
                 header.removeClass(headerClass);
+            } else {
+                header.attr("tabindex", -1);
             }
         });
     };
