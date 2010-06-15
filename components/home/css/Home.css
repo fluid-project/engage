@@ -1,0 +1,41 @@
+.fl-hidden {
+    display: none;
+}
+
+/* For Home Screen */
+.fl-home .fl-list-thumbnails.fl-grid {
+    padding-top: 20px;
+    padding-left: 10px;
+}
+
+.fl-home .fl-list-thumbnails.fl-grid li {
+    width: 100px;
+    height: 100px;
+}
+
+.fl-home .fl-list-thumbnails.fl-grid li .fl-table {
+    width: 84px;
+}
+
+.fl-home .fl-list-thumbnails.fl-grid li .fl-grid-caption {
+    width: 84px;    
+}
+
+.fl-home .fl-list-thumbnails.fl-grid li a {
+    background-color: rgb(255,255,255);
+}
+
+/* For Language Selection */
+.fl-languageSelection .fl-navbar.fl-table .fl-table-row img.fl-table-cell {
+    height: 40px;
+    width: 40px;
+}
+
+.fl-languageSelection li {
+    text-align: center;
+}
+
+.fl-theme-iphone .fl-languageSelection [class*=fl-list]:not(.fl-list):not(.fl-grid) a,
+.fl-theme-iphone .fl-languageSelection [class*=fl-list]:not(.fl-list):not(.fl-grid) a:active {
+    background: none;
+}

@@ -1,0 +1,10 @@
+{
+	"addNote": "Add Note",
+	"delete": "Delete",
+	"reportAbuse": "Report Abuse",
+	"abuseReported": "Abuse reported. Pending moderator review",
+	"cancel": "Cancel",
+  "submit": "Submit",
+  "commentEntry": "Comment Entry",
+  "title":  "Guestbook for This Exhibition"
+}

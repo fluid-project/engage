@@ -1,0 +1,67 @@
+.fl-theme-iphone {
+	background:	#f3f3f3;
+}
+
+.fl-codeEntry-headMessage {
+    width: 320px;
+    height: 80px;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
+.fl-codeEntry-invalidCode {
+	color: white;
+	background-color: #464646;
+}
+
+.fl-codeEntry-block {
+    width: 300px;	
+    margin: auto;
+    text-align: center;
+}
+
+.fl-codeEntry-digitField {
+	width: 64px;
+	height: 64px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-size: 43px;
+	line-height: 64px;
+	text-align: center;
+	vertical-align: middle;
+	background-color: white;
+	display: inline-block;
+}
+
+.fl-codeEntry-numpad {
+	width: 320px;
+	margin: auto; 
+}
+
+.fl-codeEntry-numpadItem {
+	position: relative;
+    margin: 0px;
+    margin-bottom: 1px;
+    outline: 0 none;
+    cursor: pointer;
+    border: 0px none;
+    padding: 0px;
+    float: left;
+}
+
+.fl-codeEntry-middleButton {
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+.fl-codeEntry-hidden {
+    position:absolute;
+    left:-10000px;
+    top:auto;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+}
+

@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <title>Comment entry</title>
+        
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" />
+        
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/engage-mobile.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationBar/css/NavigationBar.css" />
+        
+        <link type="text/css" rel="stylesheet" href="../css/guestbook.css" />
+        
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/json/js/json2.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
+        
+        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/plugins/cookie/js/jquery.cookie.js"></script>  
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/user.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/kettleCore.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/URLUtilities.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationBar/js/NavigationBar.js"></script>
+        
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/guestbook/js/guestbook.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/dateUtils.js"></script>
+        
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/loadData.js" rsf:id="scr=ignore"></script>
+    </head>
+    <body class="fl-theme-iphone">
+        <!--DISREPUTABLE TEMPLATE BOUNDARY-->
+        <div class="flc-guestbook-container" >
+        
+            <!-- Navigation Bar and Header -->
+            <div class="flc-navigationBar fl-navbar fl-col-mixed">
+                <!-- Back button -->
+                <div class="fl-col-fixed fl-force-left">
+                    <a class="flc-navigationBar-back fl-button fl-backButton" href="#">
+                        <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/back.png" alt="Go back"/>
+                    </a>
+                </div>
+                <!-- Page header -->
+                <h1 class="flc-guestbook-commentEntry fl-navbar-title fl-col-flex">Comment entry</h1>
+            </div>
+            <form class="flc-guestbook-form">
+	            <textarea class="flc-guestbook-text fl-guestbook-textarea-width fl-guestbook-textarea-height"></textarea>
+	            <div class="fl-push"> </div>
+	            <div class="fl-guestbook-buttons fl-guestbook-textarea-width" >
+	                <div class="fl-force-right">
+	                    <input class="flc-guestbook-cancel" type="submit" value="Cancel"/>
+	                    <input class="flc-guestbook-submit" type="submit" value="Submit"/>
+	                </div>
+	            </div>
+            </form>
+        </div>
+        <!--DISREPUTABLE TEMPLATE BOUNDARY-->
+        <script id="flc-initBlock" type="text/javascript">
+            fluid.engage.guestbookComment(".flc-guestbook-container", {});
+        </script>
+    </body>
+</html>

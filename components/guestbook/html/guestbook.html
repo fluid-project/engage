@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <title>Guestbook</title>
+        
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" />
+        
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/engage-mobile.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationBar/css/NavigationBar.css" />
+        
+        <link type="text/css" rel="stylesheet" href="../css/guestbook.css" />
+        
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/json/js/json2.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/FluidDOMUtilities.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/DataBinding.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>
+        
+        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/plugins/cookie/js/jquery.cookie.js"></script>  
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/user.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/kettleCore.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/URLUtilities.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageRenderUtils.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationBar/js/NavigationBar.js"></script>
+        
+        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/datepicker/ui.datepicker-stub.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/datepicker/i18n/jquery.ui.datepicker-en-GB.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/datepicker/i18n/jquery.ui.datepicker-fr.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/dateUtils.js"></script>
+
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/guestbook/js/guestbook.js"></script>
+
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/loadData.js" rsf:id="scr=ignore"></script>
+    </head>
+    <body class="fl-theme-iphone">
+        <!--DISREPUTABLE TEMPLATE BOUNDARY-->
+        <div class="flc-guestbook-container fl-guestbook" >
+                        <!-- Navigation Bar and Header -->
+            <div class="flc-navigationBar fl-navbar fl-col-mixed">
+                <!-- Back button -->
+                <div class="fl-col-fixed fl-force-left">
+                    <a class="flc-navigationBar-back fl-button fl-backButton" href="#">
+                        <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/back.png" alt="Go back"/>
+                    </a>
+                </div>
+                <!-- Home button -->
+                <div class="fl-col-fixed fl-force-left">
+                    <a class="flc-navigationBar-home fl-button" href="#">
+                        <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/home.png" alt="Go home"/>
+                    </a>
+                </div>
+                <!-- Page header -->
+                <h1 class="flc-guestbook-title fl-navbar-title fl-col-flex">Guestbook for This Exhibition</h1>
+            </div>
+            
+            <div class="flc-guestbook-addnote fl-guestbook-addnote">
+               <div class="fl-centered">
+                   <a class="flc-guestbook-addnote-control" href="comment.html">
+                       <label for="fl-addnote" class="flc-guestbook-addnote-text fl-guestbook-title">Add a note</label>
+                       <span id="fl-addnote" class="fl-guestbook-addnote-control"></span>
+                   </a>
+               </div>
+            </div>
+            <div class="flc-guestbook-comment-cell fl-guestbook-comment-cell">
+              <div class="fl-guestbook-header fl-push">
+                <span class="flc-guestbook-author fl-guestbook-author fl-guestbook-slash-after">Robert Brown</span>
+                <span class="flc-guestbook-location fl-guestbook-location fl-guestbook-slash-after">Washington, DC</span>
+                <span class="flc-guestbook-date fl-guestbook-date">July 16, 2009</span>
+              </div>
+                <span class="flc-guestbook-text fl-guestbook-text fl-push">I had such an amazing time at this
+                exhibit! Really loved the red sleigh especially. I had one just like it growing up</span>
+              <div class="fl-push"> </div>
+              <div class="fl-guestbook-actions fl-force-right">
+                <a class="flc-guestbook-action fl-guestbook-action">REPORT ABUSE</a>
+              </div>
+              <div class="fl-push"> </div>
+            </div>
+        </div>
+        <!--DISREPUTABLE TEMPLATE BOUNDARY-->
+        <script id="flc-initBlock" type="text/javascript">
+            fluid.engage.initComponentWithLocalData("fluid.engage.guestbook", ".flc-guestbook-container");
+        </script>
+    </body>
+</html>

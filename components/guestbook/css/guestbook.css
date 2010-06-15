@@ -1,0 +1,55 @@
+.fl-guestbook-addnote {
+    height: 48px;
+    text-align:center;
+    font-size:19px;
+    background:#F6F7F7;
+}
+
+.fl-guestbook-text {
+    font-size: 19px;
+}
+
+/* Image must be specified in background like this since URLs are not 
+ * yet rewritten in dependent templates */
+.fl-guestbook-addnote-control {
+    height: 24px;
+    width: 28px;
+    background-image: url("../images/addnote.png");
+    display: inline-block
+}
+
+.fl-guestbook-header {
+    color: #666;
+    font-weight: lighter;
+    font-size: 16px;
+}
+    
+.fl-guestbook-author {
+    color: #000;
+    font-weight: bold;
+    font-size: 16px;
+}
+    
+.fl-guestbook-slash-after:after {
+    color: #666;
+    content: " / ";
+}
+    
+.fl-guestbook-comment-cell {
+    padding: 2px;
+    border-bottom: 1px solid #aaa;
+}
+
+a.fl-guestbook-action {
+    text-decoration: underline;
+    cursor: Pointer;
+    font-size:16px;
+}
+
+.fl-guestbook-textarea-height {
+    height: 10em;
+}
+
+.fl-guestbook-textarea-width {
+    width:90%;
+}

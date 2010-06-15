@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <title>Exhibition</title>
+        
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/engage-mobile.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationBar/css/NavigationBar.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/exhibition/css/Exhibition.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationList/css/NavigationList.css" />
+        
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/json/js/json2.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/FluidDOMUtilities.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/DataBinding.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>
+
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/kettleCore.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/URLUtilities.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageRenderUtils.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/loadData.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationBar/js/NavigationBar.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationList/js/NavigationList.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/exhibition/js/ExhibitionView.js"></script>
+
+        <!-- Dependencies for Guestbook - will one day be applied automatically -->        
+        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/plugins/cookie/js/jquery.cookie.js"></script>  
+        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/datepicker/ui.datepicker-stub.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/datepicker/i18n/jquery.ui.datepicker-en-GB.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/lib/jquery/datepicker/i18n/jquery.ui.datepicker-fr.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/dateUtils.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/guestbook/js/guestbook.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/user.js"></script>
+        
+        <link type="text/css" rel="stylesheet" href="../../guestbook/css/guestbook.css" />
+        
+    </head>   
+    <body class="fl-theme-iphone">
+        <div class="flc-exhibition-container fl-exhibition">
+            
+            <!-- Navigation Bar and Header -->
+            <div class="flc-navigationBar fl-navbar fl-col-mixed">
+                <!-- Back button -->
+                <div class="fl-col-fixed fl-force-left">
+                    <a rsf:id="scr=null" class="flc-navigationBar-back fl-button fl-backButton" href="#">
+                        <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/back.png" alt="Go back"/>
+                    </a>
+                </div>
+                <!-- Home button -->
+                <div class="fl-col-fixed fl-force-left">
+                    <a rsf:id="scr=null" class="flc-navigationBar-home fl-button" href="#">
+                        <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/home.png" alt="Go home"/>
+                    </a>
+                </div>
+                <!-- Page header -->
+                <h1 class="flc-exhibition-navBarTitle fl-navbar-title fl-col-flex">Exhibition View</h1>
+            </div>
+
+            <ol class="fl-list-menu">
+                <li>
+                    <h2 class="flc-exhibition-title fl-exhibition-title">title</h2>
+                    <div class="fl-exhibitionAbout-textBlock">
+                        <div class="flc-exhibition-shortDescription fl-exhibition-shortDescription">Short Description</div>
+                        <div class="flc-exhibition-displayDate fl-exhibition-displayDate">Display Date</div>
+                    </div>
+                    <div class="fl-force-right fl-exhibition-linkContainer">
+                        <a class="flc-exhibition-aboutLink" href="#">
+                            <span class="flc-exhibition-aboutLinkText fl-exhibition-linkText">link</span>
+                        </a>
+                    </div>
+                </li>
+                <li class="flc-exhibition-catalogue">
+                    <div class="fl-exhibition-header">
+                        <div class="flc-exhibition-catalogue-title fl-exhibition-catalogue-title fl-exhibitionAbout-textBlock">catalogue</div>
+                    </div>
+                    
+                    <ul class="flc-navigationList-listGroup fl-navigationList-container fl-list fl-list-thumbnails fl-thumbnails-expanded fl-grid">
+                        <li class="flc-navigationList-items">                
+                            <div class="flc-navigationList-linkContainer fl-table">
+                                <a class="flc-navigationList-link fl-table-cell fl-engage-badged-thumbnail" href="#">
+                                    <img class="flc-navigationList-image fl-icon" alt="icon" />
+                                    <img class="flc-navigationList-badge-icon fl-engage-badge-icon"
+                                         src="../../../../fluid-engage-core/shared/images/media-badge.png" 
+                                         alt="This artifact includes media" />
+                                </a>
+                            </div>
+                            <div class="flc-navigationList-titleText fl-navigationList-titleText">title</div>
+                        </li>
+                    </ul>
+                    <div class="fl-force-right fl-exhibition-linkContainer">
+                        <a class="flc-exhibition-catalogueLink" href="#">
+                            <span class="flc-exhibition-catalogueLinkText fl-exhibition-linkText">link</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="fl-exhibition-header">
+                        <div class="flc-exhibition-guestbookHeader fl-exhibitionAbout-textBlock">guestbook</div>
+                    </div>
+                    <div class="flc-exhibition-guestbook">Actual Guestbook component will appear here</div>
+                    <div class="fl-exhibitionAbout-textBlock">
+                        <div class="flc-exhibition-guestbookInvitation fl-link-summary"></div>
+                    </div>
+                    <div class="fl-force-right fl-exhibition-linkContainer">
+                        <a class="flc-exhibition-guestbookLink" href="#">
+                            <span class="flc-exhibition-guestbookLinkText fl-exhibition-linkText">link</span>
+                        </a>
+                    </div>
+                </li>
+            </ol>
+        </div>
+        <div id="guestbook-template" class="fl-offScreen-hidden">
+           The markup for the guestbook template is inserted here when run from the server.
+        </div>
+        <script id="flc-initBlock" type="text/javascript">
+            fluid.engage.initComponentWithLocalData("fluid.engage.exhibitionView", ".flc-exhibition-container", 
+                { guestbook: {
+                    type: "fluid.engage.guestbook", 
+                    options: {templateSource: fluid.kettle.fetchTemplateSection("../../guestbook/html/guestbook.html").data,
+                              model: fluid.kettle.operateUrl("../../guestbook/data/demoData.json", JSON.parse, {async: false}).data
+                             }
+                             }
+                    });
+        </script>
+    </body>
+</html>

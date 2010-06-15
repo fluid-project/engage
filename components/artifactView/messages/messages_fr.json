@@ -1,0 +1,10 @@
+{
+    "artifactMedia": "Voir les contenus audios et vidéos (%size)",
+    "artifactComments": "Voir les commentaires (%size)",
+    "artifactRelated": "Voir les artéfacts associés (%size)",
+    "comment": "Commenter",
+    "collect": "Collectionner",
+    "uncollect": "Retirer",
+    "collectedMessage": "Ajouté à \"votre collection\". Tapez ici pour y accéder.",
+    "uncollectedMessage": "Retiré de \"votre collection\". Tapez ici pour y accéder."
+}

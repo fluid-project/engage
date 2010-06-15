@@ -1,0 +1,74 @@
+{
+    categories: [
+        {
+            name: "Category 1",
+            items: [
+                    {
+                        target: "../../navigationList/images/Artifacts-.jpg",
+                        image: "../../navigationList/images/Artifacts-.jpg",
+                        title: "Title 1",
+                        description: "Description 1"
+                    },
+                    {
+                        target: "../../navigationList/images/Snuffbox.jpg",
+                        image: "../../navigationList/images/Snuffbox.jpg",
+                        title: "Title 2",
+                        description: "Description 2"
+                    },
+                    {
+                        target: "../../navigationList/images/Snuffbox.jpg",
+                        image: "../../navigationList/images/Snuffbox.jpg",
+                        title: "Title 3",
+                        description: "Description 3"
+                    }
+                ]
+            
+        },
+        {
+            name: "Category 2",
+            items: [
+                    {
+                        target: "../../navigationList/images/Artifacts-.jpg",
+                        image: "../../navigationList/images/Artifacts-.jpg",
+                        title: "Title 1",
+                        description: "Description 1"
+                    },
+                    {
+                        target: "../../navigationList/images/Snuffbox.jpg",
+                        image: "../../navigationList/images/Snuffbox.jpg",
+                        title: "Title 2",
+                        description: "Description 2"
+                    },
+                    {
+                        target: "../../navigationList/images/Snuffbox.jpg",
+                        image: "../../navigationList/images/Snuffbox.jpg",
+                        title: "Title 3",
+                        description: "Description 3"
+                    }
+                ]
+        },
+        {
+            name: "Category 3",
+            items: [
+                    {
+                        target: "../../navigationList/images/Artifacts-.jpg",
+                        image: "../../navigationList/images/Artifacts-.jpg",
+                        title: "Title 1",
+                        description: "Description 1"
+                    },
+                    {
+                        target: "../../navigationList/images/Snuffbox.jpg",
+                        image: "../../navigationList/images/Snuffbox.jpg",
+                        title: "Title 2",
+                        description: "Description 2"
+                    },
+                    {
+                        target: "../../navigationList/images/Snuffbox.jpg",
+                        image: "../../navigationList/images/Snuffbox.jpg",
+                        title: "Title 3",
+                        description: "Description 3"
+                    }
+                ]
+        }
+    ]
+}

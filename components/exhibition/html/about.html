@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <title>About</title>
+        
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-theme-iphone.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/shared/css/engage-mobile.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/navigationBar/css/NavigationBar.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../fluid-engage-core/components/exhibition/css/Exhibition.css" />
+        
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/FluidDOMUtilities.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/core/js/DataBinding.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
+        <script type="text/javascript" src="../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>
+        
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/kettleCore.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/URLUtilities.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/engageRenderUtils.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/navigationBar/js/NavigationBar.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/components/exhibition/js/ExhibitionView.js"></script>
+        <script type="text/javascript" src="../../../../fluid-engage-core/framework/js/loadData.js"></script>
+    </head>   
+    <body class="fl-theme-iphone">
+        <div class="flc-exhibition-container">
+            
+            <!-- Navigation Bar and Header -->
+            <div class="flc-navigationBar fl-navbar fl-col-mixed">
+                <!-- Back button -->
+                <div class="fl-col-fixed fl-force-left">
+                    <a rsf:id="scr=null" class="flc-navigationBar-back fl-button fl-backButton" href="#">
+                        <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/back.png" alt="Go back"/>
+                    </a>
+                </div>
+                <!-- Home button -->
+                <div class="fl-col-fixed fl-force-left">
+                    <a rsf:id="scr=null" class="flc-navigationBar-home fl-button" href="#">
+                        <img class="fl-button-inner fl-button-icon" src="../../../../fluid-engage-core/shared/images/home.png" alt="Go home"/>
+                    </a>
+                </div>
+                <!-- Page header -->
+                <h1 class="flc-exhibition-navBarTitle fl-navbar-title fl-col-flex">About This Exhibition</h1>
+            </div>
+            
+            <div class="fl-exhibition-content">
+                <div class="fl-col-mixed">
+                    <img src="../images/a.jpg" alt="Exhibition Image" class="flc-exhibition-image fl-exhibition-image fl-force-left" />
+                    <div class="fl-exhibition-title-date fl-col-flex">
+                        <h2 class="flc-exhibition-title fl-exhibition-title">Exhibition Title: with a bunch of extra information blah blah blah</h2>
+                        <span class="flc-exhibition-displayDate fl-exhibition-displayDate fl-exhibitionAbout-textBlock">From Date</span>
+                    </div>
+                </div>
+                <p class="flc-exhibition-shortDescription fl-exhibition-shortDescription fl-exhibition-shortDescription">Short Description</p>
+                <div class="flc-exhibition-description">Exhibition Description</div> 
+            </div>
+        </div>
+        <script id="flc-initBlock" type="text/javascript">
+            fluid.engage.initComponentWithLocalData("fluid.engage.exhibitionView", ".flc-exhibition-container");
+        </script>
+    </body>
+</html>
